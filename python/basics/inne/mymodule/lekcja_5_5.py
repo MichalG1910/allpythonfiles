@@ -1,0 +1,1 @@
+string = "Odczyt z modułu lekcja_5_5.py"

@@ -1,0 +1,40 @@
+bioly1910
+grabarzmichal@gmail.com
+grabarzmichal1910
+
+token name - venv
+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 
+
+
+
+git init  							-  inicjalizacja nowego (pustego) repezytorium		Zainicjowano puste repozytorium Gita w /home/micha/venv/.git/
+git status 							-  taka jakby historia gita
+git add --all  							-  dodanie plików do repezytorium
+git config --global user.email "grabarzmichal@gmail.com"   	-  ustalenie adresu email dla konta na github
+git config --global user.name "Michał Grabarz"			-  nazwa użytkownika github
+git commit -m "Pierwszy zrzut plików"  				-  komentarz do zrzutu plików. Po poprawnym wykonaniu otrzymamy inf. jak niżej:
+
+[master (zapis-korzeń) dc0ec99] Pierwszy zrzut plików
+ 17 files changed, 429 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 01 pliki projektu.py
+ create mode 100644 02 tworzenie pierwszej aplikacji.py
+ create mode 100644 blog/__init__.py
+ create mode 100644 blog/admin.py
+ create mode 100644 blog/apps.py
+ create mode 100644 blog/migrations/0001_initial.py
+ create mode 100644 blog/migrations/__init__.py
+ create mode 100644 blog/models.py
+ create mode 100644 blog/tests.py
+ create mode 100644 blog/views.py
+ create mode 100755 manage.py
+ create mode 100644 mysite/__init__.py
+ create mode 100644 mysite/asgi.py
+ create mode 100644 mysite/settings.py
+ create mode 100644 mysite/urls.py
+ create mode 100644 mysite/wsgi.py
+ 
+git remote add origin https://github.com/bioly1910/venv.git	-  trzy komendy aby dodać repezytorium dokonta github(Uwaga, zamiast hasła musisz wpisać token)
+git branch -M main
+git push -u origin main
+

@@ -1,0 +1,173 @@
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/cups/doc-root /usr/share/cups/doc-root none bind,ro 0 0): cannot create directory "/usr/share/cups/doc-root": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/gimp/2.0/help /usr/share/gimp/2.0/help none bind,ro 0 0): cannot create directory "/usr/share/gimp/2.0": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/libreoffice/help /usr/share/libreoffice/help none bind,ro 0 0): cannot create directory "/usr/share/libreoffice/help": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/xubuntu-docs /usr/share/xubuntu-docs none bind,ro 0 0): cannot open directory "/var/lib": permission denied
+1668976184256	geckodriver	INFO	Listening on 127.0.0.1:33015
+1668976185249	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileLTiH0q"
+Gtk-Message: 21:29:45.265: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1668976187215	Marionette	INFO	Marionette enabled
+1668976187219	Marionette	INFO	Listening on port 40261
+Read port: 40261
+1668976187356	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileLTiH0q/search.json.mozlz4", (void 0)))
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://www.python.org."
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+1668976200250	Marionette	INFO	Stopped listening on port 40261
+1668976821987	geckodriver	INFO	Listening on 127.0.0.1:51899
+1668976822954	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilevX8k8b"
+Gtk-Message: 21:40:22.970: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1668976824894	Marionette	INFO	Marionette enabled
+1668976824896	Marionette	INFO	Listening on port 45865
+Read port: 45865
+1668976824999	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilevX8k8b/search.json.mozlz4", (void 0)))
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+1668976837027	Marionette	INFO	Stopped listening on port 45865
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/cups/doc-root /usr/share/cups/doc-root none bind,ro 0 0): cannot create directory "/usr/share/cups/doc-root": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/gimp/2.0/help /usr/share/gimp/2.0/help none bind,ro 0 0): cannot create directory "/usr/share/gimp/2.0": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/libreoffice/help /usr/share/libreoffice/help none bind,ro 0 0): cannot create directory "/usr/share/libreoffice/help": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/xubuntu-docs /usr/share/xubuntu-docs none bind,ro 0 0): cannot open directory "/var/lib": permission denied
+1669068003856	geckodriver	INFO	Listening on 127.0.0.1:37243
+1669068004742	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilezefnQS"
+Gtk-Message: 23:00:04.760: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1669068006729	Marionette	INFO	Marionette enabled
+1669068006734	Marionette	INFO	Listening on port 39933
+Read port: 39933
+1669068006874	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilezefnQS/search.json.mozlz4", (void 0)))
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://www.python.org."
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://www.python.org."
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://www.python.org."
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+1669068040104	Marionette	INFO	Stopped listening on port 39933
+1669068869444	geckodriver	INFO	Listening on 127.0.0.1:46615
+1669068870414	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileenkihv"
+Gtk-Message: 23:14:30.495: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1669068872688	Marionette	INFO	Marionette enabled
+1669068872701	Marionette	INFO	Listening on port 46511
+Read port: 46511
+1669068872880	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileenkihv/search.json.mozlz4", (void 0)))
+JavaScript error: https://strefakursow.pl/, line 4897: SyntaxError: missing ] after element list
+JavaScript note: https://strefakursow.pl/, line 4896: [ opened at line 4896, column 21
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://strefakursow.pl."
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 230: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 488: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 12: ReferenceError: Swiper is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: TypeError: $(...)[0] is undefined
+1669068972030	Marionette	INFO	Stopped listening on port 46511
+1669069024432	geckodriver	INFO	Listening on 127.0.0.1:57891
+1669069025415	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilej9kLlE"
+Gtk-Message: 23:17:05.489: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1669069027680	Marionette	INFO	Marionette enabled
+1669069027693	Marionette	INFO	Listening on port 42799
+Read port: 42799
+1669069027959	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilej9kLlE/search.json.mozlz4", (void 0)))
+JavaScript error: https://strefakursow.pl/, line 4897: SyntaxError: missing ] after element list
+JavaScript note: https://strefakursow.pl/, line 4896: [ opened at line 4896, column 21
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://strefakursow.pl."
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 230: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 488: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 12: ReferenceError: Swiper is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: TypeError: $(...)[0] is undefined
+1669069084139	Marionette	INFO	Stopped listening on port 42799
+1669069146150	geckodriver	INFO	Listening on 127.0.0.1:46843
+1669069147075	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofile2k90K7"
+Gtk-Message: 23:19:07.150: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1669069149299	Marionette	INFO	Marionette enabled
+1669069149313	Marionette	INFO	Listening on port 45679
+Read port: 45679
+1669069149640	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile2k90K7/search.json.mozlz4", (void 0)))
+JavaScript error: https://strefakursow.pl/, line 4897: SyntaxError: missing ] after element list
+JavaScript note: https://strefakursow.pl/, line 4896: [ opened at line 4896, column 21
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://strefakursow.pl."
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 230: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 488: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 12: ReferenceError: Swiper is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: TypeError: $(...)[0] is undefined
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://strefakursow.pl."
+JavaScript error: https://strefakursow.pl/product/search_course.html?name=drivers, line 3471: SyntaxError: missing ] after element list
+JavaScript note: https://strefakursow.pl/product/search_course.html?name=drivers, line 3470: [ opened at line 3470, column 21
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 230: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 488: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 12: ReferenceError: Swiper is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: TypeError: $(...)[0] is undefined
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://strefakursow.pl."
+JavaScript error: https://strefakursow.pl/product/search_course.html?name=documentation, line 3471: SyntaxError: missing ] after element list
+JavaScript note: https://strefakursow.pl/product/search_course.html?name=documentation, line 3470: [ opened at line 3470, column 21
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 230: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/javascript/default/modules/Product.js?1663247796, line 488: ReferenceError: videojs is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 12: ReferenceError: Swiper is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: ReferenceError: dataRecommend is not defined
+JavaScript error: https://strefakursow.pl/redesign/js/main-build.js?v=1668608446293, line 14: TypeError: $(...)[0] is undefined
+1669069206271	Marionette	INFO	Stopped listening on port 45679
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/cups/doc-root /usr/share/cups/doc-root none bind,ro 0 0): cannot create directory "/usr/share/cups/doc-root": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/gimp/2.0/help /usr/share/gimp/2.0/help none bind,ro 0 0): cannot create directory "/usr/share/gimp/2.0": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/libreoffice/help /usr/share/libreoffice/help none bind,ro 0 0): cannot create directory "/usr/share/libreoffice/help": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/xubuntu-docs /usr/share/xubuntu-docs none bind,ro 0 0): cannot open directory "/var/lib": permission denied
+1669151680828	geckodriver	INFO	Listening on 127.0.0.1:39015
+1669151681802	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileYKnnQ1"
+Gtk-Message: 22:14:41.818: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1669151683786	Marionette	INFO	Marionette enabled
+1669151683792	Marionette	INFO	Listening on port 35197
+Read port: 35197
+1669151683931	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileYKnnQ1/search.json.mozlz4", (void 0)))
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://www.python.org."
+JavaScript error: https://media.ethicalads.io/media/client/v1.4.0/ethicalads.min.js, line 1: Error: No ad placements found.
+JavaScript error: resource:///actors/FormValidationChild.sys.mjs, line 178: TypeError: this._element is null
+1669151694258	Marionette	INFO	Stopped listening on port 35197
+JavaScript error: chrome://remote/content/marionette/cert.sys.mjs, line 51: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+1669151696620	geckodriver::marionette	ERROR	Failed to close browser connection: Transport endpoint is not connected (os error 107)
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 574: uncaught exception: Object
+[2022-11-22T21:14:57Z ERROR glean_core] Can't persist ping lifetime data: Error { kind: Rkv(IoError(Os { code: 2, kind: NotFound, message: "No such file or directory" })) }

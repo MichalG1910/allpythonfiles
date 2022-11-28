@@ -1,0 +1,18 @@
+https://www.pythonguis.com/tutorials/packaging-tkinter-applications-windows-pyinstaller/ - instrukcja tworzenia pliku exe z opcjami
+
+
+pyinstaller --onefile app.py
+
+.spec - console=False - brak uruchamiania konsoli ze startem programu
+
+pyinstaller --w app.py
+pyinstaller --windowed app.py	trzy metody tworzenia pliku exe z wyłączoną funkcją konsoli
+pyinstaller --noconsole app.py
+
+pyinstaller --icon=icon.ico app.py - dodawanie ikony
+
+pyinstaller --onefile --windowed --icon=icon.ico app.py
+
+
+
+

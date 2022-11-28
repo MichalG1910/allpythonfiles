@@ -1,0 +1,34 @@
+ROCKET DIVISION SOFTWARE LICENSE AGREEMENT @@@ always is michal
+IMPORTANT - READ BEFORE COPYING, INSTALLING OR USING!!!!!!!!!!!!!
+
+WARNING: THIS SPECIAL EDITION OF THE STARWIND IS PART OF THE ALCOHOL 120% DISTRIBUTIVE. 
+IT CANNOT BE DISTRIBUTED TO THE THIRDPARTIES SEPARATELY FROM THE SOFTWARE. 
+ 
+Do not use or load this software or any associated materials (collectively, the "Software") until you have carefully read the following terms and conditions.  By loading or using the Software, you agree to the terms of this Agreement.
+If you do not wish to so agree, do not install or use the Software.
+ 
+LICENSE:  You may copy the Software onto your organization's computers or file servers and may make one back-up copy of the Software, subject to these conditions:
+ 
+1.  You may not copy, modify, rent, sell, distribute or transfer any part of the Software except as provided in this Agreement, and you agree to prevent unauthorized copying of the Software.
+ 
+2.  You may not reverse engineer, decompile, or disassemble the Software.
+ 
+3.  You may not sublicense or permit simultaneous use of the Software by more than one user.
+ 
+4.  The Software may include portions offered on terms in addition to those set out here, as set out in a license accompanying those portions.
+ 
+OWNERSHIP AND COPYRIGHT OF SOFTWARE:  Title to the Software and all copies thereof remains with Rocket Division Software or its suppliers.  The Software is copyrighted and is protected by the laws of the United States and other countries, and international treaty provisions.  You may not  remove any copyright notice from the Software.  Rocket Division Software may make changes to the Software, or to items referenced therein, at any time without notice, but is not obligated to support or update the Software.  Except as otherwise expressly provided, Rocket Division Software grants no express or implied rights under Rocket Division Software patents, copyrights, trademarks, or other intellectual property rights.  You may transfer the Software only if the recipient agrees to be fully bound by these terms and if you retain no copies of the Software.
+ 
+LIMITED MEDIA WARRANTY:  If the  Software has been delivered by Rocket Division Software on physical media, Rocket Division Software warrants the media to be free from material physical defects for a period of ninety days after delivery by Rocket Division Software. If such a defect is found, return the media to Rocket Division Software for replacement or alternate delivery of the Software as Rocket Division Software may select.
+ 
+EXCLUSION OF OTHER WARRANTIES:  EXCEPT AS PROVIDED ABOVE, THE SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY EXPRESS OR IMPLIED WARRANTY OF ANY KIND, INCLUDING WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, OR FITNESS FOR A PARTICULAR PURPOSES.  Rocket Division Software does not warrant or assume responsibility for the accuracy or completeness of any information, text, graphics, links or other items contained within the Software.
+ 
+LIMITATION OF LIABILITY:  IN NO EVENT SHALL ROCKET DIVISION SOFTWARE OR ITS SUPPLIERS BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, LOST PROFITS, BUSINESS INTERRUPTION, OR LOST INFORMATION) ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF ROCKET DIVISION SOFTWAE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  SOME JURISDICTIONS PROHIBIT EXCLUSION OR LIMITATION OF LIABILITY FOR IMPLIED WARRANTIES OR CONSEQUENTIAL OR INCIDENTAL DAMAGES, SO THE ABOVE LIMITATION MAY NOT APPLY TO YOU.  YOU MAY ALSO HAVE OTHER LEGAL RIGHTS THAT VARY FROM JURISDICTION TO JURISDICTION.
+ 
+INDEMNIFICATION:  Rocket Division Software does not endorse, support or guarantee performance results obtained using the Software.  Any difference in system hardware or software design or configuration may affect actual performance.  Buyers should consult other sources of information to evaluate the performance of systems or components they are considering purchasing.  You agree to defend, indemnify and hold Rocket Division Software harmless from and against any and all actions, claims, damages, expenses (including attorney s fees) and liabilities arising from your use of the Software.
+ 
+TERMINATION OF THIS LICENSE:  Rocket Division Software may terminate this Agreement at any time if you violate its terms.  Upon termination, you will immediately destroy the Software or return all copies of the Software to Rocket Division Software.
+ 
+U.S. GOVERNMENT RESTRICTED RIGHTS:  The Software is provided with "RESTRICTED RIGHTS."  Use, duplication, or disclosure by the Government is subject to restrictions as set forth in FAR 52.227-14 and DFAR 252.227-7013 et seq.  or its successor.  Use of the Software by the Government constitutes acknowledgment of Rocket Division Software s proprietary rights therein.  Contractor or Manufacturer is Rocket Division Software at it's legal registration address.
+
+ michal APPLICABLE LAW: Claims arising under this Agreement shall be governed by the laws of California, excluding its principles of conflict of laws and the United Nations Convention on Contracts for the Sale of Goods.  You may not export the Materials in violation of applicable export laws and regulations.  Rocket Division Software is not be obligated under any other agreements unless they are in writing and signed by an authorized representative of Rocket Division Software. 

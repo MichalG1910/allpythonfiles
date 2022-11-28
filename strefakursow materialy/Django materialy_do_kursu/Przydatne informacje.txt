@@ -1,0 +1,16 @@
+----------------
+link do repozytorium:
+https://github.com/dev-com2020/djangoblog
+----------------
+Wersje aplikacji:
+Python min. 3.7
+Django min. 2.2.4
+Pycharm 2020.3.3
+----------------
+przydatne linki:
+https://www.jetbrains.com/pycharm/
+https://www.pythonanywhere.com/
+https://www.python.org/
+https://www.djangoproject.com/
+https://getbootstrap.com/
+https://www.w3schools.com/Css/
