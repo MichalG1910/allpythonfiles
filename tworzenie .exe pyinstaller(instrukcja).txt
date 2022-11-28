@@ -14,5 +14,8 @@ pyinstaller --icon=icon.ico app.py - dodawanie ikony
 pyinstaller --onefile --windowed --icon=icon.ico app.py
 
 
+Próbny tekst do wysłania do repozytorium
+
+
 
 
