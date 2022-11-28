@@ -42,4 +42,4 @@ if __name__ == '__main__':
     app = App(root, path='c:\\')
     root.mainloop()
 
-    # aaddddddfffffffffffffffffgggggggggggggggg
+    # działa
