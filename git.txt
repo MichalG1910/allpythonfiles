@@ -1,11 +1,3 @@
-bioly1910
-grabarzmichal@gmail.com
-grabarzmichal1910
-
-token name - venv
-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 
-
-
 
 git init  							-  inicjalizacja nowego (pustego) repezytorium		Zainicjowano puste repozytorium Gita w /home/micha/venv/.git/
 git status 							-  taka jakby historia gita
