@@ -1,0 +1,75 @@
+
+call		wywołuje program wsadowy z innego programu wsadowego
+cd		wyświetla nazwę bieżącego katalogu lub zmienia go
+cls		czyści ekran
+cmd		uruchamia nową konsole
+color		ustawienia koloru konsoli
+date		wyświetla, modyfikuje datę
+dir		wyświetla zawartość katalogu
+echo		wyświetla komunikaty
+exit		zamyka konsolę lub skrypt wsadowy
+find		szuka ciągu znaków
+hostname	wyświetla nazwę hosta
+pause		zatrzymuje działanie pliku wsadowego
+runas		uruchamia program jako inny użytkownik
+shutdown	wyłącza PC
+sort		sortujące dane wyjściowe
+start		uruchamia program, plik w oddzielnym oknie
+taskkill	zamyka proces
+tasklist	wyświetla wszystkie procesy
+time		wyświetla, modyfikuje czas
+timeout		czas oczekiwania
+title		zmienia tytuł konsoli
+ver		wyświetla wersje systemu operacyjnego
+w32tm		synchronizacja czasu/serwer czasu/strefa czasowa
+Sieć:
+ftp		przesyłanie plików na serwer FTP
+ftype		wyświetla typ pliku, przynależność
+getmac		wyświetla adres Mac
+ipconfig	wyświetla konfigurację IP
+netsh		konfiguracja/zarządzanie/wyświetlanie komponentów sieciowych
+netstat		wyświetla połączenia TCP IP i ich status
+nslookup	wyświetla informacje przydatne do diagnozowania infrastruktury systemu DNS
+pathping	wyświetla stopień utraty pakietów na określonym routerze lub łączu
+ping		test połączenia ze zdalnym komputerem
+route		wyświetla oraz modyfikuje wpisy w lokalnej tabeli routingu
+systeminfo	podstawowe informacje o konfiguracji systemu
+telnet		program służący do zarządzania komputerem zdalnym bądź lokalnym, na którym jest uruchomiony serwer telnet
+tftp		przesyłanie plików na serwer TFTP
+tracert		śledzenie drogi pakietów z naszego komputera do zdalnego serwera
+Pliki:
+attrib		wyświetla lub modyfikuje atrybuty plików
+comp		porównuje zawartość dwóch plików lub zestawu plików
+compact		wyświetla informacje o kompresji i umożliwia jej modyfikację na partycjach NTFS
+copy / xcopy	kopiuje pliki
+diskcomp	porównuje zawartość dwóch dyskietek
+diskcopy	kopiuje zawartość dyskietki na inną
+erase / del	usuwa jeden lub kilka plików
+expand		dekompresuje jeden lub większą ilość plików
+fc		porównuje pliki i prezentuje różnice między nimi
+mkdir		tworzy katalog
+move		przenosi pliki i katalogi, lub zmienia ich nazwy
+rename		zmienia nazwę pliku
+replace		zamienia pliki o tych samych nazwach z jednego katalogu do drugiego
+rmdir / rd	usuwa katalog
+tree		graficzne przedstawienie struktury folderów
+type		wyświetla zawartość pliku tekstowego
+Dysk:
+chkdsk		sprawdza dysk
+chkntfs		sprawdza dysk i wyświetla raport o jego stanie
+defrag		defragmentuje dysk
+diskpart	zarządzanie dyskiem
+driverquery	wyświetla listę zainstalowanych sterowników urządzeń
+format		formatowanie dysku
+label		modyfikuje nazwę dysku
+mode		konfiguracja interfejsu/urządzenia
+mountvol	przyporządkowuje/usuwa punkty instalacji partycji (punkty montowania)
+verify		sprawdza poprawność zapisu plików na dysku
+vol		wyświetla etykietę dysku/woluminu i numer seryjny
+Inne:
+for		wykonuje dane polecenie dla wszystkich plików/zmiennych ze zbioru plików
+gpresult	wyświetla zestaw zasad RSoP dla danego użytkownika oraz systemu
+gpupdate	odświeża zasady grupy systemu operacyjnego
+perfmon		uruchamia monitoring wydajności komputera
+prompt		zmienia tekst zgłoszenia programu cmd.exe
+reg		umożliwia edycję rejestru systemowego
