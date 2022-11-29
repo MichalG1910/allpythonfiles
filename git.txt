@@ -30,7 +30,7 @@ git remote add origin https://github.com/bioly1910/venv.git	-  trzy komendy aby 
 git branch -M main
 git push -u origin main
 
-test
+
 
 
 
