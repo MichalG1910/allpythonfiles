@@ -1,8 +1,0 @@
-https://docs.python.org/3/library/index.html
-https://docs.python.org/3/library/time.html
-https://docs.python.org/3/library/os.html
-https://docs.python.org/3/library/os.html#os.environ
-https://docs.python.org/3/library/os.html#os.getenv
-https://docs.python.org/3/library/functions.html#open
-https://docs.python.org/3/glossary.html#term-file-object
-https://docs.python.org/3/library/io.html#io-overview

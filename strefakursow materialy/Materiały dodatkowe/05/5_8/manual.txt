@@ -1,6 +1,0 @@
-https://docs.python.org/3/library/subprocess.html
-https://docs.python.org/3/library/subprocess.html#subprocess.run
-https://docs.python.org/3/library/subprocess.html#subprocess.CompletedProcess
-https://docs.python.org/3/library/subprocess.html#subprocess.PIPE
-https://docs.python.org/3/library/stdtypes.html#bytes
-https://docs.python.org/3/library/subprocess.html#subprocess.CalledProcessError

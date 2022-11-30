@@ -1,0 +1,4 @@
+https://docs.python.org/3/library/os.html#os.mkdir
+https://docs.python.org/3/library/shutil.html
+https://docs.python.org/3/library/glob.html
+https://docs.python.org/3/library/json.html
