@@ -38,3 +38,9 @@ kot5 = Animal(Animal,"Łapek")
 
 print(kot5.howManyAnimal) # metoda cls.howManyAnimal po każdym utworzonym obiekcie będzie zwiększała o 1 nasze pole(zmienną) howManyAnimal 
                           # znajdującą się bezpośrednio w naszej klasie
+
+
+
+
+
+
