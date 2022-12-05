@@ -6,7 +6,7 @@ import time
 driver = webdriver.Chrome()
 driver.set_page_load_timeout(30) # jeśli strona ładuje się dłużej niż 30 sekund, wyrzzuci wyjątek
 driver.get("https://www.facebook.com")
-driver.maximize_window()
+driver.maximize_window() # pełny ekran przez cas działania skryptu
 driver.implicitly_wait(20) # pwrdpd czas jaki oczekuje program na wczytanie odpowiedniego elementu(po tym czasie wyrzuci wyjątek). Umieszczamy go tylko raz na cały skrypt
 driver.find_element(By.CLASS_NAME, "_9xo7").click()
 time.sleep(1)
