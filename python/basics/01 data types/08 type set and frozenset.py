@@ -26,10 +26,10 @@ print(setData2 - setData) # {1, 6, 19, 20, 21} od zbioru 2 odejmujemy zbiór 1
 print(setData ^ setData2) # {1, 2, 6, 19, 20, 21} różnica symetryczna - bierze z 1 zbioru wartości nie 
                           # występujące w 2 zbiorze oraz bierze z drugiego zbioru wartości nie występujące w 
                           # pierwszym zbiorze i tworzy z nich nowy zbiór
-print(setData.intersection(setData2)) # {4, 5, 22} - wyświetli zbiór, w którym będą tylko wartości zawarte zarówno w setData jak i setData2
+print(setData.intersection(setData2)) # {4, 5, 22} - wyświetli zbiór, w którym będą tylko wartości zawarte zarówno w setData jak i setData2 (to samo co & - patrz wyżej)
 print(setData.difference(setData2)) # {2} - wyświetli tylko wartość zbioru setData, ktorej nie ma w zbiorze setData2
-print(setData2.difference(setData)) 
-print(setData.union(setData2)) # {1, 2, 4, 5, 6, 19, 20, 21, 22} - wyświetli wszystkie wartości występujące w jednym jak i drugim zbiorze(bez powtarzania ich - zunifikuje je)
+print(setData2.difference(setData)) # {1, 6, 19, 20, 21}
+print(setData.union(setData2)) # {1, 2, 4, 5, 6, 19, 20, 21, 22} - wyświetli wszystkie wartości występujące w jednym jak i drugim zbiorze(bez powtarzania ich - zunifikuje je)(odpowiednik | )
 print(setData.symmetric_difference(setData2)) # {1, 2, 6, 19, 20, 21} - to samo co print(setData ^ setData2)
 
 

@@ -38,7 +38,8 @@ print("Max:", max(lista2)) # Max: 6
 print("Min:", min(lista3)) # Min: adam
 print("Max:", max(lista3)) # Max: zenon
 
-# sortowanie listy od najmniejszej do największej
+# sortowanie listy od najmniejszej do największej (uwaga! litery wielkie python stawia przed małymi, jak w naszej liścieie
+# któreś imie byłoby napisane z wielkiej liter, byłoby pierwsze nawet, jeśli litera alfabetu byłaby np Z )
 lista2.sort()
 print(lista2) # [-8, -2, 0, 1, 4, 5, 6]
 lista3.sort()
