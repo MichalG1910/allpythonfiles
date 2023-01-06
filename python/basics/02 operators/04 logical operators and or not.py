@@ -55,7 +55,7 @@ if not taskCompleted:     # jeśli taskCompleted jest "false", operator "not" go
     print("Stay a bit longer and finish") # if jest spelniony i wyrażenie zostanie wyświetlone
 
 input("ENTER ---> dalej")
-os.system("cls")
+os.system("clear")
 
 print("------------------------------------------------------------------------")
 
@@ -72,21 +72,22 @@ while True:
     nazwiskoNieznane = nazwisko or "NN"
 
     if not imie and not nazwisko:
-        os.system("cls")
+        os.system("clear")
         print("Nie ma imienia i nazwiska")
         print("imie: {}, nazwisko: {}".format(imieNieznane, nazwiskoNieznane)) # zapis kompatybilny z python 2
         
     elif imie and nazwisko:
-        os.system("cls")
+        os.system("clear")
         print("imie: ", imieNieznane, ", ","nazwisko: ", nazwiskoNieznane) # python 3
 
     else: 
-        os.system("cls")
+        os.system("clear")
         print("Niepełne dane osobowe!")
         print("imie: {}, nazwisko: {}".format(imieNieznane, nazwiskoNieznane))
     
     input("\nENTER ---> dalej")
-    os.system("cls")
+    os.system("clear")
+
 
 
 

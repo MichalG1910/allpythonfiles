@@ -6,7 +6,7 @@ result = a + b; print(result) # 15
 result = a - b; print(result) # 9
 result = a * b; print(result) # 36
 result = a / b; print(result) # 4.0
-result = a % b; print(result) # 0 - modulo, czyli reszta bz dzielenia 
+result = a % b; print(result) # 0 - modulo, czyli reszta bez dzielenia 
 result = a % 9; print(result) # 3 - 12/9=1 dziewięć tylko 1 raz zmieści się w całości w 12, 12-9*1=3 wynik=3 reszta z dzielenia
 result = a ** b; print(result) # 1728 - podnoszenie do potęgi (12**3)=1728
 result = a // b; print(result) # 4 tzw. floor division czyli dzielenie dające tylko liczbę całkowitą jako wynik

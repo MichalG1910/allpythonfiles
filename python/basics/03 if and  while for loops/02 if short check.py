@@ -23,7 +23,10 @@ if flag1 == False:
 if flag1 is not True:
     print( "flag1 is False" )
 
-if not flag1:
+
+if flag1:
+    ("flag1 jest true")
+elif not flag1:
     print( "flag1 równe jest False" )
 
 

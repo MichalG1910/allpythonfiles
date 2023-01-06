@@ -29,7 +29,7 @@ if id(a) != id(b):
 
 a.append(77) # append - dodać ( w tym przypadku dodajemy kolejną wartość do listy a)
 print(a) 
-print(b) # jak widać, do listy b została dodana liczba 77, więc adres w pamięci a i b jest taki sam
+print(b) # jak widać, do listy a została dodana liczba 77, więc adres w pamięci a i b jest taki sam
 print( 77 in b)
 
 if 77 in b:

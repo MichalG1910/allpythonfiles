@@ -1,5 +1,5 @@
 # instrukcja warunkowa if oczekuje wartości true i tylko wtedy uruchomi kod pod nią.  Kod do wykonania 
-# zwyczajowo wpisuje się po 4 spacjach (nasz edytor VDC sam je robi).
+# zwyczajowo wpisuje się po 4 spacjach (nasz edytor VSC sam je robi).
 num = 5
 if num >= 3:
     print( "num większe lub równe 3" )
@@ -36,7 +36,7 @@ print("prawda") if 5 > 2 else print("nieprawda") # prawda
 a = "parzysta" if 10 % 2 == 0 else "nieparzysta" # parzysta- przypisanie wyniku instrukcji do zmiennej
 print(a)
 
-print()
+print(list(range(10)))
 
 for i in range(10): # else odnosi się nie do instrukcji if, lecz do pętli for (może też do while)
     if i > 5:
@@ -47,12 +47,12 @@ else:
 # jeśli else odnosiłoby się do if (było na tym samym poziomie zagnieżdżenia), wynikiem byłoby: 6 X koniec
 
 try:
-    a = 5/5
+    a = 5/4
 except ZeroDivisionError:
-    print("Błąd!!!")
+    print("Błąd!!! Nie wolno dzielić przez 0!!!")
 
 else:
-    print("nie dzieliłeś przez ZERO")
+    print("wszystko gra, nie dzieliłeś przez ZERO")
 # zastosowanie else w instrukcji try:except doprowadzi do wykonania else, 
 # jeśli nasz sprawdzany wyjątek (błąd) nie wystąpi
 
