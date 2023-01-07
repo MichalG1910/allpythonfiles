@@ -26,7 +26,7 @@ print(sum) # 158
 
 
 
-# domylne wartości funkcji - w funkcji z góry możemy ustalić domyślne argumenty, ktore zostaną wykonane, jeżeli
+# domyślne wartości funkcji - w funkcji z góry możemy ustalić domyślne argumenty, ktore zostaną wykonane, jeżeli
 # odniesienie do naszej funkcji(wykonanie jej) nie będzie ich zawierało
 
 def printCar(brand, name = "concept", year = 1960, color = "black"):

@@ -27,8 +27,8 @@ def printList(listData):
                             # w tym przypadku nie zostanie zwrócony żaden wynik ( pusta lista )
     for v in listData:
         print(v)
-    return  # jeśli nie oczekujemy jakiejś konkretnej akcji, funkcja return może zostać pominięta,
-            # w tym przypadku zostaną zwrócone parametry listy (innej niż pusta lista)
+    return                  # jeśli nie oczekujemy jakiejś konkretnej akcji, funkcja return może zostać pominięta,
+                            # w tym przypadku zostaną zwrócone parametry listy (innej niż pusta lista)
 
 printList([])   # w przypadku pustej listy nie zostanie wyświetlony żaden wynik
 printList([6,7,8])

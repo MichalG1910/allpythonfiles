@@ -8,5 +8,5 @@ listsData = [
 
 for listData in listsData: # iteracja każdej listy ze zmiennej listsData
     for v in listData:
-        print(v)
+        print(v, end=' ')
         
