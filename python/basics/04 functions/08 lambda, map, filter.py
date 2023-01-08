@@ -74,4 +74,4 @@ print(sorted("AnalityK")) # ['A', 'K', 'a', 'i', 'l', 'n', 't', 'y']
 
 print(sorted("Analityk", reverse=True)) # ['y', 't', 'n', 'l', 'k', 'i', 'a', 'A'] - parametr reverse sortuje wszystko w odwrotnej kolejności 
 
-print(sorted(["ac", "aa", "az", "azz", "azb", "abc", "aba"]))
+print(sorted(["ac", "aa", "az", "azz", "azb", "abc", "aba"])) # ['aa', 'aba', 'abc', 'ac', 'az', 'azb', 'azz']

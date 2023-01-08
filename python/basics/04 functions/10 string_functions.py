@@ -4,7 +4,7 @@ print("Hello " * 3) # Hello Hello Hello
 
 string = "Hello World!"
 print( string[0]) # H - podaje pierwszy znak w łańcuch znaków (numerowane od 0)
-print( string[2:10]) # podaje rzeczywisty zakres od 3 do 9
+print( string[2:10]) # llo Worl - podaje rzeczywisty zakres od 3 do 9
 
 print( "Hello" in string) # True - czy hello jest w łańcuchu znaków (zmiennej string)
 print( "Hello" not in string) # False - czy hello niema w łańcuchu znaków (zmiennej string)
@@ -80,7 +80,7 @@ user = "Michał Grbarz" # michał grbarz
 print(user.lower())
 print(" ")
 
-print("   \n \t Hello    World! \n \t   ".strip()) # usuwa wszystkie białe znaki z łańcucha znaków
+print("   \n \t Hello    World! \n \t   ".strip()) # Hello    World! - usuwa wszystkie białe znaki z łańcucha znaków
                                                    # (bez białych znaków między tekstem)
 print("   \n \t Hello World! \n \t   ".lstrip()) # usuwa wszystkie białe znaki po lewej stronie
 print("   \n \t Hello World! \n \t   ".rstrip()) # usuwa wszystkie białe znaki po prawej stronie
