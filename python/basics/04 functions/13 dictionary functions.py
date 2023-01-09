@@ -1,7 +1,7 @@
 # dictionary functions - funkcje słownika
 
 data = {"name"  : "ola", "city" : "waw"} # {"name(key)" : "ola(value)"}
-print(data["name"]) # ola - dla klucza "name" zwróci wartość "ola"
+print(data["name"]) # ola - dla klucza "name" zwróci wartość "ola" (name to taki indeks - spełnia tą samą rolę)
 
 dataPostalCode = "postal code"
 data[dataPostalCode] = 12345 # dodanie rekordu do słownika 'postal code': 12345
@@ -21,7 +21,7 @@ print(" ")
 
 data = {"name"  : "kasia", "city" : "Krk"}
 dataCopy = data.copy() # utworzenie kopi (płytkiej) słownika data
-print(dataCopy)
+print(dataCopy) # {'name': 'kasia', 'city': 'Krk'}
 print(data["name"] is dataCopy["name"]) # True, widzimy, że ten sam element w slowniku data i dataCopy są 
                                         # w tym samym miejscu w pamięci (dlatego jest to płytka kopia)
 print( data is dataCopy) # False - zmienna data i dataCopy jako słownik są w innym miejscu w pamięci 
@@ -56,7 +56,7 @@ print(data3)               # {'city': '|MG|', 'code': '|MG|'}
 
 print()
 
-dict1 = dict(ford = 1950, opel = 1940, mercedes = 1932) #n tworzenie slownika
+dict1 = dict(ford = 1950, opel = 1940, mercedes = 1932) # tworzenie slownika
 print(dict1) # {'ford': 1950, 'opel': 1940, 'mercedes': 1932}
 
 dict2 = dict([("ford", 1950), ("opel", 1940), ("mercedes", 1932)]) #n tworzenie slownika [lista(tupli)]

@@ -37,13 +37,13 @@ print(timeData)
 i = 0
 
 while i < 12:
-    time.sleep(0.1) # funkcja sleep usypia działanie pętli o podaną wartość (w tym przypadku o 0,5 s)
+    time.sleep(0.5) # funkcja sleep usypia działanie pętli o podaną wartość (w tym przypadku o 0,5 s)
     print(time.asctime(time.localtime())) # będzie nam wyświetlało co 0.5 s datę i godzinę 
     i += 1
 
 
 tStart = time.perf_counter() # czas początku wykonywania np.kodu
-time.sleep(0.2)
+time.sleep(1.2)
 tEnd = time.perf_counter() # czas końca wykonywania np.kodu
 print("Code took: ", (tEnd - tStart), "seconds") # wynikiem będzie czas wykonania kodu time.sleep(1.2)
 

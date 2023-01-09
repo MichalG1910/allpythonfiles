@@ -20,7 +20,7 @@ print(tuple1.count(6)) # 1 - zlicza ilość wystąpień wartości 6 w krotce
 print("index: ", tuple1.index(6)) # index:  6 -pokazuję indeks wystąpienia wartości 6 w krotce indeksując od 0
 
 exam_st_date = (11,12,2014)
-print(type(exam_st_date))
+print(type(exam_st_date)) # <class 'tuple'>
 print( "The examination will start from : %i / %i / %i"%exam_st_date)
 # The examination will start from : 11 / 12 / 2014
 # metoda wyciągnięcia z krotki danych
@@ -29,9 +29,9 @@ print(tuple1) # (0, 1, 2, 3, 4, 5, 6, 7)
 print(sum(tuple1)) # 28, suma poszczególnych argumentów krotki
 
 a, b, c, d, e, f, g, h = tuple1 # tworzenie uproszczone wielu zmiennych zawartych w krotce
-print(a)
-print(e)
-print(g)
+print(a) # 0
+print(e) # 4
+print(g) # 6
 print("a:{}, b:{}, c:{}, d:{}, e:{}, f:{}, g:{}, h:{}".format(a,b,c,d,e,f,g,h)) # a:0, b:1, c:2, d:3, e:4, f:5, g:6, h:7
 print("a:%s, b:%s, c:%s, d:%s, e:%s, f:%s, g:%s, h:%s"%(tuple1)) # a:0, b:1, c:2, d:3, e:4, f:5, g:6, h:7
 # drugi sposób jest kompatybilny ze starszym Pythonem 2
