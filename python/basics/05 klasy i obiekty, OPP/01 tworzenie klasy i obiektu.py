@@ -50,14 +50,14 @@ class czlowiek2:
 obiekt = czlowiek2("Adam", 2) # jeżeli korzystamy  w klasie z konstruktora, to tworzony w oparciu o klasę obiekt 
                               # musi wykorzystać wszystkie zmienne (bez self) zawarte w tym konstruktorze 
                               # (innaczej wystąpi błąd) 
-print(obiekt.przedstawSie())  
+print(obiekt.przedstawSie())  # Cześć , mam na imie Adam lat 2.
 
 obiekt2 = czlowiek2("Filip", 5) 
 print(obiekt2.imie) # Filip
 print(obiekt2.wiek) # 5
-print(obiekt2.przedstawSie())  
-print(obiekt.przedstawSie("Witaj"))  
-print(obiekt2.przedstawSie("Dzień dobry"))  
+print(obiekt2.przedstawSie()) # Cześć , mam na imie Filip lat 5.
+print(obiekt.przedstawSie("Witaj")) # Witaj , mam na imie Adam lat 2.
+print(obiekt2.przedstawSie("Dzień dobry")) # Dzień dobry , mam na imie Filip lat 5.
 
 print("____________________________________________3______________________________________________________\n")
 
@@ -80,12 +80,13 @@ class Point:
 
 p1 = Point(4,5)
 p2 = Point(10,25)
-print(p1.x, p1.y)
-print(p2.x, p2.y)
-print(Point.points_counter)
+print(p1.x, p1.y) # 4 5
+print(p2.x, p2.y) # 10 25
+print(Point.points_counter) # 2
 
 p1.move_to_new_coords(1,1)
-print(p1.x, p1.y)
+print(p1.x, p1.y) # 1 1
+
         
 
 

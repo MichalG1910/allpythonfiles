@@ -22,9 +22,9 @@ konto = KontoBankowe()
 print(konto.stan_konta) # stan konta: 0zł - korzystając z @property def stan_konta nie użuwamy (), 
 # bez @property - print(konto.stan_konta()) - jakbyśmy próbowali to tak wywołać, spowoduje to błąd
 
-konto.stan_konta = 50 # stan konta: 50zł (+50)
+konto.stan_konta = 50 # stan konta: 50zł  - (+50)
 print(konto.stan_konta)
-konto.stan_konta = 100 # stan konta: 150zł (+100)
+konto.stan_konta = 100 # stan konta: 150zł  - (+100)
 print(konto.stan_konta)
-konto.stan_konta = -125 # stan konta: 25zł (-125)
+konto.stan_konta = -125 # stan konta: 25zł  - (-125)
 print(konto.stan_konta)

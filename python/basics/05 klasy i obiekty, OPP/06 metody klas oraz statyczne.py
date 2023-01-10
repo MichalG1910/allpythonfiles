@@ -16,8 +16,8 @@ class Czlowiek:
     
 # standardowe utworzenie obiektu wyglądało by tak: cz1 = Czlowiek() 
 cz1 = Czlowiek.nowy_czlowiek("Sebastian") # tworzymy obiekt- inacze jak do tej pory opieramy go na metodzie klasy
-cz1.przedstaw()                           # @classmethod (nowy_czlowiek). Taki obiekt nabywa możliwość tworzenia kolejnych obiektów
+cz1.przedstaw()                           # Nazywam się Sebastian - @classmethod (nowy_czlowiek). Taki obiekt nabywa możliwość tworzenia kolejnych obiektów
 cz2 = cz1.nowy_czlowiek("Adrian")         # tworzymy drugi obiekt na bazie pierwszego obiektu cz1
-cz2.przedstaw()
-Czlowiek.przywitaj("przyjacielu!")
-cz2.przywitaj("chłopcze!")
+cz2.przedstaw()                           # Nazywam się Adrian
+Czlowiek.przywitaj("przyjacielu!")        # Cześć przyjacielu!
+cz2.przywitaj("chłopcze!")                # Cześć chłopcze!
