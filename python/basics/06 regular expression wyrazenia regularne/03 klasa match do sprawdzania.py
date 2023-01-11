@@ -49,8 +49,7 @@ w1.rematch("^[A-Z][a-z]a*$", "Al")  # Dopasowano!
 w1.rematch("^[A-Z][a-z]a*$", "Ala") # Dopasowano!  
 w1.rematch("^[A-Z][a-z]a*$", "Alaaa") # Dopasowano!   
 w1.rematch("^[A-Z][a-z]a*$", "Alc") # Nie dopasowano!  
-w1.rematch("^[A-Z][a-z]a*$", "Alan") # Nie dopasowano!   
-w1.rematch("^[A-Z][a-z]a*$", "Al") # Dopasowano!  
+w1.rematch("^[A-Z][a-z]a*$", "Alan") # Nie dopasowano!    
 w1.rematch("^[A-Z][a-z]a*$", "al") # Nie dopasowano! 
 
 print("|6|---------------------------------------")

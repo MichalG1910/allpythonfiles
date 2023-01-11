@@ -17,7 +17,7 @@ else:
 print("|2|-----------------------------------------------------------------------")
 
 
-wynik = re.match(r"^(Hello) (World)+$", "Hello WorldWorld") # plus stojący przed grupą powoduje, że musi ona 
+wynik = re.match(r"^(Hello) (World)+$", "Hello WorldWorld") # plus stojący za grupą powoduje, że musi ona 
 # wystąpić w przeszukiwanym tekście conajmniej 1 raz, ale może nieskończenie wiele razy
 
 if wynik:
