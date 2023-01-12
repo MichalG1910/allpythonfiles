@@ -1,5 +1,7 @@
 
-plik = open("d:\\python\\basics\\inne\\analizatekstu.txt", "r")
+# plik = open("d:\\python\\basics\\inne\\analizatekstu.txt", "r") # ścieżka windows
+# plik = open("/home/micha/pythonGit/allpythonfiles/python/basics/inne/analizatekstu.txt", "r") # pełna ścieżka linux
+plik = open("./allpythonfiles/python/basics/inne/analizatekstu.txt", "r") # uproszczona ścieżka linux (z racji że znajdujemy się w katalogu pythonGit, stosujemy zapis od tego miejsca, .- zastępuje wcześniejszą ścieżkę)
 tekst = plik.read()
 plik.close()
 
@@ -22,7 +24,7 @@ for z in "abcdefghijklmnoprstuwxyz,.-+=:;@!#$%":
                                     # otrzymujemy ilość wystąpień każdej z liter bez względu na to czy jest 
                                     # duża czy mała
     procent = 100 * ile / len(tekst)
-    print("{0} - {1} - {2}%".format(z.upper(), ile, round(procent, 2)))
+    print("{0} - {1} - {2}%".format(z.upper(), ile, round(procent, 2))) # round - zaokrąglenie(2 miejsca po ,)
 
 # powyżej sprawdzamy cały tekst i otrzymujemy wynik dla każdej litery z ciągu znaków
 # ( który jest tak naprawdę listą) w postaci ilości wystąpień i procentowego udzialu w całym tekscie
