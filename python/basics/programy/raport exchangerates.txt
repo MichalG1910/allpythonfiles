@@ -1,0 +1,123 @@
+data raportu: 2023-01-16
+
+ilość sprawdzanych dni: 1
+ilość raportów NBP z tych dni (tylko dni pracujące): 1
+
+Exchange rates: A, 009/A/NBP/2023, 2023-01-13
+bat (Tajlandia), code: THB, value: 0.1312
+dolar amerykański, code: USD, value: 4.3272
+dolar australijski, code: AUD, value: 3.0183
+dolar Hongkongu, code: HKD, value: 0.554
+dolar kanadyjski, code: CAD, value: 3.2417
+dolar nowozelandzki, code: NZD, value: 2.7666
+dolar singapurski, code: SGD, value: 3.2741
+euro, code: EUR, value: 4.6915
+forint (Węgry), code: HUF, value: 0.011842
+frank szwajcarski, code: CHF, value: 4.66
+funt szterling, code: GBP, value: 5.291
+hrywna (Ukraina), code: UAH, value: 0.1258
+jen (Japonia), code: JPY, value: 0.033661
+korona czeska, code: CZK, value: 0.1953
+korona duńska, code: DKK, value: 0.6306
+korona islandzka, code: ISK, value: 0.030405
+korona norweska, code: NOK, value: 0.4385
+korona szwedzka, code: SEK, value: 0.4161
+lej rumuński, code: RON, value: 0.9496
+lew (Bułgaria), code: BGN, value: 2.3987
+lira turecka, code: TRY, value: 0.2303
+nowy izraelski szekel, code: ILS, value: 1.2685
+peso chilijskie, code: CLP, value: 0.005286
+peso filipińskie, code: PHP, value: 0.0789
+peso meksykańskie, code: MXN, value: 0.2298
+rand (Republika Południowej Afryki), code: ZAR, value: 0.2576
+real (Brazylia), code: BRL, value: 0.847
+ringgit (Malezja), code: MYR, value: 0.9979
+rupia indonezyjska, code: IDR, value: 0.0002857
+rupia indyjska, code: INR, value: 0.0532
+won południowokoreański, code: KRW, value: 0.003497
+yuan renminbi (Chiny), code: CNY, value: 0.6443
+SDR (MFW), code: XDR, value: 5.8544
+ilość walut: 33
+
+data raportu: 2023-01-16
+
+ilość sprawdzanych dni: 1
+ilość raportów NBP z tych dni (tylko dni pracujące): 1
+
+Exchange rates: A, 009/A/NBP/2023, 2023-01-13
+bat (Tajlandia), code: THB, value: 0.1312
+dolar amerykański, code: USD, value: 4.3272
+dolar australijski, code: AUD, value: 3.0183
+dolar Hongkongu, code: HKD, value: 0.554
+dolar kanadyjski, code: CAD, value: 3.2417
+dolar nowozelandzki, code: NZD, value: 2.7666
+dolar singapurski, code: SGD, value: 3.2741
+euro, code: EUR, value: 4.6915
+forint (Węgry), code: HUF, value: 0.011842
+frank szwajcarski, code: CHF, value: 4.66
+funt szterling, code: GBP, value: 5.291
+hrywna (Ukraina), code: UAH, value: 0.1258
+jen (Japonia), code: JPY, value: 0.033661
+korona czeska, code: CZK, value: 0.1953
+korona duńska, code: DKK, value: 0.6306
+korona islandzka, code: ISK, value: 0.030405
+korona norweska, code: NOK, value: 0.4385
+korona szwedzka, code: SEK, value: 0.4161
+lej rumuński, code: RON, value: 0.9496
+lew (Bułgaria), code: BGN, value: 2.3987
+lira turecka, code: TRY, value: 0.2303
+nowy izraelski szekel, code: ILS, value: 1.2685
+peso chilijskie, code: CLP, value: 0.005286
+peso filipińskie, code: PHP, value: 0.0789
+peso meksykańskie, code: MXN, value: 0.2298
+rand (Republika Południowej Afryki), code: ZAR, value: 0.2576
+real (Brazylia), code: BRL, value: 0.847
+ringgit (Malezja), code: MYR, value: 0.9979
+rupia indonezyjska, code: IDR, value: 0.0002857
+rupia indyjska, code: INR, value: 0.0532
+won południowokoreański, code: KRW, value: 0.003497
+yuan renminbi (Chiny), code: CNY, value: 0.6443
+SDR (MFW), code: XDR, value: 5.8544
+ilość walut: 33
+
+data raportu: 2023-01-16
+
+ilość sprawdzanych dni: 1
+ilość raportów NBP z tych dni (tylko dni pracujące): 1
+
+Exchange rates: A, 009/A/NBP/2023, 2023-01-13
+bat (Tajlandia), code: THB, value: 0.1312
+dolar amerykański, code: USD, value: 4.3272
+dolar australijski, code: AUD, value: 3.0183
+dolar Hongkongu, code: HKD, value: 0.554
+dolar kanadyjski, code: CAD, value: 3.2417
+dolar nowozelandzki, code: NZD, value: 2.7666
+dolar singapurski, code: SGD, value: 3.2741
+euro, code: EUR, value: 4.6915
+forint (Węgry), code: HUF, value: 0.011842
+frank szwajcarski, code: CHF, value: 4.66
+funt szterling, code: GBP, value: 5.291
+hrywna (Ukraina), code: UAH, value: 0.1258
+jen (Japonia), code: JPY, value: 0.033661
+korona czeska, code: CZK, value: 0.1953
+korona duńska, code: DKK, value: 0.6306
+korona islandzka, code: ISK, value: 0.030405
+korona norweska, code: NOK, value: 0.4385
+korona szwedzka, code: SEK, value: 0.4161
+lej rumuński, code: RON, value: 0.9496
+lew (Bułgaria), code: BGN, value: 2.3987
+lira turecka, code: TRY, value: 0.2303
+nowy izraelski szekel, code: ILS, value: 1.2685
+peso chilijskie, code: CLP, value: 0.005286
+peso filipińskie, code: PHP, value: 0.0789
+peso meksykańskie, code: MXN, value: 0.2298
+rand (Republika Południowej Afryki), code: ZAR, value: 0.2576
+real (Brazylia), code: BRL, value: 0.847
+ringgit (Malezja), code: MYR, value: 0.9979
+rupia indonezyjska, code: IDR, value: 0.0002857
+rupia indyjska, code: INR, value: 0.0532
+won południowokoreański, code: KRW, value: 0.003497
+yuan renminbi (Chiny), code: CNY, value: 0.6443
+SDR (MFW), code: XDR, value: 5.8544
+ilość walut: 33
+
