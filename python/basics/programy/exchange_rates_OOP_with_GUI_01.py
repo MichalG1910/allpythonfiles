@@ -20,7 +20,7 @@ class EchangeRates():
         self.exchangeRatesTabel()
         self.plotGraphGui()
         self.generateRaportGui()
-        self.fileRename()
+        self.plikRename()
 
     def getYesterday(self):
         oneday = datetime.timedelta(days=1)
@@ -70,7 +70,7 @@ class EchangeRates():
                 self.responseJson()
                 self.dataFormatting()
                 self.raport.close()   
-                self.fileRename()
+                self.raportRename()
     
     def responseJson(self):
         if self.response.ok == True: # sprawdzenie, czy serwer odpowiada poprawnie
@@ -105,12 +105,7 @@ class EchangeRates():
             currencyCount = (f"ilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
     
-    def fileRename(self):
-        if str(self.today) == str(self.effectiveDateList[-1]):
-            pass
-        else:
-            os.rename(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.today}.txt", f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.getYesterday()}.txt" )
-        
+    def raportRename(self):
         if self.startDate.get() == "":
             pass
         else:
@@ -118,7 +113,12 @@ class EchangeRates():
                 pass
             else:
                 os.rename(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.getYesterday()}.txt" )
-
+    def plikRename(self):            
+        if str(self.today) == str(self.effectiveDateList[-1]):
+            pass
+        else:
+            os.rename(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.today}.txt", f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.getYesterday()}.txt" )
+            
     def exchangeRatesTabel(self):
         echangeRateFrame = ttk.LabelFrame(self.win, text= f"Kursy Walut {self.today}", labelanchor="n")  
         echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(self.rates)+1), padx=5, sticky=tk.W)
