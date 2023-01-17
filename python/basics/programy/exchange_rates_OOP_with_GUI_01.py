@@ -1,11 +1,11 @@
+import re
 import os
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox as mBox
 import datetime
-import requests # import biblioteki requests niezbędnej do pobrania danych z serwera
-# jeśli python nie widzi jakiejś biblioteki, trzeba ją zainstalować w terminalu:
-# pip install requests
-class echangeRates():
+import requests 
+class EchangeRates():
     def __init__(self):
         self.win = tk.Tk()
         self.win.title("Exchange Rates from NBP v1.0")
@@ -41,34 +41,36 @@ class echangeRates():
     def fileClose(self):
         self.plik.close()
         self.Num = 1
-    '''
-    def inputData(self):    
-        self.date1 = input('podaj datę początkową(RRRR-MM-DD):')
-        self.date2 = input('podaj datę końcową(RRRR-MM-DD):')
-        dateRange = (f"data początkowa(RRRR-MM-DD): {self.date1}\ndata końcowa(RRRR-MM-DD): {self.date2}\n\n")
-        self.fileWrite(dateRange)
-    '''
     
     def getRequest(self):    
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
         self.daysLen = 1
     
     def raportRequest(self):
-        self.raport = open(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
-  
-        self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
-        date1_list = (list(self.startDate.get().split('-')))
-        sdList = [int(i) for i in date1_list] # to samo co niżej, tylko uproszczone
-        date2_list = (list(self.endDate.get().split('-')))
-        edList = [int(i) for i in date2_list]
-        sDate = datetime.date(sdList[0], sdList[1], sdList[2])
-        eDate = datetime.date(edList[0], edList[1], edList[2])
-        sumdays = eDate - sDate
-        self.daysLen = sumdays.days
-        self.responseJson()
-        self.dataFormatting()
-        self.raport.close()   
-        self.fileRename()
+        print(self.startDate.get())
+        print(self.endDate.get())
+        if not re.match("^20[1-2][0-9][-](0[0-9]|1[1-2])[-]([0-1][0-9]|3[0-1])$",self.startDate.get()) or not re.match("^20[1-2][0-9][-](0[0-9]|1[1-2])[-]([0-1][0-9]|3[0-1])$",self.endDate.get()):
+            mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
+        else:
+            date1_list = (list(self.startDate.get().split('-')))
+            sdList = [int(i) for i in date1_list] 
+            date2_list = (list(self.endDate.get().split('-')))
+            edList = [int(i) for i in date2_list]
+            sDate = datetime.date(sdList[0], sdList[1], sdList[2])
+            eDate = datetime.date(edList[0], edList[1], edList[2])
+        
+            if eDate > self.today or sDate >= eDate:
+                mBox.showerror("Uwaga", "Niepprawna data, wprowadź nową datę")
+            else:
+                self.raport = open(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
+                self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
+                
+                sumdays = eDate - sDate
+                self.daysLen = sumdays.days
+                self.responseJson()
+                self.dataFormatting()
+                self.raport.close()   
+                self.fileRename()
     
     def responseJson(self):
         if self.response.ok == True: # sprawdzenie, czy serwer odpowiada poprawnie
@@ -116,7 +118,7 @@ class echangeRates():
                 pass
             else:
                 os.rename(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.getYesterday()}.txt" )
-        
+
     def exchangeRatesTabel(self):
         echangeRateFrame = ttk.LabelFrame(self.win, text= f"Kursy Walut {self.today}", labelanchor="n")  
         echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(self.rates)+1), padx=5, sticky=tk.W)
@@ -169,8 +171,8 @@ class echangeRates():
     def generateGraphGui(self):
         pass
         
-        
-oop = echangeRates()
+
+oop = EchangeRates()
 oop.win.mainloop()   
 
 
