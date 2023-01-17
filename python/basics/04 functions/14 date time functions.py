@@ -89,5 +89,13 @@ print(date1 < date2) # True
 print(date1 > date2) # False
 print(date2 - date1) # 730 days, 0:00:00
 
+def getYesterday():
+    today = datetime.date.today()
+    oneday = datetime.timedelta(days=1)
+    yesterday = today - oneday
+    return yesterday
+
+print(getYesterday()) # 2023-01-16
+
 
 

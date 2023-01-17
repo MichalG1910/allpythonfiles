@@ -1,4 +1,4 @@
-
+import os
 import tkinter as tk
 from tkinter import ttk
 import datetime
@@ -12,30 +12,23 @@ class echangeRates():
         self.today = datetime.date.today()
         self.getYesterday()
         self.Num = 0
-        self.effectiveDateList()
         self.fileOpen()
-        self.sDate()
-        # self.inputData()
         self.getRequest()
         self.responseJson()
         self.dataFormatting()
         self.fileClose()
         self.exchangeRatesTabel()
-        self.plotGraph()
-        self.generateRaport()
+        self.plotGraphGui()
+        self.generateRaportGui()
+        self.fileRename()
 
     def getYesterday(self):
         oneday = datetime.timedelta(days=1)
         yesterday = self.today - oneday
         return yesterday
-
-    
-    def sDate(self):
-        start_date = (f"data raportu: {self.getYesterday()}\n\n")
-        self.fileWrite(start_date)
         
     def fileOpen(self):
-        self.plik = open(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.getYesterday()}.txt", "w")  
+        self.plik = open(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.today}.txt", "w")  
     
     def fileWrite(self,writeData):
         if self.Num == 0:
@@ -58,44 +51,30 @@ class echangeRates():
     
     def getRequest(self):    
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
-        print('ilośc sprawdzanych dni: ', 1)
-        daysRequest = ('ilość sprawdzanych dni: 1\n')
-        self.fileWrite(daysRequest)
         self.daysLen = 1
     
     def raportRequest(self):
         self.raport = open(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
-        
-        dateRange = (f"data początkowa(RRRR-MM-DD): {self.startDate.get()}\ndata końcowa(RRRR-MM-DD): {self.endDate.get()}\n\n")
-        self.fileWrite(dateRange)   
+  
         self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
         date1_list = (list(self.startDate.get().split('-')))
         sdList = [int(i) for i in date1_list] # to samo co niżej, tylko uproszczone
-        '''
-        for i in data1_list:
-                sdList.append(int(i))
-        '''
         date2_list = (list(self.endDate.get().split('-')))
         edList = [int(i) for i in date2_list]
         sDate = datetime.date(sdList[0], sdList[1], sdList[2])
         eDate = datetime.date(edList[0], edList[1], edList[2])
         sumdays = eDate - sDate
         self.daysLen = sumdays.days
-        daysRequest = (f'ilośc sprawdzanych dni: {self.daysLen}\n')
-        print(f'\nilośc sprawdzanych dni: {self.daysLen}')
-        self.fileWrite(daysRequest)
         self.responseJson()
         self.dataFormatting()
         self.raport.close()   
+        self.fileRename()
     
     def responseJson(self):
         if self.response.ok == True: # sprawdzenie, czy serwer odpowiada poprawnie
             self.data = self.response.json()[0:self.daysLen] # parsowanie danych z formatu teksowego na format do odczytu w python
-            print('ilośc sprawdzanych dni: ', 1)
-            daysRequest = ('ilość sprawdzanych dni: 1\n')
-            print('ilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data)) # wynik jest to lista która zawiera słownik. W tym słowniku mamy klucz "rates" którego wartość zawiera następną listę słowników, już z danymi nas interesującymi, czyli kursami walut
-            daysResponse = (f'ilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n\n')
-            
+            print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
+            daysResponse = (f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n\n')
             self.fileWrite(daysResponse)
             
             
@@ -124,6 +103,20 @@ class echangeRates():
             currencyCount = (f"ilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
     
+    def fileRename(self):
+        if str(self.today) == str(self.effectiveDateList[-1]):
+            pass
+        else:
+            os.rename(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.today}.txt", f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.getYesterday()}.txt" )
+        
+        if self.startDate.get() == "":
+            pass
+        else:
+            if str(self.endDate.get()) == str(self.effectiveDateList[-1]):
+                pass
+            else:
+                os.rename(f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", f"./allpythonfiles/python/basics/programy/raport_exchangerates_{self.startDate.get()}_{self.getYesterday()}.txt" )
+        
     def exchangeRatesTabel(self):
         echangeRateFrame = ttk.LabelFrame(self.win, text= f"Kursy Walut {self.today}", labelanchor="n")  
         echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(self.rates)+1), padx=5, sticky=tk.W)
@@ -134,7 +127,7 @@ class echangeRates():
             self.textbox1 = ttk.Label(echangeRateFrame, background= 'White', width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
             self.textbox2 = ttk.Label(echangeRateFrame, background= 'White', width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
             self.textbox3 = ttk.Label(echangeRateFrame, background= 'White', width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
-    def plotGraph(self):    
+    def plotGraphGui(self):    
         plotGraphFrame = ttk.LabelFrame(self.win, text= "Rysowanie wykresu", labelanchor="n") # labelanchor="n" wyśrodkuje teks labelframe 
         plotGraphFrame.grid(column=4, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
         ttk.Label(plotGraphFrame, text= "Waluta ").grid(column=4, row=1, sticky=tk.W, pady=2) 
@@ -152,10 +145,10 @@ class echangeRates():
         rangeChosen.grid(column= 5, row= 2, padx=5)
         rangeChosen.current(0)
 
-        drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.generateGraph) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
+        drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.generateGraphGui) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
         drawGraph.grid(column = 6, row = 0 , rowspan=3)
     
-    def generateRaport(self):    
+    def generateRaportGui(self):    
         raportFrame = ttk.LabelFrame(self.win, text= "Generuj raport", labelanchor="n")  
         raportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
         ttk.Label(raportFrame, text= "data początkowa(RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=2) 
@@ -168,12 +161,12 @@ class echangeRates():
         self.endDate = tk.StringVar()
         endDateBox = ttk.Entry(raportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5)
-        endDateBox.insert(tk.END, self.getYesterday())
+        endDateBox.insert(tk.END, self.today)
 
         createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.raportRequest) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
         createRaport.grid(column = 9, row = 0 , rowspan=3)
     
-    def generateGraph(self):
+    def generateGraphGui(self):
         pass
         
         

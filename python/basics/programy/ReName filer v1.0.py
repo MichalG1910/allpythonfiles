@@ -109,6 +109,6 @@ class ReName():
         self.numeration1 = tk.StringVar()
         self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.numeration1)
         self.num.grid(column= 1, row= 8, padx=85)
-
+        
 reOop = ReName()
 reOop.win.mainloop()
