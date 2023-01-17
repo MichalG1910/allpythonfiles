@@ -62,7 +62,6 @@ class echangeRates():
         dateRange = (f"data początkowa(RRRR-MM-DD): {self.startDate.get()}\ndata końcowa(RRRR-MM-DD): {self.endDate.get()}\n\n")
         self.fileWrite(dateRange)    
         self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
-
         date1_list = (list(self.startDate.get().split('-')))
         sdList = [int(i) for i in date1_list] # to samo co niżej, tylko uproszczone
         '''
