@@ -3,16 +3,18 @@ import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as mBox
+import sv_ttk                                       # biblioteka ze stylem
 import datetime
 import requests
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
+
 class EchangeRates():
     def __init__(self):
         self.win = tk.Tk()
-        self.win.geometry("1580x880")
-        self.win.title("Exchange Rates from NBP v1.0")
+        self.winStyle()
+        
         self.today = datetime.date.today()
         self.getYesterday()
         self.Num = 0
@@ -25,6 +27,19 @@ class EchangeRates():
         self.plotGraphGui()
         self.generateRaportGui()
         self.plikRename()
+    
+    def winStyle(self):
+        sv_ttk.set_theme("dark")
+        #style.theme_use('vista') 
+        #self.win.configure(background="black")
+        self.win.geometry("1580x880")
+        self.win.title("Exchange Rates from NBP v1.0")
+        # https://trinket.io/pygame/f5af3f7500  paleta kolorów
+        
+        #style = ttk.Style(self.win)
+        #self.win.tk.call("source", "https://github.com/rdbende/Azure-ttk-theme")
+        #style.theme_use('azure') 
+        
        
     def getYesterday(self):
         oneday = datetime.timedelta(days=1)
@@ -191,9 +206,9 @@ class EchangeRates():
         self.codeLabel = ttk.Label(echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
         self.valueLabel = ttk.Label(echangeRateFrame, text= "Wartość w PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
         for t in range(33):
-            self.textbox1 = ttk.Label(echangeRateFrame, background= 'White', width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-            self.textbox2 = ttk.Label(echangeRateFrame, background= 'White', width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-            self.textbox3 = ttk.Label(echangeRateFrame, background= 'White', width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+            self.textbox1 = ttk.Label(echangeRateFrame, background= 'grey19', width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+            self.textbox2 = ttk.Label(echangeRateFrame, background= 'grey19', width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
+            self.textbox3 = ttk.Label(echangeRateFrame, background= "grey19", width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
     
     def plotGraphGui(self):    
         plotGraphFrame = ttk.LabelFrame(self.win, text= "Rysowanie wykresu", labelanchor="n") # labelanchor="n" wyśrodkuje teks labelframe 
@@ -221,7 +236,7 @@ class EchangeRates():
         drawGraph.grid(column = 6, row = 0 , rowspan=3)
     
     def generateRaportGui(self):    
-        raportFrame = ttk.LabelFrame(self.win, text= "Generuj raport", labelanchor="n")  
+        raportFrame = ttk.LabelFrame(self.win, text= "Generuj raport", labelanchor="n")
         raportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
         ttk.Label(raportFrame, text= "data początkowa(RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=2) 
         ttk.Label(raportFrame, text= "data końcowa(RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=4)
