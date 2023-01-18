@@ -16,11 +16,13 @@ if response.ok == True: # sprawdzenie, czy serwer odpowiada poprawnie
     print("\nExchange rates: ", table, no, effectiveDate)
 
     rates = data["rates"]
+    list = {}
     for rate in rates:
         currency = rate["currency"]
         code = rate["code"]
         mid = rate["mid"]
         print(currency, "code: ", code, "value: ", mid)
-
+        list[code] = currency
+print(list)
 
 
