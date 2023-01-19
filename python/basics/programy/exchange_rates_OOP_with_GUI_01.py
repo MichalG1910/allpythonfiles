@@ -147,13 +147,25 @@ class EchangeRates():
             os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.getYesterday()}.txt" )
     
     def getDataForGraph(self):
-        self.timeRange30_60_90 = int(self.timeRange.get()[0:2])
-        startDate30_60_90 = self.today - datetime.timedelta(days=self.timeRange30_60_90)
-        endDate30_60_90  = self.today
         code = (self.currencyName.get()[0:3]).lower()
-        self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/{startDate30_60_90}/{endDate30_60_90}/?format=json")
-        
-        self.responseJson()
+        if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
+            self.timeRange30_60_90 = int(self.timeRange.get()[0:2])
+            startDate30_60_90 = self.today - datetime.timedelta(days=self.timeRange30_60_90)
+            endDate30_60_90  = self.today
+            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/{startDate30_60_90}/{endDate30_60_90}/?format=json")
+            self.responseJson()
+        elif self.timeRange.get() == "pół roku":
+            pass
+        elif self.timeRange.get() == "rok":
+            pass
+        elif self.timeRange.get() == "2 lata":
+            pass
+        elif self.timeRange.get() == "5 lat":
+            pass
+        elif self.timeRange.get() == "10 lat":
+            pass
+        else:
+            pass
 
         for dict1 in self.graphData:
             self.graphCurrency = dict1["currency"]
@@ -232,7 +244,7 @@ class EchangeRates():
 
         self.timeRange = tk.StringVar() 
         rangeChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.timeRange, state= "readonly")
-        rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "Rok", "2 lata", "5 lat", "10 lat") 
+        rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat") 
         rangeChosen.grid(column= 5, row= 2, padx=5)
         rangeChosen.current(0)
 
