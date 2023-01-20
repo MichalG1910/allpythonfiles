@@ -56,8 +56,8 @@ class EchangeRates():
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
         self.daysLen = 1
         self.responseJson()
-        self.dataFormatting()
-        self.plik.close()
+        self.dataFormatting(self.plik)
+        self.firstloopEDL = self.effectiveDateList[-1]
         self.plikRename()  
         self.Num = 1 
 
@@ -71,10 +71,17 @@ class EchangeRates():
             edList = [int(i) for i in date2_list]
             sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             eDate = datetime.date(edList[0], edList[1], edList[2])
+
+            print(self.effectiveDateList[-1], type(self.effectiveDateList))
+            print(eDate, type(eDate))
+            print(self.today, type(self.today))
         
-            if eDate > self.today or sDate >= eDate:
+            if eDate > self.today or sDate > eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
-            elif eDate == self.today:
+            elif str(self.today) != str(self.firstloopEDL):
+                print(self.effectiveDateList[-1], type(self.effectiveDateList))
+                print(eDate, type(eDate))
+                print(self.today, type(self.today))
                 mBox.showinfo("Raport NBP jeszcze nie opublikowany", "Zwykle publikacja odbywa się około godziny 13:00\nWprowadź inną datę")
 
             else:
@@ -82,10 +89,11 @@ class EchangeRates():
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
                 
                 sumdays = eDate - sDate
-                self.daysLen = sumdays.days
+                self.daysLen = sumdays.days + 1
+                print(self.daysLen)
                 self.responseJson()
-                self.dataFormatting()
-                self.raport.close()   
+                self.dataFormatting(self.raport)
+                   
                 
         
     def fileWrite(self,writeData):
@@ -110,18 +118,17 @@ class EchangeRates():
                 self.graphData = self.currencyResponse.json()
                 self.graphData = [self.graphData] 
             
-    def dataFormatting(self):           
+    def dataFormatting(self, whichRaport):           
         for dict in self.data:
-            table = dict["table"]
-            no = dict["no"]
-            effectiveDate= dict["effectiveDate"]
-            print("\nExchange rates: ", table, no, effectiveDate)
-            exchRates = (f"Exchange rates: {table}, {no}, {effectiveDate}\n")
+            self.table = dict["table"]
+            self.no = dict["no"]
+            self.effectiveDate= dict["effectiveDate"]
+            print("\nExchange rates: ", self.table, self.no, self.effectiveDate)
+            exchRates = (f"Exchange rates: {self.table}, {self.no}, {self.effectiveDate}\n")
             self.fileWrite(exchRates)
             self.rates = dict["rates"]
-            self.currencyList, self.codeList, self.valueList, self.effectiveDateList = [],[],[],[]
-            self.effectiveDateList.append(effectiveDate)
-            self.codeCurrencyDict = {}
+            self.currencyList, self.codeList, self.valueList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],{}
+            self.effectiveDateList.append(self.effectiveDate)
             for rate in self.rates:
                 self.currency = rate["currency"]
                 self.code = rate["code"]
@@ -129,13 +136,12 @@ class EchangeRates():
                 print(self.currency, "code: ", self.code, "value: ", self.mid)
                 currencyInfo = (f"{self.currency}, code: {self.code}, value: {self.mid}\n")
                 self.fileWrite(currencyInfo)
-                self.currencyList.append(self.currency)
-                self.codeList.append(self.code)
-                self.valueList.append(self.mid)
+                self.currencyList.append(self.currency), self.codeList.append(self.code), self.valueList.append(self.mid)
                 self.codeCurrencyDict[self.code] = self.currency
             print('ilość walut: ',len(self.rates))
             currencyCount = (f"ilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
+        whichRaport.close()
 
     def plikRename(self):            
         if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.getYesterday()}.txt") and self.effectiveDateList[-1] != self.today:
