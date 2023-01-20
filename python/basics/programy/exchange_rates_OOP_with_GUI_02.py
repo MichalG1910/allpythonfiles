@@ -25,7 +25,7 @@ class EchangeRates():
         self.exchangeRatesTabel()
         self.plotGraphGui()
         self.generateRaportGui()
-        self.raportRename()
+        
        
     def winStyle(self):
         #sv_ttk.set_theme("light")
@@ -51,16 +51,18 @@ class EchangeRates():
             path = os.path.join(self.filePath, "raports")
             os.mkdir(path)
         
+        
         self.plik = open(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", "w")
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
         self.daysLen = 1
         self.responseJson()
         self.dataFormatting()
-        self.plik.close()  
+        self.plik.close()
+        self.plikRename()  
         self.Num = 1 
 
     def raportOpen(self):
-        if not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-1][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-1][0-9]|3[0-1])$",self.endDate.get()):
+        if not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
         else:
             date1_list = (list(self.startDate.get().split('-')))
@@ -72,6 +74,9 @@ class EchangeRates():
         
             if eDate > self.today or sDate >= eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
+            elif eDate == self.today:
+                mBox.showinfo("Raport NBP jeszcze nie opublikowany", "Zwykle publikacja odbywa się około godziny 13:00\nWprowadź inną datę")
+
             else:
                 self.raport = open(f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
@@ -81,7 +86,7 @@ class EchangeRates():
                 self.responseJson()
                 self.dataFormatting()
                 self.raport.close()   
-                self.raportRename()
+                #self.raportRename()
         
     def fileWrite(self,writeData):
         if self.Num == 0:
@@ -131,7 +136,7 @@ class EchangeRates():
             print('ilość walut: ',len(self.rates))
             currencyCount = (f"ilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
-    
+    '''
     def raportRename(self):
         if self.startDate.get() == "":
             pass
@@ -140,11 +145,15 @@ class EchangeRates():
                 pass
             else:
                 os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.getYesterday()}.txt" )
+    '''
     def plikRename(self):            
-        if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt"):
-            pass
+        if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.getYesterday()}.txt") and self.effectiveDateList[-1] != self.today:
+            os.remove(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt")
         else:
-            os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.getYesterday()}.txt" )
+            if str(self.today) == str(self.effectiveDateList[-1]):
+                pass
+            else:
+                os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.getYesterday()}.txt" )
     
     def getDataForGraph(self):
         code = (self.currencyName.get()[0:3]).lower()
