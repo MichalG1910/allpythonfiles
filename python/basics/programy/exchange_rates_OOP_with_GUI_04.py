@@ -14,31 +14,17 @@ import math
 
 class EchangeRates():
     def __init__(self):
-        self.win = tk.Tk()
-        self.winStyle()
+        
         
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
         self.yesterday = self.today - datetime.timedelta(days=1)
         self.Num = 0
         self.fileOpen()
-        self.exchangeRatesTabel()
-        self.plotGraphGui()
-        self.generateRaportGui()
+        gui = Gui()
+        gui.win.mainloop()
         
-       
-    def winStyle(self):
-        #sv_ttk.set_theme("light")
-        #style.theme_use('vista') 
-        #self.win.configure(background="black")
-        self.win.geometry("1580x890")
-        self.win.title("Exchange Rates from NBP v1.0")
-        # https://trinket.io/pygame/f5af3f7500  paleta kolorów
         
-        #style = ttk.Style(self.win)
-        #self.win.tk.call("source", "https://github.com/rdbende/Azure-ttk-theme")
-        #style.theme_use('azure') 
-    
     def fileWrite(self,writeData):
         if self.Num == 0:
             if self.plik.writable():
@@ -185,6 +171,27 @@ class EchangeRates():
             self.graphEffectiveDateList.append(self.graphEffectiveDate)
             self.graphMidList.append(self.graphMid)
 
+class Gui(EchangeRates):
+    def __init__(self):
+        super().dataFormatting(super().fileOpen().super()self.plik)
+        self.win = tk.Tk()
+        self.winStyle()
+        self.exchangeRatesTabel()
+        self.plotGraphGui()
+        self.generateRaportGui()
+
+    def winStyle(self):
+        #sv_ttk.set_theme("light")
+        #style.theme_use('vista') 
+        #self.win.configure(background="black")
+        self.win.geometry("1580x890")
+        self.win.title("Exchange Rates from NBP v1.0")
+        # https://trinket.io/pygame/f5af3f7500  paleta kolorów
+        
+        #style = ttk.Style(self.win)
+        #self.win.tk.call("source", "https://github.com/rdbende/Azure-ttk-theme")
+        #style.theme_use('azure')
+    
     def generateGraphGui(self):
         self.getDataForGraph()
         # print(plt.style.available) # dostępne style wbudowane w matplotlib
@@ -232,13 +239,13 @@ class EchangeRates():
             self.textbox1 = ttk.Label(echangeRateFrame, background= 'white', width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
             self.textbox2 = ttk.Label(echangeRateFrame, background= 'white', width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
             self.textbox3 = ttk.Label(echangeRateFrame, background= "white", width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
-    
+        
     def plotGraphGui(self):    
         plotGraphFrame = ttk.LabelFrame(self.win, text= "Rysowanie wykresu", labelanchor="n") # labelanchor="n" wyśrodkuje teks labelframe 
         plotGraphFrame.grid(column=4, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.E)
         ttk.Label(plotGraphFrame, text= "Waluta ").grid(column=4, row=1, sticky=tk.W, pady=2) 
         ttk.Label(plotGraphFrame, text= "Przedział czasowy ").grid(column=4, row=2, sticky=tk.W, pady=4)
-        
+            
         self.currencyName = tk.StringVar()
         codeCurrencyList = []
         for key,values in self.codeCurrencyDict.items():
@@ -247,7 +254,7 @@ class EchangeRates():
         currencyChosen["values"] = codeCurrencyList 
         currencyChosen.grid(column= 5, row= 1, padx=5)
         currencyChosen.current(7)
-      
+        
 
         self.timeRange = tk.StringVar() 
         rangeChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.timeRange, state= "readonly")
@@ -257,29 +264,29 @@ class EchangeRates():
 
         drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.generateGraphGui) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
         drawGraph.grid(column = 6, row = 0 , rowspan=3)
-    
+        
     def generateRaportGui(self):    
         raportFrame = ttk.LabelFrame(self.win, text= "Generuj raport", labelanchor="n")
         raportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
         ttk.Label(raportFrame, text= "data początkowa(RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=2) 
         ttk.Label(raportFrame, text= "data końcowa(RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=4)
-        
+            
         self.startDate = tk.StringVar() 
         startDateBox = ttk.Entry(raportFrame, width= 10, textvariable= self.startDate)
         startDateBox.grid(column= 8, row= 1, padx=5)
-        
+            
         self.endDate = tk.StringVar()
         endDateBox = ttk.Entry(raportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5)
         endDateBox.insert(tk.END, self.effectiveDateList[-1])
 
         createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.raportOpen) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
-        createRaport.grid(column = 9, row = 0 , rowspan=3)
-    
+        createRaport.grid(column = 9, row = 0 , rowspan=3)           
         
+      
 
 oop = EchangeRates()
-oop.win.mainloop()   
+   
 
 
     
