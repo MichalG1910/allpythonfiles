@@ -19,7 +19,7 @@ class EchangeRates():
         
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
-        self.getYesterday()
+        self.yesterday = self.today - datetime.timedelta(days=1)
         self.Num = 0
         self.fileOpen()
         self.exchangeRatesTabel()
@@ -38,11 +38,6 @@ class EchangeRates():
         #style = ttk.Style(self.win)
         #self.win.tk.call("source", "https://github.com/rdbende/Azure-ttk-theme")
         #style.theme_use('azure') 
-        
-       
-    def getYesterday(self): 
-        yesterday = self.today - datetime.timedelta(days=1)
-        return yesterday
         
     def fileOpen(self):
         if os.path.exists(f"{self.filePath}/raports"):
@@ -72,14 +67,12 @@ class EchangeRates():
             sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             eDate = datetime.date(edList[0], edList[1], edList[2])
 
-            print(self.effectiveDateList[-1], type(self.effectiveDateList))
-            print(eDate, type(eDate))
-            print(self.today, type(self.today))
+            
         
             if eDate > self.today or sDate > eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
-            elif str(self.today) != str(self.firstloopEDL):
-                print(self.effectiveDateList[-1], type(self.effectiveDateList))
+            elif str(eDate) != str(self.firstloopEDL):
+                print(self.firstloopEDL, type(self.firstloopEDL))
                 print(eDate, type(eDate))
                 print(self.today, type(self.today))
                 mBox.showinfo("Raport NBP jeszcze nie opublikowany", "Zwykle publikacja odbywa się około godziny 13:00\nWprowadź inną datę")
@@ -144,24 +137,38 @@ class EchangeRates():
         whichRaport.close()
 
     def plikRename(self):            
-        if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.getYesterday()}.txt") and self.effectiveDateList[-1] != self.today:
+        if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.yesterday}.txt") and self.effectiveDateList[-1] != self.today:
             os.remove(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt")
         else:
             if str(self.today) == str(self.effectiveDateList[-1]):
                 pass
             else:
-                os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.getYesterday()}.txt" )
+                os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.yesterday}.txt" )
     
     def getDataForGraph(self):
         code = (self.currencyName.get()[0:3]).lower()
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
             self.timeRange30_60_90 = int(self.timeRange.get()[0:2])
             startDate30_60_90 = self.today - datetime.timedelta(days=self.timeRange30_60_90)
-            endDate30_60_90  = self.today
-            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/{startDate30_60_90}/{endDate30_60_90}/?format=json")
+            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/{startDate30_60_90}/{self.today}/?format=json")
             self.responseJson()
+            self.graphData = [dict0["rates"] for dict0 in self.graphData].pop()
+        
         elif self.timeRange.get() == "pół roku":
-            pass
+            self.timeRange180 = 182
+            startDate180 = self.today - datetime.timedelta(days=182)
+            halfDate = startDate180 + datetime.timedelta(days=91)
+            
+            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/{startDate180}/{halfDate}/?format=json") 
+            self.responseJson()
+            graphData1 = [dict1["rates"] for dict1 in self.graphData].pop()
+            
+            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/{halfDate+datetime.timedelta(days=1)}/{self.today}/?format=json")
+            self.responseJson()
+            graphData2 = [dict2["rates"] for dict2 in self.graphData].pop()
+            graphData1 += graphData2
+            self.graphData = graphData1
+        
         elif self.timeRange.get() == "rok":
             pass
         elif self.timeRange.get() == "2 lata":
@@ -172,17 +179,13 @@ class EchangeRates():
             pass
         else:
             pass
-
-        for dict1 in self.graphData:
-            self.graphCurrency = dict1["currency"]
-            self.graphCode = dict1["code"]
-            self.graphRates = dict1["rates"]
-            self.graphMidList, self.graphEffectiveDateList = [],[]
-            for rate in self.graphRates:
-                self.graphEffectiveDate = rate["effectiveDate"]
-                self.graphMid = rate["mid"]
-                self.graphEffectiveDateList.append(self.graphEffectiveDate)
-                self.graphMidList.append(self.graphMid)
+        
+        self.graphMidList, self.graphEffectiveDateList = [],[]
+        for rate in self.graphData:
+            self.graphEffectiveDate = rate["effectiveDate"]
+            self.graphMid = rate["mid"]
+            self.graphEffectiveDateList.append(self.graphEffectiveDate)
+            self.graphMidList.append(self.graphMid)
 
     def generateGraphGui(self):
         self.getDataForGraph()
