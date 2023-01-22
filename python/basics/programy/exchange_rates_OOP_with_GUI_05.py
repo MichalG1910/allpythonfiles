@@ -178,13 +178,16 @@ class EchangeRates():
     def gui(self):
 
         def winStyle():
-            sv_ttk.set_theme("dark")
+            #sv_ttk.set_theme("dark")
             #style.theme_use('vista')  
             #self.win.configure(background="black") 
             #win.overrideredirect(True)
             #win.geometry("{0}x{1}".format(win.winfo_screenwidth(), win.winfo_screenheight()))
             #win.attributes("-zoomed", True) # otwiera pełne okno
-            win.geometry("1680x890")
+            if win.winfo_screenwidth() < 1300:
+                win.geometry("900x890")
+            else:
+                win.geometry("1680x890")
             win.title("Exchange Rates from NBP v1.0")
             # https://trinket.io/pygame/f5af3f7500  paleta kolorów
             
