@@ -15,24 +15,20 @@ import matplotlib.pyplot as plt
 import sys
 import math
 import pylab
-
 class EchangeRates():
     def __init__(self):
-        
         
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
         self.yesterday = self.today - datetime.timedelta(days=1)
         self.Num = 0
-        self.fileOpen()
+        self.startOpen()
         self.gui()
-        
-        
-        
+           
     def fileWrite(self,writeData):
         if self.Num == 0:
-            if self.plik.writable():
-                self.plik.write(writeData)
+            if self.start.writable():
+                self.start.write(writeData)
         else:
             if self.raport.writable():
                 self.raport.write(writeData)
@@ -46,19 +42,18 @@ class EchangeRates():
             else:
                 os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.effectiveDateList[-1]}.txt" )
         
-    def fileOpen(self):
+    def startOpen(self):
         if os.path.exists(f"{self.filePath}/raports"):
             pass
         else:
             path = os.path.join(self.filePath, "raports")
             os.mkdir(path)
         
-        
-        self.plik = open(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", "w")
+        self.start = open(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", "w")
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
         self.daysLen = 1
         self.responseJson()
-        self.dataFormatting(self.plik)
+        self.dataFormatting(self.start)
         self.firstloopEDL = self.effectiveDateList[-1]
         self.plikRename()  
         self.Num = 1 
@@ -74,8 +69,6 @@ class EchangeRates():
             sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             eDate = datetime.date(edList[0], edList[1], edList[2])
 
-            
-        
             if eDate > self.today or sDate > eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
             elif str(eDate) != str(self.firstloopEDL):
@@ -131,8 +124,6 @@ class EchangeRates():
             self.fileWrite(currencyCount)
         whichRaport.close()
 
-    
-    
     def getDataForGraph(self):
         self.code = (self.currencyName.get()[0:3]).lower()
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
@@ -144,6 +135,7 @@ class EchangeRates():
         
         elif self.timeRange.get() == "pół roku":
             self.timeRange180 = 182
+            repeat = 2
             startDate180 = self.today - datetime.timedelta(days=182)
             halfDate = startDate180 + datetime.timedelta(days=91)
             
@@ -158,15 +150,40 @@ class EchangeRates():
             self.graphData = graphData1
         
         elif self.timeRange.get() == "rok":
+            self.timeRange180 = 364
+            repeat = 4
             pass
         elif self.timeRange.get() == "2 lata":
+            self.timeRange180 = 728
+            repeat = 8
             pass
         elif self.timeRange.get() == "5 lat":
+            self.timeRange180 = 1820
+            repeat = 20
             pass
         elif self.timeRange.get() == "10 lat":
+            self.timeRange180 = 3640
+            repeat = 40
             pass
         else:
             pass
+
+        def timeRangeLoop():
+            timeRange = 182
+            repeat = 2
+            startDate = self.today - datetime.timedelta(days=timeRange)
+            step = startDate + datetime.timedelta(days=(timeRange / repeat))
+            
+            
+            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{startDate}/{step}/?format=json") 
+            self.responseJson()
+            graphData1 = [dict1["rates"] for dict1 in self.graphData].pop()
+            
+            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{step+datetime.timedelta(days=1)}/{self.today}/?format=json")
+            self.responseJson()
+            graphData2 = [dict2["rates"] for dict2 in self.graphData].pop()
+            graphData1 += graphData2
+            self.graphData = graphData1
         
         self.graphMidList, self.graphEffectiveDateList = [],[]
         for rate in self.graphData:
@@ -178,7 +195,7 @@ class EchangeRates():
     def gui(self):
 
         def winStyle():
-            #sv_ttk.set_theme("dark")
+            sv_ttk.set_theme("dark")
             #style.theme_use('vista')  
             #self.win.configure(background="black") 
             #win.overrideredirect(True)
@@ -197,12 +214,13 @@ class EchangeRates():
         
         def generateGraphGui():
             self.getDataForGraph()
-            # print(plt.style.available) # dostępne style wbudowane w matplotlib
+            print(plt.style.available) # dostępne style wbudowane w matplotlib
             '''
-            ['Solarize_Light2', '_classic_test_patch', '_mpl-gallery', '_mpl-gallery-nogrid', 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight', 'ggplot', 
-            'grayscale', 'seaborn-v0_8', 'seaborn-v0_8-bright', 'seaborn-v0_8-colorblind', 'seaborn-v0_8-dark', 'seaborn-v0_8-dark-palette', 'seaborn-v0_8-darkgrid', 
-            'seaborn-v0_8-deep', 'seaborn-v0_8-muted', 'seaborn-v0_8-notebook', 'seaborn-v0_8-paper', 'seaborn-v0_8-pastel', 'seaborn-v0_8-poster', 'seaborn-v0_8-talk', 
-            'seaborn-v0_8-ticks', 'seaborn-v0_8-white', 'seaborn-v0_8-whitegrid', 'tableau-colorblind10']
+            ['Solarize_Light2', '_classic_test_patch', '_mpl-gallery', '_mpl-gallery-nogrid', 'bmh', 'classic', 'dark_background', 
+            'fast', 'fivethirtyeight', 'ggplot', 'grayscale', 'seaborn', 'seaborn-bright', 'seaborn-colorblind', 'seaborn-dark', 
+            'seaborn-dark-palette', 'seaborn-darkgrid', 'seaborn-deep', 'seaborn-muted', 'seaborn-notebook', 'seaborn-paper', 
+            'seaborn-pastel', 'seaborn-poster', 'seaborn-talk', 'seaborn-ticks', 'seaborn-white', 'seaborn-whitegrid', 
+            'tableau-colorblind10']
             '''
             plt.style.use('dark_background')
             #fig = Figure(figsize=(12,8), facecolor = "grey") # obiekt (prostokąt 12 x 8 pikseli) - będzie to prostokąt na którym umieścimy wykres
