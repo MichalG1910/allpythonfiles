@@ -125,7 +125,28 @@ class EchangeRates():
         whichRaport.close()
 
     def getDataForGraph(self):
+        def timeRangeLoop():
+            self.startDate = self.today - datetime.timedelta(days=self.dayRange)
+            self.stepDate = self.startDate + datetime.timedelta(days=self.step)
+            self.stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
+            self.gdList = []
+            while self.repeat > 0:  
+                self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{self.startDate}/{self.stepDate}/?format=json") 
+                self.responseJson()
+                graphData = [dict["rates"] for dict in self.graphData].pop()
+                self.gdList += graphData
+                self.startDate = self.startDate + self.stepTimedelta
+                if self.repeat == 2:
+                    date1_list = (list(self.effectiveDateList[-1].split('-')))
+                    sdList = [int(i) for i in date1_list] 
+                    self.stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
+                else:
+                    self.stepDate = self.stepDate + self.stepTimedelta
+                self.repeat -= 1
+            self.graphData = self.gdList 
+
         self.code = (self.currencyName.get()[0:3]).lower()
+        
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
             self.timeRange30_60_90 = int(self.timeRange.get()[0:2])
             startDate30_60_90 = self.today - datetime.timedelta(days=self.timeRange30_60_90)
@@ -134,82 +155,25 @@ class EchangeRates():
             self.graphData = [dict0["rates"] for dict0 in self.graphData].pop()
         
         elif self.timeRange.get() == "pół roku":
-            self.timeRange180 = 182
-            repeat = 2
-            startDate180 = self.today - datetime.timedelta(days=182)
-            halfDate = startDate180 + datetime.timedelta(days=91)
-            
-            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{startDate180}/{halfDate}/?format=json") 
-            self.responseJson()
-            graphData1 = [dict1["rates"] for dict1 in self.graphData].pop()
-            
-            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{halfDate+datetime.timedelta(days=1)}/{self.today}/?format=json")
-            self.responseJson()
-            graphData2 = [dict2["rates"] for dict2 in self.graphData].pop()
-            graphData1 += graphData2
-            self.graphData = graphData1
+            self.dayRange, self.repeat, self.step = 182, 2, 91
+            timeRangeLoop()
         
         elif self.timeRange.get() == "rok":
-            self.timeRange180 = 364
-            repeat = 8
-            pass
+            self.dayRange, self.repeat, self.step = 364, 4, 91
+            timeRangeLoop()
+
         elif self.timeRange.get() == "2 lata":
-            timeRange = 728
-            repeat = 8
-            step = 91
-            startDate = self.today - datetime.timedelta(days=timeRange)
-            stepDate = startDate + datetime.timedelta(days=step)
-            print(startDate, stepDate)
-            stepTimedelta = datetime.timedelta(days=step) + datetime.timedelta(days=1)
-            print(stepTimedelta)
-            gdList = []
-            while repeat > 0:
-                
-                self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{startDate}/{stepDate}/?format=json") 
-                self.responseJson()
-                graphData = [dict["rates"] for dict in self.graphData].pop()
-                gdList += graphData
-                
-                startDate = startDate + stepTimedelta
-                if repeat == 2:
-                    date1_list = (list(self.effectiveDateList[-1].split('-')))
-                    sdList = [int(i) for i in date1_list] 
-                    stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
-                    print(stepDate)
-                else:
-                    stepDate = stepDate + stepTimedelta
-                print(startDate, stepDate)
-                print(type(startDate), type(stepDate))
-                repeat -= 1
-            print(gdList)
-            self.graphData = gdList 
+            self.dayRange, self.repeat, self.step = 728, 8, 91
+            timeRangeLoop()
                 
         elif self.timeRange.get() == "5 lat":
-            self.timeRange180 = 1820
-            repeat = 20
-            pass
+            self.dayRange, self.repeat, self.step = 1820, 20, 91
+            timeRangeLoop()
+            
         elif self.timeRange.get() == "10 lat":
-            self.timeRange180 = 3640
-            repeat = 40
-            pass
-        else:
-            pass
+            self.dayRange, self.repeat, self.step = 3640, 40, 91
+            timeRangeLoop()
 
-        def timeRangeLoop():
-            timeRange = 182
-            repeat = 2
-            startDate = self.today - datetime.timedelta(days=timeRange)
-            step = startDate + datetime.timedelta(days=(timeRange / repeat))
-            while repeat > 0:
-                self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{startDate}/{step}/?format=json") 
-                self.responseJson()
-                graphData = [dict["rates"] for dict in self.graphData].pop()
-                self.graphData += graphData
-                startDate += (step + datetime.timedelta(days=1))
-                step += (step + datetime.timedelta(days=1))
-                print(startDate, step) 
-            print(self.graphData)
-        
         self.graphMidList, self.graphEffectiveDateList = [],[]
         for rate in self.graphData:
             self.graphEffectiveDate = rate["effectiveDate"]
@@ -217,7 +181,6 @@ class EchangeRates():
             self.graphEffectiveDateList.append(self.graphEffectiveDate)
             self.graphMidList.append(self.graphMid)
             
-
     def gui(self):
 
         def winStyle():
@@ -258,6 +221,7 @@ class EchangeRates():
             xValuesLen = len(xValues)-1
             a = math.ceil(xValuesLen / 7)
             b = list(range(1,xValuesLen, a))
+            b.append(xValuesLen)
             print(a)
             print(b)
             axis.plot(xValues, yValues) # drukowanie wartości na naszym wykresie
@@ -265,13 +229,13 @@ class EchangeRates():
             xaxis.set_ticks(b)
             axis.set_xlabel("Data") # etykiety naszych osi
             axis.set_ylabel("PLN Złoty")
-            
-            
+             
             canvas = FigureCanvasTkAgg(fig, master=win) # umieszczamy nasze okno wykresu fig na naszym głównym oknie root
             canvas._tkcanvas.grid(column=4, row=5, columnspan=8, padx=10, pady=10) # ułożenie naszego okna w głównym oknie
             
             win.update()
             win.deiconify()
+
         def saveGraphPNG():
                 plt.savefig(f"{self.filePath}/raports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
 
