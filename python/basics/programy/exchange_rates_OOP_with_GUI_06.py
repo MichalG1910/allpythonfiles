@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 import sys
 import math
 import pylab
+
+#404 NotFound - Not Found - Brak danych
 class EchangeRates():
     def __init__(self):
         
@@ -57,6 +59,7 @@ class EchangeRates():
         self.firstloopEDL = self.effectiveDateList[-1]
         self.plikRename()  
         self.Num = 1 
+        
 
     def raportOpen(self):
         if not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.endDate.get()):
@@ -97,7 +100,7 @@ class EchangeRates():
                 self.daysLen = -1
             else:
                 self.graphData = self.currencyResponse.json()
-                self.graphData = [self.graphData] 
+                self.graphData = [self.graphData]  
             
     def dataFormatting(self, whichRaport):           
         for dict in self.data:
@@ -126,16 +129,16 @@ class EchangeRates():
 
     def getDataForGraph(self):
         def timeRangeLoop():
-            self.startDate = self.today - datetime.timedelta(days=self.dayRange)
-            self.stepDate = self.startDate + datetime.timedelta(days=self.step)
+            self.runDate = self.today - datetime.timedelta(days=self.dayRange)
+            self.stepDate = self.runDate + datetime.timedelta(days=self.step)
             self.stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
             self.gdList = []
             while self.repeat > 0:  
-                self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{self.startDate}/{self.stepDate}/?format=json") 
+                self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{self.runDate}/{self.stepDate}/?format=json") 
                 self.responseJson()
                 graphData = [dict["rates"] for dict in self.graphData].pop()
                 self.gdList += graphData
-                self.startDate = self.startDate + self.stepTimedelta
+                self.runDate = self.runDate + self.stepTimedelta
                 if self.repeat == 2:
                     date1_list = (list(self.effectiveDateList[-1].split('-')))
                     sdList = [int(i) for i in date1_list] 
@@ -149,8 +152,8 @@ class EchangeRates():
         
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
             self.timeRange30_60_90 = int(self.timeRange.get()[0:2])
-            startDate30_60_90 = self.today - datetime.timedelta(days=self.timeRange30_60_90)
-            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{startDate30_60_90}/{self.today}/?format=json")
+            runDate30_60_90 = self.today - datetime.timedelta(days=self.timeRange30_60_90)
+            self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{runDate30_60_90}/{self.today}/?format=json")
             self.responseJson()
             self.graphData = [dict0["rates"] for dict0 in self.graphData].pop()
         
