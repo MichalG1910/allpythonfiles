@@ -71,7 +71,7 @@ class EchangeRates():
 
             if eDate > self.today or sDate > eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
-            elif str(eDate) != str(self.firstloopEDL):
+            elif str(eDate) > str(self.firstloopEDL):
                 print(self.firstloopEDL, type(self.firstloopEDL))
                 print(eDate, type(eDate))
                 print(self.today, type(self.today))
