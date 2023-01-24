@@ -3,7 +3,7 @@ import requests # import biblioteki requests niezbędnej do pobrania danych z se
 # jeśli python nie widzi jakiejś biblioteki, trzeba ją zainstalować w terminalu:
 # pip install requests
 
-response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
+response = requests.get("https://api.nbp.pl/api/exchangerates/rates/a/gbp/2023-01-01/2023-01-30/?format=json")
 
 if response.ok == True: # sprawdzenie, czy serwer odpowiada poprawnie
     data = response.json()[0] # parsowanie danych z formatu teksowego na format do odczytu w python
