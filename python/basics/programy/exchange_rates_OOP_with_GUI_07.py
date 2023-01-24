@@ -16,6 +16,9 @@ import sys
 import math
 import pylab
 
+
+
+
 #404 NotFound - Not Found - Brak danych
 class EchangeRates():
     def __init__(self):
@@ -204,21 +207,26 @@ class EchangeRates():
             #style = ttk.Style (win)
             #win.tk.call('C:\\Users\\mgrabarz3\\pythonMain\\allpythonfiles\\python\\basics\\programy', 'azure.tcl')
             #style.theme_use('azure.tcl')
+            #win = TKMT.ThemedTKinterFrame("exchange_rates_OOP_with_GUI_07.py","azure","dark")
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            win.tk.call('source', os.path.join(dir_path, 'azure.tcl'))
+            #win.tk.call("source", "azure.tcl")
+            #style.theme_use('dark') 
+            win.tk.call("set_theme", "light")
             
-            win.tk.call("source", "azure.tcl") 
-            win.tk.call("set_theme", "dark")
-            #win.tk.call("set_theme", "light")
             #sv_ttk.set_theme("dark")
             #style.theme_use('vista')  
             #self.win.configure(background="black") 
             #win.overrideredirect(True)
             #win.geometry("{0}x{1}".format(win.winfo_screenwidth(), win.winfo_screenheight()))
             #win.attributes("-zoomed", True) # otwiera pełne okno
+            '''
             if win.winfo_screenwidth() < 1300:
                 win.geometry("900x890")
             else:
-                win.geometry("1680x910")
+                win.geometry("1680x890")
             win.title("Exchange Rates from NBP v1.0")
+            '''
             # https://trinket.io/pygame/f5af3f7500  paleta kolorów
             
             #style = ttk.Style(self.win)
@@ -271,7 +279,7 @@ class EchangeRates():
             axis.set_ylabel("PLN Złoty")
              
             canvas = FigureCanvasTkAgg(fig, master=win) # umieszczamy nasze okno wykresu fig na naszym głównym oknie root
-            canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) # ułożenie naszego okna w głównym oknie
+            canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=5, pady=5) # ułożenie naszego okna w głównym oknie
             
             win.update()
             win.deiconify()
@@ -288,15 +296,15 @@ class EchangeRates():
             self.codeLabel = ttk.Label(echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
             self.valueLabel = ttk.Label(echangeRateFrame, text= "Wartość w PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
             for t in range(33):
-                ttk.Label(echangeRateFrame, background= 'grey19', width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(echangeRateFrame, background= 'grey19', width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(echangeRateFrame, background= "grey19", width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame, background= 'grey77', width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame, background= 'gray77', width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame, background= "gray77", width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
             
         def plotGraphGui():    
             plotGraphFrame = ttk.LabelFrame(win, text= "Rysowanie wykresu", labelanchor="n") # labelanchor="n" wyśrodkuje teks labelframe 
             plotGraphFrame.grid(column=4, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.E)
-            ttk.Label(plotGraphFrame, text= "Waluta ").grid(column=4, row=1, sticky=tk.W, pady=2) 
-            ttk.Label(plotGraphFrame, text= "Przedział czasowy ").grid(column=4, row=2, sticky=tk.W, pady=4)
+            ttk.Label(plotGraphFrame, text= "Waluta ").grid(column=4, row=1, sticky=tk.W, pady=5,padx=5) 
+            ttk.Label(plotGraphFrame, text= "Przedział czasowy ").grid(column=4, row=2, sticky=tk.W, pady=5, padx=5)
                 
             self.currencyName = tk.StringVar()
             codeCurrencyList = []
@@ -304,38 +312,38 @@ class EchangeRates():
                 codeCurrencyList.append(f"{key}  {values}")
             currencyChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.currencyName, state= "readonly")
             currencyChosen["values"] = codeCurrencyList 
-            currencyChosen.grid(column= 5, row= 1, padx=5)
+            currencyChosen.grid(column= 5, row= 1, padx=5,pady=5)
             currencyChosen.current(7)
             
 
             self.timeRange = tk.StringVar() 
             rangeChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.timeRange, state= "readonly")
             rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat") 
-            rangeChosen.grid(column= 5, row= 2, padx=5)
+            rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
             rangeChosen.current(0)
 
-            drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraphGui) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
-            drawGraph.grid(column = 6, row = 1)
-            saveGraph = ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = saveGraphPNG) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
-            saveGraph.grid(column = 6, row = 2)
+            drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraphGui, width=12) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
+            drawGraph.grid(column = 6, row = 1, padx=5)
+            saveGraph = ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = saveGraphPNG, width=12) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
+            saveGraph.grid(column = 6, row = 2, padx=5)
             
         def generateRaportGui():    
             raportFrame = ttk.LabelFrame(win, text= "Generuj raport", labelanchor="n")
             raportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
-            ttk.Label(raportFrame, text= "data początkowa(RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=2) 
-            ttk.Label(raportFrame, text= "data końcowa(RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=4)
+            ttk.Label(raportFrame, text= "data początkowa (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
+            ttk.Label(raportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
                 
             self.startDate = tk.StringVar() 
             startDateBox = ttk.Entry(raportFrame, width= 10, textvariable= self.startDate)
-            startDateBox.grid(column= 8, row= 1, padx=5)
+            startDateBox.grid(column= 8, row= 1, padx=5, pady=5)
                 
             self.endDate = tk.StringVar()
             endDateBox = ttk.Entry(raportFrame, width= 10,  textvariable= self.endDate)
-            endDateBox.grid(column= 8, row= 2, padx=5)
+            endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
             endDateBox.insert(tk.END, self.effectiveDateList[-1])
 
-            createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.raportOpen) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
-            createRaport.grid(column = 9, row = 0 , rowspan=3)
+            createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.raportOpen, width=12) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
+            createRaport.grid(column = 9, row = 0 , rowspan=3, padx=5)
         
         win = tk.Tk()
         winStyle()
