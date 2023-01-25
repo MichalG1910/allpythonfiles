@@ -6,24 +6,17 @@ from tkinter import messagebox as mBox
 #import sv_ttk                                       # biblioteka ze stylem
 import datetime
 import requests
-from matplotlib.figure import Figure
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
-import PIL
-#from PIL import TkImage
-from PIL import Image
 import matplotlib.pyplot as plt
 import sys
 import math
-import pylab
-
-
-
-
-#404 NotFound - Not Found - Brak danych
+from tkinter import PhotoImage
 class EchangeRates():
     def __init__(self):
         
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
+        print(self.filePath)
         self.today = datetime.date.today()
         self.yesterday = self.today - datetime.timedelta(days=1)
         self.Num = 0
@@ -48,7 +41,6 @@ class EchangeRates():
                 os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.effectiveDateList[-1]}.txt" )
         
     def startOpen(self):
-
         if os.path.exists(f"{self.filePath}/raports"):
             pass
         else:
@@ -64,7 +56,7 @@ class EchangeRates():
         self.plikRename()  
         self.Num = 1
         del self.data 
-        
+        del self.response
 
     def raportOpen(self):
         if not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.endDate.get()):
@@ -86,20 +78,20 @@ class EchangeRates():
                 mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
 
             else:
-                self.raport = open(f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
-                
-                sumdays = eDate - sDate
-                self.daysLen = sumdays.days + 1
-                self.responseJson(self.response)
                 if self.response.ok == True:
-                    self.dataFormatting(self.raport)
-                self.daysLen = -1
-                del self.data
-                
-                     
+                    self.raport = open(f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
+                    sumdays = eDate - sDate
+                    self.daysLen = sumdays.days + 1
+                    self.responseJson(self.response)
+                    self.dataFormatting(self.raport)   
+                    self.daysLen = -1
+                    del self.data
+                    del self.raport
+                else:
+                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
+                   
     def responseJson(self, whichResponse):
-        
         if whichResponse.ok == True: # sprawdzenie, czy serwer odpowiada poprawnie
             if self.daysLen >=0:
                 self.data = self.response.json()[0:self.daysLen] # parsowanie danych z formatu teksowego na format do odczytu w python
@@ -110,9 +102,7 @@ class EchangeRates():
             else:
                 self.graphData = self.currencyResponse.json()
                 self.graphData = [self.graphData] 
-        else:
-            mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
-    
+            
     def dataFormatting(self, whichRaport):           
         for dict in self.data:
             self.table = dict["table"]
@@ -167,16 +157,12 @@ class EchangeRates():
                 self.graphMid = rate["mid"]
                 self.graphEffectiveDateList.append(self.graphEffectiveDate)
                 self.graphMidList.append(self.graphMid)
-
+            del self.gdList
+            del self.graphData
 
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
             self.dayRange, self.repeat, self.step = int(self.timeRange.get()[0:2]), 1, int(self.timeRange.get()[0:2])
             timeRangeLoop()
-            #self.timeRange30_60_90 = int(self.timeRange.get()[0:2])
-            #runDate30_60_90 = self.today - datetime.timedelta(days=self.timeRange30_60_90)
-            #self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{runDate30_60_90}/{self.today}/?format=json")
-            #self.responseJson(self.currencyResponse)
-            #self.graphData = [dict0["rates"] for dict0 in self.graphData].pop()
         
         elif self.timeRange.get() == "pół roku":
             self.dayRange, self.repeat, self.step = 182, 2, 91
@@ -196,11 +182,8 @@ class EchangeRates():
             
         elif self.timeRange.get() == "10 lat":
             self.dayRange, self.repeat, self.step = 3640, 40, 91
-            timeRangeLoop()
-
-        
-        
-            
+            timeRangeLoop()   
+    
     def gui(self):
         
         def winStyle():
@@ -212,7 +195,7 @@ class EchangeRates():
             win.tk.call('source', os.path.join(dir_path, 'azure.tcl'))
             #win.tk.call("source", "azure.tcl")
             #style.theme_use('dark') 
-            win.tk.call("set_theme", "light")
+            win.tk.call("set_theme", "dark")
             
             #sv_ttk.set_theme("dark")
             #style.theme_use('vista')  
@@ -269,8 +252,6 @@ class EchangeRates():
             a = math.ceil(xValuesLen / 20)
             b = list(range(1,xValuesLen, a))
             b.append(xValuesLen)
-            print(a)
-            print(b)
             axis.plot(xValues, yValues) # drukowanie wartości na naszym wykresie
             xaxis = axis.get_xaxis()
             xaxis.set_ticks(b)
@@ -283,22 +264,26 @@ class EchangeRates():
             
             win.update()
             win.deiconify()
+            del xValues 
+            del yValues 
+            del self.graphEffectiveDateList
+            del self.graphMidList
 
         def saveGraphPNG():
                 plt.savefig(f"{self.filePath}/raports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
 
         def exchangeRatesTabel():
-
-            echangeRateFrame = ttk.LabelFrame(win, text= f"Średnie kursy walut {self.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-            echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(self.rates)+1), padx=5, sticky=tk.W)
+            self.echangeRateFrame = ttk.LabelFrame(win, text= f"Średnie kursy walut {self.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
+            self.echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(self.rates)+1), padx=5, sticky=tk.W)
             
-            self.currencyLabel = ttk.Label(echangeRateFrame, text= "Waluta:").grid(column=0, row=0, sticky=tk.W, padx=5)
-            self.codeLabel = ttk.Label(echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
-            self.valueLabel = ttk.Label(echangeRateFrame, text= "Wartość w PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
+            self.currencyLabel = ttk.Label(self.echangeRateFrame, text= "Waluta:").grid(column=0, row=0, sticky=tk.W, padx=5)
+            self.codeLabel = ttk.Label(self.echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
+            self.valueLabel = ttk.Label(self.echangeRateFrame, text= "Wartość w PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
+            
             for t in range(33):
-                ttk.Label(echangeRateFrame, background= 'grey77', width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(echangeRateFrame, background= 'gray77', width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(echangeRateFrame, background= "gray77", width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+                self.col1 = ttk.Label(self.echangeRateFrame,  width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                self.col2 = ttk.Label(self.echangeRateFrame,  width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
+                self.col3 = ttk.Label(self.echangeRateFrame,  width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
             
         def plotGraphGui():    
             plotGraphFrame = ttk.LabelFrame(win, text= "Rysowanie wykresu", labelanchor="n") # labelanchor="n" wyśrodkuje teks labelframe 
@@ -345,8 +330,31 @@ class EchangeRates():
             createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.raportOpen, width=12) # tworzymy nasz przycisk, command- odnosi się do naszej funkcji ze zdefiniowanymi 
             createRaport.grid(column = 9, row = 0 , rowspan=3, padx=5)
         
+        def themeButton():
+            def change_theme():
+            
+                if win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+                    win.tk.call("set_theme", "light")
+                    icon1 = PhotoImage(file=f'{self.filePath}/light.png')
+                    self.accentbutton.configure(image=icon1)
+                    self.accentbutton.image = icon1
+                    
+                else:
+                    win.tk.call("set_theme", "dark")
+                    icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
+                    self.accentbutton.configure(image=icon2 )
+                    self.accentbutton.image = icon2
+            
+            icon = PhotoImage(file=f'{self.filePath}/dark.png')
+            self.accentbutton = ttk.Button(win, image=icon, command=change_theme)
+            self.accentbutton.image = icon
+            self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
+            #self.accentbutton = ttk.Button(win, text="dark mode", style="Accent.TButton",command=change_theme, image=photo)
+            #self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
+            
         win = tk.Tk()
         winStyle()
+        themeButton()
         emptyGraph()
         exchangeRatesTabel()
         plotGraphGui()
