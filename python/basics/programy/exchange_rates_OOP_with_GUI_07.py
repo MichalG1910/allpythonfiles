@@ -8,6 +8,8 @@ import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
 from tabulate import tabulate
+import PIL
+import PIL._tkinter_finder 
 class EchangeRates():
     def __init__(self):
         
@@ -187,8 +189,8 @@ class EchangeRates():
         
         def winStyle():
         
-            dir_path = os.path.dirname(os.path.realpath(__file__))
-            win.tk.call('source', os.path.join(dir_path, 'azure.tcl'))
+            #dir_path = os.path.dirname(sys.argv[0])
+            win.tk.call('source', os.path.join(self.filePath, 'azure.tcl'))
             win.tk.call("set_theme", "dark")
             
             #sv_ttk.set_theme("dark")   
