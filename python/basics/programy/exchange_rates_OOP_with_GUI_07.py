@@ -120,7 +120,7 @@ class EchangeRates():
             
             erFrame = pd.DataFrame(erData)
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))            
-            self.fileWrite(str(tabulate(erFrame, showindex=True, headers=erFrame.columns)))
+            self.fileWrite(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             
             print('ilość walut: ',len(self.rates))
             currencyCount = (f"\nilość walut: {len(self.rates)}\n\n")
@@ -334,8 +334,6 @@ class EchangeRates():
                     self.accentbutton.configure(image=icon1)
                     self.accentbutton.image = icon1
                     generateGraphGui()
-                    win.update()
-                    win.deiconify()
                     
                 else:
                     win.tk.call("set_theme", "dark")
@@ -343,9 +341,7 @@ class EchangeRates():
                     self.accentbutton.configure(image=icon2 )
                     self.accentbutton.image = icon2
                     generateGraphGui()
-                    win.update()
-                    win.deiconify()
-            
+                    
             icon = PhotoImage(file=f'{self.filePath}/dark.png')
             self.accentbutton = ttk.Button(win, image=icon, command=change_theme)
             self.accentbutton.image = icon
