@@ -1,17 +1,13 @@
-import re
-import os
+import re, os, sys, math, datetime, requests
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as mBox
+from tkinter import PhotoImage
 #import sv_ttk                                       # biblioteka ze stylem
-import datetime
-import requests
-
+import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
-import sys
-import math
-from tkinter import PhotoImage
+from tabulate import tabulate
 class EchangeRates():
     def __init__(self):
         
@@ -72,9 +68,6 @@ class EchangeRates():
             if eDate > self.today or sDate > eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
             elif str(eDate) > str(self.firstloopEDL):
-                print(self.firstloopEDL, type(self.firstloopEDL))
-                print(eDate, type(eDate))
-                print(self.today, type(self.today))
                 mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
 
             else:
@@ -104,27 +97,33 @@ class EchangeRates():
                 self.graphData = [self.graphData] 
             
     def dataFormatting(self, whichRaport):           
-        for dict in self.data:
-            self.table = dict["table"]
-            self.no = dict["no"]
-            self.effectiveDate= dict["effectiveDate"]
+        for dict1 in self.data:
+            self.table = dict1["table"]
+            self.no = dict1["no"]
+            self.effectiveDate= dict1["effectiveDate"]
             print("\nExchange rates: ", self.table, self.no, self.effectiveDate)
             exchRates = (f"Exchange rates: {self.table}, {self.no}, {self.effectiveDate}\n")
             self.fileWrite(exchRates)
-            self.rates = dict["rates"]
+            self.rates = dict1["rates"]
             self.currencyList, self.codeList, self.valueList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],{}
             self.effectiveDateList.append(self.effectiveDate)
             for rate in self.rates:
                 self.currency = rate["currency"]
                 self.code = rate["code"]
                 self.mid = rate["mid"]
-                print(self.currency, "code: ", self.code, "value: ", self.mid)
-                currencyInfo = (f"{self.currency}, code: {self.code}, value: {self.mid}\n")
-                self.fileWrite(currencyInfo)
                 self.currencyList.append(self.currency), self.codeList.append(self.code), self.valueList.append(self.mid)
                 self.codeCurrencyDict[self.code] = self.currency
+
+            erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
+                      'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
+                      'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
+            
+            erFrame = pd.DataFrame(erData)
+            print(tabulate(erFrame, showindex=True, headers=erFrame.columns))            
+            self.fileWrite(str(tabulate(erFrame, showindex=True, headers=erFrame.columns)))
+            
             print('ilość walut: ',len(self.rates))
-            currencyCount = (f"ilość walut: {len(self.rates)}\n\n")
+            currencyCount = (f"\nilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
         whichRaport.close()
 
@@ -187,19 +186,12 @@ class EchangeRates():
     def gui(self):
         
         def winStyle():
-            #style = ttk.Style (win)
-            #win.tk.call('C:\\Users\\mgrabarz3\\pythonMain\\allpythonfiles\\python\\basics\\programy', 'azure.tcl')
-            #style.theme_use('azure.tcl')
-            #win = TKMT.ThemedTKinterFrame("exchange_rates_OOP_with_GUI_07.py","azure","dark")
+        
             dir_path = os.path.dirname(os.path.realpath(__file__))
             win.tk.call('source', os.path.join(dir_path, 'azure.tcl'))
-            #win.tk.call("source", "azure.tcl")
-            #style.theme_use('dark') 
             win.tk.call("set_theme", "dark")
             
-            #sv_ttk.set_theme("dark")
-            #style.theme_use('vista')  
-            #self.win.configure(background="black") 
+            #sv_ttk.set_theme("dark")   
             #win.overrideredirect(True)
             #win.geometry("{0}x{1}".format(win.winfo_screenwidth(), win.winfo_screenheight()))
             #win.attributes("-zoomed", True) # otwiera pełne okno
@@ -211,7 +203,6 @@ class EchangeRates():
             win.title("Exchange Rates from NBP v1.0")
             '''
             # https://trinket.io/pygame/f5af3f7500  paleta kolorów
-            
             #style = ttk.Style(self.win)
             #self.win.tk.call("source", "https://github.com/rdbende/Azure-ttk-theme")
             #style.theme_use('azure')
@@ -240,11 +231,16 @@ class EchangeRates():
             'seaborn-pastel', 'seaborn-poster', 'seaborn-talk', 'seaborn-ticks', 'seaborn-white', 'seaborn-whitegrid', 
             'tableau-colorblind10']
             '''
-            plt.style.use('dark_background')
+            if win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+                plt.style.use('dark_background')
+                fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
+            else:
+                plt.style.use('Solarize_Light2')
+                fig = plt.figure(figsize=(12,8), facecolor = "lightcyan")
+            
             #fig = Figure(figsize=(12,8), facecolor = "grey") # obiekt (prostokąt 12 x 8 pikseli) - będzie to prostokąt na którym umieścimy wykres
-            fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
             axis = fig.add_subplot(111) # rozmieszczenie naszego wykresu w oknie fig (211- 2 to dwa rzędy w oknie, 1 to jedna kolumna, 1 to umieszczenie wykresu w 1 rzędzie )
-            axis.set_title(f"{self.code.upper()}", fontsize=16, color="white")
+            axis.set_title(f"{self.code.upper()} {self.codeCurrencyDict[self.code.upper()]}", fontsize=16, color="silver")
             axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
             xValues = self.graphEffectiveDateList # wartości na naszym wykresie
             yValues = self.graphMidList
@@ -299,8 +295,7 @@ class EchangeRates():
             currencyChosen["values"] = codeCurrencyList 
             currencyChosen.grid(column= 5, row= 1, padx=5,pady=5)
             currencyChosen.current(7)
-            
-
+        
             self.timeRange = tk.StringVar() 
             rangeChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.timeRange, state= "readonly")
             rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat") 
@@ -338,12 +333,18 @@ class EchangeRates():
                     icon1 = PhotoImage(file=f'{self.filePath}/light.png')
                     self.accentbutton.configure(image=icon1)
                     self.accentbutton.image = icon1
+                    generateGraphGui()
+                    win.update()
+                    win.deiconify()
                     
                 else:
                     win.tk.call("set_theme", "dark")
                     icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
                     self.accentbutton.configure(image=icon2 )
                     self.accentbutton.image = icon2
+                    generateGraphGui()
+                    win.update()
+                    win.deiconify()
             
             icon = PhotoImage(file=f'{self.filePath}/dark.png')
             self.accentbutton = ttk.Button(win, image=icon, command=change_theme)
@@ -354,8 +355,8 @@ class EchangeRates():
             
         win = tk.Tk()
         winStyle()
-        themeButton()
         emptyGraph()
+        themeButton()
         exchangeRatesTabel()
         plotGraphGui()
         generateRaportGui()
