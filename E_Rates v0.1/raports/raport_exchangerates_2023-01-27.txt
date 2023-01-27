@@ -1,0 +1,41 @@
+iloœc sprawdzanych dni: 1
+iloœæ raportów NBP z tych dni (tylko dni pracuj¹ce): 1
+
+Exchange rates: A, 019/A/NBP/2023, 2023-01-27
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1316
+ 2  dolar amerykañski                    USD      4.3252
+ 3  dolar australijski                   AUD      3.0729
+ 4  dolar Hongkongu                      HKD      0.5525
+ 5  dolar kanadyjski                     CAD      3.2479
+ 6  dolar nowozelandzki                  NZD      2.8053
+ 7  dolar singapurski                    SGD      3.2924
+ 8  euro                                 EUR      4.7076
+ 9  forint (Wêgry)                       HUF      0.012125
+10  frank szwajcarski                    CHF      4.6961
+11  funt szterling                       GBP      5.3505
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033309
+14  korona czeska                        CZK      0.1977
+15  korona duñska                        DKK      0.6329
+16  korona islandzka                     ISK      0.030391
+17  korona norweska                      NOK      0.4387
+18  korona szwedzka                      SEK      0.4203
+19  lej rumuñski                         RON      0.9622
+20  lew (Bu³garia)                       BGN      2.4069
+21  lira turecka                         TRY      0.2301
+22  nowy izraelski szekel                ILS      1.2581
+23  peso chilijskie                      CLP      0.005391
+24  peso filipiñskie                     PHP      0.0794
+25  peso meksykañskie                    MXN      0.2304
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2507
+27  real (Brazylia)                      BRL      0.8537
+28  ringgit (Malezja)                    MYR      1.019
+29  rupia indonezyjska                   IDR      0.00028864
+30  rupia indyjska                       INR      0.053054
+31  won po³udniowokoreañski              KRW      0.003504
+32  yuan renminbi (Chiny)                CNY      0.6404
+33  SDR (MFW)                            XDR      5.8442
+iloœæ walut: 33
+

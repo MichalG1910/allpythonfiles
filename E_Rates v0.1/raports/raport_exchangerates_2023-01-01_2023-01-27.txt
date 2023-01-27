@@ -1,0 +1,725 @@
+iloœc sprawdzanych dni: 27
+iloœæ raportów NBP z tych dni (tylko dni pracuj¹ce): 19
+
+Exchange rates: A, 001/A/NBP/2023, 2023-01-02
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1267
+ 2  dolar amerykañski                    USD      4.3811
+ 3  dolar australijski                   AUD      2.9767
+ 4  dolar Hongkongu                      HKD      0.5615
+ 5  dolar kanadyjski                     CAD      3.2306
+ 6  dolar nowozelandzki                  NZD      2.7713
+ 7  dolar singapurski                    SGD      3.2665
+ 8  euro                                 EUR      4.6784
+ 9  forint (Wêgry)                       HUF      0.011676
+10  frank szwajcarski                    CHF      4.7379
+11  funt szterling                       GBP      5.2768
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033469
+14  korona czeska                        CZK      0.1936
+15  korona duñska                        DKK      0.629
+16  korona islandzka                     ISK      0.030881
+17  korona norweska                      NOK      0.4448
+18  korona szwedzka                      SEK      0.4187
+19  lej rumuñski                         RON      0.9463
+20  lew (Bu³garia)                       BGN      2.392
+21  lira turecka                         TRY      0.234
+22  nowy izraelski szekel                ILS      1.2441
+23  peso chilijskie                      CLP      0.005165
+24  peso filipiñskie                     PHP      0.0785
+25  peso meksykañskie                    MXN      0.2246
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2578
+27  real (Brazylia)                      BRL      0.8287
+28  ringgit (Malezja)                    MYR      0.9946
+29  rupia indonezyjska                   IDR      0.00028134
+30  rupia indyjska                       INR      0.052945
+31  won po³udniowokoreañski              KRW      0.003447
+32  yuan renminbi (Chiny)                CNY      0.6355
+33  SDR (MFW)                            XDR      5.8589
+iloœæ walut: 33
+
+Exchange rates: A, 002/A/NBP/2023, 2023-01-03
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.129
+ 2  dolar amerykañski                    USD      4.4373
+ 3  dolar australijski                   AUD      2.9825
+ 4  dolar Hongkongu                      HKD      0.5679
+ 5  dolar kanadyjski                     CAD      3.2593
+ 6  dolar nowozelandzki                  NZD      2.7722
+ 7  dolar singapurski                    SGD      3.3018
+ 8  euro                                 EUR      4.68
+ 9  forint (Wêgry)                       HUF      0.011619
+10  frank szwajcarski                    CHF      4.7342
+11  funt szterling                       GBP      5.2911
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.03402
+14  korona czeska                        CZK      0.1939
+15  korona duñska                        DKK      0.6293
+16  korona islandzka                     ISK      0.03085
+17  korona norweska                      NOK      0.4467
+18  korona szwedzka                      SEK      0.4208
+19  lej rumuñski                         RON      0.9489
+20  lew (Bu³garia)                       BGN      2.3928
+21  lira turecka                         TRY      0.2369
+22  nowy izraelski szekel                ILS      1.2555
+23  peso chilijskie                      CLP      0.005231
+24  peso filipiñskie                     PHP      0.0795
+25  peso meksykañskie                    MXN      0.228
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2601
+27  real (Brazylia)                      BRL      0.8273
+28  ringgit (Malezja)                    MYR      1.0071
+29  rupia indonezyjska                   IDR      0.00028449
+30  rupia indyjska                       INR      0.053534
+31  won po³udniowokoreañski              KRW      0.003475
+32  yuan renminbi (Chiny)                CNY      0.6428
+33  SDR (MFW)                            XDR      5.8609
+iloœæ walut: 33
+
+Exchange rates: A, 003/A/NBP/2023, 2023-01-04
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1292
+ 2  dolar amerykañski                    USD      4.3998
+ 3  dolar australijski                   AUD      3.0231
+ 4  dolar Hongkongu                      HKD      0.5628
+ 5  dolar kanadyjski                     CAD      3.2457
+ 6  dolar nowozelandzki                  NZD      2.7841
+ 7  dolar singapurski                    SGD      3.2856
+ 8  euro                                 EUR      4.6688
+ 9  forint (Wêgry)                       HUF      0.011752
+10  frank szwajcarski                    CHF      4.7454
+11  funt szterling                       GBP      5.3064
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033735
+14  korona czeska                        CZK      0.1941
+15  korona duñska                        DKK      0.6277
+16  korona islandzka                     ISK      0.030777
+17  korona norweska                      NOK      0.4367
+18  korona szwedzka                      SEK      0.4175
+19  lej rumuñski                         RON      0.9471
+20  lew (Bu³garia)                       BGN      2.3871
+21  lira turecka                         TRY      0.2348
+22  nowy izraelski szekel                ILS      1.2495
+23  peso chilijskie                      CLP      0.005099
+24  peso filipiñskie                     PHP      0.0788
+25  peso meksykañskie                    MXN      0.2276
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2618
+27  real (Brazylia)                      BRL      0.8029
+28  ringgit (Malezja)                    MYR      0.9998
+29  rupia indonezyjska                   IDR      0.00028226
+30  rupia indyjska                       INR      0.053141
+31  won po³udniowokoreañski              KRW      0.00346
+32  yuan renminbi (Chiny)                CNY      0.6396
+33  SDR (MFW)                            XDR      5.8875
+iloœæ walut: 33
+
+Exchange rates: A, 004/A/NBP/2023, 2023-01-05
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1295
+ 2  dolar amerykañski                    USD      4.397
+ 3  dolar australijski                   AUD      3.0008
+ 4  dolar Hongkongu                      HKD      0.5629
+ 5  dolar kanadyjski                     CAD      3.2555
+ 6  dolar nowozelandzki                  NZD      2.7613
+ 7  dolar singapurski                    SGD      3.2831
+ 8  euro                                 EUR      4.6709
+ 9  forint (Wêgry)                       HUF      0.011809
+10  frank szwajcarski                    CHF      4.7437
+11  funt szterling                       GBP      5.2892
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033172
+14  korona czeska                        CZK      0.1946
+15  korona duñska                        DKK      0.628
+16  korona islandzka                     ISK      0.03079
+17  korona norweska                      NOK      0.437
+18  korona szwedzka                      SEK      0.4182
+19  lej rumuñski                         RON      0.948
+20  lew (Bu³garia)                       BGN      2.3882
+21  lira turecka                         TRY      0.2344
+22  nowy izraelski szekel                ILS      1.2476
+23  peso chilijskie                      CLP      0.00514
+24  peso filipiñskie                     PHP      0.0788
+25  peso meksykañskie                    MXN      0.2273
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.259
+27  real (Brazylia)                      BRL      0.8095
+28  ringgit (Malezja)                    MYR      1.002
+29  rupia indonezyjska                   IDR      0.00028172
+30  rupia indyjska                       INR      0.053266
+31  won po³udniowokoreañski              KRW      0.003463
+32  yuan renminbi (Chiny)                CNY      0.6397
+33  SDR (MFW)                            XDR      5.8821
+iloœæ walut: 33
+
+Exchange rates: A, 005/A/NBP/2023, 2023-01-09
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1314
+ 2  dolar amerykañski                    USD      4.401
+ 3  dolar australijski                   AUD      3.0479
+ 4  dolar Hongkongu                      HKD      0.5638
+ 5  dolar kanadyjski                     CAD      3.2863
+ 6  dolar nowozelandzki                  NZD      2.8127
+ 7  dolar singapurski                    SGD      3.3019
+ 8  euro                                 EUR      4.697
+ 9  forint (Wêgry)                       HUF      0.011816
+10  frank szwajcarski                    CHF      4.7606
+11  funt szterling                       GBP      5.3515
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.03323
+14  korona czeska                        CZK      0.1957
+15  korona duñska                        DKK      0.6315
+16  korona islandzka                     ISK      0.030719
+17  korona norweska                      NOK      0.4429
+18  korona szwedzka                      SEK      0.42
+19  lej rumuñski                         RON      0.9538
+20  lew (Bu³garia)                       BGN      2.4015
+21  lira turecka                         TRY      0.2344
+22  nowy izraelski szekel                ILS      1.2539
+23  peso chilijskie                      CLP      0.005231
+24  peso filipiñskie                     PHP      0.0799
+25  peso meksykañskie                    MXN      0.23
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2581
+27  real (Brazylia)                      BRL      0.8422
+28  ringgit (Malezja)                    MYR      1.0059
+29  rupia indonezyjska                   IDR      0.00028272
+30  rupia indyjska                       INR      0.053441
+31  won po³udniowokoreañski              KRW      0.003534
+32  yuan renminbi (Chiny)                CNY      0.649
+33  SDR (MFW)                            XDR      5.9329
+iloœæ walut: 33
+
+Exchange rates: A, 006/A/NBP/2023, 2023-01-10
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1304
+ 2  dolar amerykañski                    USD      4.372
+ 3  dolar australijski                   AUD      3.0165
+ 4  dolar Hongkongu                      HKD      0.56
+ 5  dolar kanadyjski                     CAD      3.2668
+ 6  dolar nowozelandzki                  NZD      2.7901
+ 7  dolar singapurski                    SGD      3.286
+ 8  euro                                 EUR      4.6981
+ 9  forint (Wêgry)                       HUF      0.011795
+10  frank szwajcarski                    CHF      4.7525
+11  funt szterling                       GBP      5.3266
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033165
+14  korona czeska                        CZK      0.1958
+15  korona duñska                        DKK      0.6317
+16  korona islandzka                     ISK      0.030369
+17  korona norweska                      NOK      0.4401
+18  korona szwedzka                      SEK      0.4203
+19  lej rumuñski                         RON      0.9539
+20  lew (Bu³garia)                       BGN      2.4021
+21  lira turecka                         TRY      0.2328
+22  nowy izraelski szekel                ILS      1.2603
+23  peso chilijskie                      CLP      0.005232
+24  peso filipiñskie                     PHP      0.0798
+25  peso meksykañskie                    MXN      0.2289
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2568
+27  real (Brazylia)                      BRL      0.8319
+28  ringgit (Malezja)                    MYR      0.9998
+29  rupia indonezyjska                   IDR      0.00028075
+30  rupia indyjska                       INR      0.053471
+31  won po³udniowokoreañski              KRW      0.003513
+32  yuan renminbi (Chiny)                CNY      0.6453
+33  SDR (MFW)                            XDR      5.8816
+iloœæ walut: 33
+
+Exchange rates: A, 007/A/NBP/2023, 2023-01-11
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1308
+ 2  dolar amerykañski                    USD      4.3639
+ 3  dolar australijski                   AUD      3.0161
+ 4  dolar Hongkongu                      HKD      0.5585
+ 5  dolar kanadyjski                     CAD      3.251
+ 6  dolar nowozelandzki                  NZD      2.7794
+ 7  dolar singapurski                    SGD      3.2772
+ 8  euro                                 EUR      4.6871
+ 9  forint (Wêgry)                       HUF      0.011715
+10  frank szwajcarski                    CHF      4.7266
+11  funt szterling                       GBP      5.2938
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.032935
+14  korona czeska                        CZK      0.1951
+15  korona duñska                        DKK      0.6302
+16  korona islandzka                     ISK      0.030298
+17  korona norweska                      NOK      0.4371
+18  korona szwedzka                      SEK      0.4174
+19  lej rumuñski                         RON      0.9502
+20  lew (Bu³garia)                       BGN      2.3965
+21  lira turecka                         TRY      0.2324
+22  nowy izraelski szekel                ILS      1.2617
+23  peso chilijskie                      CLP      0.005277
+24  peso filipiñskie                     PHP      0.0795
+25  peso meksykañskie                    MXN      0.2289
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2567
+27  real (Brazylia)                      BRL      0.8392
+28  ringgit (Malezja)                    MYR      0.9984
+29  rupia indonezyjska                   IDR      0.00028186
+30  rupia indyjska                       INR      0.053471
+31  won po³udniowokoreañski              KRW      0.003501
+32  yuan renminbi (Chiny)                CNY      0.6445
+33  SDR (MFW)                            XDR      5.8634
+iloœæ walut: 33
+
+Exchange rates: A, 008/A/NBP/2023, 2023-01-12
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1306
+ 2  dolar amerykañski                    USD      4.3556
+ 3  dolar australijski                   AUD      3.0108
+ 4  dolar Hongkongu                      HKD      0.5578
+ 5  dolar kanadyjski                     CAD      3.2445
+ 6  dolar nowozelandzki                  NZD      2.7707
+ 7  dolar singapurski                    SGD      3.276
+ 8  euro                                 EUR      4.6888
+ 9  forint (Wêgry)                       HUF      0.011744
+10  frank szwajcarski                    CHF      4.6773
+11  funt szterling                       GBP      5.3035
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033257
+14  korona czeska                        CZK      0.1951
+15  korona duñska                        DKK      0.6304
+16  korona islandzka                     ISK      0.030388
+17  korona norweska                      NOK      0.4355
+18  korona szwedzka                      SEK      0.4151
+19  lej rumuñski                         RON      0.9498
+20  lew (Bu³garia)                       BGN      2.3973
+21  lira turecka                         TRY      0.2319
+22  nowy izraelski szekel                ILS      1.2644
+23  peso chilijskie                      CLP      0.005288
+24  peso filipiñskie                     PHP      0.0788
+25  peso meksykañskie                    MXN      0.2305
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2584
+27  real (Brazylia)                      BRL      0.8441
+28  ringgit (Malezja)                    MYR      0.9992
+29  rupia indonezyjska                   IDR      0.00028398
+30  rupia indyjska                       INR      0.0534
+31  won po³udniowokoreañski              KRW      0.003497
+32  yuan renminbi (Chiny)                CNY      0.646
+33  SDR (MFW)                            XDR      5.8526
+iloœæ walut: 33
+
+Exchange rates: A, 009/A/NBP/2023, 2023-01-13
+    currency:                            code:       value:
+--  -----------------------------------  -------  ---------
+ 1  bat (Tajlandia)                      THB      0.1312
+ 2  dolar amerykañski                    USD      4.3272
+ 3  dolar australijski                   AUD      3.0183
+ 4  dolar Hongkongu                      HKD      0.554
+ 5  dolar kanadyjski                     CAD      3.2417
+ 6  dolar nowozelandzki                  NZD      2.7666
+ 7  dolar singapurski                    SGD      3.2741
+ 8  euro                                 EUR      4.6915
+ 9  forint (Wêgry)                       HUF      0.011842
+10  frank szwajcarski                    CHF      4.66
+11  funt szterling                       GBP      5.291
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033661
+14  korona czeska                        CZK      0.1953
+15  korona duñska                        DKK      0.6306
+16  korona islandzka                     ISK      0.030405
+17  korona norweska                      NOK      0.4385
+18  korona szwedzka                      SEK      0.4161
+19  lej rumuñski                         RON      0.9496
+20  lew (Bu³garia)                       BGN      2.3987
+21  lira turecka                         TRY      0.2303
+22  nowy izraelski szekel                ILS      1.2685
+23  peso chilijskie                      CLP      0.005286
+24  peso filipiñskie                     PHP      0.0789
+25  peso meksykañskie                    MXN      0.2298
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2576
+27  real (Brazylia)                      BRL      0.847
+28  ringgit (Malezja)                    MYR      0.9979
+29  rupia indonezyjska                   IDR      0.0002857
+30  rupia indyjska                       INR      0.0532
+31  won po³udniowokoreañski              KRW      0.003497
+32  yuan renminbi (Chiny)                CNY      0.6443
+33  SDR (MFW)                            XDR      5.8544
+iloœæ walut: 33
+
+Exchange rates: A, 010/A/NBP/2023, 2023-01-16
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1317
+ 2  dolar amerykañski                    USD      4.3436
+ 3  dolar australijski                   AUD      3.025
+ 4  dolar Hongkongu                      HKD      0.5561
+ 5  dolar kanadyjski                     CAD      3.2429
+ 6  dolar nowozelandzki                  NZD      2.7772
+ 7  dolar singapurski                    SGD      3.29
+ 8  euro                                 EUR      4.7004
+ 9  forint (Wêgry)                       HUF      0.011779
+10  frank szwajcarski                    CHF      4.6959
+11  funt szterling                       GBP      5.2998
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033837
+14  korona czeska                        CZK      0.1958
+15  korona duñska                        DKK      0.6318
+16  korona islandzka                     ISK      0.030463
+17  korona norweska                      NOK      0.4388
+18  korona szwedzka                      SEK      0.4171
+19  lej rumuñski                         RON      0.9505
+20  lew (Bu³garia)                       BGN      2.4033
+21  lira turecka                         TRY      0.2313
+22  nowy izraelski szekel                ILS      1.2699
+23  peso chilijskie                      CLP      0.005313
+24  peso filipiñskie                     PHP      0.0797
+25  peso meksykañskie                    MXN      0.2305
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2544
+27  real (Brazylia)                      BRL      0.8524
+28  ringgit (Malezja)                    MYR      1.0064
+29  rupia indonezyjska                   IDR      0.00028871
+30  rupia indyjska                       INR      0.053218
+31  won po³udniowokoreañski              KRW      0.003512
+32  yuan renminbi (Chiny)                CNY      0.6456
+33  SDR (MFW)                            XDR      5.861
+iloœæ walut: 33
+
+Exchange rates: A, 011/A/NBP/2023, 2023-01-17
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1311
+ 2  dolar amerykañski                    USD      4.3398
+ 3  dolar australijski                   AUD      3.0164
+ 4  dolar Hongkongu                      HKD      0.5551
+ 5  dolar kanadyjski                     CAD      3.2321
+ 6  dolar nowozelandzki                  NZD      2.7753
+ 7  dolar singapurski                    SGD      3.2795
+ 8  euro                                 EUR      4.6946
+ 9  forint (Wêgry)                       HUF      0.011763
+10  frank szwajcarski                    CHF      4.7005
+11  funt szterling                       GBP      5.2992
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033697
+14  korona czeska                        CZK      0.1956
+15  korona duñska                        DKK      0.6311
+16  korona islandzka                     ISK      0.030386
+17  korona norweska                      NOK      0.4373
+18  korona szwedzka                      SEK      0.4161
+19  lej rumuñski                         RON      0.9521
+20  lew (Bu³garia)                       BGN      2.4003
+21  lira turecka                         TRY      0.231
+22  nowy izraelski szekel                ILS      1.2682
+23  peso chilijskie                      CLP      0.005275
+24  peso filipiñskie                     PHP      0.0792
+25  peso meksykañskie                    MXN      0.2311
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2535
+27  real (Brazylia)                      BRL      0.843
+28  ringgit (Malezja)                    MYR      1.0031
+29  rupia indonezyjska                   IDR      0.00028617
+30  rupia indyjska                       INR      0.053076
+31  won po³udniowokoreañski              KRW      0.003504
+32  yuan renminbi (Chiny)                CNY      0.6406
+33  SDR (MFW)                            XDR      5.8537
+iloœæ walut: 33
+
+Exchange rates: A, 012/A/NBP/2023, 2023-01-18
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1319
+ 2  dolar amerykañski                    USD      4.3322
+ 3  dolar australijski                   AUD      3.0435
+ 4  dolar Hongkongu                      HKD      0.5536
+ 5  dolar kanadyjski                     CAD      3.2428
+ 6  dolar nowozelandzki                  NZD      2.8103
+ 7  dolar singapurski                    SGD      3.2942
+ 8  euro                                 EUR      4.7091
+ 9  forint (Wêgry)                       HUF      0.011927
+10  frank szwajcarski                    CHF      4.7449
+11  funt szterling                       GBP      5.3543
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033479
+14  korona czeska                        CZK      0.1964
+15  korona duñska                        DKK      0.6331
+16  korona islandzka                     ISK      0.03048
+17  korona norweska                      NOK      0.4414
+18  korona szwedzka                      SEK      0.421
+19  lej rumuñski                         RON      0.9545
+20  lew (Bu³garia)                       BGN      2.4077
+21  lira turecka                         TRY      0.2305
+22  nowy izraelski szekel                ILS      1.2825
+23  peso chilijskie                      CLP      0.005315
+24  peso filipiñskie                     PHP      0.0794
+25  peso meksykañskie                    MXN      0.2332
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.256
+27  real (Brazylia)                      BRL      0.8493
+28  ringgit (Malezja)                    MYR      1.0043
+29  rupia indonezyjska                   IDR      0.00028714
+30  rupia indyjska                       INR      0.053314
+31  won po³udniowokoreañski              KRW      0.003515
+32  yuan renminbi (Chiny)                CNY      0.6415
+33  SDR (MFW)                            XDR      5.8575
+iloœæ walut: 33
+
+Exchange rates: A, 013/A/NBP/2023, 2023-01-19
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1316
+ 2  dolar amerykañski                    USD      4.3469
+ 3  dolar australijski                   AUD      2.9922
+ 4  dolar Hongkongu                      HKD      0.555
+ 5  dolar kanadyjski                     CAD      3.2165
+ 6  dolar nowozelandzki                  NZD      2.7762
+ 7  dolar singapurski                    SGD      3.2798
+ 8  euro                                 EUR      4.7053
+ 9  forint (Wêgry)                       HUF      0.011902
+10  frank szwajcarski                    CHF      4.7437
+11  funt szterling                       GBP      5.3625
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033873
+14  korona czeska                        CZK      0.1965
+15  korona duñska                        DKK      0.6324
+16  korona islandzka                     ISK      0.030455
+17  korona norweska                      NOK      0.4385
+18  korona szwedzka                      SEK      0.4238
+19  lej rumuñski                         RON      0.9544
+20  lew (Bu³garia)                       BGN      2.4058
+21  lira turecka                         TRY      0.2312
+22  nowy izraelski szekel                ILS      1.281
+23  peso chilijskie                      CLP      0.005275
+24  peso filipiñskie                     PHP      0.0795
+25  peso meksykañskie                    MXN      0.2291
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.252
+27  real (Brazylia)                      BRL      0.838
+28  ringgit (Malezja)                    MYR      1.009
+29  rupia indonezyjska                   IDR      0.00028778
+30  rupia indyjska                       INR      0.053425
+31  won po³udniowokoreañski              KRW      0.003513
+32  yuan renminbi (Chiny)                CNY      0.6407
+33  SDR (MFW)                            XDR      5.8595
+iloœæ walut: 33
+
+Exchange rates: A, 014/A/NBP/2023, 2023-01-20
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1326
+ 2  dolar amerykañski                    USD      4.352
+ 3  dolar australijski                   AUD      3.0169
+ 4  dolar Hongkongu                      HKD      0.5556
+ 5  dolar kanadyjski                     CAD      3.2311
+ 6  dolar nowozelandzki                  NZD      2.7919
+ 7  dolar singapurski                    SGD      3.2908
+ 8  euro                                 EUR      4.7137
+ 9  forint (Wêgry)                       HUF      0.011907
+10  frank szwajcarski                    CHF      4.7281
+11  funt szterling                       GBP      5.3711
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033614
+14  korona czeska                        CZK      0.1969
+15  korona duñska                        DKK      0.6336
+16  korona islandzka                     ISK      0.030509
+17  korona norweska                      NOK      0.4401
+18  korona szwedzka                      SEK      0.4221
+19  lej rumuñski                         RON      0.9569
+20  lew (Bu³garia)                       BGN      2.4101
+21  lira turecka                         TRY      0.2315
+22  nowy izraelski szekel                ILS      1.2764
+23  peso chilijskie                      CLP      0.005283
+24  peso filipiñskie                     PHP      0.0799
+25  peso meksykañskie                    MXN      0.2293
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2514
+27  real (Brazylia)                      BRL      0.841
+28  ringgit (Malezja)                    MYR      1.0155
+29  rupia indonezyjska                   IDR      0.00028869
+30  rupia indyjska                       INR      0.053646
+31  won po³udniowokoreañski              KRW      0.003524
+32  yuan renminbi (Chiny)                CNY      0.6416
+33  SDR (MFW)                            XDR      5.8803
+iloœæ walut: 33
+
+Exchange rates: A, 015/A/NBP/2023, 2023-01-23
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1321
+ 2  dolar amerykañski                    USD      4.3242
+ 3  dolar australijski                   AUD      3.0305
+ 4  dolar Hongkongu                      HKD      0.5523
+ 5  dolar kanadyjski                     CAD      3.2389
+ 6  dolar nowozelandzki                  NZD      2.8081
+ 7  dolar singapurski                    SGD      3.2849
+ 8  euro                                 EUR      4.7186
+ 9  forint (Wêgry)                       HUF      0.011958
+10  frank szwajcarski                    CHF      4.7118
+11  funt szterling                       GBP      5.3648
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033307
+14  korona czeska                        CZK      0.1974
+15  korona duñska                        DKK      0.6342
+16  korona islandzka                     ISK      0.030541
+17  korona norweska                      NOK      0.4417
+18  korona szwedzka                      SEK      0.4235
+19  lej rumuñski                         RON      0.959
+20  lew (Bu³garia)                       BGN      2.4126
+21  lira turecka                         TRY      0.2299
+22  nowy izraelski szekel                ILS      1.2804
+23  peso chilijskie                      CLP      0.005304
+24  peso filipiñskie                     PHP      0.0792
+25  peso meksykañskie                    MXN      0.2297
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.252
+27  real (Brazylia)                      BRL      0.8303
+28  ringgit (Malezja)                    MYR      1.009
+29  rupia indonezyjska                   IDR      0.00028685
+30  rupia indyjska                       INR      0.053138
+31  won po³udniowokoreañski              KRW      0.003523
+32  yuan renminbi (Chiny)                CNY      0.6419
+33  SDR (MFW)                            XDR      5.8763
+iloœæ walut: 33
+
+Exchange rates: A, 016/A/NBP/2023, 2023-01-24
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.132
+ 2  dolar amerykañski                    USD      4.3341
+ 3  dolar australijski                   AUD      3.0422
+ 4  dolar Hongkongu                      HKD      0.5534
+ 5  dolar kanadyjski                     CAD      3.2421
+ 6  dolar nowozelandzki                  NZD      2.8107
+ 7  dolar singapurski                    SGD      3.2832
+ 8  euro                                 EUR      4.7073
+ 9  forint (Wêgry)                       HUF      0.011863
+10  frank szwajcarski                    CHF      4.7014
+11  funt szterling                       GBP      5.3443
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033311
+14  korona czeska                        CZK      0.1972
+15  korona duñska                        DKK      0.6328
+16  korona islandzka                     ISK      0.030389
+17  korona norweska                      NOK      0.4405
+18  korona szwedzka                      SEK      0.4244
+19  lej rumuñski                         RON      0.9567
+20  lew (Bu³garia)                       BGN      2.4068
+21  lira turecka                         TRY      0.2305
+22  nowy izraelski szekel                ILS      1.2862
+23  peso chilijskie                      CLP      0.005329
+24  peso filipiñskie                     PHP      0.0796
+25  peso meksykañskie                    MXN      0.23
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2509
+27  real (Brazylia)                      BRL      0.8322
+28  ringgit (Malezja)                    MYR      1.0113
+29  rupia indonezyjska                   IDR      0.00029113
+30  rupia indyjska                       INR      0.05305
+31  won po³udniowokoreañski              KRW      0.003509
+32  yuan renminbi (Chiny)                CNY      0.6404
+33  SDR (MFW)                            XDR      5.8464
+iloœæ walut: 33
+
+Exchange rates: A, 017/A/NBP/2023, 2023-01-25
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1319
+ 2  dolar amerykañski                    USD      4.3265
+ 3  dolar australijski                   AUD      3.068
+ 4  dolar Hongkongu                      HKD      0.5523
+ 5  dolar kanadyjski                     CAD      3.2344
+ 6  dolar nowozelandzki                  NZD      2.8033
+ 7  dolar singapurski                    SGD      3.288
+ 8  euro                                 EUR      4.7079
+ 9  forint (Wêgry)                       HUF      0.012091
+10  frank szwajcarski                    CHF      4.687
+11  funt szterling                       GBP      5.3263
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.03332
+14  korona czeska                        CZK      0.1975
+15  korona duñska                        DKK      0.6329
+16  korona islandzka                     ISK      0.029968
+17  korona norweska                      NOK      0.4379
+18  korona szwedzka                      SEK      0.4228
+19  lej rumuñski                         RON      0.9608
+20  lew (Bu³garia)                       BGN      2.4071
+21  lira turecka                         TRY      0.2301
+22  nowy izraelski szekel                ILS      1.2898
+23  peso chilijskie                      CLP      0.005398
+24  peso filipiñskie                     PHP      0.0793
+25  peso meksykañskie                    MXN      0.2305
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2515
+27  real (Brazylia)                      BRL      0.8418
+28  ringgit (Malezja)                    MYR      1.0153
+29  rupia indonezyjska                   IDR      0.00028911
+30  rupia indyjska                       INR      0.053032
+31  won po³udniowokoreañski              KRW      0.003508
+32  yuan renminbi (Chiny)                CNY      0.6405
+33  SDR (MFW)                            XDR      5.8503
+iloœæ walut: 33
+
+Exchange rates: A, 018/A/NBP/2023, 2023-01-26
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1323
+ 2  dolar amerykañski                    USD      4.3354
+ 3  dolar australijski                   AUD      3.0799
+ 4  dolar Hongkongu                      HKD      0.5537
+ 5  dolar kanadyjski                     CAD      3.2351
+ 6  dolar nowozelandzki                  NZD      2.8079
+ 7  dolar singapurski                    SGD      3.3034
+ 8  euro                                 EUR      4.7239
+ 9  forint (Wêgry)                       HUF      0.01216
+10  frank szwajcarski                    CHF      4.7142
+11  funt szterling                       GBP      5.369
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033362
+14  korona czeska                        CZK      0.1987
+15  korona duñska                        DKK      0.6351
+16  korona islandzka                     ISK      0.030069
+17  korona norweska                      NOK      0.4389
+18  korona szwedzka                      SEK      0.4233
+19  lej rumuñski                         RON      0.9671
+20  lew (Bu³garia)                       BGN      2.4153
+21  lira turecka                         TRY      0.2305
+22  nowy izraelski szekel                ILS      1.2791
+23  peso chilijskie                      CLP      0.005396
+24  peso filipiñskie                     PHP      0.0797
+25  peso meksykañskie                    MXN      0.2305
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2537
+27  real (Brazylia)                      BRL      0.8545
+28  ringgit (Malezja)                    MYR      1.0212
+29  rupia indonezyjska                   IDR      0.00029004
+30  rupia indyjska                       INR      0.053164
+31  won po³udniowokoreañski              KRW      0.003514
+32  yuan renminbi (Chiny)                CNY      0.6426
+33  SDR (MFW)                            XDR      5.8612
+iloœæ walut: 33
+
+Exchange rates: A, 019/A/NBP/2023, 2023-01-27
+    currency:                            code:        value:
+--  -----------------------------------  -------  ----------
+ 1  bat (Tajlandia)                      THB      0.1316
+ 2  dolar amerykañski                    USD      4.3252
+ 3  dolar australijski                   AUD      3.0729
+ 4  dolar Hongkongu                      HKD      0.5525
+ 5  dolar kanadyjski                     CAD      3.2479
+ 6  dolar nowozelandzki                  NZD      2.8053
+ 7  dolar singapurski                    SGD      3.2924
+ 8  euro                                 EUR      4.7076
+ 9  forint (Wêgry)                       HUF      0.012125
+10  frank szwajcarski                    CHF      4.6961
+11  funt szterling                       GBP      5.3505
+12  hrywna (Ukraina)                     UAH      0.1258
+13  jen (Japonia)                        JPY      0.033309
+14  korona czeska                        CZK      0.1977
+15  korona duñska                        DKK      0.6329
+16  korona islandzka                     ISK      0.030391
+17  korona norweska                      NOK      0.4387
+18  korona szwedzka                      SEK      0.4203
+19  lej rumuñski                         RON      0.9622
+20  lew (Bu³garia)                       BGN      2.4069
+21  lira turecka                         TRY      0.2301
+22  nowy izraelski szekel                ILS      1.2581
+23  peso chilijskie                      CLP      0.005391
+24  peso filipiñskie                     PHP      0.0794
+25  peso meksykañskie                    MXN      0.2304
+26  rand (Republika Po³udniowej Afryki)  ZAR      0.2507
+27  real (Brazylia)                      BRL      0.8537
+28  ringgit (Malezja)                    MYR      1.019
+29  rupia indonezyjska                   IDR      0.00028864
+30  rupia indyjska                       INR      0.053054
+31  won po³udniowokoreañski              KRW      0.003504
+32  yuan renminbi (Chiny)                CNY      0.6404
+33  SDR (MFW)                            XDR      5.8442
+iloœæ walut: 33
+
