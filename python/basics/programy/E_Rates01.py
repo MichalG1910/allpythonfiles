@@ -52,9 +52,9 @@ class EchangeRates():
         self.firstloopEDL = self.effectiveDateList[-1]
         self.plikRename()  
         self.Num = 1
-        del self.data, self.response
-        
-
+        del self.data, self.response 
+        self.start = None
+    
     def raportOpen(self):
         if not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
@@ -89,7 +89,7 @@ class EchangeRates():
         if whichResponse.ok == True:
             if self.daysLen >=0:
                 self.data = self.response.json()[0:self.daysLen] 
-                print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
+                
                 daysResponse = (f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n\n')
                 self.fileWrite(daysResponse)
                 self.daysLen = -1
@@ -97,7 +97,11 @@ class EchangeRates():
                 self.graphData = self.currencyResponse.json()
                 self.graphData = [self.graphData] 
             
-    def dataFormatting(self, whichRaport):           
+    def dataFormatting(self, whichRaport):
+        if whichRaport != self.start:
+            self.excel = open(f"{self.filePath}/raports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")           
+            self.excel.write(f"currency,code,value,date\n")
+
         for dict1 in self.data:
             self.table = dict1["table"]
             self.no = dict1["no"]
@@ -114,6 +118,9 @@ class EchangeRates():
                 self.mid = rate["mid"]
                 self.currencyList.append(self.currency), self.codeList.append(self.code), self.valueList.append(self.mid)
                 self.codeCurrencyDict[self.code] = self.currency
+                if whichRaport != self.start:
+                    self.excel.write(f"{self.currency},{self.code},{self.effectiveDate},{self.mid}\n")
+
 
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
@@ -126,7 +133,11 @@ class EchangeRates():
             print('ilość walut: ',len(self.rates))
             currencyCount = (f"\nilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
+        if whichRaport != self.start:
+            self.excel.close()
         whichRaport.close()
+    def terminlPrint(self):
+        print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
 
     def getDataForGraph(self):
         self.code = (self.currencyName.get()[0:3]).lower()
