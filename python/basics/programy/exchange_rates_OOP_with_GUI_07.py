@@ -57,7 +57,7 @@ class EchangeRates():
         del self.response
 
     def raportOpen(self):
-        if not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([0-2][0-9]|3[0-1])$",self.endDate.get()):
+        if not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[0-9]|1[0-2])[-]([1-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
         else:
             date1_list = (list(self.startDate.get().split('-')))
