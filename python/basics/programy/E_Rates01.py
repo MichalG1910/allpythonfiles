@@ -98,10 +98,8 @@ class EchangeRates():
                 self.graphData = [self.graphData] 
             
     def dataFormatting(self, whichRaport):
-        if whichRaport != self.start:
-            self.excel = open(f"{self.filePath}/raports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")           
-            self.excel.write(f"currency,code,value,date\n")
-
+        
+        self.excelList=[]
         for dict1 in self.data:
             self.table = dict1["table"]
             self.no = dict1["no"]
@@ -119,7 +117,8 @@ class EchangeRates():
                 self.currencyList.append(self.currency), self.codeList.append(self.code), self.valueList.append(self.mid)
                 self.codeCurrencyDict[self.code] = self.currency
                 if whichRaport != self.start:
-                    self.excel.write(f"{self.currency},{self.code},{self.effectiveDate},{self.mid}\n")
+                    #self.excel.write(f"{self.currency},{self.code},{self.effectiveDate},{self.mid}\n")
+                    self.excelList.append([self.currency,self.code,self.effectiveDate,self.mid])
 
 
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
@@ -134,10 +133,19 @@ class EchangeRates():
             currencyCount = (f"\nilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
         if whichRaport != self.start:
+            excelLen = len(self.excelList)
+            exc=0
+            self.excel = open(f"{self.filePath}/raports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")           
+            self.excel.write(f"currency,code,value,date\n")
+            
+            while exc < excelLen:
+                self.excel.write(f"{self.excelList[exc][0]},{self.excelList[exc][1]},{self.excelList[exc][2]},{self.excelList[exc][3]}\n")
+                exc += 1
             self.excel.close()
+        
         whichRaport.close()
-    def terminlPrint(self):
-        print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
+    #def terminlPrint(self):
+        #print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
 
     def getDataForGraph(self):
         self.code = (self.currencyName.get()[0:3]).lower()
