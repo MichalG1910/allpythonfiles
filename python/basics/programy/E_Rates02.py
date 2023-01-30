@@ -18,8 +18,16 @@ class EchangeRates():
         self.yesterday = self.today - datetime.timedelta(days=1)
         self.Num = 0
         self.createRaportDir()
-        self.startRaport()
+        self.lastNBPraport()
         self.gui()
+
+    def createRaportDir(self):
+        if os.path.exists(f"{self.filePath}/raports"):
+            pass
+        else:
+            path = os.path.join(self.filePath, "raports")
+            os.mkdir(path) 
+             
            
     def fileWrite(self,writeData):
         if self.Num == 0:
@@ -38,26 +46,21 @@ class EchangeRates():
             else:
                 os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.effectiveDateList[-1]}.txt" )
                 
-    def createRaportDir(self):
-        if os.path.exists(f"{self.filePath}/raports"):
-            pass
-        else:
-            path = os.path.join(self.filePath, "raports")
-            os.mkdir(path) 
-             
-    def startRaport(self):
+    def lastNBPraport(self):
         self.start = open(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", "w")
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
         self.daysLen = 1
-        self.responseJson(self.response)
+        self.data = self.response.json()[0:self.daysLen]
         self.dataFormatting(self.start)
-        self.firstloopEDL = self.effectiveDateList[-1]
-        self.fileRename()  
+        self.terminalPrint()
+        self.fileRename() 
         self.Num = 1
         del self.data, self.response 
         self.start = None
     
     def generateRaport(self):
+        self.firstloopEDL = self.effectiveDateList[-1]
+
         if not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
         else:
@@ -79,34 +82,23 @@ class EchangeRates():
                     self.raport = open(f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
                     sumdays = eDate - sDate
                     self.daysLen = sumdays.days + 1
-                    self.responseJson(self.response)
-                    self.dataFormatting(self.raport)   
-                    self.daysLen = -1
+                    self.data = self.response.json()[0:self.daysLen]
+                    self.dataFormatting(self.raport) 
+                    self.excelERraport()
+                    self.terminalPrint()  
                     del self.data, self.raport
                     
                 else:
-                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
-                   
-    def responseJson(self, whichResponse):
-        if whichResponse.ok == True:
-            if self.daysLen >=0:
-                self.data = self.response.json()[0:self.daysLen] 
-                
-                daysResponse = (f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n\n')
-                self.fileWrite(daysResponse)
-                self.daysLen = -1
-            else:
-                self.graphData = self.currencyResponse.json()
-                self.graphData = [self.graphData] 
+                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
             
     def dataFormatting(self, whichRaport):
+        self.excelList, self.printList, self.erDataList=[],[],[]
         
-        self.excelList=[]
         for dict1 in self.data:
             self.table = dict1["table"]
             self.no = dict1["no"]
             self.effectiveDate= dict1["effectiveDate"]
-            print("\nExchange rates: ", self.table, self.no, self.effectiveDate)
+            self.printList.append([self.table, self.no, self.effectiveDate])
             exchRates = (f"Exchange rates: {self.table}, {self.no}, {self.effectiveDate}\n")
             self.fileWrite(exchRates)
             self.rates = dict1["rates"]
@@ -125,29 +117,38 @@ class EchangeRates():
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
-            
             erFrame = pd.DataFrame(erData)
-            print(tabulate(erFrame, showindex=True, headers=erFrame.columns))            
+            #print(tabulate(erFrame, showindex=True, headers=erFrame.columns))            
             self.fileWrite(tabulate(erFrame, showindex=True, headers=erFrame.columns))
-            
-            print('ilość walut: ',len(self.rates))
+            self.erDataList.append(erData)
             currencyCount = (f"\nilość walut: {len(self.rates)}\n\n")
             self.fileWrite(currencyCount)
-        if whichRaport != self.start:
-            excelLen = len(self.excelList)
-            exc=0
-            self.excel = open(f"{self.filePath}/raports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")           
-            self.excel.write(f"currency,code,value,date\n")
-            
-            while exc < excelLen:
-                self.excel.write(f"{self.excelList[exc][0]},{self.excelList[exc][1]},{self.excelList[exc][2]},{self.excelList[exc][3]}\n")
-                exc += 1
-            self.excel.close()
-        
         whichRaport.close()
-    #def terminlPrint(self):
-        #print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
 
+    def excelERraport(self):
+        excelLen = len(self.excelList)
+        exc=0
+        self.excel = open(f"{self.filePath}/raports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")           
+        self.excel.write(f"currency,code,value,date\n")
+            
+        while exc < excelLen:
+            self.excel.write(f"{self.excelList[exc][0]},{self.excelList[exc][1]},{self.excelList[exc][2]},{self.excelList[exc][3]}\n")
+            exc += 1
+        self.excel.close()
+            
+
+    def terminalPrint(self):
+        printListLen = len(self.printList)
+        prt=0
+
+        print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
+        while prt < printListLen:
+            erFrame = pd.DataFrame(self.erDataList[prt])
+            print(f"\nExchange rates: {self.printList[prt][0]},{self.printList[prt][1]},{self.printList[prt][2]}")
+            print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
+            print('ilość walut: ',len(self.rates))
+            prt += 1
+        
     def getDataForGraph(self):
         self.code = (self.currencyName.get()[0:3]).lower()
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
@@ -159,7 +160,8 @@ class EchangeRates():
             
             while self.repeat > 0:  
                 self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{self.runDate}/{self.stepDate}/?format=json") 
-                self.responseJson(self.currencyResponse)
+                self.graphData = self.currencyResponse.json()
+                self.graphData = [self.graphData]
                 graphData = [dict["rates"] for dict in self.graphData].pop()
                 self.gdList += graphData
                 self.runDate = self.runDate + self.stepTimedelta
