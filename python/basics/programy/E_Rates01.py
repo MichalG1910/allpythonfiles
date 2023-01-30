@@ -17,7 +17,7 @@ class EchangeRates():
         self.today = datetime.date.today()
         self.yesterday = self.today - datetime.timedelta(days=1)
         self.Num = 0
-        self.startOpen()
+        self.startRaport()
         self.gui()
            
     def fileWrite(self,writeData):
@@ -28,7 +28,7 @@ class EchangeRates():
             if self.raport.writable():
                 self.raport.write(writeData)
     
-    def plikRename(self):            
+    def fileRename(self):            
         if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.yesterday}.txt") and str(self.effectiveDateList[-1]) != str(self.today):
             os.remove(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt")
         else:
@@ -37,7 +37,7 @@ class EchangeRates():
             else:
                 os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.effectiveDateList[-1]}.txt" )
         
-    def startOpen(self):
+    def startRaport(self):
         if os.path.exists(f"{self.filePath}/raports"):
             pass
         else:
@@ -50,12 +50,12 @@ class EchangeRates():
         self.responseJson(self.response)
         self.dataFormatting(self.start)
         self.firstloopEDL = self.effectiveDateList[-1]
-        self.plikRename()  
+        self.fileRename()  
         self.Num = 1
         del self.data, self.response 
         self.start = None
     
-    def raportOpen(self):
+    def generateRaport(self):
         if not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
         else:
@@ -119,7 +119,6 @@ class EchangeRates():
                 if whichRaport != self.start:
                     #self.excel.write(f"{self.currency},{self.code},{self.effectiveDate},{self.mid}\n")
                     self.excelList.append([self.currency,self.code,self.effectiveDate,self.mid])
-
 
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
@@ -205,27 +204,7 @@ class EchangeRates():
     
     def gui(self):
         
-        def winStyle():
-        
-            win.tk.call('source', os.path.join(self.filePath, 'azure.tcl'))
-            win.tk.call("set_theme", "dark")
-            
-        def emptyGraph():
-            plt.style.use('dark_background')
-            fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
-            axis = fig.add_subplot(111) 
-            
-            axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-            axis.set_xlabel("Data") 
-            axis.set_ylabel("PLN Złoty")
-             
-            canvas = FigureCanvasTkAgg(fig, master=win) 
-            canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) 
-            
-            win.update()
-            win.deiconify()
-
-        def generateGraphGui():
+        def generateGraph():
             self.getDataForGraph()
             
             if win.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -234,7 +213,6 @@ class EchangeRates():
             else:
                 plt.style.use('Solarize_Light2')
                 fig = plt.figure(figsize=(12,8), facecolor = "lightcyan")
-            
             
             axis = fig.add_subplot(111) 
             axis.set_title(f"{self.code.upper()} {self.codeCurrencyDict[self.code.upper()]}", fontsize=16, color="silver")
@@ -264,6 +242,48 @@ class EchangeRates():
 
         def saveGraphPNG():
                 plt.savefig(f"{self.filePath}/raports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
+        
+        def winStyle():
+            win.tk.call('source', os.path.join(self.filePath, 'azure.tcl'))
+            win.tk.call("set_theme", "dark")
+            
+        def emptyGraph():
+            plt.style.use('dark_background')
+            fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
+            axis = fig.add_subplot(111) 
+            
+            axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+            axis.set_xlabel("Data") 
+            axis.set_ylabel("PLN Złoty")
+             
+            canvas = FigureCanvasTkAgg(fig, master=win) 
+            canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) 
+            
+            win.update()
+            win.deiconify()
+
+        
+        def themeButton():
+            def change_theme():
+            
+                if win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+                    win.tk.call("set_theme", "light")
+                    icon1 = PhotoImage(file=f'{self.filePath}/light.png')
+                    self.accentbutton.configure(image=icon1)
+                    self.accentbutton.image = icon1
+                    generateGraph()
+                    
+                else:
+                    win.tk.call("set_theme", "dark")
+                    icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
+                    self.accentbutton.configure(image=icon2 )
+                    self.accentbutton.image = icon2
+                    generateGraph()
+                    
+            icon = PhotoImage(file=f'{self.filePath}/dark.png')
+            self.accentbutton = ttk.Button(win, image=icon, command=change_theme)
+            self.accentbutton.image = icon
+            self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
 
         def exchangeRatesTabel():
             self.echangeRateFrame = ttk.LabelFrame(win, text= f"Średnie kursy walut {self.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
@@ -278,7 +298,7 @@ class EchangeRates():
                 self.col2 = ttk.Label(self.echangeRateFrame,  width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
                 self.col3 = ttk.Label(self.echangeRateFrame,  width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
             
-        def plotGraphGui():    
+        def graphGui():    
             plotGraphFrame = ttk.LabelFrame(win, text= "Rysowanie wykresu", labelanchor="n")  
             plotGraphFrame.grid(column=4, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.E)
             ttk.Label(plotGraphFrame, text= "Waluta ").grid(column=4, row=1, sticky=tk.W, pady=5,padx=5) 
@@ -299,7 +319,7 @@ class EchangeRates():
             rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
             rangeChosen.current(0)
 
-            drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraphGui, width=12)  
+            drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraph, width=12)  
             drawGraph.grid(column = 6, row = 1, padx=5)
             saveGraph = ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = saveGraphPNG, width=12) 
             saveGraph.grid(column = 6, row = 2, padx=5)
@@ -319,7 +339,7 @@ class EchangeRates():
             endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
             endDateBox.insert(tk.END, self.effectiveDateList[-1])
 
-            createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.raportOpen, width=12)  
+            createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.generateRaport, width=12)  
             createRaport.grid(column = 9, row = 0 , rowspan=3, padx=5)
         
         def themeButton():
@@ -330,14 +350,14 @@ class EchangeRates():
                     icon1 = PhotoImage(file=f'{self.filePath}/light.png')
                     self.accentbutton.configure(image=icon1)
                     self.accentbutton.image = icon1
-                    generateGraphGui()
+                    generateGraph()
                     
                 else:
                     win.tk.call("set_theme", "dark")
                     icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
                     self.accentbutton.configure(image=icon2 )
                     self.accentbutton.image = icon2
-                    generateGraphGui()
+                    generateGraph()
                     
             icon = PhotoImage(file=f'{self.filePath}/dark.png')
             self.accentbutton = ttk.Button(win, image=icon, command=change_theme)
@@ -349,7 +369,7 @@ class EchangeRates():
         emptyGraph()
         themeButton()
         exchangeRatesTabel()
-        plotGraphGui()
+        graphGui()
         generateRaportGui()
         win.mainloop()
         
