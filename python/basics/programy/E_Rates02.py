@@ -20,6 +20,9 @@ class EchangeRates():
         self.createRaportDir()
         self.lastNBPraport()
         self.gui()
+    def restart_program(self):
+        python = sys.executable
+        os.execl(python, python, * sys.argv)
 
     def createRaportDir(self):
         if os.path.exists(f"{self.filePath}/raports"):
@@ -49,14 +52,21 @@ class EchangeRates():
     def lastNBPraport(self):
         self.start = open(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", "w")
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
-        self.daysLen = 1
-        self.data = self.response.json()[0:self.daysLen]
-        self.dataFormatting(self.start)
-        self.terminalPrint()
-        self.fileRename() 
-        self.Num = 1
-        del self.data, self.response 
-        self.start = None
+        if self.response.ok == True:
+            self.daysLen = 1
+            self.data = self.response.json()[0:self.daysLen]
+            self.dataFormatting(self.start)
+            self.terminalPrint()
+            self.fileRename() 
+            self.Num = 1
+            del self.data, self.response 
+            self.start = None
+        else:
+            answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?") # przypisujemy zmienną do naszego pytania tak/nie
+            if answer == True:
+                self.restart_program()
+            else:
+                exit()
     
     def generateRaport(self):
         self.firstloopEDL = self.effectiveDateList[-1]
@@ -99,8 +109,6 @@ class EchangeRates():
             self.no = dict1["no"]
             self.effectiveDate= dict1["effectiveDate"]
             self.printList.append([self.table, self.no, self.effectiveDate])
-            exchRates = (f"Exchange rates: {self.table}, {self.no}, {self.effectiveDate}\n")
-            self.fileWrite(exchRates)
             self.rates = dict1["rates"]
             self.currencyList, self.codeList, self.valueList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],{}
             self.effectiveDateList.append(self.effectiveDate)
@@ -117,13 +125,20 @@ class EchangeRates():
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
-            erFrame = pd.DataFrame(erData)
-            #print(tabulate(erFrame, showindex=True, headers=erFrame.columns))            
-            self.fileWrite(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             self.erDataList.append(erData)
-            currencyCount = (f"\nilość walut: {len(self.rates)}\n\n")
-            self.fileWrite(currencyCount)
-        whichRaport.close()
+        self.raportCreate(whichRaport)
+        
+    def raportCreate(self, fileWrite):
+        erDataListLen = len(self.erDataList)
+        rpt=0
+        fileWrite.write(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n\n' )
+        while rpt < erDataListLen:
+            erFrame = pd.DataFrame(self.erDataList[rpt])
+            fileWrite.write(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n")
+            fileWrite.write(tabulate(erFrame, showindex=True, headers=erFrame.columns))
+            fileWrite.write(f'\nilość walut: {len(self.rates)}\n')
+            rpt += 1
+        fileWrite.close()
 
     def excelERraport(self):
         excelLen = len(self.excelList)
@@ -139,15 +154,15 @@ class EchangeRates():
 
     def terminalPrint(self):
         printListLen = len(self.printList)
-        prt=0
+        rpt=0
 
         print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
-        while prt < printListLen:
-            erFrame = pd.DataFrame(self.erDataList[prt])
-            print(f"\nExchange rates: {self.printList[prt][0]},{self.printList[prt][1]},{self.printList[prt][2]}")
+        while rpt < printListLen:
+            erFrame = pd.DataFrame(self.erDataList[rpt])
+            print(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}")
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             print('ilość walut: ',len(self.rates))
-            prt += 1
+            rpt += 1
         
     def getDataForGraph(self):
         self.code = (self.currencyName.get()[0:3]).lower()
