@@ -16,13 +16,22 @@ class EchangeRates():
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
         self.yesterday = self.today - datetime.timedelta(days=1)
-        self.Num = 0
         self.createRaportDir()
+        self.checkConnection()
         self.lastNBPraport()
         self.gui()
-    def restart_program(self):
-        python = sys.executable
-        os.execl(python, python, * sys.argv)
+    
+    def checkConnection(self):
+        hostname = "nbp.pl" #example
+        response = os.system("ping -c 1 " + hostname)
+        if response == 0:
+            pass
+        else:
+            answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?\nNie = Opuść program") # przypisujemy zmienną do naszego pytania tak/nie
+            if answer == True:
+                self.checkConnection()
+            else:
+                exit()
 
     def createRaportDir(self):
         if os.path.exists(f"{self.filePath}/raports"):
@@ -30,15 +39,6 @@ class EchangeRates():
         else:
             path = os.path.join(self.filePath, "raports")
             os.mkdir(path) 
-             
-           
-    def fileWrite(self,writeData):
-        if self.Num == 0:
-            if self.start.writable():
-                self.start.write(writeData)
-        else:
-            if self.raport.writable():
-                self.raport.write(writeData)
     
     def fileRename(self):            
         if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.yesterday}.txt") and str(self.effectiveDateList[-1]) != str(self.today):
@@ -56,20 +56,14 @@ class EchangeRates():
             self.daysLen = 1
             self.data = self.response.json()[0:self.daysLen]
             self.dataFormatting(self.start)
+            self.raportCreate(self.start)
             self.terminalPrint()
             self.fileRename() 
-            self.Num = 1
             del self.data, self.response 
             self.start = None
-        else:
-            answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?") # przypisujemy zmienną do naszego pytania tak/nie
-            if answer == True:
-                self.restart_program()
-            else:
-                exit()
     
     def generateRaport(self):
-        self.firstloopEDL = self.effectiveDateList[-1]
+        firstloopEDL = self.effectiveDateList[-1]
 
         if not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
@@ -83,18 +77,20 @@ class EchangeRates():
 
             if eDate > self.today or sDate > eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
-            elif str(eDate) > str(self.firstloopEDL):
+            elif str(eDate) > str(firstloopEDL):
                 mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
 
             else:
+                self.checkConnection()
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
                 if self.response.ok == True:
                     self.raport = open(f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
                     sumdays = eDate - sDate
                     self.daysLen = sumdays.days + 1
                     self.data = self.response.json()[0:self.daysLen]
-                    self.dataFormatting(self.raport) 
-                    self.excelERraport()
+                    self.dataFormatting(self.raport)
+                    self.raportCreate(self.raport) 
+                    self.excel_ER_raport()
                     self.terminalPrint()  
                     del self.data, self.raport
                     
@@ -102,31 +98,30 @@ class EchangeRates():
                     mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
             
     def dataFormatting(self, whichRaport):
-        self.excelList, self.printList, self.erDataList=[],[],[]
+        self.excelList, self.printList, self.erDataList, self.effectiveDateList=[],[],[],[]
+        self.currencyList, self.codeList, self.valueList, self.codeCurrencyDict= [],[],[],{}
         
-        for dict1 in self.data:
-            self.table = dict1["table"]
-            self.no = dict1["no"]
-            self.effectiveDate= dict1["effectiveDate"]
-            self.printList.append([self.table, self.no, self.effectiveDate])
-            self.rates = dict1["rates"]
-            self.currencyList, self.codeList, self.valueList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],{}
+        for dict in self.data:
+            table = dict["table"]
+            no = dict["no"]
+            self.effectiveDate= dict["effectiveDate"]
+            self.rates = dict["rates"]
+            self.printList.append([table, no, self.effectiveDate])
             self.effectiveDateList.append(self.effectiveDate)
             for rate in self.rates:
-                self.currency = rate["currency"]
+                currency = rate["currency"]
                 self.code = rate["code"]
-                self.mid = rate["mid"]
-                self.currencyList.append(self.currency), self.codeList.append(self.code), self.valueList.append(self.mid)
-                self.codeCurrencyDict[self.code] = self.currency
+                mid = rate["mid"]
+                self.currencyList.append(currency), self.codeList.append(self.code), self.valueList.append(mid)
+                self.codeCurrencyDict[self.code] = currency
                 if whichRaport != self.start:
-                    #self.excel.write(f"{self.currency},{self.code},{self.effectiveDate},{self.mid}\n")
-                    self.excelList.append([self.currency,self.code,self.effectiveDate,self.mid])
+                    self.excelList.append([currency,self.code,self.effectiveDate,mid])
 
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
             self.erDataList.append(erData)
-        self.raportCreate(whichRaport)
+        
         
     def raportCreate(self, fileWrite):
         erDataListLen = len(self.erDataList)
@@ -140,7 +135,7 @@ class EchangeRates():
             rpt += 1
         fileWrite.close()
 
-    def excelERraport(self):
+    def excel_ER_raport(self):
         excelLen = len(self.excelList)
         exc=0
         self.excel = open(f"{self.filePath}/raports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")           
@@ -151,7 +146,6 @@ class EchangeRates():
             exc += 1
         self.excel.close()
             
-
     def terminalPrint(self):
         printListLen = len(self.printList)
         rpt=0
@@ -172,6 +166,7 @@ class EchangeRates():
             self.runDate = self.today - datetime.timedelta(days=self.dayRange)
             self.stepDate = self.runDate + datetime.timedelta(days=self.step)
             self.stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
+            self.checkConnection()
             
             while self.repeat > 0:  
                 self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{self.runDate}/{self.stepDate}/?format=json") 
@@ -254,10 +249,7 @@ class EchangeRates():
             
             win.update()
             win.deiconify()
-            del xValues 
-            del yValues 
-            del self.graphEffectiveDateList
-            del self.graphMidList
+            del xValues, yValues, self.graphEffectiveDateList, self.graphMidList
 
         def saveGraphPNG():
                 plt.savefig(f"{self.filePath}/raports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
@@ -361,28 +353,6 @@ class EchangeRates():
             createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.generateRaport, width=12)  
             createRaport.grid(column = 9, row = 0 , rowspan=3, padx=5)
         
-        def themeButton():
-            def change_theme():
-            
-                if win.tk.call("ttk::style", "theme", "use") == "azure-dark":
-                    win.tk.call("set_theme", "light")
-                    icon1 = PhotoImage(file=f'{self.filePath}/light.png')
-                    self.accentbutton.configure(image=icon1)
-                    self.accentbutton.image = icon1
-                    generateGraph()
-                    
-                else:
-                    win.tk.call("set_theme", "dark")
-                    icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
-                    self.accentbutton.configure(image=icon2 )
-                    self.accentbutton.image = icon2
-                    generateGraph()
-                    
-            icon = PhotoImage(file=f'{self.filePath}/dark.png')
-            self.accentbutton = ttk.Button(win, image=icon, command=change_theme)
-            self.accentbutton.image = icon
-            self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
-            
         win = tk.Tk()
         winStyle()
         emptyGraph()
