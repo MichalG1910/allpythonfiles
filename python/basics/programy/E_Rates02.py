@@ -16,26 +16,24 @@ class EchangeRates():
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
         self.yesterday = self.today - datetime.timedelta(days=1)
-        self.createRaportDir()
         self.checkConnection()
+        self.createRaportDir()
         self.lastNBPraport()
         self.gui()
     
     def checkConnection(self):
-        pass
-    '''
-        hostname = "nbp.pl" #example
+        
+        hostname = "nbp.pl" 
         response = os.system("ping -c 1 " + hostname)
         if response == 0:
             pass
         else:
-            answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?\nNie = Opuść program") # przypisujemy zmienną do naszego pytania tak/nie
+            answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?\nNie = Opuść program") 
             if answer == True:
                 self.checkConnection()
             else:
                 exit()
-                '''
-
+            
     def createRaportDir(self):
         if os.path.exists(f"{self.filePath}/raports"):
             pass
@@ -58,7 +56,7 @@ class EchangeRates():
         if self.response.ok == True:
             self.daysLen = 1
             self.data = self.response.json()[0:self.daysLen]
-            self.dataFormatting(self.start)
+            self.dataFormatting()
             self.raportCreate(self.start)
             self.terminalPrint()
             self.fileRename() 
@@ -91,7 +89,7 @@ class EchangeRates():
                     sumdays = eDate - sDate
                     self.daysLen = sumdays.days + 1
                     self.data = self.response.json()[0:self.daysLen]
-                    self.dataFormatting(self.raport)
+                    self.dataFormatting()
                     self.raportCreate(self.raport) 
                     self.excel_ER_raport()
                     self.terminalPrint()  
@@ -102,7 +100,6 @@ class EchangeRates():
             
     def dataFormatting(self, whichRaport):
         self.excelList, self.printList, self.erDataList =[],[],[]
-        
         
         for dict in self.data:
             table = dict["table"]
@@ -345,7 +342,7 @@ class EchangeRates():
             ttk.Label(raportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
                 
             self.startDate = tk.StringVar() 
-            startDateBox = ttk.Entry(raportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
+            ttk.Entry(raportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
             
                 
             self.endDate = tk.StringVar()
@@ -353,9 +350,8 @@ class EchangeRates():
             endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
             endDateBox.insert(tk.END, self.effectiveDateList[-1])
 
-            createRaport = ttk.Button(raportFrame, text = "Generuj raport", command = self.generateRaport, width=12)  
-            createRaport.grid(column = 9, row = 0 , rowspan=3, padx=5)
-        
+            ttk.Button(raportFrame, text = "Generuj raport", command = self.generateRaport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
+            
         win = tk.Tk()
         winStyle()
         emptyGraph()
