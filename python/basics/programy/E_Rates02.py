@@ -22,6 +22,8 @@ class EchangeRates():
         self.gui()
     
     def checkConnection(self):
+        pass
+    '''
         hostname = "nbp.pl" #example
         response = os.system("ping -c 1 " + hostname)
         if response == 0:
@@ -32,6 +34,7 @@ class EchangeRates():
                 self.checkConnection()
             else:
                 exit()
+                '''
 
     def createRaportDir(self):
         if os.path.exists(f"{self.filePath}/raports"):
@@ -98,8 +101,8 @@ class EchangeRates():
                     mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
             
     def dataFormatting(self, whichRaport):
-        self.excelList, self.printList, self.erDataList, self.effectiveDateList=[],[],[],[]
-        self.currencyList, self.codeList, self.valueList, self.codeCurrencyDict= [],[],[],{}
+        self.excelList, self.printList, self.erDataList =[],[],[]
+        
         
         for dict in self.data:
             table = dict["table"]
@@ -107,7 +110,9 @@ class EchangeRates():
             self.effectiveDate= dict["effectiveDate"]
             self.rates = dict["rates"]
             self.printList.append([table, no, self.effectiveDate])
+            self.currencyList, self.codeList, self.valueList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],{}
             self.effectiveDateList.append(self.effectiveDate)
+            
             for rate in self.rates:
                 currency = rate["currency"]
                 self.code = rate["code"]
@@ -163,34 +168,34 @@ class EchangeRates():
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
 
         def timeRangeLoop():
-            self.runDate = self.today - datetime.timedelta(days=self.dayRange)
-            self.stepDate = self.runDate + datetime.timedelta(days=self.step)
-            self.stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
+            runDate = self.today - datetime.timedelta(days=self.dayRange)
+            stepDate = runDate + datetime.timedelta(days=self.step)
+            stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
             self.checkConnection()
             
             while self.repeat > 0:  
-                self.currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{self.runDate}/{self.stepDate}/?format=json") 
-                self.graphData = self.currencyResponse.json()
-                self.graphData = [self.graphData]
-                graphData = [dict["rates"] for dict in self.graphData].pop()
+                currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{runDate}/{stepDate}/?format=json") 
+                graphData = currencyResponse.json()
+                graphData = [graphData]
+                graphData = [dict["rates"] for dict in graphData].pop()
                 self.gdList += graphData
-                self.runDate = self.runDate + self.stepTimedelta
+                runDate = runDate + stepTimedelta
                 if self.repeat == 2:
                     date1_list = (list(self.effectiveDateList[-1].split('-')))
                     sdList = [int(i) for i in date1_list] 
-                    self.stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
+                    stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
                 else:
-                    self.stepDate = self.stepDate + self.stepTimedelta
+                    stepDate = stepDate + stepTimedelta
                 self.repeat -= 1
-            self.graphData = self.gdList 
+            graphData = self.gdList 
 
-            for rate in self.graphData:
-                self.graphEffectiveDate = rate["effectiveDate"]
-                self.graphMid = rate["mid"]
-                self.graphEffectiveDateList.append(self.graphEffectiveDate)
-                self.graphMidList.append(self.graphMid)
+            for rate in graphData:
+                graphEffectiveDate = rate["effectiveDate"]
+                graphMid = rate["mid"]
+                self.graphEffectiveDateList.append(graphEffectiveDate)
+                self.graphMidList.append(graphMid)
             del self.gdList
-            del self.graphData
+            del graphData
 
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
             self.dayRange, self.repeat, self.step = int(self.timeRange.get()[0:2]), 1, int(self.timeRange.get()[0:2])
@@ -297,17 +302,17 @@ class EchangeRates():
             self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
 
         def exchangeRatesTabel():
-            self.echangeRateFrame = ttk.LabelFrame(win, text= f"Średnie kursy walut {self.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-            self.echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(self.rates)+1), padx=5, sticky=tk.W)
+            echangeRateFrame = ttk.LabelFrame(win, text= f"Średnie kursy walut {self.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
+            echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(self.rates)+1), padx=5, sticky=tk.W)
             
-            self.currencyLabel = ttk.Label(self.echangeRateFrame, text= "Waluta:").grid(column=0, row=0, sticky=tk.W, padx=5)
-            self.codeLabel = ttk.Label(self.echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
-            self.valueLabel = ttk.Label(self.echangeRateFrame, text= "Wartość w PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
+            ttk.Label(echangeRateFrame, text= "Waluta:").grid(column=0, row=0, sticky=tk.W, padx=5)
+            ttk.Label(echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
+            ttk.Label(echangeRateFrame, text= "Wartość w PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
             
             for t in range(33):
-                self.col1 = ttk.Label(self.echangeRateFrame,  width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                self.col2 = ttk.Label(self.echangeRateFrame,  width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-                self.col3 = ttk.Label(self.echangeRateFrame,  width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame,  width=35, text= f'{self.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame,  width=5, text= f'{self.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame,  width=12, text= f'{self.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
             
         def graphGui():    
             plotGraphFrame = ttk.LabelFrame(win, text= "Rysowanie wykresu", labelanchor="n")  
@@ -329,11 +334,9 @@ class EchangeRates():
             rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat") 
             rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
             rangeChosen.current(0)
-
-            drawGraph = ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraph, width=12)  
-            drawGraph.grid(column = 6, row = 1, padx=5)
-            saveGraph = ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = saveGraphPNG, width=12) 
-            saveGraph.grid(column = 6, row = 2, padx=5)
+            ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraph, width=12).grid(column = 6, row = 1, padx=5)  
+            ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5) 
+            
             
         def generateRaportGui():    
             raportFrame = ttk.LabelFrame(win, text= "Generuj raport", labelanchor="n")
@@ -342,8 +345,8 @@ class EchangeRates():
             ttk.Label(raportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
                 
             self.startDate = tk.StringVar() 
-            startDateBox = ttk.Entry(raportFrame, width= 10, textvariable= self.startDate)
-            startDateBox.grid(column= 8, row= 1, padx=5, pady=5)
+            startDateBox = ttk.Entry(raportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
+            
                 
             self.endDate = tk.StringVar()
             endDateBox = ttk.Entry(raportFrame, width= 10,  textvariable= self.endDate)
