@@ -82,11 +82,10 @@ class EchangeRates():
 
             else:
                 self.checkConnection()
-                self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
+                
                 if self.response.ok == True:
-                    sumdays = eDate - sDate
-                    self.daysLen = sumdays.days + 1
-                    self.data = self.response.json()[0:self.daysLen]
+                    
+                    
                     self.dataFormatting()
                     self.raportCreate() 
                     self.excel_ER_raport()
@@ -95,7 +94,47 @@ class EchangeRates():
                     
                 else:
                     mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
-            
+    def longerRaport(self):
+
+        def longerRaportLoop():
+            self.step = 91
+            runDate = self.sDate
+            sumdays = self.eDate - self.sDate
+            self.daysLen = sumdays.days + 1
+            if self.daysLen < self.step:
+                self.step = self.daysLen
+            self.repeat = math.ceil(self.daysLen / self.step)
+            stepDate = runDate + datetime.timedelta(days=self.step)
+            stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
+            self.longerList = []
+            while self.repeat > 0:  
+                self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{runDate}/{stepDate}/?format=json") 
+                self.data = self.response.json()[0:self.step]
+                self.data = [self.data]
+                self.data = [dict["rates"] for dict in self.data].pop()
+                self.longerList += self.data
+                runDate = runDate + stepTimedelta
+                if self.repeat == 2:
+                    date1_list = (list(self.firstloopEDL.split('-')))
+                    sdList = [int(i) for i in date1_list] 
+                    stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
+                else:
+                    stepDate = stepDate + stepTimedelta
+                self.repeat -= 1
+            graphData = self.gdList 
+
+            for rate in graphData:
+                graphEffectiveDate = rate["effectiveDate"]
+                graphMid = rate["mid"]
+                self.graphEffectiveDateList.append(graphEffectiveDate)
+                self.graphMidList.append(graphMid)
+            del self.gdList
+            del graphData
+
+        if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
+            self.dayRange, self.repeat, self.step = int(self.timeRange.get()[0:2]), 1, int(self.timeRange.get()[0:2])
+            longerRaportLoop()
+
     def dataFormatting(self):
         self.excelList, self.printList, self.erDataList =[],[],[]
         
