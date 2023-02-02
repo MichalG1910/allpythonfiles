@@ -124,7 +124,6 @@ class EchangeRates():
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
             self.erDataList.append(erData)
         
-        
     def raportCreate(self):
         def file_write(fileWrite):
             erDataListLen = len(self.erDataList)
@@ -146,8 +145,6 @@ class EchangeRates():
             self.start = open(f"{self.filePath}/raports/raport_exchangerates_{self.effectiveDateList[-1]}.txt", "w")
             file_write(self.start)
         
-        
-
     def excel_ER_raport(self):
         excelLen = len(self.excelList)   
         exc=0
@@ -265,7 +262,7 @@ class EchangeRates():
             del xValues, yValues, self.graphEffectiveDateList, self.graphMidList
 
         def saveGraphPNG():
-                plt.savefig(f"{self.filePath}/raports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
+            plt.savefig(f"{self.filePath}/raports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
         
         def winStyle():
             win.tk.call('source', os.path.join(self.filePath, 'azure.tcl'))
@@ -275,18 +272,15 @@ class EchangeRates():
             plt.style.use('dark_background')
             fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
             axis = fig.add_subplot(111) 
-            
             axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
             axis.set_xlabel("Data") 
             axis.set_ylabel("PLN Złoty")
              
             canvas = FigureCanvasTkAgg(fig, master=win) 
             canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) 
-            
             win.update()
             win.deiconify()
 
-        
         def themeButton():
             def change_theme():
             
@@ -345,7 +339,6 @@ class EchangeRates():
             ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraph, width=12).grid(column = 6, row = 1, padx=5)  
             ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5) 
             
-            
         def generateRaportGui():    
             raportFrame = ttk.LabelFrame(win, text= "Generuj raport", labelanchor="n")
             raportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
@@ -355,12 +348,10 @@ class EchangeRates():
             self.startDate = tk.StringVar() 
             ttk.Entry(raportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
             
-                
             self.endDate = tk.StringVar()
             endDateBox = ttk.Entry(raportFrame, width= 10,  textvariable= self.endDate)
             endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
             endDateBox.insert(tk.END, self.effectiveDateList[-1])
-
             ttk.Button(raportFrame, text = "Generuj raport", command = self.generateRaport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
             
         win = tk.Tk()
