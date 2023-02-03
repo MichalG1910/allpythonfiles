@@ -23,7 +23,7 @@ class EchangeRates():
     
     def checkConnection(self):
         hostname = "nbp.pl" 
-        response = os.system("ping -c 1 " + hostname)
+        response = os.system("ping -n 1 " + hostname)
         if response == 0:
             pass
         else:
@@ -72,68 +72,60 @@ class EchangeRates():
             sdList = [int(i) for i in date1_list] 
             date2_list = (list(self.endDate.get().split('-')))
             edList = [int(i) for i in date2_list]
-            sDate = datetime.date(sdList[0], sdList[1], sdList[2])
-            eDate = datetime.date(edList[0], edList[1], edList[2])
+            self.sDate = datetime.date(sdList[0], sdList[1], sdList[2])
+            self.eDate = datetime.date(edList[0], edList[1], edList[2])
 
-            if eDate > self.today or sDate > eDate:
+            if self.eDate > self.today or self.sDate > self.eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
-            elif str(eDate) > str(self.firstloopEDL):
+            elif str(self.eDate) > str(self.firstloopEDL):
                 mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
 
             else:
                 self.checkConnection()
-                
-                if self.response.ok == True:
+                self.step = 91
+                self.sumdays = self.eDate - self.sDate
+                self.daysLen = self.sumdays.days + 1
+                if self.daysLen <= self.step:
+                    self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
+                    self.data = self.response.json()[0:self.daysLen]
+                else: 
+                    self.longerRaportLoop()
+                self.dataFormatting()
+                self.raportCreate() 
+                self.excel_ER_raport() 
+                del self.data, self.raport
                     
-                    
-                    self.dataFormatting()
-                    self.raportCreate() 
-                    self.excel_ER_raport()
-                    self.terminalPrint()  
-                    del self.data, self.raport
-                    
-                else:
-                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
-    def longerRaport(self):
-
-        def longerRaportLoop():
-            self.step = 91
-            runDate = self.sDate
-            sumdays = self.eDate - self.sDate
-            self.daysLen = sumdays.days + 1
-            if self.daysLen < self.step:
-                self.step = self.daysLen
-            self.repeat = math.ceil(self.daysLen / self.step)
-            stepDate = runDate + datetime.timedelta(days=self.step)
-            stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
-            self.longerList = []
-            while self.repeat > 0:  
-                self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{runDate}/{stepDate}/?format=json") 
-                self.data = self.response.json()[0:self.step]
-                self.data = [self.data]
-                self.data = [dict["rates"] for dict in self.data].pop()
-                self.longerList += self.data
-                runDate = runDate + stepTimedelta
-                if self.repeat == 2:
-                    date1_list = (list(self.firstloopEDL.split('-')))
-                    sdList = [int(i) for i in date1_list] 
-                    stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
-                else:
-                    stepDate = stepDate + stepTimedelta
-                self.repeat -= 1
-            graphData = self.gdList 
-
-            for rate in graphData:
-                graphEffectiveDate = rate["effectiveDate"]
-                graphMid = rate["mid"]
-                self.graphEffectiveDateList.append(graphEffectiveDate)
-                self.graphMidList.append(graphMid)
-            del self.gdList
-            del graphData
-
-        if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
-            self.dayRange, self.repeat, self.step = int(self.timeRange.get()[0:2]), 1, int(self.timeRange.get()[0:2])
-            longerRaportLoop()
+                #else:
+                    #mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
+    
+    def longerRaportLoop(self):
+        runDate = self.sDate
+        if self.daysLen < self.step:
+            self.step = self.daysLen
+        self.repeat = math.ceil(self.daysLen / self.step) - 1 # to jest zagadka
+        stepDate = runDate + datetime.timedelta(days=self.step)
+        stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
+        print(f"{runDate}  {stepDate}")
+        longerList = []
+        while self.repeat > 0:  
+            self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{runDate}/{stepDate}/?format=json") 
+            self.data = self.response.json()[0:self.step]
+            longerList += self.data
+            runDate = runDate + stepTimedelta
+            if self.repeat == 2:
+                date1_list = (list(self.firstloopEDL.split('-')))
+                sdList = [int(i) for i in date1_list] 
+                stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
+                #self.step = self.daysLen
+                self.repeat = 2
+                print(stepDate)
+            else:
+                stepDate = stepDate + stepTimedelta
+            print(f"{runDate}  {stepDate}")
+            self.repeat -= 1
+        self.data = longerList     
+            
+        
 
     def dataFormatting(self):
         self.excelList, self.printList, self.erDataList =[],[],[]
