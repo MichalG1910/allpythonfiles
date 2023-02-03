@@ -23,7 +23,7 @@ class EchangeRates():
     
     def checkConnection(self):
         hostname = "nbp.pl" 
-        response = os.system("ping -n 1 " + hostname)
+        response = os.system("ping -c 1 " + hostname)
         if response == 0:
             pass
         else:
@@ -65,7 +65,7 @@ class EchangeRates():
     def generateRaport(self):
         self.num = 1
 
-        if not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[1-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
+        if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
         else:
             date1_list = (list(self.startDate.get().split('-')))
@@ -79,17 +79,12 @@ class EchangeRates():
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
             elif str(self.eDate) > str(self.firstloopEDL):
                 mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
-
             else:
-                self.checkConnection()
                 self.step = 91
                 self.sumdays = self.eDate - self.sDate
                 self.daysLen = self.sumdays.days + 1
-                if self.daysLen <= self.step:
-                    self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
-                    self.data = self.response.json()[0:self.daysLen]
-                else: 
-                    self.longerRaportLoop()
+                self.checkConnection()
+                self.longerRaportLoop()
                 self.dataFormatting()
                 self.raportCreate() 
                 self.excel_ER_raport() 
@@ -100,33 +95,27 @@ class EchangeRates():
     
     def longerRaportLoop(self):
         runDate = self.sDate
-        if self.daysLen < self.step:
-            self.step = self.daysLen
-        self.repeat = math.ceil(self.daysLen / self.step) - 1 # to jest zagadka
+        self.repeat = math.ceil(self.daysLen / self.step) 
         stepDate = runDate + datetime.timedelta(days=self.step)
         stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
-        print(f"{runDate}  {stepDate}")
+        
         longerList = []
-        while self.repeat > 0:  
+        while self.repeat > 0:
+            if stepDate >= self.eDate:
+                date1_list = (list(self.firstloopEDL.split('-')))
+                sdList = [int(i) for i in date1_list] 
+                stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
+                self.step = (stepDate - runDate).days +1
+                self.repeat = 1
+                 
             self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{runDate}/{stepDate}/?format=json") 
             self.data = self.response.json()[0:self.step]
             longerList += self.data
             runDate = runDate + stepTimedelta
-            if self.repeat == 2:
-                date1_list = (list(self.firstloopEDL.split('-')))
-                sdList = [int(i) for i in date1_list] 
-                stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
-                #self.step = self.daysLen
-                self.repeat = 2
-                print(stepDate)
-            else:
-                stepDate = stepDate + stepTimedelta
-            print(f"{runDate}  {stepDate}")
+            stepDate = stepDate + stepTimedelta
             self.repeat -= 1
         self.data = longerList     
             
-        
-
     def dataFormatting(self):
         self.excelList, self.printList, self.erDataList =[],[],[]
         
@@ -254,6 +243,10 @@ class EchangeRates():
         elif self.timeRange.get() == "10 lat":
             self.dayRange, self.repeat, self.step = 3640, 40, 91
             timeRangeLoop()   
+        
+        elif self.timeRange.get() == "15 lat":
+            self.dayRange, self.repeat, self.step = 5460, 60, 91
+            timeRangeLoop()   
     
     def gui(self):
         
@@ -363,7 +356,7 @@ class EchangeRates():
         
             self.timeRange = tk.StringVar() 
             rangeChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.timeRange, state= "readonly")
-            rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat") 
+            rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
             rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
             rangeChosen.current(0)
             ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraph, width=12).grid(column = 6, row = 1, padx=5)  
