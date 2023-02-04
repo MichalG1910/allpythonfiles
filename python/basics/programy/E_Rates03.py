@@ -22,8 +22,12 @@ class EchangeRates():
         self.gui()
     
     def checkConnection(self):
-        hostname = "nbp.pl" 
-        response = os.system("ping -c 1 " + hostname)
+        hostname = "nbp.pl"
+        if sys.platform == 'linux': 
+            response = os.system("ping -c 1 " + hostname)
+        else:
+            response = os.system("ping -n 1 " + hostname)
+
         if response == 0:
             pass
         else:
@@ -38,16 +42,7 @@ class EchangeRates():
             pass
         else:
             os.mkdir(os.path.join(self.filePath, "raports")) 
-    '''
-    def fileRename(self):            
-        if os.path.exists(f"{self.filePath}/raports/raport_exchangerates_{self.yesterday}.txt") and str(self.effectiveDateList[-1]) != str(self.today):
-            os.remove(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt")
-        else:
-            if str(self.today) == str(self.effectiveDateList[-1]):
-                pass
-            else:
-                os.rename(f"{self.filePath}/raports/raport_exchangerates_{self.today}.txt", f"{self.filePath}/raports/raport_exchangerates_{self.effectiveDateList[-1]}.txt" )
-    '''    
+     
     def lastNBPraport(self):
         self.num = 0
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
@@ -57,8 +52,7 @@ class EchangeRates():
             self.dataFormatting()
             self.raportCreate()
             self.terminalPrint()
-            #self.fileRename() 
-            del self.data, self.response 
+            del self.data, self.response, self.printList, self.erDataList 
             self.start = None
             self.firstloopEDL = self.effectiveDateList[-1]
     
@@ -88,7 +82,7 @@ class EchangeRates():
                 self.dataFormatting()
                 self.raportCreate() 
                 self.excel_ER_raport() 
-                del self.data, self.raport
+                del self.data, self.raport, self.excelList, self.printList, self.erDataList
                     
                 #else:
                     #mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę") 
@@ -98,7 +92,6 @@ class EchangeRates():
         self.repeat = math.ceil(self.daysLen / self.step) 
         stepDate = runDate + datetime.timedelta(days=self.step)
         stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
-        
         longerList = []
         while self.repeat > 0:
             if stepDate >= self.eDate:
@@ -114,7 +107,8 @@ class EchangeRates():
             runDate = runDate + stepTimedelta
             stepDate = stepDate + stepTimedelta
             self.repeat -= 1
-        self.data = longerList     
+        self.data = longerList
+        del longerList     
             
     def dataFormatting(self):
         self.excelList, self.printList, self.erDataList =[],[],[]
@@ -141,19 +135,20 @@ class EchangeRates():
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
             self.erDataList.append(erData)
+            del erData
         
     def raportCreate(self):
         def file_write(fileWrite):
             erDataListLen = len(self.erDataList)
             rpt=0
-            fileWrite.write(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n\n' )
+            fileWrite.write(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n' )
             while rpt < erDataListLen:
                 erFrame = pd.DataFrame(self.erDataList[rpt])
-                fileWrite.write(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n")
+                fileWrite.write(f"\n\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n")
                 fileWrite.write(tabulate(erFrame, showindex=True, headers=erFrame.columns))
-                fileWrite.write(f'\nilość walut: {len(self.rates)}\n')
                 rpt += 1
             fileWrite.close()
+            del erFrame, fileWrite
 
         if self.num == 1:
             self.createRaportDir()
@@ -177,13 +172,11 @@ class EchangeRates():
     def terminalPrint(self):
         printListLen = len(self.printList)
         rpt=0
-
         print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
         while rpt < printListLen:
             erFrame = pd.DataFrame(self.erDataList[rpt])
             print(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}")
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
-            print('ilość walut: ',len(self.rates))
             rpt += 1
         
     def getDataForGraph(self):
@@ -211,13 +204,13 @@ class EchangeRates():
                     stepDate = stepDate + stepTimedelta
                 self.repeat -= 1
             graphData = self.gdList 
-
+            del self.gdList
+            
             for rate in graphData:
                 graphEffectiveDate = rate["effectiveDate"]
                 graphMid = rate["mid"]
                 self.graphEffectiveDateList.append(graphEffectiveDate)
                 self.graphMidList.append(graphMid)
-            del self.gdList
             del graphData
 
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
