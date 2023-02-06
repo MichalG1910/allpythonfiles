@@ -69,7 +69,7 @@ class EchangeRates():
             self.sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             self.eDate = datetime.date(edList[0], edList[1], edList[2])
             if self.sDate < datetime.date(2004,5,4):
-                mBox.showinfo("Błędny format raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informaacji na stronie http://api.nbp.pl")
+                mBox.showinfo("Błędny format raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informacji na stronie http://api.nbp.pl")
             elif self.eDate > self.today or self.sDate > self.eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
             elif str(self.eDate) > str(self.firstloopEDL):
