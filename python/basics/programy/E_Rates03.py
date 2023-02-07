@@ -17,8 +17,8 @@ class EchangeRates():
         self.today = datetime.date.today()
         self.yesterday = self.today - datetime.timedelta(days=1)
         self.checkConnection()
-        self.createRaportDir()
-        self.lastNBPraport()
+        self.createReportDir()
+        self.latestNBPreport()
         self.gui()
     
     def checkConnection(self):
@@ -37,26 +37,26 @@ class EchangeRates():
             else:
                 exit()
             
-    def createRaportDir(self):
-        if os.path.exists(f"{self.filePath}/raports"):
+    def createReportDir(self):
+        if os.path.exists(f"{self.filePath}/reports"):
             pass
         else:
-            os.mkdir(os.path.join(self.filePath, "raports")) 
+            os.mkdir(os.path.join(self.filePath, "reports")) 
      
-    def lastNBPraport(self):
+    def latestNBPreport(self):
         self.num = 0
         self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a?format=json")
         if self.response.ok == True:
             self.daysLen = 1
             self.data = self.response.json()[0:self.daysLen]
             self.dataFormatting()
-            self.raportCreate()
+            self.reportCreate()
             self.terminalPrint()
             del self.data, self.response, self.printList, self.erDataList 
             self.start = None
             self.firstloopEDL = self.effectiveDateList[-1]
     
-    def generateRaport(self):
+    def generateReport(self):
         self.num = 1
 
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
@@ -69,28 +69,28 @@ class EchangeRates():
             self.sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             self.eDate = datetime.date(edList[0], edList[1], edList[2])
             if self.sDate < datetime.date(2004,5,4):
-                mBox.showinfo("Błędny format raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informacji na stronie http://api.nbp.pl")
+                mBox.showinfo("Błędny format reportu NBP", "Możliwe jest pobranie reportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze reporty mają inny format danych. Więcej informaacji na stronie http://api.nbp.pl")
             elif self.eDate > self.today or self.sDate > self.eDate:
                 mBox.showerror("Uwaga", "Niepoprawna data, wprowadź nową datę")
             elif str(self.eDate) > str(self.firstloopEDL):
-                mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
+                mBox.showinfo("Report NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
             else:
                 self.step = 91
                 self.sumdays = self.eDate - self.sDate
                 self.daysLen = self.sumdays.days + 1
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
                 if self.response.ok == False and self.daysLen < 91:
-                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                    mBox.showinfo("Brak reportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego reportu.\nZwykle publikacja reportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                 else:
                     self.checkConnection()
-                    self.longerRaportLoop()
+                    self.longerReportLoop()
                     self.dataFormatting()
-                    self.raportCreate() 
-                    self.excel_ER_raport() 
-                    del self.data, self.raport, self.excelList, self.printList, self.erDataList, self.response
+                    self.reportCreate() 
+                    self.excel_ER_report() 
+                    del self.data, self.report, self.excelList, self.printList, self.erDataList, self.response
                      
     
-    def longerRaportLoop(self):
+    def longerReportLoop(self):
         runDate = self.sDate
         self.repeat = math.ceil(self.daysLen / self.step) 
         stepDate = runDate + datetime.timedelta(days=self.step)
@@ -138,11 +138,11 @@ class EchangeRates():
             self.erDataList.append(erData)
             del erData
         
-    def raportCreate(self):
+    def reportCreate(self):
         def file_write(fileWrite):
             erDataListLen = len(self.erDataList)
             rpt=0
-            fileWrite.write(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n' )
+            fileWrite.write(f'ilośc sprawdzanych dni: {self.daysLen}\nilość reportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n' )
             while rpt < erDataListLen:
                 erFrame = pd.DataFrame(self.erDataList[rpt])
                 fileWrite.write(f"\n\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n")
@@ -152,18 +152,18 @@ class EchangeRates():
             del erFrame, fileWrite
 
         if self.num == 1:
-            self.createRaportDir()
-            self.raport = open(f"{self.filePath}/raports/raport_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
-            file_write(self.raport)
+            self.createReportDir()
+            self.report = open(f"{self.filePath}/reports/report_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")
+            file_write(self.report)
         else:    
-            self.start = open(f"{self.filePath}/raports/raport_exchangerates_{self.effectiveDateList[-1]}.txt", "w")
+            self.start = open(f"{self.filePath}/reports/report_exchangerates_{self.effectiveDateList[-1]}.txt", "w")
             file_write(self.start)
         
-    def excel_ER_raport(self):
+    def excel_ER_report(self):
         excelLen = len(self.excelList)   
         exc=0
-        self.excel = open(f"{self.filePath}/raports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.txt", "w")           
-        self.excel.write(f"currency,code,value,date\n")
+        self.excel = open(f"{self.filePath}/reports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.csv", "w")           
+        self.excel.write(f"currency,code,date,value\n")
             
         while exc < excelLen:
             self.excel.write(f"{self.excelList[exc][0]},{self.excelList[exc][1]},{self.excelList[exc][2]},{self.excelList[exc][3]}\n")
@@ -173,7 +173,7 @@ class EchangeRates():
     def terminalPrint(self):
         printListLen = len(self.printList)
         rpt=0
-        print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
+        print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość reportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
         while rpt < printListLen:
             erFrame = pd.DataFrame(self.erDataList[rpt])
             print(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}")
@@ -212,7 +212,10 @@ class EchangeRates():
                 graphMid = rate["mid"]
                 self.graphEffectiveDateList.append(graphEffectiveDate)
                 self.graphMidList.append(graphMid)
-            del graphData
+                self.xValues = self.graphEffectiveDateList 
+                self.yValues = self.graphMidList
+
+            del graphData, self.graphEffectiveDateList, self.graphMidList
 
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
             self.dayRange, self.repeat, self.step = int(self.timeRange.get()[0:2]), 1, int(self.timeRange.get()[0:2])
@@ -244,9 +247,7 @@ class EchangeRates():
     
     def gui(self):
         
-        def generateGraph():
-            self.getDataForGraph()
-            
+        def refreshGraph():
             if win.tk.call("ttk::style", "theme", "use") == "azure-dark":
                 plt.style.use('dark_background')
                 fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
@@ -257,13 +258,11 @@ class EchangeRates():
             axis = fig.add_subplot(111) 
             axis.set_title(f"{self.code.upper()} {self.codeCurrencyDict[self.code.upper()]}", fontsize=16, color="silver")
             axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-            xValues = self.graphEffectiveDateList 
-            yValues = self.graphMidList
-            xValuesLen = len(xValues)-1
+            xValuesLen = len(self.xValues)-1
             a = math.ceil(xValuesLen / 20)
             b = list(range(1,xValuesLen, a))
             b.append(xValuesLen)
-            axis.plot(xValues, yValues) 
+            axis.plot(self.xValues, self.yValues) 
             xaxis = axis.get_xaxis()
             xaxis.set_ticks(b)
             plt.xticks(rotation=45, fontsize=8)
@@ -275,11 +274,14 @@ class EchangeRates():
             
             win.update()
             win.deiconify()
-            del xValues, yValues, self.graphEffectiveDateList, self.graphMidList
+
+        def newGraph():
+            self.getDataForGraph()
+            refreshGraph()
 
         def saveGraphPNG():
-            self.createRaportDir()
-            plt.savefig(f"{self.filePath}/raports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
+            self.createReportDir()
+            plt.savefig(f"{self.filePath}/reports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
         
         def winStyle():
             win.tk.call('source', os.path.join(self.filePath, 'azure.tcl'))
@@ -306,14 +308,14 @@ class EchangeRates():
                     icon1 = PhotoImage(file=f'{self.filePath}/light.png')
                     self.accentbutton.configure(image=icon1)
                     self.accentbutton.image = icon1
-                    generateGraph()
+                    refreshGraph()
                     
                 else:
                     win.tk.call("set_theme", "dark")
                     icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
                     self.accentbutton.configure(image=icon2 )
                     self.accentbutton.image = icon2
-                    generateGraph()
+                    refreshGraph()
                     
             icon = PhotoImage(file=f'{self.filePath}/dark.png')
             self.accentbutton = ttk.Button(win, image=icon, command=change_theme)
@@ -353,23 +355,23 @@ class EchangeRates():
             rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
             rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
             rangeChosen.current(0)
-            ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = generateGraph, width=12).grid(column = 6, row = 1, padx=5)  
+            ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = newGraph, width=12).grid(column = 6, row = 1, padx=5)  
             ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5) 
             
-        def generateRaportGui():    
-            raportFrame = ttk.LabelFrame(win, text= "Generuj raport", labelanchor="n")
-            raportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
-            ttk.Label(raportFrame, text= "data początkowa (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
-            ttk.Label(raportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
+        def generateReportGui():    
+            reportFrame = ttk.LabelFrame(win, text= "Generuj raport", labelanchor="n")
+            reportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
+            ttk.Label(reportFrame, text= "data początkowa (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
+            ttk.Label(reportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
                 
             self.startDate = tk.StringVar() 
-            ttk.Entry(raportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
+            ttk.Entry(reportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
             
             self.endDate = tk.StringVar()
-            endDateBox = ttk.Entry(raportFrame, width= 10,  textvariable= self.endDate)
+            endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
             endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
             endDateBox.insert(tk.END, self.effectiveDateList[-1])
-            ttk.Button(raportFrame, text = "Generuj raport", command = self.generateRaport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
+            ttk.Button(reportFrame, text = "Generuj raport", command = self.generateReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
             
         win = tk.Tk()
         winStyle()
@@ -377,7 +379,7 @@ class EchangeRates():
         themeButton()
         exchangeRatesTabel()
         graphGui()
-        generateRaportGui()
+        generateReportGui()
         win.mainloop()
         
 oop = EchangeRates()
