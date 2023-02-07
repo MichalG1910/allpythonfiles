@@ -58,7 +58,6 @@ class EchangeRates():
     
     def generateReport(self):
         self.num = 1
-
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
         else:
@@ -80,7 +79,7 @@ class EchangeRates():
                 self.daysLen = self.sumdays.days + 1
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{self.startDate.get()}/{self.endDate.get()}/?format=json")
                 if self.response.ok == False and self.daysLen < 91:
-                    mBox.showinfo("Brak reportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego reportu.\nZwykle publikacja reportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                 else:
                     self.checkConnection()
                     self.longerReportLoop()
@@ -88,7 +87,6 @@ class EchangeRates():
                     self.reportCreate() 
                     self.excel_ER_report() 
                     del self.data, self.report, self.excelList, self.printList, self.erDataList, self.response
-                     
     
     def longerReportLoop(self):
         runDate = self.sDate
@@ -96,6 +94,7 @@ class EchangeRates():
         stepDate = runDate + datetime.timedelta(days=self.step)
         stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
         longerList = []
+
         while self.repeat > 0:
             if stepDate >= self.eDate: 
                 stepDate = self.eDate
@@ -108,6 +107,7 @@ class EchangeRates():
             runDate = runDate + stepTimedelta
             stepDate = stepDate + stepTimedelta
             self.repeat -= 1
+
         self.data = longerList
         del longerList     
             
@@ -143,11 +143,13 @@ class EchangeRates():
             erDataListLen = len(self.erDataList)
             rpt=0
             fileWrite.write(f'ilośc sprawdzanych dni: {self.daysLen}\nilość reportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n' )
+            
             while rpt < erDataListLen:
                 erFrame = pd.DataFrame(self.erDataList[rpt])
                 fileWrite.write(f"\n\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n")
                 fileWrite.write(tabulate(erFrame, showindex=True, headers=erFrame.columns))
                 rpt += 1
+
             fileWrite.close()
             del erFrame, fileWrite
 
@@ -168,12 +170,14 @@ class EchangeRates():
         while exc < excelLen:
             self.excel.write(f"{self.excelList[exc][0]},{self.excelList[exc][1]},{self.excelList[exc][2]},{self.excelList[exc][3]}\n")
             exc += 1
+
         self.excel.close()
             
     def terminalPrint(self):
         printListLen = len(self.printList)
         rpt=0
         print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość reportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
+        
         while rpt < printListLen:
             erFrame = pd.DataFrame(self.erDataList[rpt])
             print(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}")
@@ -212,35 +216,29 @@ class EchangeRates():
                 graphMid = rate["mid"]
                 self.graphEffectiveDateList.append(graphEffectiveDate)
                 self.graphMidList.append(graphMid)
-                self.xValues = self.graphEffectiveDateList 
-                self.yValues = self.graphMidList
 
+            self.xValues = self.graphEffectiveDateList 
+            self.yValues = self.graphMidList
             del graphData, self.graphEffectiveDateList, self.graphMidList
 
         if self.timeRange.get() == "30 dni" or self.timeRange.get() == "60 dni" or self.timeRange.get() == "90 dni":
             self.dayRange, self.repeat, self.step = int(self.timeRange.get()[0:2]), 1, int(self.timeRange.get()[0:2])
             timeRangeLoop()
-        
         elif self.timeRange.get() == "pół roku":
             self.dayRange, self.repeat, self.step = 182, 2, 91
             timeRangeLoop()
-        
         elif self.timeRange.get() == "rok":
             self.dayRange, self.repeat, self.step = 364, 4, 91
             timeRangeLoop()
-
         elif self.timeRange.get() == "2 lata":
             self.dayRange, self.repeat, self.step = 728, 8, 91
-            timeRangeLoop()
-                
+            timeRangeLoop() 
         elif self.timeRange.get() == "5 lat":
             self.dayRange, self.repeat, self.step = 1820, 20, 91
             timeRangeLoop()
-            
         elif self.timeRange.get() == "10 lat":
             self.dayRange, self.repeat, self.step = 3640, 40, 91
             timeRangeLoop()   
-        
         elif self.timeRange.get() == "15 lat":
             self.dayRange, self.repeat, self.step = 5460, 60, 91
             timeRangeLoop()   
@@ -268,10 +266,8 @@ class EchangeRates():
             plt.xticks(rotation=45, fontsize=8)
             axis.set_xlabel("Data") 
             axis.set_ylabel("PLN Złoty")
-             
             canvas = FigureCanvasTkAgg(fig, master=win) 
             canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=5, pady=5) 
-            
             win.update()
             win.deiconify()
 
@@ -294,7 +290,6 @@ class EchangeRates():
             axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
             axis.set_xlabel("Data") 
             axis.set_ylabel("PLN Złoty")
-             
             canvas = FigureCanvasTkAgg(fig, master=win) 
             canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) 
             win.update()
@@ -302,7 +297,6 @@ class EchangeRates():
 
         def themeButton():
             def change_theme():
-            
                 if win.tk.call("ttk::style", "theme", "use") == "azure-dark":
                     win.tk.call("set_theme", "light")
                     icon1 = PhotoImage(file=f'{self.filePath}/light.png')
