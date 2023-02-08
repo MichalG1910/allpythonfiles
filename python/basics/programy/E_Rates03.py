@@ -82,13 +82,13 @@ class EchangeRates():
                     mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                 else:
                     self.checkConnection()
-                    self.longerReportLoop()
+                    self.ReportLoop()
                     self.dataFormatting()
                     self.reportCreate() 
                     self.excel_ER_report() 
                     del self.data, self.report, self.excelList, self.printList, self.erDataList, self.response
     
-    def longerReportLoop(self):
+    def ReportLoop(self):
         runDate = self.sDate
         self.repeat = math.ceil(self.daysLen / self.step) 
         stepDate = runDate + datetime.timedelta(days=self.step)
