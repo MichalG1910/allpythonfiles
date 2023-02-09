@@ -85,8 +85,8 @@ class EchangeRates():
                     self.ReportLoop()
                     self.dataFormatting()
                     self.reportCreate() 
-                    self.excel_ER_report() 
-                    del self.data, self.report, self.excelList, self.printList, self.erDataList, self.response
+                    self.csv_ER_report() 
+                    del self.data, self.report, self.csvList, self.printList, self.erDataList, self.response
     
     def ReportLoop(self):
         runDate = self.sDate
@@ -112,7 +112,7 @@ class EchangeRates():
         del longerList     
             
     def dataFormatting(self):
-        self.excelList, self.printList, self.erDataList =[],[],[]
+        self.csvList, self.printList, self.erDataList =[],[],[]
         
         for dict in self.data:
             table = dict["table"]
@@ -130,7 +130,7 @@ class EchangeRates():
                 self.currencyList.append(currency), self.codeList.append(self.code), self.valueList.append(mid)
                 self.codeCurrencyDict[self.code] = currency
                 if self.num == 1:
-                    self.excelList.append([currency,self.code,self.effectiveDate,mid])
+                    self.csvList.append([currency,self.code,self.effectiveDate,mid])
 
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
@@ -161,17 +161,17 @@ class EchangeRates():
             self.start = open(f"{self.filePath}/reports/report_exchangerates_{self.effectiveDateList[-1]}.txt", "w")
             file_write(self.start)
         
-    def excel_ER_report(self):
-        excelLen = len(self.excelList)   
+    def csv_ER_report(self):
+        csvLen = len(self.csvList)   
         exc=0
-        self.excel = open(f"{self.filePath}/reports/EXCEL_exchangerates_{self.startDate.get()}_{self.endDate.get()}.csv", "w")           
-        self.excel.write(f"currency,code,date,value\n")
+        self.csv = open(f"{self.filePath}/reports/CSV_exchangerates_{self.startDate.get()}_{self.endDate.get()}.csv", "w")           
+        self.csv.write(f"currency,code,date,value\n")
             
-        while exc < excelLen:
-            self.excel.write(f"{self.excelList[exc][0]},{self.excelList[exc][1]},{self.excelList[exc][2]},{self.excelList[exc][3]}\n")
+        while exc < csvLen:
+            self.csv.write(f"{self.csvList[exc][0]},{self.csvList[exc][1]},{self.csvList[exc][2]},{self.csvList[exc][3]}\n")
             exc += 1
 
-        self.excel.close()
+        self.csv.close()
             
     def terminalPrint(self):
         printListLen = len(self.printList)
