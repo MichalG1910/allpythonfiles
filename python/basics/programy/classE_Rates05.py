@@ -136,7 +136,7 @@ class Gui:
         endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
         endDateBox.insert(tk.END, effectiveDateList[-1])
-        ttk.Button(reportFrame, text = "Generuj raport", command = ExchangeRates.generateReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
+        ttk.Button(reportFrame, text = "Generuj raport", command = obj.generateReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
         
 
 class ExchangeRates:
