@@ -24,8 +24,6 @@ class Main:
         self.graphGui()
         self.generateReportGui()
         
-    
-    
     def refreshGraph(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
@@ -133,7 +131,10 @@ class Main:
         ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.newGraph, width=12).grid(column = 6, row = 1, padx=5)  
         ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = self.saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5) 
         
-    def generateReportGui(self):    
+    def generateReportGui(self): 
+        def runReport():
+            dataObj.generateReport(self.startDate.get(), self.endDate.get()) 
+
         reportFrame = ttk.LabelFrame(self.win, text= "Generuj raport", labelanchor="n")
         reportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
         ttk.Label(reportFrame, text= "data początkowa (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
@@ -146,7 +147,7 @@ class Main:
         endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
-        ttk.Button(reportFrame, text = "Generuj raport", command = dataObj.generateReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
+        ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
 dataObj = Data()
 mainObj = Main() 
 mainObj.win.mainloop()      
