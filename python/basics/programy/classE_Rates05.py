@@ -10,8 +10,10 @@ from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
 class Gui:
-    def __init__(self):
+    def __init__(self, firstloopEDL):
         self.win = tk.Tk()
+        self.firstloopEDL = firstloopEDL
+        self.filePath = os.path.dirname(sys.argv[0])
         
       
     def refreshGraph(self):
@@ -41,15 +43,15 @@ class Gui:
         self.win.deiconify()
 
     def newGraph(self):
-        obj.getDataForGraph(self.currencyName.get(), self.timeRange.get())
+        obj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), self.firstloopEDL)
         self.refreshGraph()
 
     def saveGraphPNG(self):
-        ExchangeRates.createReportDir()
-        plt.savefig(f"{ExchangeRates.filePath}/reports/{self.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
+        obj.createReportDir()
+        plt.savefig(f"{self.filePath}/reports/{obj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
     
-    def winStyle(self, filePath):
-        self.win.tk.call('source', os.path.join(filePath, 'azure.tcl'))
+    def winStyle(self):
+        self.win.tk.call('source', os.path.join(self.filePath, 'azure.tcl'))
         self.win.tk.call("set_theme", "dark")
         
     def emptyGraph(self):
@@ -64,23 +66,23 @@ class Gui:
         self.win.update()
         self.win.deiconify()
 
-    def themeButton(self,filePath):
+    def themeButton(self):
         def change_theme():
             if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
                 self.win.tk.call("set_theme", "light")
-                icon1 = PhotoImage(file=f'{filePath}/light.png')
+                icon1 = PhotoImage(file=f'{self.filePath}/light.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
                 self.refreshGraph()
                 
             else:
                 self.win.tk.call("set_theme", "dark")
-                icon2 = PhotoImage(file=f'{filePath}/dark.png')
+                icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
                 self.accentbutton.configure(image=icon2 )
                 self.accentbutton.image = icon2
                 self.refreshGraph()
                 
-        icon = PhotoImage(file=f'{filePath}/dark.png')
+        icon = PhotoImage(file=f'{self.filePath}/dark.png')
         self.accentbutton = ttk.Button(self.win, image=icon, command=change_theme)
         self.accentbutton.image = icon
         self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
@@ -137,7 +139,7 @@ class Gui:
         ttk.Button(reportFrame, text = "Generuj raport", command = ExchangeRates.generateReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
         
 
-class ExchangeRates(Gui):
+class ExchangeRates:
     def __init__(self):
         
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
@@ -177,9 +179,9 @@ class ExchangeRates(Gui):
             self.terminalPrint()
             del self.data, self.response, self.printList, self.erDataList 
             self.start = None
-            self.firstloopEDL = self.effectiveDateList[-1]
-            
-    
+        self.firstloopEDL = self.effectiveDateList[-1]
+        return  self.firstloopEDL
+        
     def generateReport(self):
         self.num = 1
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
@@ -308,10 +310,10 @@ class ExchangeRates(Gui):
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             rpt += 1
         
-    def getDataForGraph(self, currencyName, timeRange):
+    def getDataForGraph(self, currencyName, timeRange, firstloopEDL):
         self.code = (currencyName[0:3]).lower()
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
-
+        
         def timeRangeLoop():
             runDate = self.today - datetime.timedelta(days=self.dayRange)
             stepDate = runDate + datetime.timedelta(days=self.step)
@@ -326,7 +328,7 @@ class ExchangeRates(Gui):
                 self.gdList += graphData
                 runDate = runDate + stepTimedelta
                 if self.repeat == 2:
-                    date1_list = (list(self.firstloopEDL.split('-')))
+                    date1_list = (list(firstloopEDL.split('-')))
                     sdList = [int(i) for i in date1_list] 
                     stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
                 else:
