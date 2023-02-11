@@ -9,137 +9,7 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
-class Gui:
-    def __init__(self, firstloopEDL):
-        self.win = tk.Tk()
-        self.firstloopEDL = firstloopEDL
-        self.filePath = os.path.dirname(sys.argv[0])
-        
-      
-    def refreshGraph(self):
-        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            plt.style.use('dark_background')
-            fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
-        else:
-            plt.style.use('Solarize_Light2')
-            fig = plt.figure(figsize=(12,8), facecolor = "lightcyan")
-        
-        axis = fig.add_subplot(111) 
-        axis.set_title(f"{obj.code.upper()}", fontsize=16, color="silver")
-        axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-        xValuesLen = len(obj.xValues)-1
-        a = math.ceil(xValuesLen / 20)
-        b = list(range(1,xValuesLen, a))
-        b.append(xValuesLen)
-        axis.plot(obj.xValues, obj.yValues) 
-        xaxis = axis.get_xaxis()
-        xaxis.set_ticks(b)
-        plt.xticks(rotation=45, fontsize=8)
-        axis.set_xlabel("Data") 
-        axis.set_ylabel("PLN Złoty")
-        canvas = FigureCanvasTkAgg(fig, master=self.win) 
-        canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=5, pady=5) 
-        self.win.update()
-        self.win.deiconify()
-
-    def newGraph(self):
-        obj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), self.firstloopEDL)
-        self.refreshGraph()
-
-    def saveGraphPNG(self):
-        obj.createReportDir()
-        plt.savefig(f"{self.filePath}/reports/{obj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
-    
-    def winStyle(self):
-        self.win.tk.call('source', os.path.join(self.filePath, 'azure.tcl'))
-        self.win.tk.call("set_theme", "dark")
-        
-    def emptyGraph(self):
-        plt.style.use('dark_background')
-        fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
-        axis = fig.add_subplot(111) 
-        axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-        axis.set_xlabel("Data") 
-        axis.set_ylabel("PLN Złoty")
-        canvas = FigureCanvasTkAgg(fig, master=self.win) 
-        canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) 
-        self.win.update()
-        self.win.deiconify()
-
-    def themeButton(self):
-        def change_theme():
-            if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
-                self.win.tk.call("set_theme", "light")
-                icon1 = PhotoImage(file=f'{self.filePath}/light.png')
-                self.accentbutton.configure(image=icon1)
-                self.accentbutton.image = icon1
-                self.refreshGraph()
-                
-            else:
-                self.win.tk.call("set_theme", "dark")
-                icon2 = PhotoImage(file=f'{self.filePath}/dark.png')
-                self.accentbutton.configure(image=icon2 )
-                self.accentbutton.image = icon2
-                self.refreshGraph()
-                
-        icon = PhotoImage(file=f'{self.filePath}/dark.png')
-        self.accentbutton = ttk.Button(self.win, image=icon, command=change_theme)
-        self.accentbutton.image = icon
-        self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
-
-    def exchangeRatesTabel(self, effectiveDateList, currencyList, codeList, valueList, rates):
-        echangeRateFrame = ttk.LabelFrame(self.win, text= f"Średnie kursy walut {effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-        echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(rates)+1), padx=5, sticky=tk.W)
-        
-        ttk.Label(echangeRateFrame, text= "Waluta:").grid(column=0, row=0, sticky=tk.W, padx=5)
-        ttk.Label(echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
-        ttk.Label(echangeRateFrame, text= "Wartość w PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
-        
-        for t in range(len(rates)):
-            ttk.Label(echangeRateFrame,  width=35, text= f'{currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(echangeRateFrame,  width=5, text= f'{codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(echangeRateFrame,  width=12, text= f'{valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
-        
-    def graphGui(self, codeCurrencyDict):    
-        plotGraphFrame = ttk.LabelFrame(self.win, text= "Rysowanie wykresu", labelanchor="n")  
-        plotGraphFrame.grid(column=4, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.E)
-        ttk.Label(plotGraphFrame, text= "Waluta ").grid(column=4, row=1, sticky=tk.W, pady=5,padx=5) 
-        ttk.Label(plotGraphFrame, text= "Przedział czasowy ").grid(column=4, row=2, sticky=tk.W, pady=5, padx=5)
-            
-        self.currencyName = tk.StringVar()
-        codeCurrencyList = []
-        for key,values in codeCurrencyDict.items():
-            codeCurrencyList.append(f"{key}  {values}")
-        currencyChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.currencyName, state= "readonly")
-        currencyChosen["values"] = codeCurrencyList 
-        currencyChosen.grid(column= 5, row= 1, padx=5,pady=5)
-        currencyChosen.current(7)
-    
-        self.timeRange = tk.StringVar() 
-        rangeChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.timeRange, state= "readonly")
-        rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
-        rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
-        rangeChosen.current(0)
-        ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.newGraph, width=12).grid(column = 6, row = 1, padx=5)  
-        ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = self.saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5) 
-        
-    def generateReportGui(self, effectiveDateList):    
-        reportFrame = ttk.LabelFrame(self.win, text= "Generuj raport", labelanchor="n")
-        reportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
-        ttk.Label(reportFrame, text= "data początkowa (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
-        ttk.Label(reportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
-            
-        self.startDate = tk.StringVar() 
-        ttk.Entry(reportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
-        
-        self.endDate = tk.StringVar()
-        endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
-        endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
-        endDateBox.insert(tk.END, effectiveDateList[-1])
-        ttk.Button(reportFrame, text = "Generuj raport", command = obj.generateReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
-        
-
-class ExchangeRates:
+class Data:
     def __init__(self):
         
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
@@ -179,9 +49,8 @@ class ExchangeRates:
             self.terminalPrint()
             del self.data, self.response, self.printList, self.erDataList 
             self.start = None
-        self.firstloopEDL = self.effectiveDateList[-1]
-        return  self.firstloopEDL
-        
+            self.firstloopEDL = self.effectiveDateList[-1]
+    
     def generateReport(self):
         self.num = 1
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.startDate.get()) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",self.endDate.get()):
@@ -310,10 +179,10 @@ class ExchangeRates:
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             rpt += 1
         
-    def getDataForGraph(self, currencyName, timeRange, firstloopEDL):
+    def getDataForGraph(self, currencyName, timeRange):
         self.code = (currencyName[0:3]).lower()
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
-        
+
         def timeRangeLoop():
             runDate = self.today - datetime.timedelta(days=self.dayRange)
             stepDate = runDate + datetime.timedelta(days=self.step)
@@ -328,7 +197,7 @@ class ExchangeRates:
                 self.gdList += graphData
                 runDate = runDate + stepTimedelta
                 if self.repeat == 2:
-                    date1_list = (list(firstloopEDL.split('-')))
+                    date1_list = (list(self.firstloopEDL.split('-')))
                     sdList = [int(i) for i in date1_list] 
                     stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
                 else:
@@ -342,7 +211,7 @@ class ExchangeRates:
                 graphMid = rate["mid"]
                 self.graphEffectiveDateList.append(graphEffectiveDate)
                 self.graphMidList.append(graphMid)
-            
+
             self.xValues = self.graphEffectiveDateList 
             self.yValues = self.graphMidList
             del graphData, self.graphEffectiveDateList, self.graphMidList
@@ -367,8 +236,8 @@ class ExchangeRates:
             timeRangeLoop()   
         elif timeRange == "15 lat":
             self.dayRange, self.repeat, self.step = 5460, 60, 91
-            timeRangeLoop()
-obj = ExchangeRates()   
+            timeRangeLoop()  
+ 
     
     
 
