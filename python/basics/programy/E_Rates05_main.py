@@ -1,12 +1,9 @@
-import re, os, sys, math, datetime, requests
+import os, math
 import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox as mBox
 from tkinter import PhotoImage
-import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
-from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
 from classE_Rates05 import Data
@@ -18,61 +15,15 @@ class Main:
         dataObj.createReportDir()
         dataObj.latestNBPreport()
         self.winStyle()
-        self.emptyGraph()
         self.themeButton()
+        self.emptyGraph()
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
-        
-    def refreshGraph(self):
-        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            plt.style.use('dark_background')
-            fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
-        else:
-            plt.style.use('Solarize_Light2')
-            fig = plt.figure(figsize=(12,8), facecolor = "lightcyan")
-        
-        axis = fig.add_subplot(111) 
-        axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]}", fontsize=16, color="silver")
-        axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-        xValuesLen = len(dataObj.xValues)-1
-        a = math.ceil(xValuesLen / 20)
-        b = list(range(1,xValuesLen, a))
-        b.append(xValuesLen)
-        axis.plot(dataObj.xValues, dataObj.yValues) 
-        xaxis = axis.get_xaxis()
-        xaxis.set_ticks(b)
-        plt.xticks(rotation=45, fontsize=8)
-        axis.set_xlabel("Data") 
-        axis.set_ylabel("PLN Złoty")
-        canvas = FigureCanvasTkAgg(fig, master=self.win) 
-        canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=5, pady=5) 
-        self.win.update()
-        self.win.deiconify()
-
-    def newGraph(self):
-        dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get())
-        self.refreshGraph()
-
-    def saveGraphPNG(self):
-        dataObj.createReportDir()
-        plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
     
     def winStyle(self):
         self.win.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         self.win.tk.call("set_theme", "dark")
-        
-    def emptyGraph(self):
-        plt.style.use('dark_background')
-        fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
-        axis = fig.add_subplot(111) 
-        axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-        axis.set_xlabel("Data") 
-        axis.set_ylabel("PLN Złoty")
-        canvas = FigureCanvasTkAgg(fig, master=self.win) 
-        canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) 
-        self.win.update()
-        self.win.deiconify()
 
     def themeButton(self):
         def change_theme():
@@ -94,6 +45,65 @@ class Main:
         self.accentbutton = ttk.Button(self.win, image=icon, command=change_theme)
         self.accentbutton.image = icon
         self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
+    
+    def emptyGraph(self):
+        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+            plt.style.use('dark_background')
+            fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
+        else:
+            plt.style.use('Solarize_Light2')
+            fig = plt.figure(figsize=(12,8), facecolor = "lightcyan")
+        
+        axis = fig.add_subplot(111) 
+        axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+        axis.set_xlabel("Data") 
+        axis.set_ylabel("PLN Złoty")
+        canvas = FigureCanvasTkAgg(fig, master=self.win) 
+        canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=10, pady=10) 
+        self.win.update()
+        self.win.deiconify()
+
+    def newGraph(self):
+        dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get())
+        self.refreshGraph()
+
+    def refreshGraph(self):
+        try:
+            dataObj.xValues 
+        except AttributeError:
+            dataObj.xValues = None
+            
+        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+            plt.style.use('dark_background')
+            fig = plt.figure(figsize=(12,8), facecolor = "dimgray")
+        else:
+            plt.style.use('Solarize_Light2')
+            fig = plt.figure(figsize=(12,8), facecolor = "lightcyan")
+        
+        if dataObj.xValues == None:
+            self.emptyGraph()
+        else:
+            axis = fig.add_subplot(111) 
+            axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]}", fontsize=16, color="silver")
+            axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+            xValuesLen = len(dataObj.xValues)-1
+            a = math.ceil(xValuesLen / 20)
+            b = list(range(1,xValuesLen, a))
+            b.append(xValuesLen)
+            axis.plot(dataObj.xValues, dataObj.yValues) 
+            xaxis = axis.get_xaxis()
+            xaxis.set_ticks(b)
+            plt.xticks(rotation=45, fontsize=8)
+            axis.set_xlabel("Data") 
+            axis.set_ylabel("PLN Złoty")
+            canvas = FigureCanvasTkAgg(fig, master=self.win) 
+            canvas._tkcanvas.grid(column=4, row=6, columnspan=8, padx=5, pady=5) 
+            self.win.update()
+            self.win.deiconify()
+
+    def saveGraphPNG(self):
+        dataObj.createReportDir()
+        plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
 
     def exchangeRatesTabel(self):
         echangeRateFrame = ttk.LabelFrame(self.win, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
@@ -148,6 +158,7 @@ class Main:
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
         ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
+
 dataObj = Data()
 mainObj = Main() 
 mainObj.win.mainloop()      

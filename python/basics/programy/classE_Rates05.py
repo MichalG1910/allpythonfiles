@@ -1,11 +1,6 @@
 import re, os, sys, math, datetime, requests
-import tkinter as tk
-from tkinter import ttk
 from tkinter import messagebox as mBox
-from tkinter import PhotoImage
 import pandas as pd
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
-import matplotlib.pyplot as plt
 from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
@@ -14,7 +9,6 @@ class Data:
         
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
-        self.yesterday = self.today - datetime.timedelta(days=1)
         
     def checkConnection(self):
         hostname = "nbp.pl"
