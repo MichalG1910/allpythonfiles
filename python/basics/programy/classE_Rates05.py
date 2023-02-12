@@ -44,7 +44,17 @@ class Data:
             del self.data, self.response, self.printList, self.erDataList 
             self.start = None
             self.firstloopEDL = self.effectiveDateList[-1]
-    
+
+    def NBPratesUpDown(self):
+        self.num = 1
+        self.response = requests.get("http://api.nbp.pl/api/exchangerates/tables/a/last/2/?format=json")
+        if self.response.ok == True:
+            self.daysLen = 2
+            self.data = self.response.json()[0:self.daysLen]
+            self.dataFormatting()
+        self.ratesUpDown = self.csvList
+        del self.csvList
+        
     def generateReport(self,startDate, endDate):
         self.num = 1
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",startDate) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",endDate):

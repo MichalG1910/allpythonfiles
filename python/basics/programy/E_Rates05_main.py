@@ -13,6 +13,7 @@ class Main:
         self.win = tk.Tk()
         dataObj.checkConnection()
         dataObj.createReportDir()
+        dataObj.NBPratesUpDown()
         dataObj.latestNBPreport()
         self.winStyle()
         self.themeButton()
@@ -20,6 +21,7 @@ class Main:
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
+        
     
     def winStyle(self):
         self.win.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
@@ -116,7 +118,15 @@ class Main:
         for t in range(len(dataObj.rates)):
             ttk.Label(echangeRateFrame,  width=35, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
             ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(echangeRateFrame,  width=12, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+            
+            if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
+                col = "Green"
+            elif float(dataObj.ratesUpDown[t+33][3])<float(dataObj.ratesUpDown[t][3]):
+                col = "Red"
+            else:
+                col = "White"
+            ttk.Label(echangeRateFrame,  width=12, text= f'{dataObj.valueList[t]}', foreground=col).grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+        del dataObj.ratesUpDown
         
     def graphGui(self):    
         plotGraphFrame = ttk.LabelFrame(self.win, text= "Rysowanie wykresu", labelanchor="n")  
