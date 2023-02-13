@@ -111,21 +111,23 @@ class Main:
         echangeRateFrame = ttk.LabelFrame(self.win, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
         echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
         
-        ttk.Label(echangeRateFrame, text= "Waluta:").grid(column=0, row=0, sticky=tk.W, padx=5)
-        ttk.Label(echangeRateFrame, text= "Kod:").grid(column=1, row=0, sticky=tk.W, padx=5)
-        ttk.Label(echangeRateFrame, text= "Kurs PLN:").grid(column=2, row=0, sticky=tk.W, padx=2)
+        ttk.Label(echangeRateFrame, text= "Waluta").grid(column=0, row=0, sticky=tk.W, padx=5)
+        ttk.Label(echangeRateFrame, text= "Kod").grid(column=1, row=0, sticky=tk.W, padx=5)
+        ttk.Label(echangeRateFrame, text= "Kurs PLN").grid(column=2, row=0, sticky=tk.W, padx=2)
+        ttk.Label(echangeRateFrame, text= "Zmiana").grid(column=3, row=0, sticky=tk.W, padx=2)
         
         for t in range(len(dataObj.rates)):
             ttk.Label(echangeRateFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
             ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-            
+            ttk.Label(echangeRateFrame,  width=9, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
             if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
                 col = "Green"
             elif float(dataObj.ratesUpDown[t+33][3])<float(dataObj.ratesUpDown[t][3]):
                 col = "Red"
             else:
                 col = "White"
-            ttk.Label(echangeRateFrame,  width=12, text= f'{dataObj.valueList[t]}', foreground=col).grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+            procent = round((((float(dataObj.ratesUpDown[t+33][3])/float(dataObj.ratesUpDown[t][3])) -1) * 100), 2)
+            ttk.Label(echangeRateFrame,  width=6, text= f'{procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=3, pady=3)
         
         del dataObj.ratesUpDown
         
