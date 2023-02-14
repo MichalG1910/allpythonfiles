@@ -58,7 +58,7 @@ class Data:
     def NBPbidAsk(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/c/?format=json"
         self.NBPreport(3, url, "bid")
-        self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.rates1 = self.currencyList, self.codeList, self.valueList, self.askList, self.rates
+        self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.rates1, self.no1 = self.currencyList, self.codeList, self.valueList, self.askList, self.rates, self.no
         
     def generateReport(self,startDate, endDate):
         self.num = 2
@@ -120,10 +120,10 @@ class Data:
         
         for dict in self.data:
             table = dict["table"]
-            no = dict["no"]
+            self.no = dict["no"]
             self.effectiveDate= dict["effectiveDate"]
             self.rates = dict["rates"]
-            self.printList.append([table, no, self.effectiveDate])
+            self.printList.append([table, self.no, self.effectiveDate])
             self.currencyList, self.codeList, self.valueList, self.askList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],[],{}
             self.effectiveDateList.append(self.effectiveDate)
             

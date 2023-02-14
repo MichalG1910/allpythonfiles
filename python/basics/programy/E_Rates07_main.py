@@ -109,48 +109,55 @@ class Main:
         plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
 
     def exchangeRatesTabel(self):
-        tabControl = ttk.Notebook(self.win) 
-        tab1, tab2 = ttk.Frame(tabControl), ttk.Frame(tabControl)
-        tabControl.add(tab1, text="Średnie")  
-        tabControl.add(tab2, text="kupno/sprzedaż")
-        tabControl.grid(column=0, columnspan=4, rowspan=34, row=0, padx=4, pady=4)
-        # ----------------- Tab1 --------------------------------
-        echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-        echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
         
-        ttk.Label(echangeRateFrame, text= "Waluta").grid(column=0, row=0, sticky=tk.W, padx=5)
-        ttk.Label(echangeRateFrame, text= "Kod").grid(column=1, row=0, sticky=tk.W, padx=5)
-        ttk.Label(echangeRateFrame, text= "Kurs PLN").grid(column=2, row=0, sticky=tk.W, padx=2)
-        ttk.Label(echangeRateFrame, text= "Zmiana").grid(column=3, row=0, sticky=tk.W, padx=2)
+        def mediumTab(): 
+            tab1 = ttk.Frame(tabControl)
+            tabControl.add(tab1, text="Średnie")  
+            tabControl.grid(column=0, columnspan=4, rowspan=34, row=0, padx=4, pady=4)
+            echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
+            echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
+            
+            ttk.Label(echangeRateFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
+            ttk.Label(echangeRateFrame, text= "Kod", foreground="#007fff").grid(column=1, row=0, sticky=tk.W, padx=5)
+            ttk.Label(echangeRateFrame, text= "Kurs PLN", foreground="#007fff").grid(column=2, row=0, sticky=tk.W, padx=2)
+            ttk.Label(echangeRateFrame, text= "Zmiana", foreground="#007fff").grid(column=3, row=0, sticky=tk.W, padx=2)
+            
+            for t in range(len(dataObj.rates)):
+                ttk.Label(echangeRateFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame,  width=9, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+                if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
+                    col = "Green"
+                elif float(dataObj.ratesUpDown[t+33][3])<float(dataObj.ratesUpDown[t][3]):
+                    col = "Red"
+                else:
+                    col = "White"
+                procent = round((((float(dataObj.ratesUpDown[t+33][3])/float(dataObj.ratesUpDown[t][3])) -1) * 100), 2)
+                ttk.Label(echangeRateFrame,  width=6, text= f'{procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=3, pady=3)
         
-        for t in range(len(dataObj.rates)):
-            ttk.Label(echangeRateFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(echangeRateFrame,  width=9, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
-            if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
-                col = "Green"
-            elif float(dataObj.ratesUpDown[t+33][3])<float(dataObj.ratesUpDown[t][3]):
-                col = "Red"
-            else:
-                col = "White"
-            procent = round((((float(dataObj.ratesUpDown[t+33][3])/float(dataObj.ratesUpDown[t][3])) -1) * 100), 2)
-            ttk.Label(echangeRateFrame,  width=6, text= f'{procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=3, pady=3)
-        # ----------------- Tab2 --------------------------------
-        buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-        buySellFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
-        
-        ttk.Label(buySellFrame, text= "Waluta").grid(column=0, row=0, sticky=tk.W, padx=5)
-        ttk.Label(buySellFrame, text= "Kod").grid(column=1, row=0, sticky=tk.W, padx=5)
-        ttk.Label(buySellFrame, text= "Kupno").grid(column=2, row=0, sticky=tk.W, padx=2)
-        ttk.Label(buySellFrame, text= "Sprzedaż").grid(column=3, row=0, sticky=tk.W, padx=2)
-
-        for v in range(len(dataObj.rates1)):
-            ttk.Label(buySellFrame,  width=28, text= f'{dataObj.currencyList1[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(buySellFrame,  width=5, text= f'{dataObj.codeList1[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(buySellFrame,  width=9, text= f'{dataObj.valueList1[v]}').grid(column=2, row=v+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(buySellFrame,  width=8, text= f'{dataObj.askList1[v]}').grid(column=3, row=v+1, sticky=tk.W, padx=3, pady=3)
+        def bidAskTab():
+            tab2 = ttk.Frame(tabControl)
+            tabControl.add(tab2, text="kupno/sprzedaż")
+            buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
+            buySellFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates1)+1), padx=5, sticky=tk.W)
+            
+            ttk.Label(buySellFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
+            ttk.Label(buySellFrame, text= "Kod", foreground="#007fff").grid(column=1, row=0, sticky=tk.W, padx=5)
+            ttk.Label(buySellFrame, text= "Kupno", foreground="#007fff").grid(column=2, row=0, sticky=tk.W, padx=2)
+            ttk.Label(buySellFrame, text= "Sprzedaż", foreground="#007fff").grid(column=3, row=0, sticky=tk.W, padx=2)
+            ttk.Label(tab2, text= f"\nTabela {dataObj.no1} zawiera tylko wybrane waluty").grid(columnspan=4, row=len(dataObj.rates1)+2, sticky=tk.W, padx=3, pady=3)
+            
+            for v in range(len(dataObj.rates1)):
+                ttk.Label(buySellFrame,  width=28, text= f'{dataObj.currencyList1[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=5, text= f'{dataObj.codeList1[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=9, text= f'{dataObj.valueList1[v]}').grid(column=2, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=8, text= f'{dataObj.askList1[v]}').grid(column=3, row=v+1, sticky=tk.W, padx=3, pady=3)
+            
+        tabControl = ttk.Notebook(self.win)
+        mediumTab()
+        bidAskTab()
         del dataObj.ratesUpDown
-        
+
     def graphGui(self): 
         tabControlGui = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
