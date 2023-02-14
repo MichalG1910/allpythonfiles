@@ -6,13 +6,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import PIL
 import PIL._tkinter_finder
-from classE_Rates06 import Data
+from classE_Rates07 import Data
 
 class Main:
     def __init__(self):
         self.win = tk.Tk()
         dataObj.checkConnection()
         dataObj.createReportDir()
+        dataObj.NBPbidAsk()
         dataObj.NBPratesUpDown()
         dataObj.latestNBPreport()
         self.winStyle()
@@ -112,10 +113,10 @@ class Main:
         tab1, tab2 = ttk.Frame(tabControl), ttk.Frame(tabControl)
         tabControl.add(tab1, text="Średnie")  
         tabControl.add(tab2, text="kupno/sprzedaż")
-        tabControl.grid(column=0, columnspan=3, rowspan=10, row=0, padx=4, pady=4)
+        tabControl.grid(column=0, columnspan=4, rowspan=34, row=0, padx=4, pady=4)
         # ----------------- Tab1 --------------------------------
         echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-        echangeRateFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
+        echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
         
         ttk.Label(echangeRateFrame, text= "Waluta").grid(column=0, row=0, sticky=tk.W, padx=5)
         ttk.Label(echangeRateFrame, text= "Kod").grid(column=1, row=0, sticky=tk.W, padx=5)
@@ -136,17 +137,18 @@ class Main:
             ttk.Label(echangeRateFrame,  width=6, text= f'{procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=3, pady=3)
         # ----------------- Tab2 --------------------------------
         buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-        buySellFrame.grid(column=1, row=0, columnspan=3, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
+        buySellFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
         
         ttk.Label(buySellFrame, text= "Waluta").grid(column=0, row=0, sticky=tk.W, padx=5)
         ttk.Label(buySellFrame, text= "Kod").grid(column=1, row=0, sticky=tk.W, padx=5)
-        ttk.Label(buySellFrame, text= "Kupno PLN").grid(column=2, row=0, sticky=tk.W, padx=2)
-        ttk.Label(buySellFrame, text= "Sprzedaż PLN").grid(column=3, row=0, sticky=tk.W, padx=2)
+        ttk.Label(buySellFrame, text= "Kupno").grid(column=2, row=0, sticky=tk.W, padx=2)
+        ttk.Label(buySellFrame, text= "Sprzedaż").grid(column=3, row=0, sticky=tk.W, padx=2)
 
-        for v in range(len(dataObj.rates)):
-            ttk.Label(buySellFrame,  width=30, text= f'{dataObj.currencyList[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
-            ttk.Label(buySellFrame,  width=5, text= f'{dataObj.codeList[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
-        
+        for v in range(len(dataObj.rates1)):
+            ttk.Label(buySellFrame,  width=28, text= f'{dataObj.currencyList1[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
+            ttk.Label(buySellFrame,  width=5, text= f'{dataObj.codeList1[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
+            ttk.Label(buySellFrame,  width=9, text= f'{dataObj.valueList1[v]}').grid(column=2, row=v+1, sticky=tk.W, padx=3, pady=3)
+            ttk.Label(buySellFrame,  width=8, text= f'{dataObj.askList1[v]}').grid(column=3, row=v+1, sticky=tk.W, padx=3, pady=3)
         del dataObj.ratesUpDown
         
     def graphGui(self): 
