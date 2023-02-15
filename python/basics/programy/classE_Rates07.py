@@ -59,7 +59,19 @@ class Data:
         url = "https://api.nbp.pl/api/exchangerates/tables/c/?format=json"
         self.NBPreport(3, url, "bid")
         self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.rates1, self.no1 = self.currencyList, self.codeList, self.valueList, self.askList, self.rates, self.no
-        
+    
+    def last30Data(self, code):
+        code = (code[0:3]).lower()
+        currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/last/30/?format=json")
+        self.last30EDList, self.last30MidList = [],[] 
+        last30 = currencyResponse.json()
+         
+        for rate in last30["rates"]:
+            last30ED = rate["effectiveDate"]
+            last30Mid = rate["mid"]
+            self.last30EDList.append(last30ED), self.last30MidList.append(last30Mid)
+        self.last30EDList.reverse(), self.last30MidList.reverse()
+    
     def generateReport(self,startDate, endDate):
         self.num = 2
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",startDate) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",endDate):

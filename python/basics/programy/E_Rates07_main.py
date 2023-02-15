@@ -154,30 +154,51 @@ class Main:
                 ttk.Label(buySellFrame,  width=8, text= f'{dataObj.askList1[v]}').grid(column=3, row=v+1, sticky=tk.W, padx=3, pady=3)
         
         def currencyLast30():
+            def getLast30Tabel():
+                dataObj.last30Data(currencyLast30.get())
+                for i in range(30):
+                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30EDList[i]}').grid(column=0, row=i+2, sticky=tk.W, padx=3, pady=3)
+                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30MidList[i]}').grid(column=1, row=i+2, sticky=tk.W, padx=3, pady=3)
+                
+                for m in range(29):
+                    if float(dataObj.last30MidList[m])>float(dataObj.last30MidList[m+1]):
+                        col = "Green"
+                    elif float(dataObj.last30MidList[m])<float(dataObj.last30MidList[m+1]):
+                        col = "Red"
+                    else:
+                        col = "White" 
+                    procent = round((((float(dataObj.last30MidList[m])/float(dataObj.last30MidList[m+1])) -1) * 100), 2)
+                    ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=3, pady=3)
+                
+                if float(dataObj.last30MidList[0])>float(dataObj.last30MidList[-1]):
+                    col1 = "Green"
+                elif float(dataObj.last30MidList[0])<float(dataObj.last30MidList[-1]):
+                    col1 = "Red"
+                else:
+                    col1 = "White" 
+                procent = round((((float(dataObj.last30MidList[0])/float(dataObj.last30MidList[-1])) -1) * 100), 2)
+                ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=3, pady=3)   
+            
             tab3 = ttk.Frame(tabControl)
             tabControl.add(tab3, text="Waluta ostatnie 30")
-            last30Frame = ttk.LabelFrame(tab3, text="Wluta ostatnie 30 notowań", labelanchor="n", style='clam.TLabelframe')  
-            last30Frame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates1)+1), padx=5, sticky=tk.W)
+            last30Frame = ttk.LabelFrame(tab3, text="Waluta ostatnie 30 notowań", labelanchor="n", style='clam.TLabelframe')  
+            last30Frame.grid(column=1, row=0, columnspan=4, rowspan=30, padx=5, sticky=tk.W)
             
-            self.currencyLast30 = tk.StringVar()
+            currencyLast30 = tk.StringVar()
             self.codeCurrencyList = []
             for key,values in dataObj.codeCurrencyDict.items():
                 self.codeCurrencyList.append(f"{key}  {values}")
-            currencyChosen = ttk.Combobox(last30Frame, width= 30, textvariable= self.currencyLast30, state= "readonly")
+            currencyChosen = ttk.Combobox(last30Frame, width= 40, textvariable= currencyLast30, state= "readonly")
             currencyChosen["values"] = self.codeCurrencyList 
-            currencyChosen.grid(column= 1, columnspan=3, row= 0, padx=5,pady=5)
+            currencyChosen.grid(column= 0, columnspan=3, row= 0, padx=5,pady=5)
             currencyChosen.current(7)
             
-            ttk.Label(last30Frame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
-            ttk.Label(last30Frame, text= "Kod", foreground="#007fff").grid(column=1, row=1, sticky=tk.W, padx=5)
-            ttk.Label(last30Frame, text= "Kupno", foreground="#007fff").grid(column=2, row=1, sticky=tk.W, padx=2)
-            ttk.Label(last30Frame, text= "Sprzedaż", foreground="#007fff").grid(column=3, row=1, sticky=tk.W, padx=2)
-            
-            for v in range(len(dataObj.rates1)):
-                ttk.Label(last30Frame,  width=20, text= f'{dataObj.currencyList1[v]}').grid(column=0, row=v+2, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(last30Frame,  width=5, text= f'{dataObj.codeList1[v]}').grid(column=1, row=v+2, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(last30Frame,  width=9, text= f'{dataObj.valueList1[v]}').grid(column=2, row=v+2, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(last30Frame,  width=8, text= f'{dataObj.askList1[v]}').grid(column=3, row=v+2, sticky=tk.W, padx=3, pady=3)
+            #ttk.Label(last30Frame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
+            ttk.Button(last30Frame, text = "Pokaż", command = getLast30Tabel, width=8).grid(column = 3, row = 0, padx=5, sticky=tk.E)
+            ttk.Label(last30Frame, text= "Data", foreground="#007fff").grid(column=0, row=1, sticky=tk.W, padx=5)
+            ttk.Label(last30Frame, text= "Kurs PLN", foreground="#007fff").grid(column=1, row=1, sticky=tk.W, padx=2)
+            ttk.Label(last30Frame, text= "Zmiana", foreground="#007fff").grid(column=2, row=1, sticky=tk.W, padx=2)
+            ttk.Label(last30Frame, text= "Zmiana 30\n notowań", foreground="#007fff").grid(column=3, row=1, sticky=tk.W, padx=2)
 
         tabControl = ttk.Notebook(self.win)
         mediumTab()
