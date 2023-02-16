@@ -6,7 +6,6 @@ import PIL
 import PIL._tkinter_finder
 class Data:
     def __init__(self):
-        
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
         
@@ -143,6 +142,8 @@ class Data:
                 currency = rate["currency"]
                 self.code = rate["code"]
                 mid = rate[midBid]
+                if currency == "rand (Republika Południowej Afryki)":
+                    currency = "rand (RPA)"
                 self.currencyList.append(currency), self.codeList.append(self.code), self.valueList.append(mid)
                 self.codeCurrencyDict[self.code] = currency
                 if self.num == 3: 
@@ -151,7 +152,7 @@ class Data:
 
                 if self.num == 2:
                     self.csvList.append([currency,self.code,self.effectiveDate,mid])
-
+        
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
