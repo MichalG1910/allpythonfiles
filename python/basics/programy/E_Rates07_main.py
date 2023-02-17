@@ -112,7 +112,10 @@ class Main:
         
         def mediumTab(): 
             tab1 = ttk.Frame(tabControl)
-            tabControl.add(tab1, text="Średnie kursy")  
+            iconSrednie = PhotoImage(file=f'{dataObj.filePath}/kursy.png')
+            
+            tabControl.add(tab1,  image=iconSrednie, compound='left')  
+            tabControl.image = iconSrednie
             tabControl.grid(column=0, columnspan=4, rowspan=34, row=0, padx=4, pady=4)
             echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
             echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
