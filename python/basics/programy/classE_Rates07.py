@@ -44,6 +44,7 @@ class Data:
         self.NBPreport(1, url, "mid")
         self.reportCreate(startDate=None, endDate=None)
         self.terminalPrint()
+        
         del self.data, self.response, self.printList, self.erDataList 
         self.start = None
         self.firstloopEDL = self.effectiveDateList[-1]
@@ -51,6 +52,7 @@ class Data:
     def NBPratesUpDown(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/a/last/2/?format=json"
         self.NBPreport(2, url, "mid")
+       
         self.ratesUpDown = self.csvList
         del self.csvList
     
@@ -82,6 +84,7 @@ class Data:
             edList = [int(i) for i in date2_list]
             self.sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             self.eDate = datetime.date(edList[0], edList[1], edList[2])
+            
             if self.sDate < datetime.date(2004,5,4):
                 mBox.showinfo("Błędny format danych raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informaacji na stronie http://api.nbp.pl")
             elif self.eDate > self.today or self.sDate > self.eDate:
@@ -93,6 +96,7 @@ class Data:
                 self.sumdays = self.eDate - self.sDate
                 self.daysLen = self.sumdays.days + 1
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{startDate}/{endDate}/?format=json")
+                
                 if self.response.ok == False and self.daysLen < 91:
                     mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                 else:
@@ -101,6 +105,7 @@ class Data:
                     self.dataFormatting("mid")
                     self.reportCreate(startDate, endDate) 
                     self.csv_ER_report(startDate, endDate) 
+                    
                     del self.data, self.report, self.csvList, self.printList, self.erDataList, self.response
     
     def ReportLoop(self):
@@ -156,6 +161,7 @@ class Data:
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
+            
             self.erDataList.append(erData)
             del erData
         
@@ -229,6 +235,7 @@ class Data:
                 else:
                     stepDate = stepDate + stepTimedelta
                 self.repeat -= 1
+            
             graphData = self.gdList 
             del self.gdList
             
