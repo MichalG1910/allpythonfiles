@@ -108,6 +108,13 @@ class Main:
     def saveGraphPNG(self):
         dataObj.createReportDir()
         plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
+    
+    def multiData(self):
+        listTR = []
+        for a in range(len(dataObj.rates)-15):
+            listTR.append(globals()['timeRange{}'.format(a)].get())
+        print(listTR)
+        
 
     def exchangeRatesTabel(self):
         
@@ -205,30 +212,33 @@ class Main:
             ttk.Label(last30Frame, text= "Zmiana 30\n notowań", foreground="#007fff").grid(column=3, row=1, sticky=tk.W, padx=2)
         
         def multiGraph():
-            self.timeRangel = []
+            self.tR1 = {}
             rangeChosen = []
+            self.checkChosen = []
 
             #for i in range(len(dataObj.rates)):
-                #rangeChosen.append(i)
+             #   self.timeRange1.append(i)
+            #print(self.timeRange1)
 
 
             tab4 = ttk.Frame(tabControl)
             tabControl.add(tab4, text="wiele wykr.")
-            multiGraphFrame = ttk.LabelFrame(tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
-            multiGraphFrame.grid(column=0, row=0, columnspan=4, rowspan=30, padx=5, sticky=tk.W)
-            for t in range(len(dataObj.rates)):
-                ttk.Label(multiGraphFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                self.timeRange = tk.StringVar()
-                rangeChosen= ttk.Combobox(multiGraphFrame, width= 8, textvariable= self.timeRange, state= "readonly",height=10)
-                rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
-                rangeChosen.grid(column= 1, row= t+1, padx=5, pady=5)
-                rangeChosen.current(0)
-                self.timeRangel.append(self.timeRange.get())
-                
+            self.multiGraphFrame = ttk.LabelFrame(tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
+            self.multiGraphFrame.grid(column=0, row=0, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
 
+            for t in range(len(dataObj.rates)-15):
+                ttk.Label(self.multiGraphFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
                 
-            print(self.timeRangel)
-            print(rangeChosen)
+                globals()['timeRange{}'.format(t)] = tk.StringVar()
+                globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10)
+                globals()['rangeChosen{}'.format(t)]["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
+                globals()['rangeChosen{}'.format(t)].current(0)
+                globals()['rangeChosen{}'.format(t)].grid(column= 1, row= t+1, padx=5, pady=5)
+                
+                chVarDis = tk.IntVar() 
+                check1 = tk.Checkbutton(self.multiGraphFrame, variable=chVarDis ) # state= "disabled"
+                check1.grid(column=3, row=t+1, sticky=tk.W)
+                self.checkChosen.append(chVarDis.get())
 
         tabControl = ttk.Notebook(self.win)
         mediumTab()
@@ -262,7 +272,10 @@ class Main:
         rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
         rangeChosen.current(0)
         ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.newGraph, width=12).grid(column = 6, row = 1, padx=5)  
-        ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = self.saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5) 
+        ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = self.saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5)
+
+        # test button
+        ttk.Button(tab2, text = "wez dane", command = self.multiData, width=12).grid(column = 6, row = 1, padx=5)   
         
     def generateReportGui(self):
         self.startDate = tk.StringVar()
