@@ -110,12 +110,24 @@ class Main:
         plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
     
     def multiGraphList(self):
-        listTR, listChVar = [], []
+        listTR, listChVar, multiGraphDict = [], [], {}
+        agr = -1
+
         for a in range(len(dataObj.rates)):
             listTR.append(globals()['timeRange{}'.format(a)].get())
             listChVar.append(globals()['chVar{}'.format(a)].get())
+        for b in listTR:
+            agr += 1
+            if b != "" and listChVar[agr] == 1:
+                multiGraphDict[self.codeCurrencyList[agr]] = listTR[agr]
+                
+
+        print(multiGraphDict)
+        print(len(multiGraphDict))
         print(listTR)
         print(listChVar)
+        print(self.codeCurrencyList)
+
         
 
     def exchangeRatesTabel(self):
@@ -220,17 +232,13 @@ class Main:
             ratesHalf = math.floor(len(dataObj.rates) / 2)
             print(ratesHalf)
 
-            #for i in range(len(dataObj.rates)):
-             #   self.timeRange1.append(i)
-            #print(self.timeRange1)
-
-
             tab4 = ttk.Frame(tabControl)
             tabControl.add(tab4, text="wiele wykr.")
             self.multiGraphFrame = ttk.LabelFrame(tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
             self.multiGraphFrame.grid(column=0, row=0, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
 
             for t in range(len(dataObj.rates)):
+                aaa = tk.StringVar()
                 if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
                 else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}').grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
                 
