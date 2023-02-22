@@ -149,6 +149,8 @@ class Data:
                 mid = rate[midBid]
                 if currency == "rand (Republika Południowej Afryki)":
                     currency = "rand (RPA)"
+                if currency == "won południowokoreański":
+                    currency = "won (Korea Pd.)"
                 self.currencyList.append(currency), self.codeList.append(self.code), self.valueList.append(mid)
                 self.codeCurrencyDict[self.code] = currency
                 if self.num == 3: 
