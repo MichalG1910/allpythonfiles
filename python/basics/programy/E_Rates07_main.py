@@ -35,14 +35,14 @@ class Main:
                 icon1 = PhotoImage(file=f'{dataObj.filePath}/light.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
-                self.refreshGraph()
+                self.refreshGraph(self.win, 4, [11,8], 111)
                 
             else:
                 self.win.tk.call("set_theme", "dark")
                 icon2 = PhotoImage(file=f'{dataObj.filePath}/dark.png')
                 self.accentbutton.configure(image=icon2 )
                 self.accentbutton.image = icon2
-                self.refreshGraph()
+                self.refreshGraph(self.win, 4, [11,8], 111)
                 
         icon = PhotoImage(file=f'{dataObj.filePath}/dark.png')
         self.accentbutton = ttk.Button(self.win, image=icon, command=change_theme)
@@ -371,7 +371,7 @@ class Main:
             self.refreshGraph(winFull, 0 , figsizeSubplot[0], figsizeSubplot[1])
            
 
-        ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5)
+        ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
 
         winFull.mainloop()
 
