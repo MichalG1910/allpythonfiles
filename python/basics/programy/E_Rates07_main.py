@@ -16,7 +16,7 @@ class Main:
         dataObj.NBPbidAsk()
         dataObj.NBPratesUpDown()
         dataObj.latestNBPreport()
-        self.winStyle()
+        self.winStyle(self.win)
         self.themeButton()
         self.emptyGraph()
         self.exchangeRatesTabel()
@@ -24,9 +24,9 @@ class Main:
         self.generateReportGui()
         
     
-    def winStyle(self):
-        self.win.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
-        self.win.tk.call("set_theme", "dark")
+    def winStyle(self, window):
+        window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
+        window.tk.call("set_theme", "dark")
 
     def themeButton(self):
         def change_theme():
@@ -68,9 +68,9 @@ class Main:
 
     def newGraph(self):
         dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get())
-        self.refreshGraph()
+        self.refreshGraph(self.win, 4, [11,8], 111)
 
-    def refreshGraph(self):
+    def refreshGraph(self, window, col, fsize, subp):
         try:
             dataObj.xValues 
         except AttributeError:
@@ -78,39 +78,45 @@ class Main:
             
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
-            fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
+            self.fig = plt.figure(figsize=(fsize[0],fsize[1]), facecolor = "dimgray")
         else:
             plt.style.use('Solarize_Light2')
-            fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+            self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
         if dataObj.xValues == None:
             self.emptyGraph()
         else:
-            xValuesLen = len(dataObj.xValues)-1
-            a = math.ceil(xValuesLen / 20)
-            b = list(range(1,xValuesLen, a))
-            b.append(xValuesLen)
+            self.axis = self.fig.add_subplot(subp)
+            self.axisCreate()
+            self.putGraph(window, col)
             
-            axis = fig.add_subplot(111) 
-            axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]}", fontsize=16, color="silver")
-            axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-            axis.plot(dataObj.xValues, dataObj.yValues) 
-            xaxis = axis.get_xaxis()
-            xaxis.set_ticks(b)
-            plt.xticks(rotation=45, fontsize=8)
-            axis.set_xlabel("Data") 
-            axis.set_ylabel("PLN Złoty")
-            canvas = FigureCanvasTkAgg(fig, master=self.win) 
-            canvas._tkcanvas.grid(column=4, row=3, columnspan=8, padx=5, pady=5) 
-            self.win.update()
-            self.win.deiconify()
+            
+    def axisCreate(self):
+        xValuesLen = len(dataObj.xValues)-1
+        a = math.ceil(xValuesLen / 20)
+        b = list(range(1,xValuesLen, a))
+        b.append(xValuesLen)
+         
+        self.axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]}", fontsize=16, color="silver")
+        self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+        self.axis.plot(dataObj.xValues, dataObj.yValues) 
+        xaxis = self.axis.get_xaxis()
+        xaxis.set_ticks(b)
+        plt.xticks(rotation=45, fontsize=8)
+        self.axis.set_xlabel("Data") 
+        self.axis.set_ylabel("PLN Złoty")
+    def putGraph(self, window, col):
+        canvas = FigureCanvasTkAgg(self.fig, master=window) 
+        canvas._tkcanvas.grid(column=col, row=3, columnspan=8, padx=5, pady=5) 
+        window.update()
+        window.deiconify()
 
     def saveGraphPNG(self):
         dataObj.createReportDir()
         plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
     
     def multiGraphList(self):
-        listTR, listChVar, multiGraphDict = [], [], {}
+        listTR, listChVar, self.multiGraphDict = [], [], {}
         agr = -1
 
         for a in range(len(dataObj.rates)):
@@ -119,11 +125,11 @@ class Main:
         for b in listTR:
             agr += 1
             if b != "" and listChVar[agr] == 1:
-                multiGraphDict[self.codeCurrencyList[agr]] = listTR[agr]
+                self.multiGraphDict[self.codeCurrencyList[agr]] = listTR[agr]
                 
 
-        print(multiGraphDict)
-        print(len(multiGraphDict))
+        print(self.multiGraphDict)
+        print(len(self.multiGraphDict))
         print(listTR)
         print(listChVar)
         print(self.codeCurrencyList)
@@ -290,7 +296,7 @@ class Main:
         ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = self.saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5)
 
         # test button
-        ttk.Button(tab2, text = "wez dane", command = self.multiGraphList, width=12).grid(column = 6, row = 1, padx=5)  
+        ttk.Button(tab2, text = "wez dane", command = self.fullscreenGraphWindow, width=12).grid(column = 6, row = 1, padx=5)  
         # test checkbox
         testV = tk.IntVar() 
         testch = ttk.Checkbutton(tab2, variable=testV ).grid(column=3, row=2, sticky=tk.W) 
@@ -299,6 +305,8 @@ class Main:
         #self.radVar.set(99)
         curRad = ttk.Radiobutton(tab2, variable=self.radVar) # command=self.radCall
         curRad.grid(column=2, row=2, sticky=tk.W)
+
+
         
     def generateReportGui(self):
         self.startDate = tk.StringVar()
@@ -323,6 +331,51 @@ class Main:
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
         ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
+
+    def fullscreenGraphWindow(self):
+        def _quit():
+            winFull.quit()
+            winFull.destroy()
+
+        winFull = tk.Tk()
+        self.winStyle(winFull)
+        winFull.attributes("-fullscreen", True)
+        
+        dataObj.checkConnection()
+        self.multiGraphList()
+        listTrSum = len(self.multiGraphDict)
+        if listTrSum == 1: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 2: figsizeSubplot = ([8,10], 111, ) 
+        if listTrSum == 3: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 4: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 5: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 6: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 7: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 8: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 9: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 10: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 11: figsizeSubplot = ([19,10], 111) 
+        if listTrSum == 12: figsizeSubplot = ([19,10], 111)
+
+        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+            plt.style.use('dark_background')
+            figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
+        else:
+            plt.style.use('Solarize_Light2')
+            figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
+        
+        main = figFS.add_subplot(111) 
+  
+        for key,value in self.multiGraphDict.items():
+            dataObj.getDataForGraph(key, value)
+            self.refreshGraph(winFull, 0 , figsizeSubplot[0], figsizeSubplot[1])
+           
+
+        ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5)
+
+        winFull.mainloop()
+
+
 
 dataObj = Data()
 mainObj = Main() 
