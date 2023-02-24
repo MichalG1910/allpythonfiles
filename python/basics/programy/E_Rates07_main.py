@@ -357,6 +357,9 @@ class Main:
             if listTrSum == 10: self.axis = figFS.add_subplot(3,4,1 + agr)  
             if listTrSum == 11: self.axis = figFS.add_subplot(3,4,1 + agr)  
             if listTrSum == 12: self.axis = figFS.add_subplot(3,4,1 + agr) 
+            if listTrSum == 13: self.axis = figFS.add_subplot(3,5,1 + agr) 
+            if listTrSum == 14: self.axis = figFS.add_subplot(3,5,1 + agr) 
+            if listTrSum == 15: self.axis = figFS.add_subplot(3,5,1 + agr) 
             
             dataObj.getDataForGraph(key, value)
             figFS.tight_layout() # wykresy nie nachodzą na siebie
