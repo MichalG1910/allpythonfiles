@@ -221,7 +221,6 @@ class Data:
             runDate = self.today - datetime.timedelta(days=self.dayRange)
             stepDate = runDate + datetime.timedelta(days=self.step)
             stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
-            self.checkConnection()
             
             while self.repeat > 0:  
                 currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{self.code}/{runDate}/{stepDate}/?format=json") 

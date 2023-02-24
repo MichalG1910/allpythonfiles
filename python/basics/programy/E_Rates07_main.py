@@ -67,6 +67,7 @@ class Main:
         self.win.deiconify()
 
     def newGraph(self):
+        dataObj.checkConnection()
         dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get())
         self.refreshGraph(self.win, 4, [11,8], 111)
 
@@ -88,7 +89,7 @@ class Main:
         else:
             self.axis = self.fig.add_subplot(subp)
             self.axisCreate()
-            self.putGraph(window, col)
+            self.putGraph(window, col, self.fig)
             
             
     def axisCreate(self):
@@ -105,8 +106,9 @@ class Main:
         plt.xticks(rotation=45, fontsize=8)
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
-    def putGraph(self, window, col):
-        canvas = FigureCanvasTkAgg(self.fig, master=window) 
+    
+    def putGraph(self, window, col, fig):
+        canvas = FigureCanvasTkAgg(fig, master=window) 
         canvas._tkcanvas.grid(column=col, row=3, columnspan=8, padx=5, pady=5) 
         window.update()
         window.deiconify()
@@ -340,37 +342,39 @@ class Main:
         winFull = tk.Tk()
         self.winStyle(winFull)
         winFull.attributes("-fullscreen", True)
+        agr = 0
         
         dataObj.checkConnection()
         self.multiGraphList()
         listTrSum = len(self.multiGraphDict)
-        if listTrSum == 1: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 2: figsizeSubplot = ([8,10], 111, ) 
-        if listTrSum == 3: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 4: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 5: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 6: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 7: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 8: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 9: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 10: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 11: figsizeSubplot = ([19,10], 111) 
-        if listTrSum == 12: figsizeSubplot = ([19,10], 111)
-
-        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+        
+        if winFull.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
             figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
         else:
             plt.style.use('Solarize_Light2')
             figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
-        
-        main = figFS.add_subplot(111) 
-  
+       
         for key,value in self.multiGraphDict.items():
+            if listTrSum == 1: self.axis = figFS.add_subplot(111) 
+            if listTrSum == 2: self.axis = figFS.add_subplot(121 + agr) 
+            if listTrSum == 3: self.axis = figFS.add_subplot(221 + agr) 
+            if listTrSum == 4: self.axis = figFS.add_subplot(221 + agr)  
+            if listTrSum == 5: self.axis = figFS.add_subplot(231 + agr)  
+            if listTrSum == 6: self.axis = figFS.add_subplot(231 + agr)  
+            if listTrSum == 7: self.axis = figFS.add_subplot(241 + agr)  
+            if listTrSum == 8: self.axis = figFS.add_subplot(241 + agr) 
+            if listTrSum == 9: self.axis = figFS.add_subplot(331 + agr)  
+            if listTrSum == 10: self.axis = figFS.add_subplot(3,4,1 + agr)  
+            if listTrSum == 11: self.axis = figFS.add_subplot(3,4,1 + agr)  
+            if listTrSum == 12: self.axis = figFS.add_subplot(3,4,1 + agr) 
+            
             dataObj.getDataForGraph(key, value)
-            self.refreshGraph(winFull, 0 , figsizeSubplot[0], figsizeSubplot[1])
-           
-
+            figFS.tight_layout() # wykresy nie nachodzą na siebie
+            self.axisCreate()
+            agr += 1
+        
+        self.putGraph(winFull, 0, figFS)
         ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
 
         winFull.mainloop()
