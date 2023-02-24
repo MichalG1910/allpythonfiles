@@ -17,35 +17,34 @@ class Main:
         dataObj.NBPratesUpDown()
         dataObj.latestNBPreport()
         self.winStyle(self.win)
-        self.themeButton()
+        self.themeButton(self.win)
         self.emptyGraph()
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
         
-    
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
 
-    def themeButton(self):
+    def themeButton(self, window):
         def change_theme():
-            if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
-                self.win.tk.call("set_theme", "light")
+            if window.tk.call("ttk::style", "theme", "use") == "azure-dark":
+                window.tk.call("set_theme", "light")
                 icon1 = PhotoImage(file=f'{dataObj.filePath}/light.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
-                self.refreshGraph(self.win, 4, [11,8], 111)
+                self.refreshGraph(window, 4, [11,8], 111)
                 
             else:
-                self.win.tk.call("set_theme", "dark")
+                window.tk.call("set_theme", "dark")
                 icon2 = PhotoImage(file=f'{dataObj.filePath}/dark.png')
                 self.accentbutton.configure(image=icon2 )
                 self.accentbutton.image = icon2
-                self.refreshGraph(self.win, 4, [11,8], 111)
+                self.refreshGraph(window, 4, [11,8], 111)
                 
         icon = PhotoImage(file=f'{dataObj.filePath}/dark.png')
-        self.accentbutton = ttk.Button(self.win, image=icon, command=change_theme)
+        self.accentbutton = ttk.Button(window, image=icon, command=change_theme)
         self.accentbutton.image = icon
         self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
     
@@ -109,7 +108,7 @@ class Main:
     
     def putGraph(self, window, col, fig):
         canvas = FigureCanvasTkAgg(fig, master=window) 
-        canvas._tkcanvas.grid(column=col, row=3, columnspan=8, padx=5, pady=5) 
+        canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
         window.update()
         window.deiconify()
 
@@ -128,15 +127,6 @@ class Main:
             agr += 1
             if b != "" and listChVar[agr] == 1:
                 self.multiGraphDict[self.codeCurrencyList[agr]] = listTR[agr]
-                
-
-        print(self.multiGraphDict)
-        print(len(self.multiGraphDict))
-        print(listTR)
-        print(listChVar)
-        print(self.codeCurrencyList)
-
-        
 
     def exchangeRatesTabel(self):
         
@@ -238,7 +228,6 @@ class Main:
             rangeChosen = []
             self.checkChosen = []
             ratesHalf = math.floor(len(dataObj.rates) / 2)
-            print(ratesHalf)
 
             tab4 = ttk.Frame(tabControl)
             tabControl.add(tab4, text="wiele wykr.")
@@ -376,6 +365,7 @@ class Main:
         
         self.putGraph(winFull, 0, figFS)
         ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
+        
 
         winFull.mainloop()
 
