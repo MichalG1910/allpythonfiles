@@ -68,9 +68,9 @@ class Main:
     def newGraph(self):
         dataObj.checkConnection()
         dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get())
-        self.refreshGraph(self.win, 4, [11,8], 111)
+        self.refreshGraph()
 
-    def refreshGraph(self, window, col, fsize, subp):
+    def refreshGraph(self):
         try:
             dataObj.xValues 
         except AttributeError:
@@ -78,7 +78,7 @@ class Main:
             
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
-            self.fig = plt.figure(figsize=(fsize[0],fsize[1]), facecolor = "dimgray")
+            self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
         else:
             plt.style.use('Solarize_Light2')
             self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
@@ -86,15 +86,18 @@ class Main:
         if dataObj.xValues == None:
             self.emptyGraph()
         else:
-            self.axis = self.fig.add_subplot(subp)
+            self.axis = self.fig.add_subplot(111)
             self.axisCreate()
-            self.putGraph(window, col, self.fig)
+            self.putGraph(self.win, 4, self.fig)
             
             
     def axisCreate(self):
         xValuesLen = len(dataObj.xValues)-1
-        a = math.ceil(xValuesLen / 20)
+        a = math.ceil(xValuesLen / 15)
         b = list(range(1,xValuesLen, a))
+        print(xValuesLen)
+        print(a)
+        print()
         b.append(xValuesLen)
          
         self.axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]}", fontsize=16, color="silver")
@@ -346,33 +349,31 @@ class Main:
        
         for key,value in self.multiGraphDict.items():
             if listTrSum == 1: self.axis = figFS.add_subplot(111) 
-            if listTrSum == 2: self.axis = figFS.add_subplot(121 + agr) 
-            if listTrSum == 3: self.axis = figFS.add_subplot(221 + agr) 
-            if listTrSum == 4: self.axis = figFS.add_subplot(221 + agr)  
-            if listTrSum == 5: self.axis = figFS.add_subplot(231 + agr)  
-            if listTrSum == 6: self.axis = figFS.add_subplot(231 + agr)  
-            if listTrSum == 7: self.axis = figFS.add_subplot(241 + agr)  
-            if listTrSum == 8: self.axis = figFS.add_subplot(241 + agr) 
-            if listTrSum == 9: self.axis = figFS.add_subplot(331 + agr)  
-            if listTrSum == 10: self.axis = figFS.add_subplot(3,4,1 + agr)  
-            if listTrSum == 11: self.axis = figFS.add_subplot(3,4,1 + agr)  
-            if listTrSum == 12: self.axis = figFS.add_subplot(3,4,1 + agr) 
-            if listTrSum == 13: self.axis = figFS.add_subplot(3,5,1 + agr) 
-            if listTrSum == 14: self.axis = figFS.add_subplot(3,5,1 + agr) 
-            if listTrSum == 15: self.axis = figFS.add_subplot(3,5,1 + agr) 
+            elif listTrSum == 2: self.axis = figFS.add_subplot(121 + agr) 
+            elif listTrSum == 3: self.axis = figFS.add_subplot(221 + agr) 
+            elif listTrSum == 4: self.axis = figFS.add_subplot(221 + agr)  
+            elif listTrSum == 5: self.axis = figFS.add_subplot(231 + agr)  
+            elif listTrSum == 6: self.axis = figFS.add_subplot(231 + agr)  
+            elif listTrSum == 7: self.axis = figFS.add_subplot(241 + agr)  
+            elif listTrSum == 8: self.axis = figFS.add_subplot(241 + agr) 
+            elif listTrSum == 9: self.axis = figFS.add_subplot(331 + agr)  
+            elif listTrSum == 10: self.axis = figFS.add_subplot(3,4,1 + agr)  
+            elif listTrSum == 11: self.axis = figFS.add_subplot(3,4,1 + agr)  
+            elif listTrSum == 12: self.axis = figFS.add_subplot(3,4,1 + agr) 
+            elif listTrSum == 13: self.axis = figFS.add_subplot(3,5,1 + agr) 
+            elif listTrSum == 14: self.axis = figFS.add_subplot(3,5,1 + agr) 
+            elif listTrSum == 15: self.axis = figFS.add_subplot(3,5,1 + agr) 
             
             dataObj.getDataForGraph(key, value)
-            figFS.tight_layout() # wykresy nie nachodzą na siebie
+             # wykresy nie nachodzą na siebie
             self.axisCreate()
+            figFS.tight_layout()
             agr += 1
         
         self.putGraph(winFull, 0, figFS)
         ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
-        
-
+    
         winFull.mainloop()
-
-
 
 dataObj = Data()
 mainObj = Main() 
