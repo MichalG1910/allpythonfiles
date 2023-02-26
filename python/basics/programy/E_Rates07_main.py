@@ -34,14 +34,14 @@ class Main:
                 icon1 = PhotoImage(file=f'{dataObj.filePath}/light.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
-                self.refreshGraph(window, 4, [11,8], 111)
+                self.refreshGraph()
                 
             else:
                 window.tk.call("set_theme", "dark")
                 icon2 = PhotoImage(file=f'{dataObj.filePath}/dark.png')
                 self.accentbutton.configure(image=icon2 )
                 self.accentbutton.image = icon2
-                self.refreshGraph(window, 4, [11,8], 111)
+                self.refreshGraph()
                 
         icon = PhotoImage(file=f'{dataObj.filePath}/dark.png')
         self.accentbutton = ttk.Button(window, image=icon, command=change_theme)
@@ -60,10 +60,8 @@ class Main:
         axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         axis.set_xlabel("Data") 
         axis.set_ylabel("PLN Złoty")
-        canvas = FigureCanvasTkAgg(fig, master=self.win) 
-        canvas._tkcanvas.grid(column=4, row=3, columnspan=8, padx=10, pady=10) 
-        self.win.update()
-        self.win.deiconify()
+        fig.tight_layout()
+        self.putGraph(self.win, 4, fig)
 
     def newGraph(self):
         dataObj.checkConnection()
@@ -87,11 +85,12 @@ class Main:
             self.emptyGraph()
         else:
             self.axis = self.fig.add_subplot(111)
-            self.axisCreate()
+            self.axisCreate(16, self.timeRange.get())
+            self.fig.tight_layout()
             self.putGraph(self.win, 4, self.fig)
             
             
-    def axisCreate(self):
+    def axisCreate(self, fontSize, tRange):
         xValuesLen = len(dataObj.xValues)-1
         a = math.ceil(xValuesLen / 15)
         b = list(range(1,xValuesLen, a))
@@ -100,7 +99,7 @@ class Main:
         print()
         b.append(xValuesLen)
          
-        self.axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]}", fontsize=16, color="silver")
+        self.axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         self.axis.plot(dataObj.xValues, dataObj.yValues) 
         xaxis = self.axis.get_xaxis()
@@ -362,12 +361,16 @@ class Main:
             elif listTrSum == 12: self.axis = figFS.add_subplot(3,4,1 + agr) 
             elif listTrSum == 13: self.axis = figFS.add_subplot(3,5,1 + agr) 
             elif listTrSum == 14: self.axis = figFS.add_subplot(3,5,1 + agr) 
-            elif listTrSum == 15: self.axis = figFS.add_subplot(3,5,1 + agr) 
+            elif listTrSum == 15: self.axis = figFS.add_subplot(3,5,1 + agr)
+
+            if listTrSum >0 and listTrSum <= 4: fSize = 16 
+            elif listTrSum > 4 and listTrSum <= 6: fSize = 14    
+            elif listTrSum > 6 and listTrSum <= 12: fSize = 12  
+            elif listTrSum > 12: fSize = 10
             
             dataObj.getDataForGraph(key, value)
-             # wykresy nie nachodzą na siebie
-            self.axisCreate()
-            figFS.tight_layout()
+            self.axisCreate(fSize, value)
+            figFS.tight_layout()# wykresy nie nachodzą na siebie
             agr += 1
         
         self.putGraph(winFull, 0, figFS)
