@@ -252,8 +252,16 @@ class Main:
                 globals()['checkChosen{}'.format(t)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(t)] ) # state= "disabled"
                 if t <= ratesHalf: globals()['checkChosen{}'.format(t)].grid(column=2, row=t+1, sticky=tk.W)
                 else: globals()['checkChosen{}'.format(t)].grid(column=5, row=t-ratesHalf, sticky=tk.W)
-                
+            self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="", labelanchor="n", style='clam.TLabelframe')  
+            self.startclearFrame.grid(column=0, row=t+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
+            ttk.Button(self.startclearFrame, text = "wyczyść", command = self.fullscreenGraphWindow).grid(column = 0, row=0, padx=5)
+            ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5)
 
+            self.multiSettingsFrame = ttk.LabelFrame(tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
+            self.multiSettingsFrame.grid(column=0, row=t+2, columnspan=6, padx=5, sticky=tk.W)
+            ttk.Label(self.multiSettingsFrame,  width=18, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
+            ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5)  
+             
         tabControl = ttk.Notebook(self.win)
         mediumTab()
         bidAskTab()
