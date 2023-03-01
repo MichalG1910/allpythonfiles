@@ -119,24 +119,32 @@ class Main:
         plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
     
     def multiGraphList(self):
-        listTR, listChVar, listCC, self.multiGraphDict = [], [], [], {}
-        codeCurrencyList = self.codeCurrencyList
+        self.listTR, listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
+        
         agr = -1
         
         for a in range(len(dataObj.rates)):
-            listTR.append(globals()['timeRange{}'.format(a)].get())
+            self.listTR.append(globals()['timeRange{}'.format(a)].get())
             listChVar.append(globals()['chVar{}'.format(a)].get())
             if self.fieldsNum == 2 and a < 15:
                 listCC.append(globals()['codeVar{}'.format(a)].get())
-                codeCurrencyList = listCC
-        print(codeCurrencyList)
-        print(listTR)
-        print(listChVar)
-        for b in listTR:
+                
+                
+        
+        for b in range(len(dataObj.rates)):
             agr += 1
-            if b != "" and listChVar[agr] == 1:
-                self.multiGraphDict[codeCurrencyList[agr]] = listTR[agr]
-        print(self.multiGraphDict)
+            if self.fieldsNum == 2 and b < 15:
+                if listCC[b] != "" and listChVar[agr] == 1:
+                    self.multiCodeCurrencyList.append(listCC[b])
+            else:
+                if self.codeCurrencyList[b] != "" and listChVar[agr] == 1:
+                    self.multiCodeCurrencyList.append(self.codeCurrencyList[b])
+            if self.listTR[b] != "" and listChVar[agr] == 1:
+                self.multiTimeRangeList.append(self.listTR[b])
+            
+         
+        print(self.multiCodeCurrencyList)
+        print(self.multiTimeRangeList)
 
     def exchangeRatesTabel(self):
         
@@ -379,7 +387,7 @@ class Main:
         
         dataObj.checkConnection()
         self.multiGraphList()
-        listTrSum = len(self.multiGraphDict)
+        listTrSum = len(self.multiCodeCurrencyList)
         
         if winFull.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
@@ -388,7 +396,7 @@ class Main:
             plt.style.use('Solarize_Light2')
             figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
        
-        for key,value in self.multiGraphDict.items():
+        for code in self.multiCodeCurrencyList:
             if listTrSum == 1: self.axis = figFS.add_subplot(111) 
             elif listTrSum == 2: self.axis = figFS.add_subplot(121 + agr) 
             elif listTrSum == 3: self.axis = figFS.add_subplot(221 + agr) 
@@ -410,14 +418,14 @@ class Main:
             elif listTrSum > 6 and listTrSum <= 12: fSize = 12  
             elif listTrSum > 12: fSize = 10
             
-            dataObj.getDataForGraph(key, value)
-            self.axisCreate(fSize, value)
+            dataObj.getDataForGraph(code, self.multiTimeRangeList[agr])
+            self.axisCreate(fSize, self.multiTimeRangeList[agr])
             figFS.tight_layout()# wykresy nie nachodzą na siebie
             agr += 1
         
         self.putGraph(winFull, 0, figFS)
         ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
-    
+        del self.multiCodeCurrencyList, self.multiTimeRangeList
         winFull.mainloop()
 
 dataObj = Data()
