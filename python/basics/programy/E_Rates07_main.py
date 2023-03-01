@@ -425,6 +425,10 @@ class Main:
         
         self.putGraph(winFull, 0, figFS)
         ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
+        
+        dataObj.xValues.clear() 
+        dataObj.yValues.clear()
+        
         del self.multiCodeCurrencyList, self.multiTimeRangeList
         winFull.mainloop()
 
