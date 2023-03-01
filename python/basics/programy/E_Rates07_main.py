@@ -119,16 +119,24 @@ class Main:
         plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
     
     def multiGraphList(self):
-        listTR, listChVar, self.multiGraphDict = [], [], {}
+        listTR, listChVar, listCC, self.multiGraphDict = [], [], [], {}
+        codeCurrencyList = self.codeCurrencyList
         agr = -1
-
+        
         for a in range(len(dataObj.rates)):
             listTR.append(globals()['timeRange{}'.format(a)].get())
             listChVar.append(globals()['chVar{}'.format(a)].get())
+            if self.fieldsNum == 2 and a < 15:
+                listCC.append(globals()['codeVar{}'.format(a)].get())
+                codeCurrencyList = listCC
+        print(codeCurrencyList)
+        print(listTR)
+        print(listChVar)
         for b in listTR:
             agr += 1
             if b != "" and listChVar[agr] == 1:
-                self.multiGraphDict[self.codeCurrencyList[agr]] = listTR[agr]
+                self.multiGraphDict[codeCurrencyList[agr]] = listTR[agr]
+        print(self.multiGraphDict)
 
     def exchangeRatesTabel(self):
         
@@ -231,36 +239,62 @@ class Main:
             self.checkChosen = []
             ratesHalf = math.floor(len(dataObj.rates) / 2)
 
+            def createFields1():
+                self.fieldsNum = 1
+                for t in range(len(dataObj.rates)):
+                    if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                    else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}').grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
+                    
+                    globals()['timeRange{}'.format(t)] = tk.StringVar()
+                    globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10)
+                    globals()['rangeChosen{}'.format(t)]["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
+                    #globals()['rangeChosen{}'.format(t)].current(0)
+                    if t <= ratesHalf: globals()['rangeChosen{}'.format(t)].grid(column= 1, row= t+1, padx=5, pady=5)
+                    else: globals()['rangeChosen{}'.format(t)].grid(column= 4, row=t-ratesHalf, padx=5, pady=5)
+                    
+                    globals()['chVar{}'.format(t)] = tk.IntVar() 
+                    globals()['checkChosen{}'.format(t)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(t)] ) # state= "disabled"
+                    if t <= ratesHalf: globals()['checkChosen{}'.format(t)].grid(column=2, row=t+1, sticky=tk.W)
+                    else: globals()['checkChosen{}'.format(t)].grid(column=5, row=t-ratesHalf, sticky=tk.W)
+            def createFields2():
+                self.fieldsNum = 2
+                
+                for f in range(15):
+                
+                    globals()['codeVar{}'.format(f)] = tk.StringVar()
+                    globals()['codeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 29, textvariable= globals()['codeVar{}'.format(f)], state= "readonly",height=10)
+                    globals()['codeChosen{}'.format(f)]["values"] = self.codeCurrencyList
+                    globals()['codeChosen{}'.format(f)].grid(column= 0, row=f, padx=5, pady=5)
+
+                    globals()['timeRange{}'.format(f)] = tk.StringVar()
+                    globals()['rangeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 29, textvariable= globals()['timeRange{}'.format(f)], state= "readonly",height=10)
+                    globals()['rangeChosen{}'.format(f)]["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
+                    globals()['rangeChosen{}'.format(f)].grid(column= 1, row=f, padx=5, pady=5)
+                    
+                    globals()['chVar{}'.format(f)] = tk.IntVar() 
+                    globals()['checkChosen{}'.format(f)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(f)] )
+                    globals()['checkChosen{}'.format(f)].grid(column=2, row=f, sticky=tk.W)
+            def changeView():
+                for widget in self.multiGraphFrame.winfo_children():
+                    widget.destroy()
+                if self.fieldsNum == 1: createFields2()
+                else: createFields1()
+
             tab4 = ttk.Frame(tabControl)
             tabControl.add(tab4, text="wiele wykr.")
             self.multiGraphFrame = ttk.LabelFrame(tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
             self.multiGraphFrame.grid(column=0, row=0, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
-
-            for t in range(len(dataObj.rates)):
-                aaa = tk.StringVar()
-                if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}').grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
-                
-                globals()['timeRange{}'.format(t)] = tk.StringVar()
-                globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10)
-                globals()['rangeChosen{}'.format(t)]["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
-                #globals()['rangeChosen{}'.format(t)].current(0)
-                if t <= ratesHalf: globals()['rangeChosen{}'.format(t)].grid(column= 1, row= t+1, padx=5, pady=5)
-                else: globals()['rangeChosen{}'.format(t)].grid(column= 4, row=t-ratesHalf, padx=5, pady=5)
-                
-                globals()['chVar{}'.format(t)] = tk.IntVar() 
-                globals()['checkChosen{}'.format(t)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(t)] ) # state= "disabled"
-                if t <= ratesHalf: globals()['checkChosen{}'.format(t)].grid(column=2, row=t+1, sticky=tk.W)
-                else: globals()['checkChosen{}'.format(t)].grid(column=5, row=t-ratesHalf, sticky=tk.W)
+            createFields1()
+            
             self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="", labelanchor="n", style='clam.TLabelframe')  
-            self.startclearFrame.grid(column=0, row=t+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
-            ttk.Button(self.startclearFrame, text = "wyczyść", command = self.fullscreenGraphWindow).grid(column = 0, row=0, padx=5)
-            ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5)
+            self.startclearFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
+            ttk.Button(self.startclearFrame, text = "wyczyść", command = createFields1).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
+            ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
 
             self.multiSettingsFrame = ttk.LabelFrame(tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
-            self.multiSettingsFrame.grid(column=0, row=t+2, columnspan=6, padx=5, sticky=tk.W)
+            self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.W)
             ttk.Label(self.multiSettingsFrame,  width=18, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
-            ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5)  
+            ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 1, row=0, padx=5, pady=5)  
              
         tabControl = ttk.Notebook(self.win)
         mediumTab()
