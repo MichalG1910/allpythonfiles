@@ -213,7 +213,7 @@ class Data:
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             rpt += 1
         
-    def getDataForGraph(self, currencyName, timeRange):
+    def getDataForGraph(self, currencyName, timeRange, oneOrMultiNum):
         self.code = (currencyName[0:3]).lower()
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
 
@@ -245,9 +245,14 @@ class Data:
                 graphMid = rate["mid"]
                 self.graphEffectiveDateList.append(graphEffectiveDate)
                 self.graphMidList.append(graphMid)
-
-            self.xValues = self.graphEffectiveDateList 
-            self.yValues = self.graphMidList
+            
+            if oneOrMultiNum == 1:
+                self.xValues = self.graphEffectiveDateList 
+                self.yValues = self.graphMidList
+            else:
+                self.xValuesMultiGraph = self.graphEffectiveDateList
+                self.yValuesMultiGraph = self.graphMidList
+            
             del graphData, self.graphEffectiveDateList, self.graphMidList
 
         if timeRange == "30 dni" or timeRange == "60 dni" or timeRange == "90 dni":

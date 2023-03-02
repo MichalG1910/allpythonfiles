@@ -51,24 +51,25 @@ class Main:
     def emptyGraph(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
-            self.emptyFig = plt.figure(figsize=(11,8), facecolor = "dimgray")
+            self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
         else:
             plt.style.use('Solarize_Light2')
-            self.emptyFig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+            self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
-        axis = self.emptyFig.add_subplot(111) 
+        axis = self.fig.add_subplot(111) 
         axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         axis.set_xlabel("Data") 
         axis.set_ylabel("PLN Złoty")
-        self.emptyFig.tight_layout()
-        self.putGraph(self.win, 4, self.emptyFig)
+        self.fig.tight_layout()
+        self.putGraph(self.win, 4, self.fig)
 
     def newGraph(self):
         dataObj.checkConnection()
-        dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get())
+        dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(),1)
         self.refreshGraph()
 
     def refreshGraph(self):
+        plt.close(self.fig)
         try:
             dataObj.xValues 
         except AttributeError:
@@ -82,26 +83,28 @@ class Main:
             self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
         if dataObj.xValues == None:
+            plt.close(self.fig)
             self.emptyGraph()
         else:
             self.axis = self.fig.add_subplot(111)
-            self.axisCreate(16, self.timeRange.get())
+            self.axisCreate(16, self.timeRange.get(), dataObj.xValues, dataObj.yValues)
             self.fig.tight_layout()
             self.putGraph(self.win, 4, self.fig)
             
             
-    def axisCreate(self, fontSize, tRange):
-        xValuesLen = len(dataObj.xValues)-1
+    def axisCreate(self, fontSize, tRange, xValues, yValues):
+        xValuesLen = len(xValues)-1
+        print(xValuesLen)
         a = math.ceil(xValuesLen / 15)
         b = list(range(1,xValuesLen, a))
-        print(xValuesLen)
+        
         print(a)
         print()
         b.append(xValuesLen)
          
         self.axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-        self.axis.plot(dataObj.xValues, dataObj.yValues) 
+        self.axis.plot(xValues, yValues) 
         xaxis = self.axis.get_xaxis()
         xaxis.set_ticks(b)
         plt.xticks(rotation=45, fontsize=8)
@@ -401,10 +404,11 @@ class Main:
         self.multiGraphList()
         listTrSum = len(self.multiCodeCurrencyList)
         
-        if winFull.tk.call("ttk::style", "theme", "use") == "azure-dark":
+        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
             figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
         else:
+            winFull.tk.call("set_theme", "light")
             plt.style.use('Solarize_Light2')
             figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
        
@@ -430,16 +434,16 @@ class Main:
             elif listTrSum > 6 and listTrSum <= 12: fSize = 12  
             elif listTrSum > 12: fSize = 10
             
-            dataObj.getDataForGraph(code, self.multiTimeRangeList[agr])
-            self.axisCreate(fSize, self.multiTimeRangeList[agr])
+            dataObj.getDataForGraph(code, self.multiTimeRangeList[agr], 2)
+            self.axisCreate(fSize, self.multiTimeRangeList[agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph)
             figFS.tight_layout()# wykresy nie nachodzą na siebie
             agr += 1
         
         self.putGraph(winFull, 0, figFS)
         ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
         
-        dataObj.xValues.clear() 
-        dataObj.yValues.clear()
+        dataObj.xValuesMultiGraph.clear() 
+        dataObj.yValuesMultiGraph.clear()
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()
         winFull.mainloop()
