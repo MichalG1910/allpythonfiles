@@ -51,17 +51,17 @@ class Main:
     def emptyGraph(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
-            fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
+            self.emptyFig = plt.figure(figsize=(11,8), facecolor = "dimgray")
         else:
             plt.style.use('Solarize_Light2')
-            fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+            self.emptyFig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
-        axis = fig.add_subplot(111) 
+        axis = self.emptyFig.add_subplot(111) 
         axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         axis.set_xlabel("Data") 
         axis.set_ylabel("PLN Złoty")
-        fig.tight_layout()
-        self.putGraph(self.win, 4, fig)
+        self.emptyFig.tight_layout()
+        self.putGraph(self.win, 4, self.emptyFig)
 
     def newGraph(self):
         dataObj.checkConnection()
@@ -109,8 +109,8 @@ class Main:
         self.axis.set_ylabel("PLN Złoty")
     
     def putGraph(self, window, col, fig):
-        canvas = FigureCanvasTkAgg(fig, master=window) 
-        canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
+        self.canvas = FigureCanvasTkAgg(fig, master=window) 
+        self.canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
         window.update()
         window.deiconify()
 
@@ -121,7 +121,7 @@ class Main:
     def multiGraphList(self):
         self.listTR, listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
       
-        if self.fieldsNum == 2:
+        if self.viewNum == 2:
             for a in range(15): 
                 listCC.append(globals()['codeVar{}'.format(a)].get())
                 self.listTR.append(globals()['timeRange{}'.format(a)].get())
@@ -239,13 +239,10 @@ class Main:
             ttk.Label(last30Frame, text= "Zmiana 30\n notowań", foreground="#007fff").grid(column=3, row=1, sticky=tk.W, padx=2)
         
         def multiGraph():
-            self.tR1 = {}
-            rangeChosen = []
-            self.checkChosen = []
             ratesHalf = math.floor(len(dataObj.rates) / 2)
 
-            def createFields1():
-                self.fieldsNum = 1
+            def createView1():
+                self.viewNum = 1
                 for t in range(len(dataObj.rates)):
                     if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
                     else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}').grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
@@ -261,11 +258,11 @@ class Main:
                     globals()['checkChosen{}'.format(t)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(t)] ) # state= "disabled"
                     if t <= ratesHalf: globals()['checkChosen{}'.format(t)].grid(column=2, row=t+1, sticky=tk.W)
                     else: globals()['checkChosen{}'.format(t)].grid(column=5, row=t-ratesHalf, sticky=tk.W)
-            def createFields2():
-                self.fieldsNum = 2
+            
+            def createView2():
+                self.viewNum = 2
                 
                 for f in range(15):
-                
                     globals()['codeVar{}'.format(f)] = tk.StringVar()
                     globals()['codeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 29, textvariable= globals()['codeVar{}'.format(f)], state= "readonly",height=10)
                     globals()['codeChosen{}'.format(f)]["values"] = self.codeCurrencyList
@@ -279,28 +276,45 @@ class Main:
                     globals()['chVar{}'.format(f)] = tk.IntVar() 
                     globals()['checkChosen{}'.format(f)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(f)] )
                     globals()['checkChosen{}'.format(f)].grid(column=2, row=f, sticky=tk.W)
+            
             def changeView():
                 for widget in self.multiGraphFrame.winfo_children():
-                    widget.destroy()
-                    
-                if self.fieldsNum == 1: createFields2()
-                else: createFields1()
-
-            tab4 = ttk.Frame(tabControl)
-            tabControl.add(tab4, text="wiele wykr.")
-            self.multiGraphFrame = ttk.LabelFrame(tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
-            self.multiGraphFrame.grid(column=0, row=0, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
-            createFields1()
+                    widget.destroy()  
+                if self.viewNum == 1: 
+                    createView2()
+                    startClearF()
+                else: 
+                    createView1()
+                    startClearF()
             
-            self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="", labelanchor="n", style='clam.TLabelframe')  
-            self.startclearFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
-            ttk.Button(self.startclearFrame, text = "wyczyść", command = createFields1).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
-            ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
-
-            self.multiSettingsFrame = ttk.LabelFrame(tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
-            self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.W)
-            ttk.Label(self.multiSettingsFrame,  width=18, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
-            ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 1, row=0, padx=5, pady=5)  
+            def clearView():
+                if self.viewNum == 1:
+                    createView1()
+                else:
+                    createView2()
+            
+            def createTab4():
+                self.tab4 = ttk.Frame(tabControl)
+                tabControl.add(self.tab4, text="wiele wykr.")
+                self.multiGraphFrame = ttk.LabelFrame(self.tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
+                self.multiGraphFrame.grid(column=0, row=0, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
+            
+            def startClearF():
+                self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="wyczyść/rysuj", labelanchor="n", style='clam.TLabelframe', width=100)  
+                self.startclearFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.E)
+                ttk.Button(self.startclearFrame, text = "wyczyść", command = clearView).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
+                ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
+            
+            def multiSettingsF():
+                self.multiSettingsFrame = ttk.LabelFrame(self.tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
+                self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.E)
+                ttk.Label(self.multiSettingsFrame,  width=11, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
+                ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 1, row=0, padx=5, pady=5)  
+            
+            createTab4()
+            createView1()
+            startClearF()
+            multiSettingsF()
              
         tabControl = ttk.Notebook(self.win)
         mediumTab()
@@ -432,7 +446,7 @@ class Main:
 
 dataObj = Data()
 mainObj = Main() 
-mainObj.win.mainloop()      
+mainObj.win.mainloop()            
     
 
 
