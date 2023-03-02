@@ -120,29 +120,26 @@ class Main:
     
     def multiGraphList(self):
         self.listTR, listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
-        
-        agr = -1
-        
-        for a in range(len(dataObj.rates)):
-            self.listTR.append(globals()['timeRange{}'.format(a)].get())
-            listChVar.append(globals()['chVar{}'.format(a)].get())
-            if self.fieldsNum == 2 and a < 15:
+      
+        if self.fieldsNum == 2:
+            for a in range(15): 
                 listCC.append(globals()['codeVar{}'.format(a)].get())
-                
-                
-        
-        for b in range(len(dataObj.rates)):
-            agr += 1
-            if self.fieldsNum == 2 and b < 15:
-                if listCC[b] != "" and listChVar[agr] == 1:
-                    self.multiCodeCurrencyList.append(listCC[b])
-            else:
-                if self.codeCurrencyList[b] != "" and listChVar[agr] == 1:
+                self.listTR.append(globals()['timeRange{}'.format(a)].get())
+                listChVar.append(globals()['chVar{}'.format(a)].get())
+                if listCC[a] != "" and listChVar[a] == 1:
+                    self.multiCodeCurrencyList.append(listCC[a])
+                    self.multiTimeRangeList.append(self.listTR[a])
+        else:
+            for b in range(len(dataObj.rates)):
+                self.listTR.append(globals()['timeRange{}'.format(b)].get())
+                listChVar.append(globals()['chVar{}'.format(b)].get())
+                if self.codeCurrencyList[b] != "" and listChVar[b] == 1:
                     self.multiCodeCurrencyList.append(self.codeCurrencyList[b])
-            if self.listTR[b] != "" and listChVar[agr] == 1:
-                self.multiTimeRangeList.append(self.listTR[b])
+                    self.multiTimeRangeList.append(self.listTR[b])
             
-         
+        self.listTR.clear()
+        listChVar.clear()
+        listCC.clear()
         print(self.multiCodeCurrencyList)
         print(self.multiTimeRangeList)
 
@@ -285,6 +282,7 @@ class Main:
             def changeView():
                 for widget in self.multiGraphFrame.winfo_children():
                     widget.destroy()
+                    
                 if self.fieldsNum == 1: createFields2()
                 else: createFields1()
 
@@ -428,8 +426,8 @@ class Main:
         
         dataObj.xValues.clear() 
         dataObj.yValues.clear()
-        
-        del self.multiCodeCurrencyList, self.multiTimeRangeList
+        self.multiCodeCurrencyList.clear() 
+        self.multiTimeRangeList.clear()
         winFull.mainloop()
 
 dataObj = Data()
