@@ -1,4 +1,4 @@
-import os, math
+import os, math, time
 import tkinter as tk
 from tkinter import ttk
 from tkinter import PhotoImage
@@ -89,19 +89,19 @@ class Main:
             self.emptyGraph()
         else:
             self.axis = self.fig.add_subplot(111)
-            self.axisCreate(16, self.timeRange.get(), dataObj.xValues, dataObj.yValues)
+            self.axisCreate(16, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne)
             self.fig.tight_layout()
             self.putGraph(self.win, 4, self.fig)
             
             
-    def axisCreate(self, fontSize, tRange, xValues, yValues):
+    def axisCreate(self, fontSize, tRange, xValues, yValues, code):
         xValuesLen = len(xValues)-1
         print(xValuesLen)
         a = math.ceil(xValuesLen / 15)
         b = list(range(1,xValuesLen, a))
         b.append(xValuesLen)
          
-        self.axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
+        self.axis.set_title(f"{code.upper()} {dataObj.codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         self.axis.plot(xValues, yValues) 
         xaxis = self.axis.get_xaxis()
@@ -123,12 +123,15 @@ class Main:
     
     def saveGraphPNG(self, graphNum):
         dataObj.createReportDir()
-        if graphNum == 1: graphName = f"{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png"
+        if graphNum == 1: graphName = f"{dataObj.codeOne.upper()} ostatnie {self.timeRange.get()}.png"
         else: 
+            dateTimeNow = time.localtime()
+            print(time.strftime("%d/%m/%Y %H:%M:%S",dateTimeNow)) 
             num = Main.printInformation()
-            graphName = f"multi_Graph_{num}_{dataObj.today}.png"
+            graphName = f"multi_Graph_{num}_{time.strftime('%d-%m-%Y %H:%M:%S',dateTimeNow)}.png"
 
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
+        del graphName
     
 
 
@@ -408,6 +411,7 @@ class Main:
         def _quit():
             winFull.quit()
             winFull.destroy()
+            plt.close(figFS)
         def runSaveGraphPNG2():
             self.saveGraphPNG(2)
 
@@ -451,7 +455,7 @@ class Main:
             elif listTrSum > 12: fSize = 10
             
             dataObj.getDataForGraph(code, self.multiTimeRangeList[agr], 2)
-            self.axisCreate(fSize, self.multiTimeRangeList[agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph)
+            self.axisCreate(fSize, self.multiTimeRangeList[agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti)
             figFS.tight_layout()# wykresy nie nachodzą na siebie
             agr += 1
         
@@ -464,6 +468,7 @@ class Main:
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()
         winFull.mainloop()
+        dataObj.code
 
 dataObj = Data()
 mainObj = Main() 
