@@ -9,6 +9,8 @@ import PIL._tkinter_finder
 from classE_Rates07 import Data
 
 class Main:
+    agr_number = 0
+    
     def __init__(self):
         self.win = tk.Tk()
         dataObj.checkConnection()
@@ -65,7 +67,7 @@ class Main:
 
     def newGraph(self):
         dataObj.checkConnection()
-        dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(),1)
+        dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1)
         self.refreshGraph()
 
     def refreshGraph(self):
@@ -97,9 +99,6 @@ class Main:
         print(xValuesLen)
         a = math.ceil(xValuesLen / 15)
         b = list(range(1,xValuesLen, a))
-        
-        print(a)
-        print()
         b.append(xValuesLen)
          
         self.axis.set_title(f"{dataObj.code.upper()} {dataObj.codeCurrencyDict[dataObj.code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
@@ -117,10 +116,22 @@ class Main:
         window.update()
         window.deiconify()
 
-    def saveGraphPNG(self):
-        dataObj.createReportDir()
-        plt.savefig(f"{dataObj.filePath}/reports/{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png", dpi=200)
+    @classmethod 
+    def printInformation(cls): 
+        cls.agr_number +=1
+        return cls.agr_number 
     
+    def saveGraphPNG(self, graphNum):
+        dataObj.createReportDir()
+        if graphNum == 1: graphName = f"{dataObj.code.upper()} ostatnie {self.timeRange.get()}.png"
+        else: 
+            num = Main.printInformation()
+            graphName = f"multi_Graph_{num}_{dataObj.today}.png"
+
+        plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
+    
+
+
     def multiGraphList(self):
         self.listTR, listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
       
@@ -328,7 +339,10 @@ class Main:
 
     def graphGui(self): 
         self.currencyName = tk.StringVar()
-        self.timeRange = tk.StringVar() 
+        self.timeRange = tk.StringVar()
+
+        def runSaveGraphPNG1():
+            self.saveGraphPNG(1)
 
         tabControlGui = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
@@ -351,7 +365,7 @@ class Main:
         rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
         rangeChosen.current(0)
         ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.newGraph, width=12).grid(column = 6, row = 1, padx=5)  
-        ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = self.saveGraphPNG, width=12).grid(column = 6, row = 2, padx=5)
+        ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = runSaveGraphPNG1, width=12).grid(column = 6, row = 2, padx=5)
 
         # test button
         ttk.Button(tab2, text = "wez dane", command = self.fullscreenGraphWindow, width=12).grid(column = 6, row = 1, padx=5)  
@@ -394,6 +408,8 @@ class Main:
         def _quit():
             winFull.quit()
             winFull.destroy()
+        def runSaveGraphPNG2():
+            self.saveGraphPNG(2)
 
         winFull = tk.Tk()
         self.winStyle(winFull)
@@ -440,7 +456,8 @@ class Main:
             agr += 1
         
         self.putGraph(winFull, 0, figFS)
-        ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 0, row = 0 , padx=5, pady=5, sticky=tk.W)
+        ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
+        ttk.Button(winFull, text = "zapisz", command = runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
         
         dataObj.xValuesMultiGraph.clear() 
         dataObj.yValuesMultiGraph.clear()
