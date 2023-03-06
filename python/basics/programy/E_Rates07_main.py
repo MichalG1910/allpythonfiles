@@ -93,7 +93,6 @@ class Main:
             self.fig.tight_layout()
             self.putGraph(self.win, 4, self.fig)
             
-            
     def axisCreate(self, fontSize, tRange, xValues, yValues, code):
         xValuesLen = len(xValues)-1
         print(xValuesLen)
@@ -126,15 +125,13 @@ class Main:
         if graphNum == 1: graphName = f"{dataObj.codeOne.upper()} ostatnie {self.timeRange.get()}.png"
         else: 
             dateTimeNow = time.localtime()
-            print(time.strftime("%d/%m/%Y %H:%M:%S",dateTimeNow)) 
+            
             num = Main.printInformation()
-            graphName = f"multi_Graph_{num}_{time.strftime('%d-%m-%Y %H:%M:%S',dateTimeNow)}.png"
+            graphName = f"multi_Graph_{num}_{time.strftime('%d-%m-%Y %H%M%S',dateTimeNow)}.png"
 
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
         del graphName
     
-
-
     def multiGraphList(self):
         self.listTR, listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
       
@@ -157,8 +154,6 @@ class Main:
         self.listTR.clear()
         listChVar.clear()
         listCC.clear()
-        print(self.multiCodeCurrencyList)
-        print(self.multiTimeRangeList)
 
     def exchangeRatesTabel(self):
         
@@ -468,8 +463,7 @@ class Main:
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()
         winFull.mainloop()
-        dataObj.code
-
+     
 dataObj = Data()
 mainObj = Main() 
 mainObj.win.mainloop()            
