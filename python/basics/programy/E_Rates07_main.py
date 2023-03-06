@@ -95,7 +95,6 @@ class Main:
             
     def axisCreate(self, fontSize, tRange, xValues, yValues, code):
         xValuesLen = len(xValues)-1
-        print(xValuesLen)
         a = math.ceil(xValuesLen / 15)
         b = list(range(1,xValuesLen, a))
         b.append(xValuesLen)
