@@ -20,10 +20,19 @@ class Main:
         dataObj.latestNBPreport()
         self.winStyle(self.win)
         self.themeButton(self.win)
+        self.quitButton()
         self.emptyGraph()
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
+    
+    def _quit(self):
+        self.win.quit()
+        self.win.destroy()
+        exit()
+    
+    def quitButton(self):
+        ttk.Button(self.win,text="Zamknij", command=self._quit).grid(row=0, column=10, padx=5, pady=5, sticky="nsew")
         
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
@@ -31,6 +40,7 @@ class Main:
 
     def themeButton(self, window):
         def change_theme():
+            
             if window.tk.call("ttk::style", "theme", "use") == "azure-dark":
                 window.tk.call("set_theme", "light")
                 icon1 = PhotoImage(file=f'{dataObj.filePath}/light.png')
@@ -71,6 +81,7 @@ class Main:
         self.refreshGraph()
 
     def refreshGraph(self):
+        self.fig.clear()
         plt.close(self.fig)
         try:
             dataObj.xValues 
@@ -85,6 +96,7 @@ class Main:
             self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
         if dataObj.xValues == None:
+            self.fig.clear()
             plt.close(self.fig)
             self.emptyGraph()
         else:
@@ -107,6 +119,7 @@ class Main:
         plt.xticks(rotation=45, fontsize=8)
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
+        del self.axis, xValues, yValues
     
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
@@ -403,9 +416,11 @@ class Main:
 
     def fullscreenGraphWindow(self):
         def _quit():
+            figFS.clear()
+            plt.close(figFS)
             winFull.quit()
             winFull.destroy()
-            plt.close(figFS)
+            
         def runSaveGraphPNG2():
             self.saveGraphPNG(2)
 
