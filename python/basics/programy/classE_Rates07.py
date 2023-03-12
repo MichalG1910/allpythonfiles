@@ -256,7 +256,6 @@ class Data:
                 self.codeMulti = self.code
             
             del graphData, self.graphEffectiveDateList, self.graphMidList, self.code
-            gc.collect()
 
         if timeRange == "30 dni" or timeRange == "60 dni" or timeRange == "90 dni":
             self.dayRange, self.repeat, self.step = int(timeRange[0:2]), 1, int(timeRange[0:2])
