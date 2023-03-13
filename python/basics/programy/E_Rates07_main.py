@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import PIL
 import PIL._tkinter_finder
 from classE_Rates07 import Data
+import gc
 
 class Main:
     agr_number = 0
@@ -30,6 +31,8 @@ class Main:
         self.win.quit()
         self.win.destroy()
         exit()
+    def gcCollect(self):
+        gc.collect()
     
     def quitButton(self):
         ttk.Button(self.win,text="Zamknij", command=self._quit).grid(row=0, column=10, padx=5, pady=5, sticky="nsew")
@@ -81,8 +84,9 @@ class Main:
         self.refreshGraph()
 
     def refreshGraph(self):
-        self.fig.clear()
+        plt.clf()
         plt.close(self.fig)
+        
         try:
             dataObj.xValues 
         except AttributeError:
@@ -96,8 +100,9 @@ class Main:
             self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
         if dataObj.xValues == None:
-            self.fig.clear()
+            plt.clf()
             plt.close(self.fig)
+            
             self.emptyGraph()
         else:
             self.axis = self.fig.add_subplot(111)
@@ -120,7 +125,7 @@ class Main:
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
         del self.axis, xValues, yValues
-    
+        
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
         self.canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
@@ -143,7 +148,7 @@ class Main:
 
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
         del graphName
-    
+        
     def multiGraphList(self):
         self.listTR, listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
       
@@ -346,7 +351,7 @@ class Main:
         currencyLast30()
         multiGraph()
         del dataObj.ratesUpDown
-
+        
     def graphGui(self): 
         self.currencyName = tk.StringVar()
         self.timeRange = tk.StringVar()
@@ -378,7 +383,7 @@ class Main:
         ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = runSaveGraphPNG1, width=12).grid(column = 6, row = 2, padx=5)
 
         # test button
-        ttk.Button(tab2, text = "wez dane", command = self.fullscreenGraphWindow, width=12).grid(column = 6, row = 1, padx=5)  
+        ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)  
         # test checkbox
         testV = tk.IntVar() 
         testch = ttk.Checkbutton(tab2, variable=testV ).grid(column=3, row=2, sticky=tk.W) 

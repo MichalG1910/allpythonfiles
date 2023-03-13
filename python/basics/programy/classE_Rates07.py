@@ -4,6 +4,7 @@ import pandas as pd
 from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
+
 class Data:
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
@@ -46,6 +47,7 @@ class Data:
         self.terminalPrint()
         
         del self.data, self.response, self.printList, self.erDataList 
+        
         self.start = None
         self.firstloopEDL = self.effectiveDateList[-1]
 
@@ -55,6 +57,7 @@ class Data:
        
         self.ratesUpDown = self.csvList
         del self.csvList
+        
     
     def NBPbidAsk(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/c/?format=json"
@@ -107,7 +110,7 @@ class Data:
                     self.csv_ER_report(startDate, endDate) 
                     
                     del self.data, self.report, self.csvList, self.printList, self.erDataList, self.response
-    
+                    
     def ReportLoop(self):
         runDate = self.sDate
         self.repeat = math.ceil(self.daysLen / self.step) 
@@ -166,7 +169,7 @@ class Data:
             
             self.erDataList.append(erData)
             del erData
-        
+            
     def reportCreate(self, startDate, endDate):
         def file_write(fileWrite):
             erDataListLen = len(self.erDataList)
@@ -181,7 +184,7 @@ class Data:
 
             fileWrite.close()
             del erFrame, fileWrite
-
+            
         if self.num == 2:
             self.createReportDir()
             self.report = open(f"{self.filePath}/reports/report_exchangerates_{startDate}_{endDate}.txt", "w")
@@ -256,7 +259,7 @@ class Data:
                 self.codeMulti = self.code
             
             del graphData, self.graphEffectiveDateList, self.graphMidList, self.code
-
+            
         if timeRange == "30 dni" or timeRange == "60 dni" or timeRange == "90 dni":
             self.dayRange, self.repeat, self.step = int(timeRange[0:2]), 1, int(timeRange[0:2])
             timeRangeLoop()
