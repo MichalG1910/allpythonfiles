@@ -8,6 +8,7 @@ import PIL
 import PIL._tkinter_finder
 from classE_Rates07 import Data
 import gc
+from tkinter import messagebox as mBox
 
 class Main:
     agr_number = 0
@@ -142,7 +143,6 @@ class Main:
         if graphNum == 1: graphName = f"{dataObj.codeOne.upper()} ostatnie {self.timeRange.get()}.png"
         else: 
             dateTimeNow = time.localtime()
-            
             num = Main.printInformation()
             graphName = f"multi_Graph_{num}_{time.strftime('%d-%m-%Y %H%M%S',dateTimeNow)}.png"
 
@@ -150,26 +150,25 @@ class Main:
         del graphName
         
     def multiGraphList(self):
-        self.listTR, listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
+        self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
       
         if self.viewNum == 2:
             for a in range(15): 
                 listCC.append(globals()['codeVar{}'.format(a)].get())
                 self.listTR.append(globals()['timeRange{}'.format(a)].get())
-                listChVar.append(globals()['chVar{}'.format(a)].get())
-                if listCC[a] != "" and listChVar[a] == 1:
+                self.listChVar.append(globals()['chVar{}'.format(a)].get())
+                if listCC[a] != "" and self.listChVar[a] == 1:
                     self.multiCodeCurrencyList.append(listCC[a])
                     self.multiTimeRangeList.append(self.listTR[a])
         else:
             for b in range(len(dataObj.rates)):
                 self.listTR.append(globals()['timeRange{}'.format(b)].get())
-                listChVar.append(globals()['chVar{}'.format(b)].get())
-                if self.codeCurrencyList[b] != "" and listChVar[b] == 1:
+                self.listChVar.append(globals()['chVar{}'.format(b)].get())
+                if self.codeCurrencyList[b] != "" and self.listChVar[b] == 1:
                     self.multiCodeCurrencyList.append(self.codeCurrencyList[b])
                     self.multiTimeRangeList.append(self.listTR[b])
-            
+           
         self.listTR.clear()
-        listChVar.clear()
         listCC.clear()
 
     def exchangeRatesTabel(self):
@@ -429,59 +428,63 @@ class Main:
         def runSaveGraphPNG2():
             self.saveGraphPNG(2)
 
-        winFull = tk.Tk()
-        self.winStyle(winFull)
-        winFull.attributes("-fullscreen", True)
-        agr = 0
-        
         dataObj.checkConnection()
         self.multiGraphList()
-        listTrSum = len(self.multiCodeCurrencyList)
-        
-        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            plt.style.use('dark_background')
-            figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
+        if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
+            mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
         else:
-            winFull.tk.call("set_theme", "light")
-            plt.style.use('Solarize_Light2')
-            figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
-       
-        for code in self.multiCodeCurrencyList:
-            if listTrSum == 1: self.axis = figFS.add_subplot(111) 
-            elif listTrSum == 2: self.axis = figFS.add_subplot(121 + agr) 
-            elif listTrSum == 3: self.axis = figFS.add_subplot(221 + agr) 
-            elif listTrSum == 4: self.axis = figFS.add_subplot(221 + agr)  
-            elif listTrSum == 5: self.axis = figFS.add_subplot(231 + agr)  
-            elif listTrSum == 6: self.axis = figFS.add_subplot(231 + agr)  
-            elif listTrSum == 7: self.axis = figFS.add_subplot(241 + agr)  
-            elif listTrSum == 8: self.axis = figFS.add_subplot(241 + agr) 
-            elif listTrSum == 9: self.axis = figFS.add_subplot(331 + agr)  
-            elif listTrSum == 10: self.axis = figFS.add_subplot(3,4,1 + agr)  
-            elif listTrSum == 11: self.axis = figFS.add_subplot(3,4,1 + agr)  
-            elif listTrSum == 12: self.axis = figFS.add_subplot(3,4,1 + agr) 
-            elif listTrSum == 13: self.axis = figFS.add_subplot(3,5,1 + agr) 
-            elif listTrSum == 14: self.axis = figFS.add_subplot(3,5,1 + agr) 
-            elif listTrSum == 15: self.axis = figFS.add_subplot(3,5,1 + agr)
-
-            if listTrSum >0 and listTrSum <= 4: fSize = 16 
-            elif listTrSum > 4 and listTrSum <= 6: fSize = 14    
-            elif listTrSum > 6 and listTrSum <= 12: fSize = 12  
-            elif listTrSum > 12: fSize = 10
+            winFull = tk.Tk()
+            self.winStyle(winFull)
+            winFull.attributes("-fullscreen", True)
+            agr = 0
+            listTrSum = len(self.multiCodeCurrencyList)
             
-            dataObj.getDataForGraph(code, self.multiTimeRangeList[agr], 2)
-            self.axisCreate(fSize, self.multiTimeRangeList[agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti)
-            figFS.tight_layout()# wykresy nie nachodzą na siebie
-            agr += 1
+            if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+                plt.style.use('dark_background')
+                figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
+            else:
+                winFull.tk.call("set_theme", "light")
+                plt.style.use('Solarize_Light2')
+                figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
         
-        self.putGraph(winFull, 0, figFS)
-        ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
-        ttk.Button(winFull, text = "zapisz", command = runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+            for code in self.multiCodeCurrencyList:
+                if listTrSum == 1: self.axis = figFS.add_subplot(111) 
+                elif listTrSum == 2: self.axis = figFS.add_subplot(121 + agr) 
+                elif listTrSum == 3: self.axis = figFS.add_subplot(221 + agr) 
+                elif listTrSum == 4: self.axis = figFS.add_subplot(221 + agr)  
+                elif listTrSum == 5: self.axis = figFS.add_subplot(231 + agr)  
+                elif listTrSum == 6: self.axis = figFS.add_subplot(231 + agr)  
+                elif listTrSum == 7: self.axis = figFS.add_subplot(241 + agr)  
+                elif listTrSum == 8: self.axis = figFS.add_subplot(241 + agr) 
+                elif listTrSum == 9: self.axis = figFS.add_subplot(331 + agr)  
+                elif listTrSum == 10: self.axis = figFS.add_subplot(3,4,1 + agr)  
+                elif listTrSum == 11: self.axis = figFS.add_subplot(3,4,1 + agr)  
+                elif listTrSum == 12: self.axis = figFS.add_subplot(3,4,1 + agr) 
+                elif listTrSum == 13: self.axis = figFS.add_subplot(3,5,1 + agr) 
+                elif listTrSum == 14: self.axis = figFS.add_subplot(3,5,1 + agr) 
+                elif listTrSum == 15: self.axis = figFS.add_subplot(3,5,1 + agr)
+
+                if listTrSum >0 and listTrSum <= 4: fSize = 16 
+                elif listTrSum > 4 and listTrSum <= 6: fSize = 14    
+                elif listTrSum > 6 and listTrSum <= 12: fSize = 12  
+                elif listTrSum > 12: fSize = 10
+                
+                dataObj.getDataForGraph(code, self.multiTimeRangeList[agr], 2)
+                self.axisCreate(fSize, self.multiTimeRangeList[agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti)
+                figFS.tight_layout()# wykresy nie nachodzą na siebie
+                agr += 1
+                
+                self.putGraph(winFull, 0, figFS)
+                ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
+                ttk.Button(winFull, text = "zapisz", command = runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+            dataObj.xValuesMultiGraph.clear() 
+            dataObj.yValuesMultiGraph.clear()
+            winFull.mainloop()
         
-        dataObj.xValuesMultiGraph.clear() 
-        dataObj.yValuesMultiGraph.clear()
+        self.listChVar.clear()
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()
-        winFull.mainloop()
+        
      
 dataObj = Data()
 mainObj = Main() 
