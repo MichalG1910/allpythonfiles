@@ -157,17 +157,17 @@ class Main:
                 listCC.append(globals()['codeVar{}'.format(a)].get())
                 self.listTR.append(globals()['timeRange{}'.format(a)].get())
                 self.listChVar.append(globals()['chVar{}'.format(a)].get())
-                if listCC[a] != "" and self.listChVar[a] == 1:
+                if self.listChVar[a] == 1:
                     self.multiCodeCurrencyList.append(listCC[a])
                     self.multiTimeRangeList.append(self.listTR[a])
         else:
             for b in range(len(dataObj.rates)):
                 self.listTR.append(globals()['timeRange{}'.format(b)].get())
                 self.listChVar.append(globals()['chVar{}'.format(b)].get())
-                if self.codeCurrencyList[b] != "" and self.listChVar[b] == 1:
+                if self.listChVar[b] == 1:
                     self.multiCodeCurrencyList.append(self.codeCurrencyList[b])
                     self.multiTimeRangeList.append(self.listTR[b])
-           
+         
         self.listTR.clear()
         listCC.clear()
 
@@ -432,6 +432,8 @@ class Main:
         self.multiGraphList()
         if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
             mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
+        elif "" in self.multiCodeCurrencyList or "" in self.multiTimeRangeList:
+            mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznzczonych do narysowania")
         else:
             winFull = tk.Tk()
             self.winStyle(winFull)
