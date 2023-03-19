@@ -9,6 +9,8 @@ import PIL._tkinter_finder
 from classE_Rates07 import Data
 import gc
 from tkinter import messagebox as mBox
+import numpy as np
+
 
 class Main:
     agr_number = 0
@@ -150,16 +152,29 @@ class Main:
         t0 = self.axis.plot(xValues, yValues)
         t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="white", linewidth=0.8)
         t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="white", linewidth=0.8, label='efert')
-        self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues)*1.0002))
-        self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues)*1.0002))
+        
+        # add annotates (min/max values)
+        self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) * 1.0003))
+        self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) * 1.0003))
         xaxis = self.axis.get_xaxis()
         xaxis.set_ticks(b)
         plt.xticks(rotation=45, fontsize=8)
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
         
-        del self.axis, xValues, yValues
-        
+        # add trendline to plot
+        x = np.array(range(len(xValues)))
+        y = np.array(yValues)
+        z = np.polyfit(x, y, 1)
+        p = np.poly1d(z)
+        if p(x)[0] > p(x)[-1]:
+            plt.plot(x, p(x), color='red')
+        elif p(x)[0] == p(x)[-1]:
+            plt.plot(x, p(x), color='white')
+        else:
+            plt.plot(x, p(x), color='green')
+
+        del self.axis, xValues, yValues, x, y, z, p, t0, t1, t2
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
         self.canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
