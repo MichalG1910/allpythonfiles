@@ -115,7 +115,7 @@ class Main:
             
     def axisCreate(self, fontSize, tRange, xValues, yValues, code):
         xValuesLen = len(xValues) 
-        
+        print(max(yValues))
         if sum(self.listChVar) == 0: 
             a = round(xValuesLen / 25)
             b = list(range(0,xValuesLen, a))
@@ -147,10 +147,14 @@ class Main:
         
         self.axis.set_title(f"{code.upper()} {dataObj.codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-        self.axis.plot(xValues, yValues)
+        t0 = self.axis.plot(xValues, yValues)
+        t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="white", linewidth=0.8)
+        t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="white", linewidth=0.8, label='efert')
+        self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues)*1.0002))
+        self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues)*1.0002))
         xaxis = self.axis.get_xaxis()
         xaxis.set_ticks(b)
-        plt.xticks(rotation=45, fontsize=8,)
+        plt.xticks(rotation=45, fontsize=8)
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
         
