@@ -106,25 +106,54 @@ class Main:
             
             self.emptyGraph()
         else:
+            self.listChVar = [0]
             self.axis = self.fig.add_subplot(111)
             self.axisCreate(16, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne)
             self.fig.tight_layout()
             self.putGraph(self.win, 4, self.fig)
+            self.listChVar.clear()
             
     def axisCreate(self, fontSize, tRange, xValues, yValues, code):
-        xValuesLen = len(xValues)-1
-        a = math.ceil(xValuesLen / 15)
-        b = list(range(1,xValuesLen, a))
-        b.append(xValuesLen)
-         
+        xValuesLen = len(xValues) 
+        
+        if sum(self.listChVar) == 0: 
+            a = round(xValuesLen / 25)
+            b = list(range(0,xValuesLen, a))
+            #b.append(xValuesLen -1)
+        if sum(self.listChVar) == 1: 
+            a = round(xValuesLen / 40)
+            b = list(range(0,xValuesLen, a))
+            if len(b) < 40: b.append(xValuesLen -1)
+        if sum(self.listChVar) == 2 or sum(self.listChVar) == 3 or sum(self.listChVar) == 4: 
+            a = round(xValuesLen / 20)
+            b = list(range(0,xValuesLen, a))
+            if len(b) < 20: b.append(xValuesLen -1)
+        if sum(self.listChVar) == 5 or sum(self.listChVar) == 6: 
+            a = round(xValuesLen / 16)
+            b = list(range(0,xValuesLen, a))
+            if len(b) < 16: b.append(xValuesLen-1)
+        if sum(self.listChVar) == 7 or sum(self.listChVar) == 8 or sum(self.listChVar) == 9: 
+            a = round(xValuesLen / 15)
+            b = list(range(0,xValuesLen, a))
+            if len(b) < 15: b.append(xValuesLen-1)
+        if sum(self.listChVar) == 10 or sum(self.listChVar) == 11 or sum(self.listChVar) == 12: 
+            a = round(xValuesLen / 14)
+            b = list(range(0,xValuesLen, a))
+            if len(b) < 14: b.append(xValuesLen-1)
+        if sum(self.listChVar) == 13 or sum(self.listChVar) == 14 or sum(self.listChVar) == 15: 
+            a = round(xValuesLen / 11)
+            b = list(range(0,xValuesLen, a))
+            if len(b) < 11: b.append(xValuesLen-1)
+        
         self.axis.set_title(f"{code.upper()} {dataObj.codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-        self.axis.plot(xValues, yValues) 
+        self.axis.plot(xValues, yValues)
         xaxis = self.axis.get_xaxis()
         xaxis.set_ticks(b)
-        plt.xticks(rotation=45, fontsize=8)
+        plt.xticks(rotation=45, fontsize=8,)
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
+        
         del self.axis, xValues, yValues
         
     def putGraph(self, window, col, fig):
