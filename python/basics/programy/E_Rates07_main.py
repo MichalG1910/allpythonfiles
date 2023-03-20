@@ -138,56 +138,60 @@ class Main:
             t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
             t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
             del t1,t2
+        def optionsStatus():
+            if self.annotateVar.get() == 1 and oneOrMultiGraph == 1:
+                annotates()
+            if self.trendLineVar.get() == 1 and oneOrMultiGraph == 1:
+                trendline()
+            if self.annotateVarMulti.get() == 1 and oneOrMultiGraph == 2:
+                annotates()
+            if self.trendLineVarMulti.get() == 1 and oneOrMultiGraph == 2:
+                trendline()
+
+        def tickListScale():
+            if sum(self.listChVar) == 0: 
+                a = round(xValuesLen / 25)
+                self.tickList = list(range(0,xValuesLen, a))
+            if sum(self.listChVar) == 1: 
+                a = round(xValuesLen / 40)
+                self.tickList = list(range(0,xValuesLen, a))
+                if len(self.tickList) < 40: self.tickList.append(xValuesLen -1)
+            if sum(self.listChVar) == 2 or sum(self.listChVar) == 3 or sum(self.listChVar) == 4: 
+                a = round(xValuesLen / 20)
+                self.tickList = list(range(0,xValuesLen, a))
+                if len(self.tickList) < 20: self.tickList.append(xValuesLen -1)
+            if sum(self.listChVar) == 5 or sum(self.listChVar) == 6: 
+                a = round(xValuesLen / 16)
+                self.tickList = list(range(0,xValuesLen, a))
+                if len(self.tickList) < 16: self.tickList.append(xValuesLen-1)
+            if sum(self.listChVar) == 7 or sum(self.listChVar) == 8 or sum(self.listChVar) == 9: 
+                a = round(xValuesLen / 15)
+                self.tickList = list(range(0,xValuesLen, a))
+                if len(self.tickList) < 15: self.tickList.append(xValuesLen-1)
+            if sum(self.listChVar) == 10 or sum(self.listChVar) == 11 or sum(self.listChVar) == 12: 
+                a = round(xValuesLen / 14)
+                self.tickList = list(range(0,xValuesLen, a))
+                if len(self.tickList) < 14: self.tickList.append(xValuesLen-1)
+            if sum(self.listChVar) == 13 or sum(self.listChVar) == 14 or sum(self.listChVar) == 15: 
+                a = round(xValuesLen / 11)
+                self.tickList = list(range(0,xValuesLen, a))
+                if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
         
-        if sum(self.listChVar) == 0: 
-            a = round(xValuesLen / 25)
-            b = list(range(0,xValuesLen, a))
-        if sum(self.listChVar) == 1: 
-            a = round(xValuesLen / 40)
-            b = list(range(0,xValuesLen, a))
-            if len(b) < 40: b.append(xValuesLen -1)
-        if sum(self.listChVar) == 2 or sum(self.listChVar) == 3 or sum(self.listChVar) == 4: 
-            a = round(xValuesLen / 20)
-            b = list(range(0,xValuesLen, a))
-            if len(b) < 20: b.append(xValuesLen -1)
-        if sum(self.listChVar) == 5 or sum(self.listChVar) == 6: 
-            a = round(xValuesLen / 16)
-            b = list(range(0,xValuesLen, a))
-            if len(b) < 16: b.append(xValuesLen-1)
-        if sum(self.listChVar) == 7 or sum(self.listChVar) == 8 or sum(self.listChVar) == 9: 
-            a = round(xValuesLen / 15)
-            b = list(range(0,xValuesLen, a))
-            if len(b) < 15: b.append(xValuesLen-1)
-        if sum(self.listChVar) == 10 or sum(self.listChVar) == 11 or sum(self.listChVar) == 12: 
-            a = round(xValuesLen / 14)
-            b = list(range(0,xValuesLen, a))
-            if len(b) < 14: b.append(xValuesLen-1)
-        if sum(self.listChVar) == 13 or sum(self.listChVar) == 14 or sum(self.listChVar) == 15: 
-            a = round(xValuesLen / 11)
-            b = list(range(0,xValuesLen, a))
-            if len(b) < 11: b.append(xValuesLen-1)
-        
+        tickListScale()
+        optionsStatus()
         self.axis.set_title(f"{code.upper()} {dataObj.codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         t0 = self.axis.plot(xValues, yValues)
         
         xaxis = self.axis.get_xaxis()
-        xaxis.set_ticks(b)
+        xaxis.set_ticks(self.tickList)
         plt.xticks(rotation=45, fontsize=8)
         plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
         
-        if self.annotateVar.get() == 1 and oneOrMultiGraph == 1:
-            annotates()
-        if self.trendLineVar.get() == 1 and oneOrMultiGraph == 1:
-            trendline()
-        if self.annotateVarMulti.get() == 1 and oneOrMultiGraph == 2:
-            annotates()
-        if self.trendLineVarMulti.get() == 1 and oneOrMultiGraph == 2:
-            trendline()
             
-        del self.axis, xValues, yValues, t0
+        del self.axis, xValues, yValues, t0, self.tickList
     
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
@@ -546,6 +550,7 @@ class Main:
                 self.putGraph(winFull, 0, figFS)
                 ttk.Button(winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
                 ttk.Button(winFull, text = "zapisz", command = runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+            
             dataObj.xValuesMultiGraph.clear() 
             dataObj.yValuesMultiGraph.clear()
             winFull.mainloop()
