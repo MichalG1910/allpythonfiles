@@ -117,7 +117,7 @@ class Main:
             
     def axisCreate(self, fontSize, tRange, xValues, yValues, code):
         xValuesLen = len(xValues) 
-        print(max(yValues))
+        
         if sum(self.listChVar) == 0: 
             a = round(xValuesLen / 25)
             b = list(range(0,xValuesLen, a))
@@ -150,15 +150,17 @@ class Main:
         self.axis.set_title(f"{code.upper()} {dataObj.codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         t0 = self.axis.plot(xValues, yValues)
-        t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="white", linewidth=0.8)
-        t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="white", linewidth=0.8, label='efert')
+        t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
+        t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
         
         # add annotates (min/max values)
-        self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) * 1.0003))
-        self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) * 1.0003))
+        yRange = (max(yValues) - min(yValues)) * 0.09
+        self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) + yRange * 0.1), color='grey')
+        self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) + yRange * 0.1), color='grey')
         xaxis = self.axis.get_xaxis()
         xaxis.set_ticks(b)
         plt.xticks(rotation=45, fontsize=8)
+        plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
         
@@ -168,11 +170,11 @@ class Main:
         z = np.polyfit(x, y, 1)
         p = np.poly1d(z)
         if p(x)[0] > p(x)[-1]:
-            plt.plot(x, p(x), color='red')
+            plt.plot(x, p(x), color='orangered', linewidth=0.7)
         elif p(x)[0] == p(x)[-1]:
-            plt.plot(x, p(x), color='white')
+            plt.plot(x, p(x), color='grey', linewidth=0.7)
         else:
-            plt.plot(x, p(x), color='green')
+            plt.plot(x, p(x), color='limegreen', linewidth=0.7)
 
         del self.axis, xValues, yValues, x, y, z, p, t0, t1, t2
     def putGraph(self, window, col, fig):
