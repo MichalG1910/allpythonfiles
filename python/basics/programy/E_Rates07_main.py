@@ -116,7 +116,27 @@ class Main:
             self.listChVar.clear()
             
     def axisCreate(self, fontSize, tRange, xValues, yValues, code):
-        xValuesLen = len(xValues) 
+        xValuesLen = len(xValues)
+        yRange = (max(yValues) - min(yValues)) * 0.09 
+        def trendline():
+            x = np.array(range(len(xValues)))
+            y = np.array(yValues)
+            z = np.polyfit(x, y, 1)
+            p = np.poly1d(z)
+            if p(x)[0] > p(x)[-1]:
+                plt.plot(x, p(x), color='orangered', linewidth=0.7)
+            elif p(x)[0] == p(x)[-1]:
+                plt.plot(x, p(x), color='grey', linewidth=0.7)
+            else:
+                plt.plot(x, p(x), color='limegreen', linewidth=0.7)
+            del x,y,z,p
+        
+        def annotates():
+            self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) + yRange * 0.1), color='grey')
+            self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) + yRange * 0.1), color='grey')
+            t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
+            t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
+            del t1,t2
         
         if sum(self.listChVar) == 0: 
             a = round(xValuesLen / 25)
@@ -150,13 +170,7 @@ class Main:
         self.axis.set_title(f"{code.upper()} {dataObj.codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver")
         self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         t0 = self.axis.plot(xValues, yValues)
-        t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
-        t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
         
-        # add annotates (min/max values)
-        yRange = (max(yValues) - min(yValues)) * 0.09
-        self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) + yRange * 0.1), color='grey')
-        self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) + yRange * 0.1), color='grey')
         xaxis = self.axis.get_xaxis()
         xaxis.set_ticks(b)
         plt.xticks(rotation=45, fontsize=8)
@@ -164,19 +178,13 @@ class Main:
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
         
-        # add trendline to plot
-        x = np.array(range(len(xValues)))
-        y = np.array(yValues)
-        z = np.polyfit(x, y, 1)
-        p = np.poly1d(z)
-        if p(x)[0] > p(x)[-1]:
-            plt.plot(x, p(x), color='orangered', linewidth=0.7)
-        elif p(x)[0] == p(x)[-1]:
-            plt.plot(x, p(x), color='grey', linewidth=0.7)
-        else:
-            plt.plot(x, p(x), color='limegreen', linewidth=0.7)
+        if self.annotateVar.get() == 1:
+            annotates()
+        if self.trendLineVar.get() == 1:
+            trendline()
+            
 
-        del self.axis, xValues, yValues, x, y, z, p, t0, t1, t2
+        del self.axis, xValues, yValues, t0
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
         self.canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
@@ -404,14 +412,16 @@ class Main:
     def graphGui(self): 
         self.currencyName = tk.StringVar()
         self.timeRange = tk.StringVar()
-
+        self.trendLineVar = tk.IntVar()
+        self.annotateVar = tk.IntVar()
+        
         def runSaveGraphPNG1():
             self.saveGraphPNG(1)
 
         tabControlGui = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
         tabControlGui.add(tab1, text="Wykres")
-        tabControlGui.add(tab2, text="Wiele wykresów")
+        tabControlGui.add(tab2, text="Ustawienia")
         tabControlGui.grid(column=4, columnspan=3, rowspan=3,row=0, padx=4, pady=4)
 
         plotGraphFrame = ttk.LabelFrame(tab1, text= "Rysowanie wykresu", labelanchor="n")  
@@ -431,19 +441,13 @@ class Main:
         ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = self.newGraph, width=12).grid(column = 6, row = 1, padx=5)  
         ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = runSaveGraphPNG1, width=12).grid(column = 6, row = 2, padx=5)
 
-        # test button
-        ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)  
-        # test checkbox
-        testV = tk.IntVar() 
-        testch = ttk.Checkbutton(tab2, variable=testV ).grid(column=3, row=2, sticky=tk.W) 
-        # test radiobutton
-        self.radVar = tk.IntVar()
-        #self.radVar.set(99)
-        curRad = ttk.Radiobutton(tab2, variable=self.radVar) # command=self.radCall
-        curRad.grid(column=2, row=2, sticky=tk.W)
-
-
+        # ustawienia wykresów checkbox 
+        ttk.Label(tab2, text= "linia trendu ").grid(column=2, row=2, sticky=tk.W, pady=5,padx=5)  
+        trendLineCheck = ttk.Checkbutton(tab2, variable=self.trendLineVar ).grid(column=3, row=2, sticky=tk.W) 
+        ttk.Label(tab2, text= "min/max wartość ").grid(column=2, row=3, sticky=tk.W, pady=5,padx=5)  
+        annotateCheck = ttk.Checkbutton(tab2, variable=self.annotateVar ).grid(column=3, row=3, sticky=tk.W) 
         
+       
     def generateReportGui(self):
         self.startDate = tk.StringVar()
         self.endDate = tk.StringVar()
@@ -468,6 +472,8 @@ class Main:
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
         ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
 
+        ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)
+    
     def fullscreenGraphWindow(self):
         def _quit():
             figFS.clear()
