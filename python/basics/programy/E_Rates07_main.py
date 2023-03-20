@@ -110,14 +110,15 @@ class Main:
         else:
             self.listChVar = [0]
             self.axis = self.fig.add_subplot(111)
-            self.axisCreate(16, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne)
+            self.axisCreate(16, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, 1)
             self.fig.tight_layout()
             self.putGraph(self.win, 4, self.fig)
             self.listChVar.clear()
             
-    def axisCreate(self, fontSize, tRange, xValues, yValues, code):
+    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
+       
         def trendline():
             x = np.array(range(len(xValues)))
             y = np.array(yValues)
@@ -141,7 +142,6 @@ class Main:
         if sum(self.listChVar) == 0: 
             a = round(xValuesLen / 25)
             b = list(range(0,xValuesLen, a))
-            #b.append(xValuesLen -1)
         if sum(self.listChVar) == 1: 
             a = round(xValuesLen / 40)
             b = list(range(0,xValuesLen, a))
@@ -178,13 +178,17 @@ class Main:
         self.axis.set_xlabel("Data") 
         self.axis.set_ylabel("PLN Złoty")
         
-        if self.annotateVar.get() == 1:
+        if self.annotateVar.get() == 1 and oneOrMultiGraph == 1:
             annotates()
-        if self.trendLineVar.get() == 1:
+        if self.trendLineVar.get() == 1 and oneOrMultiGraph == 1:
+            trendline()
+        if self.annotateVarMulti.get() == 1 and oneOrMultiGraph == 2:
+            annotates()
+        if self.trendLineVarMulti.get() == 1 and oneOrMultiGraph == 2:
             trendline()
             
-
         del self.axis, xValues, yValues, t0
+    
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
         self.canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
@@ -392,10 +396,17 @@ class Main:
                 ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def multiSettingsF():
+                self.trendLineVarMulti = tk.IntVar()
+                self.annotateVarMulti = tk.IntVar()
                 self.multiSettingsFrame = ttk.LabelFrame(self.tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.E)
                 ttk.Label(self.multiSettingsFrame,  width=11, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
                 ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 1, row=0, padx=5, pady=5)  
+                
+                ttk.Label(self.multiSettingsFrame, text= "linia trendu ").grid(column=0, row=2, sticky=tk.W, pady=5,padx=5)  
+                trendLineCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.trendLineVarMulti ).grid(column=1, row=2, sticky=tk.W) 
+                ttk.Label(self.multiSettingsFrame, text= "min/max wartość ").grid(column=0, row=3, sticky=tk.W, pady=5,padx=5)  
+                annotateCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.annotateVarMulti ).grid(column=1, row=3, sticky=tk.W) 
             
             createTab4()
             createView1()
@@ -528,7 +539,7 @@ class Main:
                 elif listTrSum > 12: fSize = 10
                 
                 dataObj.getDataForGraph(code, self.multiTimeRangeList[agr], 2)
-                self.axisCreate(fSize, self.multiTimeRangeList[agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti)
+                self.axisCreate(fSize, self.multiTimeRangeList[agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2)
                 figFS.tight_layout()# wykresy nie nachodzą na siebie
                 agr += 1
                 
