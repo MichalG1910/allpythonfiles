@@ -551,6 +551,7 @@ class Main:
                 self.figFS.tight_layout()# wykresy nie nachodzą na siebie
                 self.putGraph(self.winFull, 0, self.figFS)
                 self.agr += 1
+                
                 dataObj.xValuesMultiGraph.clear() 
                 dataObj.yValuesMultiGraph.clear()
                 del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
