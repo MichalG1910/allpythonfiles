@@ -244,10 +244,9 @@ class Main:
         
         def mediumTab(): 
             tab1 = ttk.Frame(tabControl)
-            iconSrednie = PhotoImage(file=f'{dataObj.filePath}/kursy.png')
-            
-            tabControl.add(tab1,  image=iconSrednie, compound='left')  
-            tabControl.image = iconSrednie
+            #iconSrednie = PhotoImage(file=f'{dataObj.filePath}/kursy.png')
+            tabControl.add(tab1,  text='Średni kurs walut', compound='left') #image=iconSrednie (dopisać w nawiasie) 
+            #tabControl.image = iconSrednie
             tabControl.grid(column=0, columnspan=4, rowspan=34, row=0, padx=4, pady=4)
             echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
             echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
@@ -272,7 +271,7 @@ class Main:
         
         def bidAskTab():
             tab2 = ttk.Frame(tabControl)
-            tabControl.add(tab2, text="kupno/sprzedaż")
+            tabControl.add(tab2, text="Kupno/sprzedaż")
             buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
             buySellFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates1)+1), padx=5, sticky=tk.W)
             
@@ -392,7 +391,7 @@ class Main:
             
             def createTab4():
                 self.tab4 = ttk.Frame(tabControl)
-                tabControl.add(self.tab4, text="wiele wykr.")
+                tabControl.add(self.tab4, text="Wiele wykresów")
                 self.multiGraphFrame = ttk.LabelFrame(self.tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiGraphFrame.grid(column=0, row=0, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
             
