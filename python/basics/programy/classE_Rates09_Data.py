@@ -258,6 +258,7 @@ class Data:
                 self.yValuesMultiGraph = self.graphMidList
                 self.codeMulti = self.code
             
+            
             del graphData, self.graphEffectiveDateList, self.graphMidList, self.code
             
         if timeRange == "30 dni" or timeRange == "60 dni" or timeRange == "90 dni":

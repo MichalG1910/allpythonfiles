@@ -33,7 +33,7 @@ class Graph:
     def getVar(self, trendLineVar, annotateVar):
         self.a = annotateVar
         self.t = trendLineVar
-        print("self a:", self.a, "\nself b:", self.b )   
+        print("self a:", self.a, "\nself t:", self.t )   
     
     def newGraph(self, currencyName, timeRange, root):
         dataObj.checkConnection()
@@ -72,7 +72,7 @@ class Graph:
     def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
-       
+        self.timeRangeGet = tRange
         def trendline():
             x = np.array(range(len(xValues)))
             y = np.array(yValues)
@@ -100,11 +100,11 @@ class Graph:
                 annotates()
             if self.t == 1 and oneOrMultiGraph == 1:
                 trendline()
-            if self.annotateVarMulti.get() == 1 and oneOrMultiGraph == 2:
+            '''if self.annotateVarMulti.get() == 1 and oneOrMultiGraph == 2:
                 annotates()
             if self.trendLineVarMulti.get() == 1 and oneOrMultiGraph == 2:
                 trendline()
-
+            '''
         def tickListScale():
             if sum(self.listChVar) == 0: 
                 a = round(xValuesLen / 25)
@@ -135,7 +135,7 @@ class Graph:
                 if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
         
         def drawGraph():
-            self.axis.set_title(f"{code.upper()}  ({tRange})", fontsize=fontSize, color="silver")
+            self.axis.set_title(f"{code.upper()}  ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
             self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
             t0 = self.axis.plot(xValues, yValues, linewidth=1)
             xaxis = self.axis.get_xaxis()
@@ -165,7 +165,7 @@ class Graph:
     
     def saveGraphPNG(self, graphNum):
         dataObj.createReportDir()
-        if graphNum == 1: graphName = f"{dataObj.codeOne.upper()} ostatnie {self.timeRange.get()}.png"
+        if graphNum == 1: graphName = f"{dataObj.codeOne.upper()} ostatnie {self.timeRangeGet}.png"
         else: 
             dateTimeNow = time.localtime()
             num = Graph.printInformation()

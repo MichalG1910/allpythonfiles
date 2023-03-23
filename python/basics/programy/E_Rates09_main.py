@@ -336,7 +336,7 @@ class Main:
             ttk.Label(last30Frame, text= "Kurs PLN", foreground="#007fff").grid(column=1, row=1, sticky=tk.W, padx=2)
             ttk.Label(last30Frame, text= "Zmiana", foreground="#007fff").grid(column=2, row=1, sticky=tk.W, padx=2)
             ttk.Label(last30Frame, text= "Zmiana 30\n notowań", foreground="#007fff").grid(column=3, row=1, sticky=tk.W, padx=2)
-        
+            
         def multiGraph():
             ratesHalf = math.floor(len(dataObj.rates) / 2)
 
@@ -438,10 +438,12 @@ class Main:
         
         
         def runSaveGraphPNG1():
-            self.saveGraphPNG(1)
+            graphObj.saveGraphPNG(1)
         def newGraph():
-            graphObj.newGraph(self.currencyName.get(), self.timeRange.get(), self.win)
             graphObj.getVar(self.trendLineVar.get(), self.annotateVar.get())
+            graphObj.newGraph(self.currencyName.get(), self.timeRange.get(), self.win)
+            print(self.trendLineVar)
+            print(self.annotateVar)
             
         tabControlGui = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
