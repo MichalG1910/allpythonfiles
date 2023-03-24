@@ -29,6 +29,7 @@ class Main:
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
+        self.win.protocol("WM_DELETE_WINDOW", self._quit)
     
     def _quit(self):
         self.win.quit()
@@ -38,7 +39,8 @@ class Main:
         gc.collect()
     
     def quitButton(self):
-        ttk.Button(self.win,text="Zamknij", command=self._quit).grid(row=0, column=10, padx=5, pady=5, sticky="nsew")
+        ttk.Button(self.win, text="Zamknij", command=self._quit).grid(row=0, column=10, padx=5, pady=5, sticky="nsew")
+        
         
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
@@ -49,19 +51,19 @@ class Main:
             
             if window.tk.call("ttk::style", "theme", "use") == "azure-dark":
                 window.tk.call("set_theme", "light")
-                icon1 = PhotoImage(file=f'{dataObj.filePath}/light.png')
+                icon1 = PhotoImage(file=f'{dataObj.filePath}/light1.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
                 self.refreshGraph()
                 
             else:
                 window.tk.call("set_theme", "dark")
-                icon2 = PhotoImage(file=f'{dataObj.filePath}/dark.png')
+                icon2 = PhotoImage(file=f'{dataObj.filePath}/dark1.png')
                 self.accentbutton.configure(image=icon2 )
                 self.accentbutton.image = icon2
                 self.refreshGraph()
                 
-        icon = PhotoImage(file=f'{dataObj.filePath}/dark.png')
+        icon = PhotoImage(file=f'{dataObj.filePath}/dark1.png')
         self.accentbutton = ttk.Button(window, image=icon, command=change_theme)
         self.accentbutton.image = icon
         self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
@@ -198,7 +200,7 @@ class Main:
     
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
-        self.canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
+        self.canvas._tkcanvas.grid(column=col, row=7, columnspan=11, padx=5, pady=5) 
         window.update()
         window.deiconify()
 
@@ -217,7 +219,7 @@ class Main:
 
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
         del graphName
-        
+       
     def multiGraphList(self):
         self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
       
@@ -239,9 +241,8 @@ class Main:
          
         self.listTR.clear()
         listCC.clear()
-
-    def exchangeRatesTabel(self):
         
+    def exchangeRatesTabel(self):
         def mediumTab(): 
             tab1 = ttk.Frame(tabControl)
             #iconSrednie = PhotoImage(file=f'{dataObj.filePath}/kursy.png')
@@ -439,7 +440,7 @@ class Main:
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
         tabControlGui.add(tab1, text="Wykres")
         tabControlGui.add(tab2, text="Ustawienia")
-        tabControlGui.grid(column=4, columnspan=3, rowspan=3,row=0, padx=4, pady=4)
+        tabControlGui.grid(column=4, columnspan=3, rowspan=6,row=0, padx=4, pady=4)
 
         plotGraphFrame = ttk.LabelFrame(tab1, text= "Rysowanie wykresu", labelanchor="n")  
         plotGraphFrame.grid(column=4, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.E)
@@ -476,7 +477,7 @@ class Main:
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 
         tabControlRep.add(tab1, text="Raporty")
         tabControlRep.add(tab2, text="Inne")
-        tabControlRep.grid(column=7, columnspan=3, rowspan=3,row=0, padx=4, pady=4)
+        tabControlRep.grid(column=7, columnspan=3, rowspan=6,row=0, padx=4, pady=4)
 
         reportFrame = ttk.LabelFrame(tab1, text= "Generuj raport", labelanchor="n")
         reportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
@@ -576,7 +577,7 @@ class Main:
         dataObj.checkConnection()
         self.multiGraphList()
         drawGraph()
-    
+   
 dataObj = Data()
 mainObj = Main() 
 mainObj.win.mainloop()            
