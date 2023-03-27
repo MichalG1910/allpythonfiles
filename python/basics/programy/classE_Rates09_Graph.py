@@ -40,13 +40,13 @@ class Graph:
         dataObj.getDataForGraph(currencyName, timeRange, 1)
         self.refreshGraph(root, timeRange)
 
-    def refreshGraph(self, root, timeRange):
+    def refreshGraph(self, root, timeRange, xValues, yValues, codeOne, codeCurrencyDict):
         plt.clf()
         plt.close(self.fig)
         try:
-            dataObj.xValues 
+            xValues 
         except AttributeError:
-            dataObj.xValues = None
+            xValues = None
         '''  
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
@@ -56,7 +56,7 @@ class Graph:
         '''
         self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
-        if dataObj.xValues == None:
+        if xValues == None:
             plt.clf()
             plt.close(self.fig)
             
@@ -64,12 +64,12 @@ class Graph:
         else:
             self.listChVar = [0]
             self.axis = self.fig.add_subplot(111)
-            self.axisCreate(16, timeRange, dataObj.xValues, dataObj.yValues, dataObj.codeOne, 1)
+            self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict)
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
             self.listChVar.clear()
         
-    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph):
+    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
         self.timeRangeGet = tRange
@@ -134,8 +134,8 @@ class Graph:
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
         
-        def drawGraph():
-            self.axis.set_title(f"{code.upper()}  ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
+        def drawGraph(codeCurrencyDict):
+            self.axis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
             self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
             t0 = self.axis.plot(xValues, yValues, linewidth=1)
             xaxis = self.axis.get_xaxis()
@@ -148,7 +148,7 @@ class Graph:
         
         tickListScale()
         optionsStatus()
-        drawGraph()
+        drawGraph(codeCurrencyDict)
         
         del self.axis, xValues, yValues, self.tickList
     
@@ -163,9 +163,9 @@ class Graph:
         cls.agr_number +=1
         return cls.agr_number 
     
-    def saveGraphPNG(self, graphNum):
+    def saveGraphPNG(self, graphNum, codeOne, timeRange):
         dataObj.createReportDir()
-        if graphNum == 1: graphName = f"{dataObj.codeOne.upper()} ostatnie {self.timeRangeGet}.png"
+        if graphNum == 1: graphName = f"{codeOne.upper()} ostatnie {timeRange}.png"
         else: 
             dateTimeNow = time.localtime()
             num = Graph.printInformation()
@@ -174,10 +174,10 @@ class Graph:
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
         del graphName
         
-    def multiGraphList(self):
+    def multiGraphList(self, viewNum, rates):
         self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
       
-        if self.viewNum == 2:
+        if viewNum == 2:
             for a in range(15): 
                 listCC.append(globals()['codeVar{}'.format(a)].get())
                 self.listTR.append(globals()['timeRange{}'.format(a)].get())
@@ -186,7 +186,7 @@ class Graph:
                     self.multiCodeCurrencyList.append(listCC[a])
                     self.multiTimeRangeList.append(self.listTR[a])
         else:
-            for b in range(len(dataObj.rates)):
+            for b in range(len(rates)):
                 self.listTR.append(globals()['timeRange{}'.format(b)].get())
                 self.listChVar.append(globals()['chVar{}'.format(b)].get())
                 if self.listChVar[b] == 1:

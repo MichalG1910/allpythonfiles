@@ -434,16 +434,14 @@ class Main:
         self.timeRange = tk.StringVar()
         self.trendLineVar = tk.IntVar()
         self.annotateVar = tk.IntVar()
-       
-        
-        
+
         def runSaveGraphPNG1():
-            graphObj.saveGraphPNG(1)
+            graphObj.saveGraphPNG(1, dataObj.codeOne, self.timeRange.get())
         def newGraph():
             graphObj.getVar(self.trendLineVar.get(), self.annotateVar.get())
-            graphObj.newGraph(self.currencyName.get(), self.timeRange.get(), self.win)
-            print(self.trendLineVar)
-            print(self.annotateVar)
+            dataObj.checkConnection()
+            dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1)
+            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
             
         tabControlGui = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
@@ -584,7 +582,7 @@ class Main:
                 self.winFull.mainloop()
         
         dataObj.checkConnection()
-        self.multiGraphList()
+        graphObj.multiGraphList(self.viewNum, dataObj.rates)
         drawGraph()
 graphObj = Graph()   
 dataObj = Data()
