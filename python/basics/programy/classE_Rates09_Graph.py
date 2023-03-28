@@ -11,6 +11,8 @@ from classE_Rates09_Data import Data
 import numpy as np
 
 class Graph:
+    agr_number = 0
+
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
@@ -64,12 +66,12 @@ class Graph:
         else:
             self.listChVar = [0]
             self.axis = self.fig.add_subplot(111)
-            self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict)
+            self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict, self.axis)
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
             self.listChVar.clear()
         
-    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict):
+    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict, selfAxis):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
         self.timeRangeGet = tRange
@@ -87,10 +89,10 @@ class Graph:
             del x,y,z,p
         
         def annotates():
-            self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) + yRange * 0.1), color='grey')
-            self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) + yRange * 0.1), color='grey')
-            t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
-            t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
+            selfAxis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) + yRange * 0.1), color='grey')
+            selfAxis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) + yRange * 0.1), color='grey')
+            t1 = selfAxis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
+            t2 = selfAxis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
             del t1,t2
         
         def optionsStatus():
@@ -135,22 +137,22 @@ class Graph:
                 if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
         
         def drawGraph(codeCurrencyDict):
-            self.axis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
-            self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
-            t0 = self.axis.plot(xValues, yValues, linewidth=1)
-            xaxis = self.axis.get_xaxis()
+            selfAxis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
+            selfAxis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+            t0 = selfAxis.plot(xValues, yValues, linewidth=1)
+            xaxis = selfAxis.get_xaxis()
             xaxis.set_ticks(self.tickList)
             plt.xticks(rotation=45, fontsize=8)
             plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
-            self.axis.set_xlabel("Data") 
-            self.axis.set_ylabel("PLN Złoty")
+            selfAxis.set_xlabel("Data") 
+            selfAxis.set_ylabel("PLN Złoty")
             del t0
         
         tickListScale()
         optionsStatus()
         drawGraph(codeCurrencyDict)
         
-        del self.axis, xValues, yValues, self.tickList
+        del selfAxis, xValues, yValues, self.tickList
     
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
@@ -174,9 +176,10 @@ class Graph:
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
         del graphName
         
-    def multiGraphList(self, viewNum, rates):
+    def multiGraphList(self, viewNum, rates, trvl, chvl, codeCurrencyList):
         self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
-      
+        
+        
         if viewNum == 2:
             for a in range(15): 
                 listCC.append(globals()['codeVar{}'.format(a)].get())
@@ -187,11 +190,11 @@ class Graph:
                     self.multiTimeRangeList.append(self.listTR[a])
         else:
             for b in range(len(rates)):
-                self.listTR.append(globals()['timeRange{}'.format(b)].get())
-                self.listChVar.append(globals()['chVar{}'.format(b)].get())
-                if self.listChVar[b] == 1:
-                    self.multiCodeCurrencyList.append(self.codeCurrencyList[b])
-                    self.multiTimeRangeList.append(self.listTR[b])
+                #self.listTR.append(globals()['timeRange{}'.format(b)].get())
+                #self.listChVar.append(globals()['chVar{}'.format(b)].get())
+                if chvl[b] == 1:      #if self.listChVar[b] == 1:
+                    self.multiCodeCurrencyList.append(codeCurrencyList[b])
+                    self.multiTimeRangeList.append(trvl[b])
          
         self.listTR.clear()
         listCC.clear()

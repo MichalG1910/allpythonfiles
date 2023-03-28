@@ -339,9 +339,11 @@ class Main:
             
         def multiGraph():
             ratesHalf = math.floor(len(dataObj.rates) / 2)
+            self.timeRangeVariableList, self.chVariableList, self.codeVariableList, self.listchv = [],[],[],[]
 
             def createView1():
                 self.viewNum = 1
+                
                 for t in range(len(dataObj.rates)):
                     if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
                     else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}').grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
@@ -357,7 +359,14 @@ class Main:
                     globals()['checkChosen{}'.format(t)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(t)] ) # state= "disabled"
                     if t <= ratesHalf: globals()['checkChosen{}'.format(t)].grid(column=2, row=t+1, sticky=tk.W)
                     else: globals()['checkChosen{}'.format(t)].grid(column=5, row=t-ratesHalf, sticky=tk.W)
-            
+                    
+                    self.timeRangeVariableList.append(globals()['timeRange{}'.format(t)] )
+                    self.chVariableList.append(globals()['chVar{}'.format(t)])
+                    
+                print('timerange0: ',timeRange0.get())
+                print(self.timeRangeVariableList)
+                print(self.chVariableList)
+
             def createView2():
                 self.viewNum = 2
                 
@@ -375,7 +384,12 @@ class Main:
                     globals()['chVar{}'.format(f)] = tk.IntVar() 
                     globals()['checkChosen{}'.format(f)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(f)] )
                     globals()['checkChosen{}'.format(f)].grid(column=2, row=f, sticky=tk.W)
-            
+
+                    self.timeRangeVariableList.append('timeRange{}'.format(f)) 
+                    self.codeVariableList.append('codeVar{}'.format(f))
+                print(self.timeRangeVariableList)
+                print(self.codeVariableList)
+
             def changeView():
                 for widget in self.multiGraphFrame.winfo_children():
                     widget.destroy()  
@@ -501,7 +515,7 @@ class Main:
     
     def fullscreenGraphWindow(self):
         self.agr = 0
-
+        
         def _quit():
             self.figFS.clear()
             plt.close(self.figFS)
@@ -509,13 +523,15 @@ class Main:
             self.winFull.destroy()
             
         def runSaveGraphPNG2():
-            self.saveGraphPNG(2)
+            graphObj.saveGraphPNG(2, codeOne=None, timeRange=None )
+        
+        
 
         def winFullSet():
             self.winFull = tk.Tk()
             self.winFull.attributes("-fullscreen", True)
             self.winStyle(self.winFull)
-            self.listTrSum = len(self.multiCodeCurrencyList)
+            self.listTrSum = len(graphObj.multiCodeCurrencyList)
         
         def themeSet():    
             if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -531,7 +547,7 @@ class Main:
             ttk.Button(self.winFull, text = "zapisz", command = runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
 
         def drawGraphLoop():   
-            for code in self.multiCodeCurrencyList:
+            for code in graphObj.multiCodeCurrencyList:
                 if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111) 
                 elif self.listTrSum == 2: self.axis = self.figFS.add_subplot(121 + self.agr) 
                 elif self.listTrSum == 3: self.axis = self.figFS.add_subplot(221 + self.agr) 
@@ -553,10 +569,10 @@ class Main:
                 elif self.listTrSum > 6 and self.listTrSum <= 12: fSize = 12  
                 elif self.listTrSum > 12: fSize = 10
                 
-                dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2)
-                self.axisCreate(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2)
+                dataObj.getDataForGraph(code, graphObj.multiTimeRangeList[self.agr], 2)
+                graphObj.axisCreate(fSize, graphObj.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,dataObj.codeCurrencyDict, self.axis)
                 self.figFS.tight_layout()# wykresy nie nachodzą na siebie
-                self.putGraph(self.winFull, 0, self.figFS)
+                graphObj.putGraph(self.winFull, 0, self.figFS)
                 self.agr += 1
                 
                 dataObj.xValuesMultiGraph.clear() 
@@ -564,25 +580,29 @@ class Main:
                 del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
 
         def clearList():
-            self.listChVar.clear()
-            self.multiCodeCurrencyList.clear() 
-            self.multiTimeRangeList.clear()
+            #self.listChVar.clear()
+            graphObj.multiCodeCurrencyList.clear() 
+            graphObj.multiTimeRangeList.clear()
         
         def drawGraph():
-            if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
+            print([i.get() for i in self.chVariableList])
+            print(graphObj.multiCodeCurrencyList)
+            print(graphObj.multiTimeRangeList)
+            if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
                 mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
-            elif "" in self.multiCodeCurrencyList or "" in self.multiTimeRangeList:
+            elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznzczonych do narysowania")
             else:
                 winFullSet()
                 themeSet()
                 buttonCreate()
+                graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get())
                 drawGraphLoop()
                 clearList()
                 self.winFull.mainloop()
         
         dataObj.checkConnection()
-        graphObj.multiGraphList(self.viewNum, dataObj.rates)
+        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], self.codeCurrencyList)
         drawGraph()
 graphObj = Graph()   
 dataObj = Data()
