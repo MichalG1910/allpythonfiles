@@ -53,14 +53,22 @@ class Main:
                 icon1 = PhotoImage(file=f'{dataObj.filePath}/light.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
-                self.refreshGraph()
+                try:
+                    dataObj.xValues 
+                except AttributeError:
+                    dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
+                graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
                 
             else:
                 window.tk.call("set_theme", "dark")
                 icon2 = PhotoImage(file=f'{dataObj.filePath}/dark.png')
                 self.accentbutton.configure(image=icon2 )
                 self.accentbutton.image = icon2
-                self.refreshGraph()
+                try:
+                    dataObj.xValues 
+                except AttributeError:
+                    dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
+                graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
                 
         icon = PhotoImage(file=f'{dataObj.filePath}/dark.png')
         self.accentbutton = ttk.Button(window, image=icon, command=change_theme)
@@ -525,8 +533,6 @@ class Main:
         def runSaveGraphPNG2():
             graphObj.saveGraphPNG(2, codeOne=None, timeRange=None )
         
-        
-
         def winFullSet():
             self.winFull = tk.Tk()
             self.winFull.attributes("-fullscreen", True)

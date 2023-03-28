@@ -36,27 +36,27 @@ class Graph:
         self.a = annotateVar
         self.t = trendLineVar
         print("self a:", self.a, "\nself t:", self.t )   
-    
+    '''
     def newGraph(self, currencyName, timeRange, root):
         dataObj.checkConnection()
         dataObj.getDataForGraph(currencyName, timeRange, 1)
         self.refreshGraph(root, timeRange)
-
+    '''
     def refreshGraph(self, root, timeRange, xValues, yValues, codeOne, codeCurrencyDict):
         plt.clf()
         plt.close(self.fig)
-        try:
-            xValues 
-        except AttributeError:
-            xValues = None
-        '''  
-        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+        #try:
+        #    xValues 
+        #except AttributeError:
+        #    xValues = None
+          
+        if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
             self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
         else:
             plt.style.use('Solarize_Light2')
-        '''
-        self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+        
+            self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
         if xValues == None:
             plt.clf()
@@ -102,11 +102,11 @@ class Graph:
                 annotates()
             if self.t == 1 and oneOrMultiGraph == 1:
                 trendline()
-            '''if self.annotateVarMulti.get() == 1 and oneOrMultiGraph == 2:
+            if self.a == 1 and oneOrMultiGraph == 2:
                 annotates()
-            if self.trendLineVarMulti.get() == 1 and oneOrMultiGraph == 2:
+            if self.t == 1 and oneOrMultiGraph == 2:
                 trendline()
-            '''
+            
         def tickListScale():
             if sum(self.listChVar) == 0: 
                 a = round(xValuesLen / 25)
