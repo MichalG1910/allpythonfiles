@@ -347,7 +347,7 @@ class Main:
             
         def multiGraph():
             ratesHalf = math.floor(len(dataObj.rates) / 2)
-            self.timeRangeVariableList, self.chVariableList, self.codeVariableList, self.listchv = [],[],[],[]
+            self.timeRangeVariableList, self.chVariableList, self.codeVariableList, self.listchv, trl1, cvl1, code1 = [],[],[],[],[],[],[]
 
             def createView1():
                 self.viewNum = 1
@@ -368,13 +368,18 @@ class Main:
                     if t <= ratesHalf: globals()['checkChosen{}'.format(t)].grid(column=2, row=t+1, sticky=tk.W)
                     else: globals()['checkChosen{}'.format(t)].grid(column=5, row=t-ratesHalf, sticky=tk.W)
                     
-                    self.timeRangeVariableList.append(globals()['timeRange{}'.format(t)] )
-                    self.chVariableList.append(globals()['chVar{}'.format(t)])
+                    trl1.append(globals()['timeRange{}'.format(t)]) 
+                    cvl1.append(globals()['chVar{}'.format(t)])
                     
                 print('timerange0: ',timeRange0.get())
+                self.timeRangeVariableList += trl1
+                self.chVariableList += cvl1
+                
                 print(self.timeRangeVariableList)
-                print(self.chVariableList)
-
+                print()
+                print(self.chVariableList )
+                trl1.clear()
+                cvl1.clear()
             def createView2():
                 self.viewNum = 2
                 
@@ -393,12 +398,25 @@ class Main:
                     globals()['checkChosen{}'.format(f)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(f)] )
                     globals()['checkChosen{}'.format(f)].grid(column=2, row=f, sticky=tk.W)
 
-                    self.timeRangeVariableList.append('timeRange{}'.format(f)) 
-                    self.codeVariableList.append('codeVar{}'.format(f))
+                    trl1.append(globals()['timeRange{}'.format(f)]) 
+                    code1.append(globals()['codeVar{}'.format(f)])
+                    cvl1.append(globals()['chVar{}'.format(f)])
+
+                self.timeRangeVariableList += trl1
+                self.codeVariableList += code1
+                self.chVariableList += cvl1
                 print(self.timeRangeVariableList)
-                print(self.codeVariableList)
+                print()
+                print(self.codeVariableList )
+                trl1.clear()
+                code1.clear()
 
             def changeView():
+                self.timeRangeVariableList.clear()
+                self.chVariableList.clear()
+                self.codeVariableList.clear()
+                
+                
                 for widget in self.multiGraphFrame.winfo_children():
                     widget.destroy()  
                 if self.viewNum == 1: 
@@ -586,14 +604,14 @@ class Main:
                 del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
 
         def clearList():
-            #self.listChVar.clear()
+            graphObj.listChVar.clear()
             graphObj.multiCodeCurrencyList.clear() 
             graphObj.multiTimeRangeList.clear()
+            
+            
         
         def drawGraph():
-            print([i.get() for i in self.chVariableList])
-            print(graphObj.multiCodeCurrencyList)
-            print(graphObj.multiTimeRangeList)
+           
             if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
                 mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
             elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
@@ -608,7 +626,7 @@ class Main:
                 self.winFull.mainloop()
         
         dataObj.checkConnection()
-        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], self.codeCurrencyList)
+        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         drawGraph()
 graphObj = Graph()   
 dataObj = Data()

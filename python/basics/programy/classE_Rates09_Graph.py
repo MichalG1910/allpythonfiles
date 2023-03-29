@@ -176,18 +176,21 @@ class Graph:
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
         del graphName
         
-    def multiGraphList(self, viewNum, rates, trvl, chvl, codeCurrencyList):
+    def multiGraphList(self, viewNum, rates, trvl, chvl = None, codevl = None, codeCurrencyList = None):
         self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
-        
+        print('class Graph - multigraphlist')
+        print(trvl)
+        print(chvl)
+        print(codevl)
         
         if viewNum == 2:
             for a in range(15): 
-                listCC.append(globals()['codeVar{}'.format(a)].get())
-                self.listTR.append(globals()['timeRange{}'.format(a)].get())
-                self.listChVar.append(globals()['chVar{}'.format(a)].get())
-                if self.listChVar[a] == 1:
-                    self.multiCodeCurrencyList.append(listCC[a])
-                    self.multiTimeRangeList.append(self.listTR[a])
+                #listCC.append(globals()['codeVar{}'.format(a)].get())
+                #self.listTR.append(globals()['timeRange{}'.format(a)].get())
+                #self.listChVar.append(globals()['chVar{}'.format(a)].get())
+                if chvl[a] == 1:
+                    self.multiCodeCurrencyList.append(codevl[a])
+                    self.multiTimeRangeList.append(trvl[a])
         else:
             for b in range(len(rates)):
                 #self.listTR.append(globals()['timeRange{}'.format(b)].get())
@@ -198,7 +201,9 @@ class Graph:
          
         self.listTR.clear()
         listCC.clear()
-    
+        trvl.clear()
+        chvl.clear()
+        codevl.clear()
 dataObj = Data() 
 
 
