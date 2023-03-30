@@ -17,14 +17,16 @@ class Graph:
         
     def emptyGraph(self, root):
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            plt.style.use('dark_background')
             self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
+            plt.style.use('dark_background')
+            axis = self.fig.add_subplot(111) 
+            axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         else:
-            plt.style.use('Solarize_Light2')
             self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+            plt.style.use('Solarize_Light2')
+            axis = self.fig.add_subplot(111) 
+            axis.grid(linestyle="solid", color="white",  linewidth=0.4)
         
-        axis = self.fig.add_subplot(111) 
-        axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         axis.set_xlabel("Data") 
         axis.set_ylabel("PLN Złoty")
         self.fig.tight_layout()
@@ -95,7 +97,6 @@ class Graph:
         
         def optionsStatus():
             
-               
             if self.a == 1 and oneOrMultiGraph == 1:
                 annotates()
             if self.t == 1 and oneOrMultiGraph == 1:
@@ -109,8 +110,6 @@ class Graph:
             if self.sumChVar == 0: 
                 a = round(xValuesLen / 25)
                 self.tickList = list(range(0,xValuesLen, a))
-                print('xvalueslen', xValuesLen, '\nticklist', self.tickList)
-
             if self.sumChVar == 1: 
                 a = round(xValuesLen / 40)
                 self.tickList = list(range(0,xValuesLen, a))
@@ -138,7 +137,7 @@ class Graph:
         
         def drawGraph(codeCurrencyDict):
             selfAxis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
-            selfAxis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+            selfAxis.grid(linestyle="solid", color="white", linewidth=0.4) # 
             t0 = selfAxis.plot(xValues, yValues, linewidth=1)
             xaxis = selfAxis.get_xaxis()
             xaxis.set_ticks(self.tickList)
