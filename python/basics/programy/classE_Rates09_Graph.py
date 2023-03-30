@@ -19,16 +19,16 @@ class Graph:
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
             self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
             plt.style.use('dark_background')
-            axis = self.fig.add_subplot(111) 
-            axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+            self.axis = self.fig.add_subplot(111) 
+            self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         else:
             self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
             plt.style.use('Solarize_Light2')
-            axis = self.fig.add_subplot(111) 
-            axis.grid(linestyle="solid", color="white",  linewidth=0.4)
+            self.axis = self.fig.add_subplot(111) 
+            self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
         
-        axis.set_xlabel("Data") 
-        axis.set_ylabel("PLN Złoty")
+        self.axis.set_xlabel("Data") 
+        self.axis.set_ylabel("PLN Złoty")
         self.fig.tight_layout()
         self.putGraph(root, 4, self.fig)
     
@@ -45,33 +45,31 @@ class Graph:
     def refreshGraph(self, root, timeRange, xValues, yValues, codeOne, codeCurrencyDict):
         plt.clf()
         plt.close(self.fig)
-        #try:
-        #    xValues 
-        #except AttributeError:
-        #    xValues = None
-          
-        if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            plt.style.use('dark_background')
-            self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
-        else:
-            plt.style.use('Solarize_Light2')
-        
-            self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
         
         if xValues == None:
             plt.clf()
             plt.close(self.fig)
-            
             self.emptyGraph(root)
         else:
+            if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
+                self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
+                plt.style.use('dark_background')
+                self.axis = self.fig.add_subplot(111) 
+                self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
+            else:
+                self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+                plt.style.use('Solarize_Light2')
+                self.axis = self.fig.add_subplot(111) 
+                self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
+
             self.sumChVar = 0
-            self.axis = self.fig.add_subplot(111)
-            self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict, self.axis)
+            #self.axis = self.fig.add_subplot(111)
+            self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict)
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
-            del self.sumChVar
+            #del self.sumChVar
         
-    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict, selfAxis):
+    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
         self.timeRangeGet = tRange
@@ -89,10 +87,10 @@ class Graph:
             del x,y,z,p
         
         def annotates():
-            selfAxis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) + yRange * 0.1), color='grey')
-            selfAxis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) + yRange * 0.1), color='grey')
-            t1 = selfAxis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
-            t2 = selfAxis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
+            self.axis.annotate(f"max {max(yValues)}", xy=(xValuesLen/2, max(yValues) + yRange * 0.1), color='grey')
+            self.axis.annotate(f"min {min(yValues)}", xy=(xValuesLen/2, min(yValues) + yRange * 0.1), color='grey')
+            t1 = self.axis.plot(xValues, [max(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
+            t2 = self.axis.plot(xValues, [min(yValues)] * xValuesLen, linestyle="--", color="grey", linewidth=0.7)
             del t1,t2
         
         def optionsStatus():
@@ -136,22 +134,21 @@ class Graph:
                 if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
         
         def drawGraph(codeCurrencyDict):
-            selfAxis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
-            selfAxis.grid(linestyle="solid", color="white", linewidth=0.4) # 
-            t0 = selfAxis.plot(xValues, yValues, linewidth=1)
-            xaxis = selfAxis.get_xaxis()
+            self.axis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
+            t0 = self.axis.plot(xValues, yValues, linewidth=1)
+            xaxis = self.axis.get_xaxis()
             xaxis.set_ticks(self.tickList)
             plt.xticks(rotation=45, fontsize=8)
             plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
-            selfAxis.set_xlabel("Data") 
-            selfAxis.set_ylabel("PLN Złoty")
+            self.axis.set_xlabel("Data") 
+            self.axis.set_ylabel("PLN Złoty")
             del t0
         
         tickListScale()
         optionsStatus()
         drawGraph(codeCurrencyDict)
         
-        del selfAxis, xValues, yValues, self.tickList
+        del self.axis, xValues, yValues, self.tickList
     
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
@@ -179,10 +176,6 @@ class Graph:
         
     def multiGraphList(self, viewNum, rates, trvl, chvl = None, codevl = None, codeCurrencyList = None):
         self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
-        print('class Graph - multigraphlist')
-        print(trvl)
-        print(chvl)
-        print(codevl)
         
         if viewNum == 2:
             for a in range(15): 
@@ -208,7 +201,7 @@ class Graph:
         codevl.clear()
         
     def _quit(self):
-            self.figFS.clear()
+            plt.clf()
             plt.close(self.figFS)
             self.winFull.quit()
             self.winFull.destroy()
@@ -224,11 +217,13 @@ class Graph:
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
             plt.style.use('dark_background')
             self.figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
+            self.gridColor = "darkslategrey"
         else:
             self.winFull.tk.call("set_theme", "light")
             plt.style.use('Solarize_Light2')
             self.figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
-
+            self.gridColor = "white"
+    
     def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):
         self.agr = 0
         self.listTrSum = len(self.multiCodeCurrencyList)
@@ -255,8 +250,9 @@ class Graph:
             elif self.listTrSum > 6 and self.listTrSum <= 12: fSize = 12  
             elif self.listTrSum > 12: fSize = 10
             
+            self.axis.grid(linestyle="solid", color=self.gridColor,  linewidth=0.4)
             dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
-            self.axisCreate(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict, self.axis)
+            self.axisCreate(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict)
             self.figFS.tight_layout()# wykresy nie nachodzą na siebie
             self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1

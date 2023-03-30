@@ -632,31 +632,30 @@ class Main:
         drawGraph()'''
     
     def fullscreenGraphWindow(self):
+        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
             ttk.Button(graphObj.winFull, text = "Zamknij okno", command = graphObj._quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
             ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
         
         def drawGraph():
+            dataObj.checkConnection()
+            graphObj.winFullSet()
+            self.winStyle(graphObj.winFull)
+            graphObj.themeSet(self.win)
+            buttonCreate()
+            graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get())
+            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
+            graphObj.clearList()
+            graphObj.winFull.mainloop()
            
-            if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
-                mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
-            elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-                mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznzczonych do narysowania")
-            else:
-                graphObj.winFullSet()
-                self.winStyle(graphObj.winFull)
-                graphObj.themeSet(self.win)
-                buttonCreate()
-                graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get())
-                graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
-                graphObj.clearList()
-                graphObj.winFull.mainloop()
-        
-        dataObj.checkConnection()
-        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
-        drawGraph()
-        
+        if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
+            mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
+        elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
+            mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznzczonych do narysowania")
+        else:
+            drawGraph()
+                     
 graphObj = Graph()   
 dataObj = Data()
 mainObj = Main() 
