@@ -216,7 +216,7 @@ class Data:
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             rpt += 1
         
-    def getDataForGraph(self, currencyName, timeRange, oneOrMultiNum):
+    def getDataForGraph(self, currencyName, timeRange, oneOrMultiNum, firstloopEDL = None):
         self.code = (currencyName[0:3]).lower()
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
 
@@ -233,7 +233,7 @@ class Data:
                 self.gdList += graphData
                 runDate = runDate + stepTimedelta
                 if self.repeat == 2:
-                    date1_list = (list(self.firstloopEDL.split('-')))
+                    date1_list = (list(firstloopEDL.split('-')))
                     sdList = [int(i) for i in date1_list] 
                     stepDate = datetime.date(sdList[0], sdList[1], sdList[2])
                 else:

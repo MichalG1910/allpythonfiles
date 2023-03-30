@@ -371,7 +371,6 @@ class Main:
                     trl1.append(globals()['timeRange{}'.format(t)]) 
                     cvl1.append(globals()['chVar{}'.format(t)])
                     
-                print('timerange0: ',timeRange0.get())
                 self.timeRangeVariableList += trl1
                 self.chVariableList += cvl1
                 
@@ -481,7 +480,7 @@ class Main:
         def newGraph():
             graphObj.getVar(self.trendLineVar.get(), self.annotateVar.get())
             dataObj.checkConnection()
-            dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1)
+            dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1, dataObj.firstloopEDL)
             graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
             
         tabControlGui = ttk.Notebook(self.win) 
@@ -629,6 +628,33 @@ class Main:
         dataObj.checkConnection()
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         drawGraph()'''
+    
+    def fullscreenGraphWindow(self):
+        
+        def buttonCreate():
+            ttk.Button(graphObj.winFull, text = "Zamknij okno", command = graphObj._quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
+            ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+        
+        def drawGraph():
+           
+            if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
+                mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
+            elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
+                mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznzczonych do narysowania")
+            else:
+                graphObj.winFullSet()
+                self.winStyle(graphObj.winFull)
+                graphObj.themeSet(self.win)
+                buttonCreate()
+                graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get())
+                graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
+                graphObj.clearList()
+                graphObj.winFull.mainloop()
+        
+        dataObj.checkConnection()
+        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
+        drawGraph()
+        
 graphObj = Graph()   
 dataObj = Data()
 mainObj = Main() 

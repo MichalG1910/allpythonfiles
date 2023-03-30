@@ -7,6 +7,8 @@ from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
 from classE_Rates09_Data import Data
+import tkinter as tk
+from tkinter import ttk
 
 import numpy as np
 
@@ -108,30 +110,30 @@ class Graph:
                 trendline()
             
         def tickListScale():
-            if sum(self.listChVar) == 0: 
+            if self.sumChVar == 0: 
                 a = round(xValuesLen / 25)
                 self.tickList = list(range(0,xValuesLen, a))
-            if sum(self.listChVar) == 1: 
+            if self.sumChVar == 1: 
                 a = round(xValuesLen / 40)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 40: self.tickList.append(xValuesLen -1)
-            if sum(self.listChVar) == 2 or sum(self.listChVar) == 3 or sum(self.listChVar) == 4: 
+            if self.sumChVar == 2 or self.sumChVar == 3 or self.sumChVar == 4: 
                 a = round(xValuesLen / 20)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 20: self.tickList.append(xValuesLen -1)
-            if sum(self.listChVar) == 5 or sum(self.listChVar) == 6: 
+            if self.sumChVar == 5 or self.sumChVar == 6: 
                 a = round(xValuesLen / 16)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 16: self.tickList.append(xValuesLen-1)
-            if sum(self.listChVar) == 7 or sum(self.listChVar) == 8 or sum(self.listChVar) == 9: 
+            if self.sumChVar == 7 or self.sumChVar == 8 or self.sumChVar == 9: 
                 a = round(xValuesLen / 15)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 15: self.tickList.append(xValuesLen-1)
-            if sum(self.listChVar) == 10 or sum(self.listChVar) == 11 or sum(self.listChVar) == 12: 
+            if self.sumChVar == 10 or self.sumChVar == 11 or self.sumChVar == 12: 
                 a = round(xValuesLen / 14)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 14: self.tickList.append(xValuesLen-1)
-            if sum(self.listChVar) == 13 or sum(self.listChVar) == 14 or sum(self.listChVar) == 15: 
+            if self.sumChVar == 13 or self.sumChVar == 14 or self.sumChVar == 15: 
                 a = round(xValuesLen / 11)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
@@ -199,101 +201,76 @@ class Graph:
                     self.multiCodeCurrencyList.append(codeCurrencyList[b])
                     self.multiTimeRangeList.append(trvl[b])
          
-        self.listTR.clear()
-        listCC.clear()
+        #self.listTR.clear()
+        #listCC.clear()
+        self.sumChVar = sum(chvl)
         trvl.clear()
         chvl.clear()
         codevl.clear()
     
-    def fullscreenGraphWindow(self):
+    #def fullscreenGraphWindow(self):
         self.agr = 0
-        
-        def _quit():
+    def _quit(self):
             self.figFS.clear()
             plt.close(self.figFS)
             self.winFull.quit()
             self.winFull.destroy()
             
-        def runSaveGraphPNG2():
-            graphObj.saveGraphPNG(2, codeOne=None, timeRange=None )
+    def runSaveGraphPNG2(self):
+            self.saveGraphPNG(2, codeOne=None, timeRange=None )
         
-        def winFullSet():
-            self.winFull = tk.Tk()
-            self.winFull.attributes("-fullscreen", True)
-            self.winStyle(self.winFull)
-            self.listTrSum = len(graphObj.multiCodeCurrencyList)
-        
-        def themeSet():    
-            if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
-                plt.style.use('dark_background')
-                self.figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
-            else:
-                self.winFull.tk.call("set_theme", "light")
-                plt.style.use('Solarize_Light2')
-                self.figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
-        
-        def buttonCreate():
-            ttk.Button(self.winFull, text = "Zamknij okno", command = _quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
-            ttk.Button(self.winFull, text = "zapisz", command = runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+    def winFullSet(self):
+        self.winFull = tk.Tk()
+        self.winFull.attributes("-fullscreen", True)
+        self.listTrSum = len(self.multiCodeCurrencyList)
+    
+    def themeSet(self, root):    
+        if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
+            plt.style.use('dark_background')
+            self.figFS = plt.figure(figsize=(19,10), facecolor = "dimgray")
+        else:
+            self.winFull.tk.call("set_theme", "light")
+            plt.style.use('Solarize_Light2')
+            self.figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
 
-        def drawGraphLoop():   
-            for code in graphObj.multiCodeCurrencyList:
-                if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111) 
-                elif self.listTrSum == 2: self.axis = self.figFS.add_subplot(121 + self.agr) 
-                elif self.listTrSum == 3: self.axis = self.figFS.add_subplot(221 + self.agr) 
-                elif self.listTrSum == 4: self.axis = self.figFS.add_subplot(221 + self.agr)  
-                elif self.listTrSum == 5: self.axis = self.figFS.add_subplot(231 + self.agr)  
-                elif self.listTrSum == 6: self.axis = self.figFS.add_subplot(231 + self.agr)  
-                elif self.listTrSum == 7: self.axis = self.figFS.add_subplot(241 + self.agr)  
-                elif self.listTrSum == 8: self.axis = self.figFS.add_subplot(241 + self.agr) 
-                elif self.listTrSum == 9: self.axis = self.figFS.add_subplot(331 + self.agr)  
-                elif self.listTrSum == 10: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
-                elif self.listTrSum == 11: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
-                elif self.listTrSum == 12: self.axis = self.figFS.add_subplot(3,4,1 + self.agr) 
-                elif self.listTrSum == 13: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
-                elif self.listTrSum == 14: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
-                elif self.listTrSum == 15: self.axis = self.figFS.add_subplot(3,5,1 + self.agr)
+    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):   
+        for code in self.multiCodeCurrencyList:
+            if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111) 
+            elif self.listTrSum == 2: self.axis = self.figFS.add_subplot(121 + self.agr) 
+            elif self.listTrSum == 3: self.axis = self.figFS.add_subplot(221 + self.agr) 
+            elif self.listTrSum == 4: self.axis = self.figFS.add_subplot(221 + self.agr)  
+            elif self.listTrSum == 5: self.axis = self.figFS.add_subplot(231 + self.agr)  
+            elif self.listTrSum == 6: self.axis = self.figFS.add_subplot(231 + self.agr)  
+            elif self.listTrSum == 7: self.axis = self.figFS.add_subplot(241 + self.agr)  
+            elif self.listTrSum == 8: self.axis = self.figFS.add_subplot(241 + self.agr) 
+            elif self.listTrSum == 9: self.axis = self.figFS.add_subplot(331 + self.agr)  
+            elif self.listTrSum == 10: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
+            elif self.listTrSum == 11: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
+            elif self.listTrSum == 12: self.axis = self.figFS.add_subplot(3,4,1 + self.agr) 
+            elif self.listTrSum == 13: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
+            elif self.listTrSum == 14: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
+            elif self.listTrSum == 15: self.axis = self.figFS.add_subplot(3,5,1 + self.agr)
 
-                if self.listTrSum >0 and self.listTrSum <= 4: fSize = 16 
-                elif self.listTrSum > 4 and self.listTrSum <= 6: fSize = 14    
-                elif self.listTrSum > 6 and self.listTrSum <= 12: fSize = 12  
-                elif self.listTrSum > 12: fSize = 10
-                
-                dataObj.getDataForGraph(code, graphObj.multiTimeRangeList[self.agr], 2)
-                graphObj.axisCreate(fSize, graphObj.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,dataObj.codeCurrencyDict, self.axis)
-                self.figFS.tight_layout()# wykresy nie nachodzą na siebie
-                graphObj.putGraph(self.winFull, 0, self.figFS)
-                self.agr += 1
-                
-                dataObj.xValuesMultiGraph.clear() 
-                dataObj.yValuesMultiGraph.clear()
-                del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
-
-        def clearList():
-            graphObj.listChVar.clear()
-            graphObj.multiCodeCurrencyList.clear() 
-            graphObj.multiTimeRangeList.clear()
+            if self.listTrSum >0 and self.listTrSum <= 4: fSize = 16 
+            elif self.listTrSum > 4 and self.listTrSum <= 6: fSize = 14    
+            elif self.listTrSum > 6 and self.listTrSum <= 12: fSize = 12  
+            elif self.listTrSum > 12: fSize = 10
             
+            dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
+            self.axisCreate(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict, self.axis)
+            self.figFS.tight_layout()# wykresy nie nachodzą na siebie
+            self.putGraph(self.winFull, 0, self.figFS)
+            self.agr += 1
             
-        
-        def drawGraph():
-           
-            if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
-                mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
-            elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-                mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznzczonych do narysowania")
-            else:
-                winFullSet()
-                themeSet()
-                buttonCreate()
-                graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get())
-                drawGraphLoop()
-                clearList()
-                self.winFull.mainloop()
-        
-        dataObj.checkConnection()
-        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
-        drawGraph()
+            dataObj.xValuesMultiGraph.clear() 
+            dataObj.yValuesMultiGraph.clear()
+            del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
+
+    def clearList(self):
+        self.listChVar.clear()
+        self.multiCodeCurrencyList.clear() 
+        self.multiTimeRangeList.clear()
+          
 dataObj = Data() 
 
 
