@@ -410,6 +410,7 @@ class Main:
                 print(self.codeVariableList )
                 trl1.clear()
                 code1.clear()
+                cvl1.clear()
 
             def changeView():
                 self.timeRangeVariableList.clear()
@@ -538,7 +539,7 @@ class Main:
         ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
 
         ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)
-    
+    '''
     def fullscreenGraphWindow(self):
         self.agr = 0
         
@@ -627,7 +628,7 @@ class Main:
         
         dataObj.checkConnection()
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
-        drawGraph()
+        drawGraph()'''
 graphObj = Graph()   
 dataObj = Data()
 mainObj = Main() 
