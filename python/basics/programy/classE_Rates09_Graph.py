@@ -14,10 +14,6 @@ import numpy as np
 
 class Graph:
     agr_number = 0
-
-    def __init__(self):
-        self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
-        self.today = datetime.date.today()
         
     def emptyGraph(self, root):
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -66,12 +62,12 @@ class Graph:
             
             self.emptyGraph(root)
         else:
-            self.listChVar = [0]
+            self.sumChVar = 0
             self.axis = self.fig.add_subplot(111)
             self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict, self.axis)
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
-            self.listChVar.clear()
+            del self.sumChVar
         
     def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict, selfAxis):
         xValuesLen = len(xValues)
@@ -113,6 +109,8 @@ class Graph:
             if self.sumChVar == 0: 
                 a = round(xValuesLen / 25)
                 self.tickList = list(range(0,xValuesLen, a))
+                print('xvalueslen', xValuesLen, '\nticklist', self.tickList)
+
             if self.sumChVar == 1: 
                 a = round(xValuesLen / 40)
                 self.tickList = list(range(0,xValuesLen, a))
@@ -177,6 +175,8 @@ class Graph:
 
         plt.savefig(f"{dataObj.filePath}/reports/{graphName}", dpi=200)
         del graphName
+
+    ############################    fullscreenGraphWindow   #######################################################    
         
     def multiGraphList(self, viewNum, rates, trvl, chvl = None, codevl = None, codeCurrencyList = None):
         self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
@@ -207,8 +207,6 @@ class Graph:
         trvl.clear()
         chvl.clear()
         codevl.clear()
-    
-    ############################    fullscreenGraphWindow   #######################################################
         
     def _quit(self):
             self.figFS.clear()
@@ -222,7 +220,6 @@ class Graph:
     def winFullSet(self):
         self.winFull = tk.Tk()
         self.winFull.attributes("-fullscreen", True)
-        self.listTrSum = len(self.multiCodeCurrencyList)
     
     def themeSet(self, root):    
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -235,6 +232,7 @@ class Graph:
 
     def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):
         self.agr = 0
+        self.listTrSum = len(self.multiCodeCurrencyList)
            
         for code in self.multiCodeCurrencyList:
             if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111) 

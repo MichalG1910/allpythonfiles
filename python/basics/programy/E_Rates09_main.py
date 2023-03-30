@@ -34,7 +34,7 @@ class Main:
     def _quit(self):
         self.win.quit()
         self.win.destroy()
-        exit()
+        
     def gcCollect(self):
         gc.collect()
     
@@ -373,12 +373,9 @@ class Main:
                     
                 self.timeRangeVariableList += trl1
                 self.chVariableList += cvl1
-                
-                print(self.timeRangeVariableList)
-                print()
-                print(self.chVariableList )
                 trl1.clear()
                 cvl1.clear()
+            
             def createView2():
                 self.viewNum = 2
                 
@@ -404,9 +401,6 @@ class Main:
                 self.timeRangeVariableList += trl1
                 self.codeVariableList += code1
                 self.chVariableList += cvl1
-                print(self.timeRangeVariableList)
-                print()
-                print(self.codeVariableList )
                 trl1.clear()
                 code1.clear()
                 cvl1.clear()
