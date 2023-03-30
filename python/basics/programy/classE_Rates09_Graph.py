@@ -208,8 +208,8 @@ class Graph:
         chvl.clear()
         codevl.clear()
     
-    #def fullscreenGraphWindow(self):
-        self.agr = 0
+    ############################    fullscreenGraphWindow   #######################################################
+        
     def _quit(self):
             self.figFS.clear()
             plt.close(self.figFS)
@@ -233,7 +233,9 @@ class Graph:
             plt.style.use('Solarize_Light2')
             self.figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
 
-    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):   
+    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):
+        self.agr = 0
+           
         for code in self.multiCodeCurrencyList:
             if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111) 
             elif self.listTrSum == 2: self.axis = self.figFS.add_subplot(121 + self.agr) 

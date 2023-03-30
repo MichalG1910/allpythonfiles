@@ -427,10 +427,18 @@ class Main:
                     startClearF()
             
             def clearView():
+                self.timeRangeVariableList.clear()
+                self.chVariableList.clear()
+                self.codeVariableList.clear()
+
+                for widget in self.multiGraphFrame.winfo_children():
+                    widget.destroy() 
                 if self.viewNum == 1:
                     createView1()
+                    startClearF()
                 else:
                     createView2()
+                    startClearF()
             
             def createTab4():
                 self.tab4 = ttk.Frame(tabControl)
