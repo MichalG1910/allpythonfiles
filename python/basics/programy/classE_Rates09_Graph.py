@@ -1,17 +1,11 @@
-import re, os, sys, math, datetime, requests, time
-from tkinter import messagebox as mBox
-import pandas as pd
+import time
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
-from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
 from classE_Rates09_Data import Data
 import tkinter as tk
-from tkinter import ttk
-
 import numpy as np
-
 class Graph:
     agr_number = 0
         
@@ -35,20 +29,12 @@ class Graph:
     def getVar(self, trendLineVar, annotateVar):
         self.a = annotateVar
         self.t = trendLineVar
-        print("self a:", self.a, "\nself t:", self.t )   
-    '''
-    def newGraph(self, currencyName, timeRange, root):
-        dataObj.checkConnection()
-        dataObj.getDataForGraph(currencyName, timeRange, 1)
-        self.refreshGraph(root, timeRange)
-    '''
+    
     def refreshGraph(self, root, timeRange, xValues, yValues, codeOne, codeCurrencyDict):
         plt.clf()
         plt.close(self.fig)
         
         if xValues == None:
-            plt.clf()
-            plt.close(self.fig)
             self.emptyGraph(root)
         else:
             if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -63,11 +49,9 @@ class Graph:
                 self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
 
             self.sumChVar = 0
-            #self.axis = self.fig.add_subplot(111)
             self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict)
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
-            #del self.sumChVar
         
     def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict):
         xValuesLen = len(xValues)
@@ -175,20 +159,15 @@ class Graph:
     ############################    fullscreenGraphWindow   #######################################################    
         
     def multiGraphList(self, viewNum, rates, trvl, chvl = None, codevl = None, codeCurrencyList = None):
-        self.listTR, self.listChVar, listCC, self.multiTimeRangeList, self.multiCodeCurrencyList = [], [], [], [], []
+        self.multiTimeRangeList, self.multiCodeCurrencyList = [], []
         
         if viewNum == 2:
             for a in range(15): 
-                #listCC.append(globals()['codeVar{}'.format(a)].get())
-                #self.listTR.append(globals()['timeRange{}'.format(a)].get())
-                #self.listChVar.append(globals()['chVar{}'.format(a)].get())
                 if chvl[a] == 1:
                     self.multiCodeCurrencyList.append(codevl[a])
                     self.multiTimeRangeList.append(trvl[a])
         else:
             for b in range(len(rates)):
-                #self.listTR.append(globals()['timeRange{}'.format(b)].get())
-                #self.listChVar.append(globals()['chVar{}'.format(b)].get())
                 if chvl[b] == 1:      #if self.listChVar[b] == 1:
                     self.multiCodeCurrencyList.append(codeCurrencyList[b])
                     self.multiTimeRangeList.append(trvl[b])
@@ -262,7 +241,6 @@ class Graph:
             del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
 
     def clearList(self):
-        self.listChVar.clear()
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()
           

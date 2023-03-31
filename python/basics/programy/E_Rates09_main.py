@@ -1,8 +1,7 @@
-import os, math, time
+import os, math
 import tkinter as tk
 from tkinter import ttk
 from tkinter import PhotoImage
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
 import PIL
 import PIL._tkinter_finder
@@ -10,9 +9,6 @@ from classE_Rates09_Data import Data
 from classE_Rates09_Graph import Graph
 import gc
 from tkinter import messagebox as mBox
-import numpy as np
-
-
 class Main:
     agr_number = 0
     
