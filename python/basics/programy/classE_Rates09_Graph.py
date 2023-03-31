@@ -49,11 +49,11 @@ class Graph:
                 self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
 
             self.sumChVar = 0
-            self.axisCreate(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict)
+            self.drawGraph(16, timeRange, xValues, yValues, codeOne, 1, codeCurrencyDict)
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
         
-    def axisCreate(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict):
+    def drawGraph(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
         self.timeRangeGet = tRange
@@ -117,7 +117,7 @@ class Graph:
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
         
-        def drawGraph(codeCurrencyDict):
+        def axisLineCreate(codeCurrencyDict):
             self.axis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
             t0 = self.axis.plot(xValues, yValues, linewidth=1)
             xaxis = self.axis.get_xaxis()
@@ -130,7 +130,7 @@ class Graph:
         
         tickListScale()
         optionsStatus()
-        drawGraph(codeCurrencyDict)
+        axisLineCreate(codeCurrencyDict)
         
         del self.axis, xValues, yValues, self.tickList
     
@@ -231,7 +231,7 @@ class Graph:
             
             self.axis.grid(linestyle="solid", color=self.gridColor,  linewidth=0.4)
             dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
-            self.axisCreate(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict)
+            self.drawGraph(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict)
             self.figFS.tight_layout()# wykresy nie nachodzą na siebie
             self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1
