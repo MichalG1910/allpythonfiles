@@ -120,21 +120,23 @@ class Graph:
         
         def axisLineCreate(codeCurrencyDict):
             if self.oneSubplotVarMulti == 1:
-                colorpallete = ['red', 'green', 'blue']
+                colorpallete = ['red', 'green', 'blue', 'cyan', 'lawngreen', 'gold', 'darkorange', 'hotpink', 'yellow']
+                limitList = []
                 self.agr = 0
                 self.axis.set_title("Waluty wykres zbiorczy", fontsize=fontSize, color="silver")
                 for code in self.multiCodeCurrencyList:
                     print('mccl: ', self.multiCodeCurrencyList, code)
                     dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firtloopEDL)
                     locals()['line{}'.format(code[0:3])] = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpallete[self.agr], linewidth=1)
-                    print(['line{}'.format(code[0:3])])
+                    print( ['line{}'.format(code[0:3])])
                     print('mtrl z self.agr: ', self.multiTimeRangeList[self.agr])
                     print('dataObj.yValuesMultiGraph', dataObj.yValuesMultiGraph)
+                    limitList += dataObj.yValuesMultiGraph
                     self.agr += 1
                 xaxis = self.axis.get_xaxis()
                 xaxis.set_ticks(self.tickList)
                 plt.xticks(rotation=45, fontsize=8)
-                plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
+                plt.ylim(min(limitList) - yRange, max(limitList) + yRange)
                 self.axis.set_xlabel("Data") 
                 self.axis.set_ylabel("PLN Złoty")
             else:
