@@ -26,9 +26,10 @@ class Graph:
         self.fig.tight_layout()
         self.putGraph(root, 4, self.fig)
     
-    def getVar(self, trendLineVar, annotateVar):
+    def getVar(self, trendLineVar, annotateVar, oneSubplotVarMulti = None):
         self.a = annotateVar
         self.t = trendLineVar
+        self.oneSubplotVarMulti = oneSubplotVarMulti
     
     def refreshGraph(self, root, timeRange, xValues, yValues, codeOne, codeCurrencyDict):
         plt.clf()
@@ -53,7 +54,7 @@ class Graph:
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
         
-    def drawGraph(self, fontSize, tRange, xValues, yValues, code, oneOrMultiGraph, codeCurrencyDict):
+    def drawGraph(self, fontSize, tRange, xValues, yValues, codeMulti, oneOrMultiGraph, codeCurrencyDict):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
         self.timeRangeGet = tRange
@@ -118,15 +119,34 @@ class Graph:
                 if len(self.tickList) < 11: self.tickList.append(xValuesLen-1)
         
         def axisLineCreate(codeCurrencyDict):
-            self.axis.set_title(f"{code.upper()} {codeCurrencyDict[code.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
-            t0 = self.axis.plot(xValues, yValues, linewidth=1)
-            xaxis = self.axis.get_xaxis()
-            xaxis.set_ticks(self.tickList)
-            plt.xticks(rotation=45, fontsize=8)
-            plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
-            self.axis.set_xlabel("Data") 
-            self.axis.set_ylabel("PLN Złoty")
-            del t0
+            if self.oneSubplotVarMulti == 1:
+                colorpallete = ['red', 'green', 'blue']
+                self.agr = 0
+                self.axis.set_title("Waluty wykres zbiorczy", fontsize=fontSize, color="silver")
+                for code in self.multiCodeCurrencyList:
+                    print('mccl: ', self.multiCodeCurrencyList, code)
+                    dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firtloopEDL)
+                    locals()['line{}'.format(code[0:3])] = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpallete[self.agr], linewidth=1)
+                    print(['line{}'.format(code[0:3])])
+                    print('mtrl z self.agr: ', self.multiTimeRangeList[self.agr])
+                    print('dataObj.yValuesMultiGraph', dataObj.yValuesMultiGraph)
+                    self.agr += 1
+                xaxis = self.axis.get_xaxis()
+                xaxis.set_ticks(self.tickList)
+                plt.xticks(rotation=45, fontsize=8)
+                plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
+                self.axis.set_xlabel("Data") 
+                self.axis.set_ylabel("PLN Złoty")
+            else:
+                self.axis.set_title(f"{codeMulti.upper()} {codeCurrencyDict[codeMulti.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
+                t0 = self.axis.plot(xValues, yValues, linewidth=1)
+                xaxis = self.axis.get_xaxis()
+                xaxis.set_ticks(self.tickList)
+                plt.xticks(rotation=45, fontsize=8)
+                plt.ylim(min(yValues) - yRange, max(yValues) + yRange)
+                self.axis.set_xlabel("Data") 
+                self.axis.set_ylabel("PLN Złoty")
+                del t0
         
         tickListScale()
         optionsStatus()
@@ -204,37 +224,47 @@ class Graph:
             self.gridColor = "white"
     
     def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):
+        self.firtloopEDL = firstloopEDL
         self.agr = 0
         self.listTrSum = len(self.multiCodeCurrencyList)
-           
-        for code in self.multiCodeCurrencyList:
-            if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111) 
-            elif self.listTrSum == 2: self.axis = self.figFS.add_subplot(121 + self.agr) 
-            elif self.listTrSum == 3: self.axis = self.figFS.add_subplot(221 + self.agr) 
-            elif self.listTrSum == 4: self.axis = self.figFS.add_subplot(221 + self.agr)  
-            elif self.listTrSum == 5: self.axis = self.figFS.add_subplot(231 + self.agr)  
-            elif self.listTrSum == 6: self.axis = self.figFS.add_subplot(231 + self.agr)  
-            elif self.listTrSum == 7: self.axis = self.figFS.add_subplot(241 + self.agr)  
-            elif self.listTrSum == 8: self.axis = self.figFS.add_subplot(241 + self.agr) 
-            elif self.listTrSum == 9: self.axis = self.figFS.add_subplot(331 + self.agr)  
-            elif self.listTrSum == 10: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
-            elif self.listTrSum == 11: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
-            elif self.listTrSum == 12: self.axis = self.figFS.add_subplot(3,4,1 + self.agr) 
-            elif self.listTrSum == 13: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
-            elif self.listTrSum == 14: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
-            elif self.listTrSum == 15: self.axis = self.figFS.add_subplot(3,5,1 + self.agr)
-
-            if self.listTrSum >0 and self.listTrSum <= 4: fSize = 16 
-            elif self.listTrSum > 4 and self.listTrSum <= 6: fSize = 14    
-            elif self.listTrSum > 6 and self.listTrSum <= 12: fSize = 12  
-            elif self.listTrSum > 12: fSize = 10
-            
+        
+        def addGraph():
             self.axis.grid(linestyle="solid", color=self.gridColor,  linewidth=0.4)
             dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
             self.drawGraph(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict)
             self.figFS.tight_layout()# wykresy nie nachodzą na siebie
             self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1
+
+        if self.oneSubplotVarMulti  == 1:
+            self.axis = self.figFS.add_subplot(111)
+            fSize = 16
+            code = self.multiCodeCurrencyList[0]
+            addGraph()
+        else:
+            for code in self.multiCodeCurrencyList:
+                if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111)
+                elif self.listTrSum == 2: self.axis = self.figFS.add_subplot(121 + self.agr) 
+                elif self.listTrSum == 3: self.axis = self.figFS.add_subplot(221 + self.agr) 
+                elif self.listTrSum == 4: self.axis = self.figFS.add_subplot(221 + self.agr)  
+                elif self.listTrSum == 5: self.axis = self.figFS.add_subplot(231 + self.agr)  
+                elif self.listTrSum == 6: self.axis = self.figFS.add_subplot(231 + self.agr)  
+                elif self.listTrSum == 7: self.axis = self.figFS.add_subplot(241 + self.agr)  
+                elif self.listTrSum == 8: self.axis = self.figFS.add_subplot(241 + self.agr) 
+                elif self.listTrSum == 9: self.axis = self.figFS.add_subplot(331 + self.agr)  
+                elif self.listTrSum == 10: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
+                elif self.listTrSum == 11: self.axis = self.figFS.add_subplot(3,4,1 + self.agr)  
+                elif self.listTrSum == 12: self.axis = self.figFS.add_subplot(3,4,1 + self.agr) 
+                elif self.listTrSum == 13: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
+                elif self.listTrSum == 14: self.axis = self.figFS.add_subplot(3,5,1 + self.agr) 
+                elif self.listTrSum == 15: self.axis = self.figFS.add_subplot(3,5,1 + self.agr)
+
+                if self.listTrSum >0 and self.listTrSum <= 4: fSize = 16 
+                elif self.listTrSum > 4 and self.listTrSum <= 6: fSize = 14    
+                elif self.listTrSum > 6 and self.listTrSum <= 12: fSize = 12  
+                elif self.listTrSum > 12: fSize = 10
+                addGraph()
+                
             
             dataObj.xValuesMultiGraph.clear() 
             dataObj.yValuesMultiGraph.clear()

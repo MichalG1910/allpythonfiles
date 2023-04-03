@@ -445,6 +445,7 @@ class Main:
             def multiSettingsF():
                 self.trendLineVarMulti = tk.IntVar()
                 self.annotateVarMulti = tk.IntVar()
+                self.oneSubplotVarMulti = tk.IntVar()
                 self.multiSettingsFrame = ttk.LabelFrame(self.tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.E)
                 ttk.Label(self.multiSettingsFrame,  width=11, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
@@ -454,6 +455,8 @@ class Main:
                 trendLineCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.trendLineVarMulti ).grid(column=1, row=2, sticky=tk.W) 
                 ttk.Label(self.multiSettingsFrame, text= "min/max wartość ").grid(column=0, row=3, sticky=tk.W, pady=5,padx=5)  
                 annotateCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.annotateVarMulti ).grid(column=1, row=3, sticky=tk.W) 
+                ttk.Label(self.multiSettingsFrame, text= "rysuj na jednym wykresie ").grid(column=2, row=2, sticky=tk.W, pady=5,padx=5)  
+                oneSubplotMultiGraph = ttk.Checkbutton(self.multiSettingsFrame, variable=self.oneSubplotVarMulti ).grid(column=3, row=2, sticky=tk.W) 
             
             createTab4()
             createView1()
@@ -640,7 +643,7 @@ class Main:
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
             buttonCreate()
-            graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get())
+            graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
             graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
             graphObj.clearList()
             graphObj.winFull.mainloop()
@@ -648,7 +651,7 @@ class Main:
         if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
             mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
         elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-            mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznzczonych do narysowania")
+            mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
         else:
             drawGraph()
                      
