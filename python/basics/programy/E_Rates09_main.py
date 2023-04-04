@@ -354,7 +354,7 @@ class Main:
                     
                     globals()['timeRange{}'.format(t)] = tk.StringVar()
                     globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10)
-                    globals()['rangeChosen{}'.format(t)]["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
+                    globals()['rangeChosen{}'.format(t)]["values"] = ("", "30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
                     #globals()['rangeChosen{}'.format(t)].current(0)
                     if t <= ratesHalf: globals()['rangeChosen{}'.format(t)].grid(column= 1, row= t+1, padx=5, pady=5)
                     else: globals()['rangeChosen{}'.format(t)].grid(column= 4, row=t-ratesHalf, padx=5, pady=5)
@@ -383,7 +383,7 @@ class Main:
 
                     globals()['timeRange{}'.format(f)] = tk.StringVar()
                     globals()['rangeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 29, textvariable= globals()['timeRange{}'.format(f)], state= "readonly",height=10)
-                    globals()['rangeChosen{}'.format(f)]["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
+                    globals()['rangeChosen{}'.format(f)]["values"] = ("", "30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
                     globals()['rangeChosen{}'.format(f)].grid(column= 1, row=f, padx=5, pady=5)
                     
                     globals()['chVar{}'.format(f)] = tk.IntVar() 
@@ -443,8 +443,14 @@ class Main:
                 ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def multiSettingsF():
-                def otherOptions():
+                def otherOptions(*ignoredArgs):
                     if self.oneSubplotVarMulti.get() == 1:
+                        for t in range(len(dataObj.rates)):
+                            globals()['rangeChosen{}'.format(t)].current(allRange["values"].index(self.allRangeVar.get()))
+                            #globals()['rangeChosen{}'.format(t)].configure(state='disabled')
+                            globals()['timeRange{}'.format(t)] = self.allRangeVar.get()
+                        allRange.configure(state='enabled')
+                        allRange.configure(state='readonly')
                         if self.trendLineVarMulti.get() == 1:
                             trendLineCheck.invoke()
                         trendLineCheck.configure(state= "disabled")
@@ -452,24 +458,41 @@ class Main:
                             annotateCheck.invoke()  
                         annotateCheck.configure(state= "disabled")
                     else:
+                        #allRange.configure(state='disabled')
+                        #allRange.current(0)
+                        clearView()
+                        allRange.configure(state='disabled')
                         trendLineCheck.configure(state= "enabled")
                         annotateCheck.configure(state= "enabled")
+                        
                 
                 self.trendLineVarMulti = tk.IntVar()
                 self.annotateVarMulti = tk.IntVar()
                 self.oneSubplotVarMulti = tk.IntVar()
+                self.allRangeVar= tk.StringVar()
+                
                 self.multiSettingsFrame = ttk.LabelFrame(self.tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.E)
-                ttk.Label(self.multiSettingsFrame,  width=11, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
-                ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 1, row=0, padx=5, pady=5)
+                #ttk.Label(self.multiSettingsFrame,  width=11, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
+                ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 0, row=0, padx=5, pady=5)
+                
                 ttk.Label(self.multiSettingsFrame, text= "linia trendu ").grid(column=0, row=2, sticky=tk.W, pady=5,padx=5)  
                 trendLineCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.trendLineVarMulti )
                 trendLineCheck.grid(column=1, row=2, sticky=tk.W) 
+                
                 ttk.Label(self.multiSettingsFrame, text= "min/max wartość ").grid(column=0, row=3, sticky=tk.W, pady=5,padx=5)  
                 annotateCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.annotateVarMulti )
                 annotateCheck.grid(column=1, row=3, sticky=tk.W) 
-                ttk.Label(self.multiSettingsFrame, text= "rysuj na jednym wykresie ").grid(column=2, row=2, sticky=tk.W, pady=5,padx=5)  
-                oneSubplotMultiGraph = ttk.Checkbutton(self.multiSettingsFrame, variable=self.oneSubplotVarMulti, command=otherOptions ).grid(column=3, row=2, sticky=tk.W) 
+                
+                multiLineFrame = ttk.LabelFrame(self.multiSettingsFrame, text= "rysuj na jednym wykresie ", labelanchor="n", style='clam.TLabelframe')
+                multiLineFrame.grid(column=2, row=0, sticky=tk.W, pady=5,padx=5)  
+                ttk.Label(multiLineFrame, text= "zakres czasu ").grid(column=2,rowspan=3, sticky=tk.W, pady=5,padx=5)  
+                oneSubplotMultiGraph = ttk.Checkbutton(multiLineFrame, variable=self.oneSubplotVarMulti, command=otherOptions ).grid(column=4, row=0, sticky=tk.W) 
+                allRange = ttk.Combobox(multiLineFrame, width=8, textvariable=self.allRangeVar, height=10, state='readonly')
+                allRange.configure(state="disabled")
+                allRange["values"]= ("", "30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat")
+                allRange.grid(column= 3, row=0, padx=5, pady=5)
+                self.allRangeVar.trace('w', lambda unused0, unused1, unused2 : otherOptions())
                 
             
             createTab4()
