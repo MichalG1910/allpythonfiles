@@ -443,20 +443,34 @@ class Main:
                 ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def multiSettingsF():
+                def otherOptions():
+                    if self.oneSubplotVarMulti.get() == 1:
+                        if self.trendLineVarMulti.get() == 1:
+                            trendLineCheck.invoke()
+                        trendLineCheck.configure(state= "disabled")
+                        if self.annotateVarMulti.get() == 1: 
+                            annotateCheck.invoke()  
+                        annotateCheck.configure(state= "disabled")
+                    else:
+                        trendLineCheck.configure(state= "enabled")
+                        annotateCheck.configure(state= "enabled")
+                
                 self.trendLineVarMulti = tk.IntVar()
                 self.annotateVarMulti = tk.IntVar()
                 self.oneSubplotVarMulti = tk.IntVar()
                 self.multiSettingsFrame = ttk.LabelFrame(self.tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.E)
                 ttk.Label(self.multiSettingsFrame,  width=11, text= 'ustawienia').grid(column=0, row=0, sticky=tk.W, padx=3, pady=3)
-                ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 1, row=0, padx=5, pady=5)  
-                
+                ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 1, row=0, padx=5, pady=5)
                 ttk.Label(self.multiSettingsFrame, text= "linia trendu ").grid(column=0, row=2, sticky=tk.W, pady=5,padx=5)  
-                trendLineCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.trendLineVarMulti ).grid(column=1, row=2, sticky=tk.W) 
+                trendLineCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.trendLineVarMulti )
+                trendLineCheck.grid(column=1, row=2, sticky=tk.W) 
                 ttk.Label(self.multiSettingsFrame, text= "min/max wartość ").grid(column=0, row=3, sticky=tk.W, pady=5,padx=5)  
-                annotateCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.annotateVarMulti ).grid(column=1, row=3, sticky=tk.W) 
+                annotateCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.annotateVarMulti )
+                annotateCheck.grid(column=1, row=3, sticky=tk.W) 
                 ttk.Label(self.multiSettingsFrame, text= "rysuj na jednym wykresie ").grid(column=2, row=2, sticky=tk.W, pady=5,padx=5)  
-                oneSubplotMultiGraph = ttk.Checkbutton(self.multiSettingsFrame, variable=self.oneSubplotVarMulti ).grid(column=3, row=2, sticky=tk.W) 
+                oneSubplotMultiGraph = ttk.Checkbutton(self.multiSettingsFrame, variable=self.oneSubplotVarMulti, command=otherOptions ).grid(column=3, row=2, sticky=tk.W) 
+                
             
             createTab4()
             createView1()

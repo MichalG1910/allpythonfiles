@@ -120,17 +120,14 @@ class Graph:
         
         def axisLineCreate(codeCurrencyDict):
             if self.oneSubplotVarMulti == 1:
-                colorpallete = ['red', 'green', 'blue', 'cyan', 'lawngreen', 'gold', 'darkorange', 'hotpink', 'yellow']
+                colorpalette = ['red', 'green', 'blue', 'gold', 'lawngreen', 'cyan', 'darkorange', 'hotpink', 'yellow']
                 limitList = []
                 self.agr = 0
                 self.axis.set_title("Waluty wykres zbiorczy", fontsize=fontSize, color="silver")
                 for code in self.multiCodeCurrencyList:
                     print('mccl: ', self.multiCodeCurrencyList, code)
                     dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firtloopEDL)
-                    locals()['line{}'.format(code[0:3])] = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpallete[self.agr], linewidth=1)
-                    print( ['line{}'.format(code[0:3])])
-                    print('mtrl z self.agr: ', self.multiTimeRangeList[self.agr])
-                    print('dataObj.yValuesMultiGraph', dataObj.yValuesMultiGraph)
+                    locals()['line{}'.format(code[0:3])] = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpalette[self.agr], linewidth=1)
                     limitList += dataObj.yValuesMultiGraph
                     self.agr += 1
                 xaxis = self.axis.get_xaxis()
