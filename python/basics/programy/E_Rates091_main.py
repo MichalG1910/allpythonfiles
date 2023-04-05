@@ -347,7 +347,8 @@ class Main:
 
             def createView1():
                 self.viewNum = 1
-                
+                self.timeRangeVariableList.clear()
+                self.chVariableList.clear()
                 for t in range(len(dataObj.rates)):
                     if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
                     else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}').grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
@@ -376,7 +377,9 @@ class Main:
                 self.viewNum = 2
                 
                 for f in range(15):
-                    
+                    self.timeRangeVariableList.clear()
+                    self.codeVariableList.clear()
+                    self.chVariableList.clear()
                     globals()['codeVar{}'.format(f)] = tk.StringVar()
                     globals()['codeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 29, textvariable= globals()['codeVar{}'.format(f)], state= "readonly",height=10)
                     globals()['codeChosen{}'.format(f)]["values"] = self.codeCurrencyList
@@ -398,14 +401,14 @@ class Main:
                 self.timeRangeVariableList += trl1
                 self.codeVariableList += code1
                 self.chVariableList += cvl1
-                
+                '''
                 self.chVariableList.reverse()
                 self.chVariableList = self.chVariableList[0:15]
                 self.chVariableList.reverse()
                 self.timeRangeVariableList.reverse()
                 self.timeRangeVariableList = self.timeRangeVariableList[0:15]
                 self.timeRangeVariableList.reverse()
-                
+                '''
                 print('CVL1: ',len(cvl1))
                 trl1.clear()
                 code1.clear()
@@ -414,9 +417,9 @@ class Main:
                 
 
             def changeView():
-                self.timeRangeVariableList.clear()
+                '''self.timeRangeVariableList.clear()
                 self.chVariableList.clear()
-                self.codeVariableList.clear()
+                self.codeVariableList.clear()'''
                 if self.oneSubplotVarMulti.get() == 1:
                     #self.oneSubplotMultiGraph.invoke()
                     self.allRange.current(0)
@@ -433,10 +436,10 @@ class Main:
                     startClearF()
             
             def clearView():
-                self.timeRangeVariableList.clear()
+                '''self.timeRangeVariableList.clear()
                 self.chVariableList.clear()
                 self.codeVariableList.clear()
-                
+                '''
                 for widget in self.multiGraphFrame.winfo_children():
                     widget.destroy() 
                 if self.viewNum == 1:

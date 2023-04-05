@@ -121,21 +121,24 @@ class Graph:
         def axisLineCreate(codeCurrencyDict):
             if self.oneSubplotVarMulti == 1:
                 colorpalette = ['red', 'green', 'blue', 'gold', 'lawngreen', 'cyan', 'darkorange', 'hotpink', 'yellow']
-                limitList = []
+                limitList, lineName = [],[]
                 self.agr = 0
                 self.axis.set_title("Waluty wykres zbiorczy", fontsize=fontSize, color="silver")
                 for code in self.multiCodeCurrencyList:
                     print('mccl: ', self.multiCodeCurrencyList, code)
                     dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firtloopEDL)
-                    locals()['line{}'.format(code[0:3])] = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpalette[self.agr], linewidth=1)
+                    locals()['line{}'.format(code[0:3])], = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpalette[self.agr], linewidth=1)
                     limitList += dataObj.yValuesMultiGraph
+                    lineName.append(locals()['line{}'.format(code[0:3])])
                     self.agr += 1
+                self.figFS.legend(lineName, self.multiCodeCurrencyList, 'upper right' )
                 xaxis = self.axis.get_xaxis()
                 xaxis.set_ticks(self.tickList)
                 plt.xticks(rotation=45, fontsize=8)
                 plt.ylim(min(limitList) - yRange, max(limitList) + yRange)
                 self.axis.set_xlabel("Data") 
                 self.axis.set_ylabel("PLN Złoty")
+                del limitList
             else:
                 self.axis.set_title(f"{codeMulti.upper()} {codeCurrencyDict[codeMulti.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
                 t0 = self.axis.plot(xValues, yValues, linewidth=1)
