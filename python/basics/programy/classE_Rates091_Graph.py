@@ -1,4 +1,5 @@
 import time
+from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
 import PIL
@@ -131,7 +132,8 @@ class Graph:
                     limitList += dataObj.yValuesMultiGraph
                     lineName.append(locals()['line{}'.format(code[0:3])])
                     self.agr += 1
-                self.figFS.legend(lineName, self.multiCodeCurrencyList, 'upper right' )
+                self.figFS.legend(lineName, self.multiCodeCurrencyList, 'upper center')
+                #plt.legend(bbox_to_anchor=(1.02, 0.1), loc='upper left', borderaxespad=0)
                 xaxis = self.axis.get_xaxis()
                 xaxis.set_ticks(self.tickList)
                 plt.xticks(rotation=45, fontsize=8)
