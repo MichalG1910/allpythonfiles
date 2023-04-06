@@ -102,18 +102,18 @@ class Graph:
                 a = round(xValuesLen / 20)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 20: self.tickList.append(xValuesLen -1)
-            if self.sumChVar == 5 or self.sumChVar == 6: 
+            if self.sumChVar == 5 or self.sumChVar == 6 or self.sumChVar == 9: 
                 a = round(xValuesLen / 16)
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 16: self.tickList.append(xValuesLen-1)
-            if self.sumChVar == 7 or self.sumChVar == 8 or self.sumChVar == 9: 
-                a = round(xValuesLen / 15)
+            if self.sumChVar == 7 or self.sumChVar == 8 : 
+                a = round(xValuesLen / 12)
                 self.tickList = list(range(0,xValuesLen, a))
-                if len(self.tickList) < 15: self.tickList.append(xValuesLen-1)
+                if len(self.tickList) < 12: self.tickList.append(xValuesLen-1)
             if self.sumChVar == 10 or self.sumChVar == 11 or self.sumChVar == 12: 
-                a = round(xValuesLen / 14)
+                a = round(xValuesLen / 12)
                 self.tickList = list(range(0,xValuesLen, a))
-                if len(self.tickList) < 14: self.tickList.append(xValuesLen-1)
+                if len(self.tickList) < 12: self.tickList.append(xValuesLen-1)
             if self.sumChVar == 13 or self.sumChVar == 14 or self.sumChVar == 15: 
                 a = round(xValuesLen / 11)
                 self.tickList = list(range(0,xValuesLen, a))
@@ -121,7 +121,7 @@ class Graph:
         
         def axisLineCreate(codeCurrencyDict):
             if self.oneSubplotVarMulti == 1:
-                colorpalette = ['red', 'green', 'blue', 'gold', 'lawngreen', 'cyan', 'darkorange', 'hotpink', 'yellow']
+                colorpalette = ['red', 'green', 'blue', 'gold', 'lawngreen', 'cyan', 'darkorange', 'hotpink', 'yellow', 'darkcyan', 'deepskyblue', 'violet', 'cadetblue', 'indigo', 'cornflowerblue', 'mediumblue', 'darkgoldenrod', 'pink', 'lightgreen', 'darkred' ]
                 limitList, lineName = [],[]
                 self.agr = 0
                 self.axis.set_title("Waluty wykres zbiorczy", fontsize=fontSize, color="silver")
@@ -132,7 +132,7 @@ class Graph:
                     limitList += dataObj.yValuesMultiGraph
                     lineName.append(locals()['line{}'.format(code[0:3])])
                     self.agr += 1
-                self.figFS.legend(lineName, self.multiCodeCurrencyList, 'upper center')
+                self.figFS.legend(lineName, self.multiCodeCurrencyList, bbox_to_anchor=(0.995, 0.97))
                 #plt.legend(bbox_to_anchor=(1.02, 0.1), loc='upper left', borderaxespad=0)
                 xaxis = self.axis.get_xaxis()
                 xaxis.set_ticks(self.tickList)
@@ -244,7 +244,10 @@ class Graph:
             self.axis.grid(linestyle="solid", color=self.gridColor,  linewidth=0.4)
             dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
             self.drawGraph(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict)
-            self.figFS.tight_layout()# wykresy nie nachodzą na siebie
+            if self.oneSubplotVarMulti  == 0:
+                self.figFS.tight_layout()# wykresy nie nachodzą na siebie
+            else:
+                self.figFS.tight_layout( rect=[0, 0, 0.874, 1.0])
             self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1
 
