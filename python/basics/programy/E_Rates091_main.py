@@ -409,13 +409,10 @@ class Main:
                 self.timeRangeVariableList = self.timeRangeVariableList[0:15]
                 self.timeRangeVariableList.reverse()
                 '''
-                print('CVL1: ',len(cvl1))
                 trl1.clear()
                 code1.clear()
                 cvl1.clear()
-                print('CHVARIABLELIST: ',len(self.chVariableList))
                 
-
             def changeView():
                 '''self.timeRangeVariableList.clear()
                 self.chVariableList.clear()
@@ -712,9 +709,10 @@ class Main:
             graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
             graphObj.clearList()
             graphObj.winFull.mainloop()
-           
-        if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
-            mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
+         
+        if self.oneSubplotVarMulti.get() != 1:
+            if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
+                mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
         elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
             mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
         else:

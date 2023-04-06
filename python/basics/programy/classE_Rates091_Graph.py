@@ -91,7 +91,7 @@ class Graph:
                 trendline()
             
         def tickListScale():
-            if self.sumChVar == 0: 
+            if self.sumChVar == 0 or self.sumChVar > 15: 
                 a = round(xValuesLen / 25)
                 self.tickList = list(range(0,xValuesLen, a))
             if self.sumChVar == 1: 
@@ -121,7 +121,9 @@ class Graph:
         
         def axisLineCreate(codeCurrencyDict):
             if self.oneSubplotVarMulti == 1:
-                colorpalette = ['red', 'green', 'blue', 'gold', 'lawngreen', 'cyan', 'darkorange', 'hotpink', 'yellow', 'darkcyan', 'deepskyblue', 'violet', 'cadetblue', 'indigo', 'cornflowerblue', 'mediumblue', 'darkgoldenrod', 'pink', 'lightgreen', 'darkred' ]
+                colorpalette = ['red', 'green', 'blue', 'gold', 'lawngreen', 'cyan', 'darkorange', 'hotpink', 'yellow', 'darkcyan', 'deepskyblue', 'violet', 'cadetblue', 
+                                'indigo', 'cornflowerblue', 'mediumblue', 'darkgoldenrod', 'pink', 'lightgreen', 'darkred', 'gray', 'lightgray', 'salmon', 'chocolate', 'maroon', 
+                                'tan', 'olive', 'darkgreen', 'lightcyan', 'magenta', 'mediumorchid', 'thistle', 'crimson', ]
                 limitList, lineName = [],[]
                 self.agr = 0
                 self.axis.set_title("Waluty wykres zbiorczy", fontsize=fontSize, color="silver")
@@ -189,15 +191,12 @@ class Graph:
             #chvl.reverse()
             #chvl = chvl[0:15]
             #chvl.reverse()
-            print('chvl[-15:-1]', chvl)
+            
             for a in range(15): 
                 if chvl[a] == 1:
                     self.multiCodeCurrencyList.append(codevl[a])
                     self.multiTimeRangeList.append(trvl[a])
-            print('chvl: ', chvl)
-            print('codevl:', codevl)
-            print(self.multiCodeCurrencyList)
-            print(self.multiTimeRangeList)
+    
         else:
             for b in range(len(rates)):
                 if chvl[b] == 1:      #if self.listChVar[b] == 1:
@@ -247,14 +246,13 @@ class Graph:
             if self.oneSubplotVarMulti  == 0:
                 self.figFS.tight_layout()# wykresy nie nachodzą na siebie
             else:
-                self.figFS.tight_layout( rect=[0, 0, 0.874, 1.0])
+                self.figFS.tight_layout( rect=[0, 0, 0.869, 1.0])
             self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1
 
         if self.oneSubplotVarMulti  == 1:
             self.axis = self.figFS.add_subplot(111)
             fSize = 16
-            print('mccl: ', self.multiCodeCurrencyList)
             code = self.multiCodeCurrencyList[0]
             addGraph()
         else:
