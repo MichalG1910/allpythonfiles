@@ -428,9 +428,11 @@ class Main:
                 if self.viewNum == 1: 
                     createView2()
                     startClearF()
+                    markF()
                 else: 
                     createView1()
                     startClearF()
+                    markF()
             
             def clearView():
                 '''self.timeRangeVariableList.clear()
@@ -442,9 +444,11 @@ class Main:
                 if self.viewNum == 1:
                     createView1()
                     startClearF()
+                    markF()
                 else:
                     createView2()
                     startClearF()
+                    markF()
             
             def createTab4():
                 self.tab4 = ttk.Frame(tabControl)
@@ -457,6 +461,12 @@ class Main:
                 self.startclearFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.E)
                 ttk.Button(self.startclearFrame, text = "wyczyść", command = clearView).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
                 ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
+            
+            def markF():
+                self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz", labelanchor="n", style='clam.TLabelframe', width=100)  
+                self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
+                ttk.Button(self.markFrame, text = "wszystko", command = clearView).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
+                ttk.Button(self.markFrame, text = "z zakresem czasu", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def multiSettingsF():
                 def otherOptions(*ignoredArgs):
@@ -522,6 +532,7 @@ class Main:
             createTab4()
             createView1()
             startClearF()
+            markF()
             multiSettingsF()
              
         tabControl = ttk.Notebook(self.win)
