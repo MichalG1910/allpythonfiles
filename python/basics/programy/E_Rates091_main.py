@@ -695,7 +695,7 @@ class Main:
         drawGraph()'''
     
     def fullscreenGraphWindow(self):
-        print('self.chVariableList: ', [i.get() for i in self.chVariableList])
+        
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
