@@ -747,15 +747,21 @@ class Main:
             graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
             graphObj.clearList()
             graphObj.winFull.mainloop()
-         
-        if self.oneSubplotVarMulti.get() != 1:
+        print(self.oneSubplotVarMulti.get()) 
+        if self.oneSubplotVarMulti.get() != 1:    # tu jest blad
             if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
                 mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
-        elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-            mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
+            elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
+                mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
+            else:
+                print('752 main')
+                drawGraph()
         else:
-            drawGraph()
-                     
+            if "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
+                mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
+            else:
+                drawGraph()
+     
 graphObj = Graph()   
 dataObj = Data()
 mainObj = Main() 

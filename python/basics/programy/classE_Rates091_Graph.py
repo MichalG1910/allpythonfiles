@@ -202,7 +202,8 @@ class Graph:
                 if chvl[b] == 1:      #if self.listChVar[b] == 1:
                     self.multiCodeCurrencyList.append(codeCurrencyList[b])
                     self.multiTimeRangeList.append(trvl[b])
-         
+        print(self.multiCodeCurrencyList) 
+        print(self.multiTimeRangeList) 
         #self.listTR.clear()
         #listCC.clear()
         self.sumChVar = sum(chvl)
@@ -249,7 +250,7 @@ class Graph:
                 self.figFS.tight_layout( rect=[0, 0, 0.869, 1.0])
             self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1
-
+        print(self.oneSubplotVarMulti)
         if self.oneSubplotVarMulti  == 1:
             self.axis = self.figFS.add_subplot(111)
             fSize = 16
