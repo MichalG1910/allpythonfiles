@@ -463,16 +463,30 @@ class Main:
                 ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def markF():
-                self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz", labelanchor="n", style='clam.TLabelframe', width=100)  
+                self.a = 1
+                def markAll():
+                    if self.a % 2 != 0:
+                        for t in range(len(self.chVariableList)): 
+                            globals()['chVar{}'.format(t)].set(1)
+                        
+                    if self.a % 2 == 0:
+                        for t in range(len(self.chVariableList)): 
+                            globals()['chVar{}'.format(t)].set(0)
+                    self.a += 1
+
+
+                def markTimeRange():
+                    pass
+                self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=100)  
                 self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
-                ttk.Button(self.markFrame, text = "wszystko", command = clearView).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
-                ttk.Button(self.markFrame, text = "z zakresem czasu", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
+                ttk.Button(self.markFrame, text = "wszystko", command = markAll).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
+                ttk.Button(self.markFrame, text = "z zakresem czasu", command = markTimeRange).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def multiSettingsF():
                 def otherOptions(*ignoredArgs):
                     if self.oneSubplotVarMulti.get() == 1:
                         if self.viewNum == 1:
-                            for t in range(len(dataObj.rates)): # rozdziel to na 2 widoki
+                            for t in range(len(dataObj.rates)): 
                                 globals()['rangeChosen{}'.format(t)].current(self.allRange["values"].index(self.allRangeVar.get()))
                                 #globals()['rangeChosen{}'.format(t)].configure(state='disabled')
                                 #globals()['timeRange{}'.format(t)] = self.allRangeVar.get()
