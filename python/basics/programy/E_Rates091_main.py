@@ -464,6 +464,7 @@ class Main:
             
             def markF():
                 self.a = 1
+                self.b = 1
                 def markAll():
                     if self.a % 2 != 0:
                         for t in range(len(self.chVariableList)): 
@@ -476,7 +477,19 @@ class Main:
 
 
                 def markTimeRange():
-                    pass
+                    if self.b % 2 != 0:
+                        for u in range(len(self.chVariableList)):
+                            if globals()['timeRange{}'.format(u)].get() != "":
+                                globals()['checkChosen{}'.format(u)].invoke() 
+                                #globals()['chVar{}'.format(u)].set(1)
+                        
+                    if self.b % 2 == 0:
+                        for u in range(len(self.chVariableList)):
+                            if globals()['timeRange{}'.format(u)].get() != "":
+                                globals()['checkChosen{}'.format(u)].invoke()
+                                #globals()['chVar{}'.format(u)].set(0)
+                    self.b += 1
+                    
                 self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=100)  
                 self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
                 ttk.Button(self.markFrame, text = "wszystko", command = markAll).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
