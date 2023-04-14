@@ -142,6 +142,7 @@ class Graph:
                 plt.ylim(min(limitList) - yRange, max(limitList) + yRange)
                 self.axis.set_xlabel("Data") 
                 self.axis.set_ylabel("PLN Złoty")
+                 
                 del limitList
             else:
                 self.axis.set_title(f"{codeMulti.upper()} {codeCurrencyDict[codeMulti.upper()]} ({tRange})", fontsize=fontSize, color="silver") # {dataObj.codeCurrencyDict[code.upper()]}
@@ -249,12 +250,13 @@ class Graph:
                 self.figFS.tight_layout( rect=[0, 0, 0.869, 1.0])
             self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1
-        print(self.oneSubplotVarMulti)
+        
         if self.oneSubplotVarMulti  == 1:
             self.axis = self.figFS.add_subplot(111)
             fSize = 16
             code = self.multiCodeCurrencyList[0]
             addGraph()
+            self.oneSubplotVarMulti  = 0
         else:
             for code in self.multiCodeCurrencyList:
                 if self.listTrSum == 1: self.axis = self.figFS.add_subplot(111)
@@ -279,7 +281,6 @@ class Graph:
                 elif self.listTrSum > 12: fSize = 10
                 addGraph()
                 
-            
             dataObj.xValuesMultiGraph.clear() 
             dataObj.yValuesMultiGraph.clear()
             del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
