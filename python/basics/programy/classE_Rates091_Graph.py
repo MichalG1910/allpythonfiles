@@ -202,8 +202,7 @@ class Graph:
                 if chvl[b] == 1:      #if self.listChVar[b] == 1:
                     self.multiCodeCurrencyList.append(codeCurrencyList[b])
                     self.multiTimeRangeList.append(trvl[b])
-        print(self.multiCodeCurrencyList) 
-        print(self.multiTimeRangeList) 
+    
         #self.listTR.clear()
         #listCC.clear()
         self.sumChVar = sum(chvl)

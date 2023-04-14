@@ -475,18 +475,15 @@ class Main:
                             globals()['chVar{}'.format(t)].set(0)
                     self.a += 1
 
-
                 def markTimeRange():
                     if self.b % 2 != 0:
                         for u in range(len(self.chVariableList)):
-                            if globals()['timeRange{}'.format(u)].get() != "": # and globals()['chVar{}'.format(u)].get() == 0:
-                                #globals()['checkChosen{}'.format(u)].invoke() 
+                            if globals()['timeRange{}'.format(u)].get() != "": 
                                 globals()['chVar{}'.format(u)].set(1)
                     
                     if self.b % 2 == 0:
                         for u in range(len(self.chVariableList)):
-                            if globals()['timeRange{}'.format(u)].get() != "": # and globals()['chVar{}'.format(u)].get() == 1:
-                                #globals()['checkChosen{}'.format(u)].invoke()
+                            if globals()['timeRange{}'.format(u)].get() != "": 
                                 globals()['chVar{}'.format(u)].set(0)
                                 
                     if [i.get() for i in self.timeRangeVariableList].count("") != len(self.timeRangeVariableList):
@@ -557,7 +554,6 @@ class Main:
                 self.allRange.grid(column= 3, row=0, padx=5, pady=5)
                 self.allRangeVar.trace('w', lambda unused0, unused1, unused2 : otherOptions())
                 
-            
             createTab4()
             createView1()
             startClearF()
@@ -614,7 +610,6 @@ class Main:
         ttk.Label(tab2, text= "min/max wartość ").grid(column=2, row=3, sticky=tk.W, pady=5,padx=5)  
         annotateCheck = ttk.Checkbutton(tab2, variable=self.annotateVar ).grid(column=3, row=3, sticky=tk.W) 
         
-       
     def generateReportGui(self):
         self.startDate = tk.StringVar()
         self.endDate = tk.StringVar()
@@ -749,14 +744,13 @@ class Main:
             graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
             graphObj.clearList()
             graphObj.winFull.mainloop()
-        print(self.oneSubplotVarMulti.get()) 
+         
         if self.oneSubplotVarMulti.get() != 1:    # tu jest blad
             if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
                 mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
             elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
-                print('752 main')
                 drawGraph()
         else:
             if "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
