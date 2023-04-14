@@ -479,16 +479,18 @@ class Main:
                 def markTimeRange():
                     if self.b % 2 != 0:
                         for u in range(len(self.chVariableList)):
-                            if globals()['timeRange{}'.format(u)].get() != "":
-                                globals()['checkChosen{}'.format(u)].invoke() 
-                                #globals()['chVar{}'.format(u)].set(1)
-                        
+                            if globals()['timeRange{}'.format(u)].get() != "": # and globals()['chVar{}'.format(u)].get() == 0:
+                                #globals()['checkChosen{}'.format(u)].invoke() 
+                                globals()['chVar{}'.format(u)].set(1)
+                    
                     if self.b % 2 == 0:
                         for u in range(len(self.chVariableList)):
-                            if globals()['timeRange{}'.format(u)].get() != "":
-                                globals()['checkChosen{}'.format(u)].invoke()
-                                #globals()['chVar{}'.format(u)].set(0)
-                    self.b += 1
+                            if globals()['timeRange{}'.format(u)].get() != "": # and globals()['chVar{}'.format(u)].get() == 1:
+                                #globals()['checkChosen{}'.format(u)].invoke()
+                                globals()['chVar{}'.format(u)].set(0)
+                                
+                    if [i.get() for i in self.timeRangeVariableList].count("") != len(self.timeRangeVariableList):
+                        self.b += 1
                     
                 self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=100)  
                 self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
@@ -518,7 +520,7 @@ class Main:
                         annotateCheck.configure(state= "disabled")
                     else:
                         #allRange.configure(state='disabled')
-                        #allRange.current(0)
+                        self.allRange.current(0)
                         clearView()
                         self.allRange.configure(state='disabled')
                         trendLineCheck.configure(state= "enabled")
