@@ -9,6 +9,11 @@ from classE_Rates091_Data import Data
 from classE_Rates091_Graph import Graph
 import gc
 from tkinter import messagebox as mBox
+
+''' to do
+zmien kolor legendy w trybie jasnym ( graph- 138 linia) - żeby w jasnym był czarny, w ciemny biały
+
+'''
 class Main:
     agr_number = 0
     

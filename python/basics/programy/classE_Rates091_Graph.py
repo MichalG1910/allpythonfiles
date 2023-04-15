@@ -135,7 +135,7 @@ class Graph:
                     lineName.append(locals()['line{}'.format(code[0:3])])
                     self.agr += 1
                 
-                self.figFS.legend(lineName, self.multiCodeCurrencyList, bbox_to_anchor=(0.995, 0.97))
+                self.figFS.legend(lineName, self.multiCodeCurrencyList, bbox_to_anchor=(0.995, 0.97), labelcolor='red')
                 xaxis = self.axis.get_xaxis()
                 xaxis.set_ticks(self.tickList)
                 plt.xticks(rotation=45, fontsize=8)
