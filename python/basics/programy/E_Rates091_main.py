@@ -750,7 +750,7 @@ class Main:
             graphObj.clearList()
             graphObj.winFull.mainloop()
          
-        if self.oneSubplotVarMulti.get() != 1:    # tu jest blad
+        if self.oneSubplotVarMulti.get() != 1:    # tu jest blad - nprawiono
             if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:      # if sum(self.listChVar) < 1 or sum(self.listChVar)> 15:
                 mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
             elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
