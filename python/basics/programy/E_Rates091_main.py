@@ -41,7 +41,7 @@ class Main:
         gc.collect()
     
     def quitButton(self):
-        ttk.Button(self.win,text="Zamknij", command=self._quit).grid(row=0, column=10, padx=5, pady=5, sticky="nsew")
+        ttk.Button(self.win,text="Zamknij", command=self._quit).grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
         
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
@@ -52,7 +52,7 @@ class Main:
             
             if window.tk.call("ttk::style", "theme", "use") == "azure-dark":
                 window.tk.call("set_theme", "light")
-                icon1 = PhotoImage(file=f'{dataObj.filePath}/light.png')
+                icon1 = PhotoImage(file=f'{dataObj.filePath}/light1.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
                 try:
@@ -63,8 +63,8 @@ class Main:
                 
             else:
                 window.tk.call("set_theme", "dark")
-                icon2 = PhotoImage(file=f'{dataObj.filePath}/dark.png')
-                self.accentbutton.configure(image=icon2 )
+                icon2 = PhotoImage(file=f'{dataObj.filePath}/dark1.png')
+                self.accentbutton.configure(image=icon2,  )
                 self.accentbutton.image = icon2
                 try:
                     dataObj.xValues 
@@ -72,10 +72,10 @@ class Main:
                     dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
                 graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
                 
-        icon = PhotoImage(file=f'{dataObj.filePath}/dark.png')
+        icon = PhotoImage(file=f'{dataObj.filePath}/dark1.png')
         self.accentbutton = ttk.Button(window, image=icon, command=change_theme)
         self.accentbutton.image = icon
-        self.accentbutton.grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
+        self.accentbutton.grid(row=0, column=10, padx=5, pady=5, sticky="nsew")
     '''
     def emptyGraph(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -260,7 +260,7 @@ class Main:
             
             tabControl.add(tab1,  image=iconSrednie, compound='left')  
             tabControl.image = iconSrednie
-            tabControl.grid(column=0, columnspan=4, rowspan=34, row=0, padx=4, pady=4)
+            tabControl.grid(column=0, columnspan=4, rowspan=34, row=1, padx=4, pady=4, sticky=tk.N)
             echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
             echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
             
@@ -270,9 +270,9 @@ class Main:
             ttk.Label(echangeRateFrame, text= "Zmiana", foreground="#007fff").grid(column=3, row=0, sticky=tk.W, padx=2)
             
             for t in range(len(dataObj.rates)):
-                ttk.Label(echangeRateFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(echangeRateFrame,  width=9, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
+                ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=1, pady=1)
+                ttk.Label(echangeRateFrame,  width=9, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
                 if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
                     col = "Green"
                 elif float(dataObj.ratesUpDown[t+33][3])<float(dataObj.ratesUpDown[t][3]):
@@ -280,13 +280,13 @@ class Main:
                 else:
                     col = "White"
                 procent = round((((float(dataObj.ratesUpDown[t+33][3])/float(dataObj.ratesUpDown[t][3])) -1) * 100), 2)
-                ttk.Label(echangeRateFrame,  width=6, text= f'{procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(echangeRateFrame,  width=6, text= f'{procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
         
         def bidAskTab():
             tab2 = ttk.Frame(tabControl)
             tabControl.add(tab2, text="kupno/sprzedaż")
             buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-            buySellFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates1)+1), padx=5, sticky=tk.W)
+            buySellFrame.grid(column=1, row=1, columnspan=4, rowspan=(len(dataObj.rates1)+1), padx=5, sticky=tk.W)
             
             ttk.Label(buySellFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
             ttk.Label(buySellFrame, text= "Kod", foreground="#007fff").grid(column=1, row=0, sticky=tk.W, padx=5)
@@ -307,8 +307,8 @@ class Main:
             def getLast30Tabel():
                 dataObj.last30Data(currencyLast30.get())
                 for i in range(30):
-                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30EDList[i]}').grid(column=0, row=i+2, sticky=tk.W, padx=3, pady=3)
-                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30MidList[i]}').grid(column=1, row=i+2, sticky=tk.W, padx=3, pady=3)
+                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30EDList[i]}').grid(column=0, row=i+2, sticky=tk.W, padx=1, pady=1)
+                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30MidList[i]}').grid(column=1, row=i+2, sticky=tk.W, padx=1, pady=1)
                 #rise fall
                 for m in range(29):
                     if float(dataObj.last30MidList[m])>float(dataObj.last30MidList[m+1]): 
@@ -318,7 +318,7 @@ class Main:
                     else:
                         col = "White" 
                     procent = round((((float(dataObj.last30MidList[m])/float(dataObj.last30MidList[m+1])) -1) * 100), 2)
-                    ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=3, pady=3)
+                    ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=1, pady=1)
                 #rise fall 30
                 if float(dataObj.last30MidList[0])>float(dataObj.last30MidList[-1]):
                     col1 = "Green"
@@ -327,12 +327,12 @@ class Main:
                 else:
                     col1 = "White" 
                 procent = round((((float(dataObj.last30MidList[0])/float(dataObj.last30MidList[-1])) -1) * 100), 2)
-                ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=3, pady=3)   
+                ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=1, pady=1)   
             
             tab3 = ttk.Frame(tabControl)
             tabControl.add(tab3, text="Waluta ostatnie 30")
             last30Frame = ttk.LabelFrame(tab3, text="Waluta ostatnie 30 notowań", labelanchor="n", style='clam.TLabelframe')  
-            last30Frame.grid(column=1, row=0, columnspan=4, rowspan=30, padx=5, sticky=tk.W)
+            last30Frame.grid(column=1, row=1, columnspan=4, rowspan=30, padx=5, sticky=tk.W)
             
             for key,values in dataObj.codeCurrencyDict.items():
                 self.codeCurrencyList.append(f"{key}  {values}")
@@ -356,15 +356,15 @@ class Main:
                 self.timeRangeVariableList.clear()
                 self.chVariableList.clear()
                 for t in range(len(dataObj.rates)):
-                    if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                    else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}').grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
+                    if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}', font=("Arial",8)).grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                    else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}', font=("Arial",8)).grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
                     
                     globals()['timeRange{}'.format(t)] = tk.StringVar()
-                    globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10)
+                    globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10, font=("Arial",8))
                     globals()['rangeChosen{}'.format(t)]["values"] = ("", "30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
                     #globals()['rangeChosen{}'.format(t)].current(0)
-                    if t <= ratesHalf: globals()['rangeChosen{}'.format(t)].grid(column= 1, row= t+1, padx=5, pady=5)
-                    else: globals()['rangeChosen{}'.format(t)].grid(column= 4, row=t-ratesHalf, padx=5, pady=5)
+                    if t <= ratesHalf: globals()['rangeChosen{}'.format(t)].grid(column= 1, row= t+1, padx=2, pady=2)
+                    else: globals()['rangeChosen{}'.format(t)].grid(column= 4, row=t-ratesHalf, padx=2, pady=2)
                     
                     globals()['chVar{}'.format(t)] = tk.IntVar() 
                     globals()['checkChosen{}'.format(t)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(t)] ) # state= "disabled"
@@ -387,14 +387,14 @@ class Main:
                     self.codeVariableList.clear()
                     self.chVariableList.clear()
                     globals()['codeVar{}'.format(f)] = tk.StringVar()
-                    globals()['codeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 29, textvariable= globals()['codeVar{}'.format(f)], state= "readonly",height=10)
+                    globals()['codeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 25, textvariable= globals()['codeVar{}'.format(f)], state= "readonly",height=10)
                     globals()['codeChosen{}'.format(f)]["values"] = self.codeCurrencyList
-                    globals()['codeChosen{}'.format(f)].grid(column= 0, row=f, padx=5, pady=5)
+                    globals()['codeChosen{}'.format(f)].grid(column= 0, row=f, padx=4, pady=2.5)
 
                     globals()['timeRange{}'.format(f)] = tk.StringVar()
-                    globals()['rangeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 29, textvariable= globals()['timeRange{}'.format(f)], state= "readonly",height=10)
+                    globals()['rangeChosen{}'.format(f)]= ttk.Combobox(self.multiGraphFrame, width= 25, textvariable= globals()['timeRange{}'.format(f)], state= "readonly",height=10,)
                     globals()['rangeChosen{}'.format(f)]["values"] = ("", "30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
-                    globals()['rangeChosen{}'.format(f)].grid(column= 1, row=f, padx=5, pady=5)
+                    globals()['rangeChosen{}'.format(f)].grid(column= 1, row=f, padx=4, pady=2.5)
                     
                     globals()['chVar{}'.format(f)] = tk.IntVar() 
                     globals()['checkChosen{}'.format(f)] = ttk.Checkbutton(self.multiGraphFrame, variable=globals()['chVar{}'.format(f)] )
@@ -460,13 +460,13 @@ class Main:
                 self.tab4 = ttk.Frame(tabControl)
                 tabControl.add(self.tab4, text="wiele wykr.")
                 self.multiGraphFrame = ttk.LabelFrame(self.tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
-                self.multiGraphFrame.grid(column=0, row=0, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
+                self.multiGraphFrame.grid(column=0, row=1, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
             
             def startClearF():
-                self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="wyczyść/rysuj", labelanchor="n", style='clam.TLabelframe', width=100)  
+                self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="wyczyść/rysuj", labelanchor="n", style='clam.TLabelframe', width=80)  
                 self.startclearFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.E)
-                ttk.Button(self.startclearFrame, text = "wyczyść", command = clearView).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
-                ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
+                ttk.Button(self.startclearFrame, text = "wyczyść", command = clearView, width=7).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
+                ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow, width=7).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def markF():
                 self.a = 1
@@ -495,7 +495,7 @@ class Main:
                     if [i.get() for i in self.timeRangeVariableList].count("") != len(self.timeRangeVariableList):
                         self.b += 1
                     
-                self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=100)  
+                self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=80)  
                 self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
                 ttk.Button(self.markFrame, text = "wszystko", command = markAll).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
                 ttk.Button(self.markFrame, text = "z zakresem czasu", command = markTimeRange).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
@@ -591,24 +591,24 @@ class Main:
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
         tabControlGui.add(tab1, text="Wykres")
         tabControlGui.add(tab2, text="Ustawienia")
-        tabControlGui.grid(column=4, columnspan=3, rowspan=3,row=0, padx=4, pady=4)
+        tabControlGui.grid(column=4, columnspan=3, rowspan=3,row=1, padx=4, pady=4)
 
         plotGraphFrame = ttk.LabelFrame(tab1, text= "Rysowanie wykresu", labelanchor="n")  
-        plotGraphFrame.grid(column=4, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.E)
+        plotGraphFrame.grid(column=4, row=1, columnspan=3, rowspan=3, padx=5, sticky=tk.E)
         ttk.Label(plotGraphFrame, text= "Waluta ").grid(column=4, row=1, sticky=tk.W, pady=5,padx=5) 
         ttk.Label(plotGraphFrame, text= "Przedział czasowy ").grid(column=4, row=2, sticky=tk.W, pady=5, padx=5)
             
-        currencyChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.currencyName, state= "readonly")
+        currencyChosen = ttk.Combobox(plotGraphFrame, width= 23, textvariable= self.currencyName, state= "readonly")
         currencyChosen["values"] = self.codeCurrencyList 
         currencyChosen.grid(column= 5, row= 1, padx=5,pady=5)
         currencyChosen.current(7)
     
-        rangeChosen = ttk.Combobox(plotGraphFrame, width= 32, textvariable= self.timeRange, state= "readonly")
+        rangeChosen = ttk.Combobox(plotGraphFrame, width= 23, textvariable= self.timeRange, state= "readonly")
         rangeChosen["values"] = ("30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
         rangeChosen.grid(column= 5, row= 2, padx=5, pady=5)
         rangeChosen.current(0)
-        ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = newGraph, width=12).grid(column = 6, row = 1, padx=5)  
-        ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = runSaveGraphPNG1, width=12).grid(column = 6, row = 2, padx=5)
+        ttk.Button(plotGraphFrame, text = "Rysuj wykres", command = newGraph, width=12).grid(column = 6, row = 1, padx=3)  
+        ttk.Button(plotGraphFrame, text = "Zapisz wykres", command = runSaveGraphPNG1, width=12).grid(column = 6, row = 2, padx=3)
 
         # ustawienia wykresów checkbox 
         ttk.Label(tab2, text= "linia trendu ").grid(column=2, row=2, sticky=tk.W, pady=5,padx=5)  
@@ -627,10 +627,10 @@ class Main:
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 
         tabControlRep.add(tab1, text="Raporty")
         tabControlRep.add(tab2, text="Inne")
-        tabControlRep.grid(column=7, columnspan=3, rowspan=3,row=0, padx=4, pady=4)
+        tabControlRep.grid(column=7, columnspan=3, rowspan=3,row=1, padx=4, pady=4)
 
         reportFrame = ttk.LabelFrame(tab1, text= "Generuj raport", labelanchor="n")
-        reportFrame.grid(column=7, row=0, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
+        reportFrame.grid(column=7, row=1, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
         ttk.Label(reportFrame, text= "data początkowa (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
         ttk.Label(reportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
         ttk.Entry(reportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)

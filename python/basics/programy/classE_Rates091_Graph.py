@@ -12,12 +12,12 @@ class Graph:
         
     def emptyGraph(self, root):
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
+            self.fig = plt.figure(figsize=(9,7), facecolor = "dimgray")
             plt.style.use('dark_background')
             self.axis = self.fig.add_subplot(111) 
             self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         else:
-            self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+            self.fig = plt.figure(figsize=(9,7), facecolor = "lightcyan")
             plt.style.use('Solarize_Light2')
             self.axis = self.fig.add_subplot(111) 
             self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
@@ -40,12 +40,12 @@ class Graph:
             self.emptyGraph(root)
         else:
             if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-                self.fig = plt.figure(figsize=(11,8), facecolor = "dimgray")
+                self.fig = plt.figure(figsize=(9,7), facecolor = "dimgray")
                 plt.style.use('dark_background')
                 self.axis = self.fig.add_subplot(111) 
                 self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
             else:
-                self.fig = plt.figure(figsize=(11,8), facecolor = "lightcyan")
+                self.fig = plt.figure(figsize=(9,7), facecolor = "lightcyan")
                 plt.style.use('Solarize_Light2')
                 self.axis = self.fig.add_subplot(111) 
                 self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
@@ -167,7 +167,7 @@ class Graph:
     
     def putGraph(self, window, col, fig):
         self.canvas = FigureCanvasTkAgg(fig, master=window) 
-        self.canvas._tkcanvas.grid(column=col, row=3, columnspan=11, padx=5, pady=5) 
+        self.canvas._tkcanvas.grid(column=col, row=5, columnspan=11, padx=5, pady=5, sticky=tk.W) 
         window.update()
         window.deiconify()
 
