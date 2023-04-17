@@ -10,8 +10,8 @@ from classE_Rates091_Graph import Graph
 import gc
 from tkinter import messagebox as mBox
 
-''' to do
-zmien kolor legendy w trybie jasnym ( graph- 138 linia) - żeby w jasnym był czarny, w ciemny biały
+''' do zrobienia
+# zmien kolor legendy w trybie jasnym ( graph- 138 linia) - żeby w jasnym był czarny, w ciemny biały - ZROBIONE
 
 '''
 class Main:
@@ -31,7 +31,8 @@ class Main:
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
-    
+        self.win.protocol("WM_DELETE_WINDOW", self._quit)
+        
     def _quit(self):
         self.win.quit()
         self.win.destroy()

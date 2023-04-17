@@ -135,7 +135,11 @@ class Graph:
                     lineName.append(locals()['line{}'.format(code[0:3])])
                     self.agr += 1
                 
-                self.figFS.legend(lineName, self.multiCodeCurrencyList, bbox_to_anchor=(0.995, 0.97), labelcolor='red')
+                if self.winFull.tk.call("ttk::style", "theme", "use") == "azure-dark":
+                    self.figFS.legend(lineName, self.multiCodeCurrencyList, bbox_to_anchor=(0.995, 0.97), labelcolor='white')
+                else:
+                    self.figFS.legend(lineName, self.multiCodeCurrencyList, bbox_to_anchor=(0.995, 0.97), labelcolor='black')
+                
                 xaxis = self.axis.get_xaxis()
                 xaxis.set_ticks(self.tickList)
                 plt.xticks(rotation=45, fontsize=8)
