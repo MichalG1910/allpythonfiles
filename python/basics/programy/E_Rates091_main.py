@@ -9,6 +9,7 @@ from classE_Rates091_Data import Data
 from classE_Rates091_Graph import Graph
 import gc
 from tkinter import messagebox as mBox
+from tkinter import Menu
 
 ''' do zrobienia
 # zmien kolor legendy w trybie jasnym ( graph- 138 linia) - żeby w jasnym był czarny, w ciemny biały - ZROBIONE
@@ -32,6 +33,20 @@ class Main:
         self.graphGui()
         self.generateReportGui()
         self.win.protocol("WM_DELETE_WINDOW", self._quit)
+        self.menu()
+        
+    def menu(self):  
+        menuBar = Menu(self.win)
+        self.win.config(menu=menuBar,)
+        fileMenu = Menu(menuBar, tearoff=0)
+        fileMenu.add_command(label="New",)
+        fileMenu.add_command(label="Save")
+        fileMenu.add_separator()
+        fileMenu.add_command(label="Exit", command=self._quit)
+        menuBar.add_cascade(label="File", menu=fileMenu)
+        for s in range(124):
+            menuBar.add_separator() 
+        menuBar.add_command(label = "X", command = self._quit )
         
     def _quit(self):
         self.win.quit()
@@ -258,7 +273,7 @@ class Main:
         
         def mediumTab(): 
             tab1 = ttk.Frame(tabControl)
-            iconSrednie = PhotoImage(file=f'{dataObj.filePath}/kursy.png')
+            iconSrednie = PhotoImage(file=f'{dataObj.filePath}/kursy1.png')
             
             tabControl.add(tab1,  image=iconSrednie, compound='left')  
             tabControl.image = iconSrednie
