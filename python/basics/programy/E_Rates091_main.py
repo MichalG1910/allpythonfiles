@@ -41,7 +41,9 @@ class Main:
         gc.collect()
     
     def quitButton(self):
-        ttk.Button(self.win,text="Zamknij", command=self._quit).grid(row=0, column=11, padx=5, pady=5, sticky="nsew")
+        boldStyle = ttk.Style ()
+        boldStyle.configure ("Bold.TButton", weight = "bold", foreground='black', font=20)
+        ttk.Button(self.win,text="X", command=self._quit, width=2, style = "Bold.TButton").grid(row=0, column=13, padx=5, pady=5, columnspan=2, sticky=tk.E)
         
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
@@ -52,7 +54,7 @@ class Main:
             
             if window.tk.call("ttk::style", "theme", "use") == "azure-dark":
                 window.tk.call("set_theme", "light")
-                icon1 = PhotoImage(file=f'{dataObj.filePath}/light1.png')
+                icon1 = PhotoImage(file=f'{dataObj.filePath}/light4.png')
                 self.accentbutton.configure(image=icon1)
                 self.accentbutton.image = icon1
                 try:
@@ -63,7 +65,7 @@ class Main:
                 
             else:
                 window.tk.call("set_theme", "dark")
-                icon2 = PhotoImage(file=f'{dataObj.filePath}/dark1.png')
+                icon2 = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
                 self.accentbutton.configure(image=icon2,  )
                 self.accentbutton.image = icon2
                 try:
@@ -72,10 +74,10 @@ class Main:
                     dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
                 graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
                 
-        icon = PhotoImage(file=f'{dataObj.filePath}/dark1.png')
-        self.accentbutton = ttk.Button(window, image=icon, command=change_theme)
+        icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
+        self.accentbutton = ttk.Button(window, image=icon, command=change_theme, width=2)
         self.accentbutton.image = icon
-        self.accentbutton.grid(row=0, column=10, padx=5, pady=5, sticky="nsew")
+        self.accentbutton.grid(row=0, column=13,columnspan=2, padx=5, pady=5, sticky=tk.W)
     '''
     def emptyGraph(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -350,6 +352,7 @@ class Main:
         def multiGraph():
             ratesHalf = math.floor(len(dataObj.rates) / 2)
             self.timeRangeVariableList, self.chVariableList, self.codeVariableList, self.listchv, trl1, cvl1, code1 = [],[],[],[],[],[],[]
+            
 
             def createView1():
                 self.viewNum = 1
@@ -457,8 +460,9 @@ class Main:
                     markF()
             
             def createTab4():
-                self.tab4 = ttk.Frame(tabControl)
-                tabControl.add(self.tab4, text="wiele wykr.")
+                self.tab4 = ttk.Frame(tabMultiGraph)
+                tabMultiGraph.add(self.tab4, text="wiele wykr.")
+                tabMultiGraph.grid(column=10, columnspan=4, rowspan=34, row=1, padx=4, pady=4, sticky=tk.N)
                 self.multiGraphFrame = ttk.LabelFrame(self.tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiGraphFrame.grid(column=0, row=1, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
             
@@ -567,6 +571,7 @@ class Main:
             multiSettingsF()
              
         tabControl = ttk.Notebook(self.win)
+        tabMultiGraph = ttk.Notebook(self.win)
         mediumTab()
         bidAskTab()
         currencyLast30()
@@ -638,7 +643,7 @@ class Main:
         endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
-        ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5)  
+        ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5, pady=5, sticky=tk.N)  
 
         ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)
     '''
