@@ -133,6 +133,9 @@ class Graph:
                     locals()['line{}'.format(code[0:3])], = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpalette[self.agr], linewidth=1)
                     limitList += dataObj.yValuesMultiGraph
                     lineName.append(locals()['line{}'.format(code[0:3])])
+                    #######################################################################################################
+                    print(f"wykres {code} - {self.agr + 1}") ###### Do sprawdzenia wielu linii na 1 wykresie #############
+                    ######################################################################################################
                     self.agr += 1
                 
                 if self.winFull.tk.call("ttk::style", "theme", "use") == "azure-dark":

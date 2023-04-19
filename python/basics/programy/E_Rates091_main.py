@@ -67,7 +67,7 @@ class Main:
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
-        #window.attributes("-fullscreen", True) # pełny ekran
+        window.attributes("-fullscreen", True) # pełny ekran
 
     def themeButton(self, window):
         def change_theme():
