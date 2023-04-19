@@ -11,6 +11,7 @@ import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
 
+
 ''' do zrobienia
 # zmien kolor legendy w trybie jasnym ( graph- 138 linia) - żeby w jasnym był czarny, w ciemny biały - ZROBIONE
 
@@ -36,18 +37,22 @@ class Main:
         self.menu()
         
     def menu(self):  
-        menuBar = Menu(self.win)
-        self.win.config(menu=menuBar,)
-        fileMenu = Menu(menuBar, tearoff=0)
+        self.menuBar = Menu(self.win)
+        self.win.config(menu=self.menuBar,)
+        fileMenu = Menu(self.menuBar, tearoff=0)
         fileMenu.add_command(label="New",)
         fileMenu.add_command(label="Save")
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=self._quit)
-        menuBar.add_cascade(label="File", menu=fileMenu)
-        for s in range(120):
-            menuBar.add_separator() 
-        menuBar.add_command(label = "__", command = self._minimalize )
-        menuBar.add_command(label = "x", command = self._quit )
+        self.menuBar.add_cascade(label="File", menu=fileMenu)
+        self.menuBar.add_cascade(label="".ljust(437),state='disabled', menu=fileMenu)
+        #for s in range(60):
+        #    menuBar.add_separator() 
+        self.menuBar.add_command(label = "__", command = self._minimalize )
+        self.menuBar.add_command(label = "x", command = self._quit )
+        self.menuBar.add_command(command=self.change_theme,image=self.icon,)
+        self.menuBar.image = self.icon
+        
    
     def _minimalize(self):
         self.win.iconify()
@@ -68,36 +73,43 @@ class Main:
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
         window.attributes("-fullscreen", True) # pełny ekran
-
-    def themeButton(self, window):
-        def change_theme():
-            
-            if window.tk.call("ttk::style", "theme", "use") == "azure-dark":
-                window.tk.call("set_theme", "light")
-                icon1 = PhotoImage(file=f'{dataObj.filePath}/light4.png')
-                self.accentbutton.configure(image=icon1)
-                self.accentbutton.image = icon1
-                try:
-                    dataObj.xValues 
-                except AttributeError:
-                    dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
-                graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
-                
-            else:
-                window.tk.call("set_theme", "dark")
-                icon2 = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
-                self.accentbutton.configure(image=icon2,  )
-                self.accentbutton.image = icon2
-                try:
-                    dataObj.xValues 
-                except AttributeError:
-                    dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
-                graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
-                
-        icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
-        self.accentbutton = ttk.Button(window, image=icon, command=change_theme, width=2)
-        self.accentbutton.image = icon
+    
+    def themeButton(self, window):            
+        self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
+        self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=2)
+        self.accentbutton.image = self.icon
         self.accentbutton.grid(row=0, column=13,columnspan=2, padx=5, pady=5, sticky=tk.W)
+    
+    def change_theme(self):
+        if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
+            self.win.tk.call("set_theme", "light")
+            self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
+            self.accentbutton.configure(image=self.icon)
+            self.menuBar.delete(446)
+            self.menuBar.add_command(command=self.change_theme,image=self.icon)
+            self.accentbutton.image = self.icon
+            self.menuBar.image = self.icon
+            try:
+                dataObj.xValues 
+            except AttributeError:
+                dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
+            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
+            
+        else:
+            self.win.tk.call("set_theme", "dark")
+            self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
+            self.accentbutton.configure(image=self.icon)
+            self.menuBar.delete(446)
+            
+            self.menuBar.add_command(command=self.change_theme,image=self.icon)
+            self.accentbutton.image = self.icon
+            self.menuBar.image = self.icon
+            try:
+                dataObj.xValues 
+            except AttributeError:
+                dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
+            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
+    
     '''
     def emptyGraph(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -669,16 +681,16 @@ class Main:
         tabControlRep.add(tab2, text="Inne")
         tabControlRep.grid(column=7, columnspan=3, rowspan=3,row=1, padx=4, pady=4)
 
-        reportFrame = ttk.LabelFrame(tab1, text= "Generuj raport", labelanchor="n")
+        reportFrame = ttk.LabelFrame(tab1, text= "Generuj Raport", labelanchor="n")
         reportFrame.grid(column=7, row=1, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
-        ttk.Label(reportFrame, text= "data początkowa (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
-        ttk.Label(reportFrame, text= "data końcowa (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
+        ttk.Label(reportFrame, text= "data od (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
+        ttk.Label(reportFrame, text= "data do (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
         ttk.Entry(reportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
         
         endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
-        ttk.Button(reportFrame, text = "Generuj raport", command = runReport, width=12).grid(column = 9, row = 0 , rowspan=3, padx=5, pady=5, sticky=tk.N)  
+        ttk.Button(reportFrame, text = "Generuj", command = runReport, width=8).grid(column = 9, row = 0 , rowspan=3, padx=5, pady=5, sticky=tk.N)  
 
         ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)
     '''
