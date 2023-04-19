@@ -44,10 +44,14 @@ class Main:
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=self._quit)
         menuBar.add_cascade(label="File", menu=fileMenu)
-        for s in range(124):
+        for s in range(120):
             menuBar.add_separator() 
-        menuBar.add_command(label = "X", command = self._quit )
-        
+        menuBar.add_command(label = "__", command = self._minimalize )
+        menuBar.add_command(label = "x", command = self._quit )
+   
+    def _minimalize(self):
+        self.win.iconify()
+    
     def _quit(self):
         self.win.quit()
         self.win.destroy()
@@ -63,6 +67,7 @@ class Main:
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
+        #window.attributes("-fullscreen", True) # pełny ekran
 
     def themeButton(self, window):
         def change_theme():
@@ -289,7 +294,7 @@ class Main:
             for t in range(len(dataObj.rates)):
                 ttk.Label(echangeRateFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
                 ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=1, pady=1)
-                ttk.Label(echangeRateFrame,  width=9, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
+                ttk.Label(echangeRateFrame,  width=10, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
                 if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
                     col = "Green"
                 elif float(dataObj.ratesUpDown[t+33][3])<float(dataObj.ratesUpDown[t][3]):
@@ -297,7 +302,12 @@ class Main:
                 else:
                     col = "White"
                 procent = round((((float(dataObj.ratesUpDown[t+33][3])/float(dataObj.ratesUpDown[t][3])) -1) * 100), 2)
-                ttk.Label(echangeRateFrame,  width=6, text= f'{procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
+                if procent > 0:
+                    ttk.Label(echangeRateFrame,  width=8, text= f'\u25B2 {procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
+                elif procent == 0:
+                    ttk.Label(echangeRateFrame,  width=8, text= f'    {procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
+                else: 
+                    ttk.Label(echangeRateFrame,  width=8, text= f'\u25BC {abs(procent)}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
         
         def bidAskTab():
             tab2 = ttk.Frame(tabControl)
@@ -335,7 +345,12 @@ class Main:
                     else:
                         col = "White" 
                     procent = round((((float(dataObj.last30MidList[m])/float(dataObj.last30MidList[m+1])) -1) * 100), 2)
-                    ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=1, pady=1)
+                    if procent > 0:
+                        ttk.Label(last30Frame,  width=8, text= f'\u25B2 {procent}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=1, pady=1)
+                    elif procent == 0:
+                        ttk.Label(last30Frame,  width=8, text= f'    {procent}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=1, pady=1)
+                    else:
+                        ttk.Label(last30Frame,  width=8, text= f'\u25BC {abs(procent)}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=1, pady=1)
                 #rise fall 30
                 if float(dataObj.last30MidList[0])>float(dataObj.last30MidList[-1]):
                     col1 = "Green"
@@ -344,7 +359,12 @@ class Main:
                 else:
                     col1 = "White" 
                 procent = round((((float(dataObj.last30MidList[0])/float(dataObj.last30MidList[-1])) -1) * 100), 2)
-                ttk.Label(last30Frame,  width=6, text= f'{procent}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=1, pady=1)   
+                if procent > 0:
+                    ttk.Label(last30Frame,  width=8, text= f'\u25B2 {procent}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=1, pady=1)
+                elif procent == 0:
+                    ttk.Label(last30Frame,  width=8, text= f'    {procent}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=1, pady=1)
+                else:   
+                    ttk.Label(last30Frame,  width=8, text= f'\u25BC {abs(procent)}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=1, pady=1)   
             
             tab3 = ttk.Frame(tabControl)
             tabControl.add(tab3, text="Waluta ostatnie 30")
