@@ -1,6 +1,7 @@
 import os, math
+from re import X
 import tkinter as tk
-from tkinter import ttk
+from tkinter import FLAT, LEFT, RIGHT, TOP, Button, Frame, ttk
 from tkinter import PhotoImage
 import matplotlib.pyplot as plt
 import PIL
@@ -10,6 +11,8 @@ from classE_Rates091_Graph import Graph
 import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
+from tkinter import *
+from tkinter import font as W1
 
 
 ''' do zrobienia
@@ -36,24 +39,32 @@ class Main:
         self.win.protocol("WM_DELETE_WINDOW", self._quit)
         self.menu()
         
+        
     def menu(self):  
         self.menuBar = Menu(self.win)
-        self.win.config(menu=self.menuBar,)
+        self.win.config(menu=self.menuBar)
         fileMenu = Menu(self.menuBar, tearoff=0)
-        fileMenu.add_command(label="New",)
+        fileMenu.add_command(label="New")
         fileMenu.add_command(label="Save")
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=self._quit)
         self.menuBar.add_cascade(label="File", menu=fileMenu)
-        self.menuBar.add_cascade(label="".ljust(437),state='disabled', menu=fileMenu)
+        print(self.win.winfo_width())
+        print(self.win.winfo_screenwidth())
+        print(self.win.winfo_geometry())
+        self.menuBar.add_cascade(label=" ".ljust(int(self.win.winfo_width()/3.27)),state='disabled', menu=fileMenu)
         #for s in range(60):
-        #    menuBar.add_separator() 
-        self.menuBar.add_command(label = "__", command = self._minimalize )
-        self.menuBar.add_command(label = "x", command = self._quit )
-        self.menuBar.add_command(command=self.change_theme,image=self.icon,)
+        #    menuBar.add_separator()
+        self.menuBar.add_command(command=self.change_theme,image=self.icon)
+        self.menuBar.add_command(label = "__", command = self._minimalize)
+        self.menuBar.add_command(label = "x", command = self._quit)
         self.menuBar.image = self.icon
         
-   
+        
+        Text =str(" "*587)
+        W2 = W1.Font(family='Segoe Ui' , size = 8) # do sprawdzania w pikselach długosci stringow
+        length = W2.measure(Text)
+        
     def _minimalize(self):
         self.win.iconify()
     
@@ -72,7 +83,7 @@ class Main:
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
-        window.attributes("-fullscreen", True) # pełny ekran
+        #window.attributes("-fullscreen", True) # pełny ekran
     
     def themeButton(self, window):            
         self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
@@ -85,8 +96,8 @@ class Main:
             self.win.tk.call("set_theme", "light")
             self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
             self.accentbutton.configure(image=self.icon)
-            self.menuBar.delete(446)
-            self.menuBar.add_command(command=self.change_theme,image=self.icon)
+            self.menuBar.destroy()
+            self.menu()
             self.accentbutton.image = self.icon
             self.menuBar.image = self.icon
             try:
@@ -99,9 +110,8 @@ class Main:
             self.win.tk.call("set_theme", "dark")
             self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
             self.accentbutton.configure(image=self.icon)
-            self.menuBar.delete(446)
-            
-            self.menuBar.add_command(command=self.change_theme,image=self.icon)
+            self.menuBar.destroy()
+            self.menu()
             self.accentbutton.image = self.icon
             self.menuBar.image = self.icon
             try:
@@ -815,11 +825,13 @@ class Main:
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
                 drawGraph()
-     
+       
 graphObj = Graph()   
 dataObj = Data()
-mainObj = Main() 
-mainObj.win.mainloop()            
+mainObj = Main()       
+mainObj.win.mainloop()
+
+          
     
 
 

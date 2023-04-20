@@ -12,12 +12,12 @@ class Graph:
         
     def emptyGraph(self, root):
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            self.fig = plt.figure(figsize=(9,7), facecolor = "dimgray")
+            self.fig = plt.figure(figsize=(8.25,7), facecolor = "dimgray") # win figsize=(8.25,7)
             plt.style.use('dark_background')
             self.axis = self.fig.add_subplot(111) 
             self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         else:
-            self.fig = plt.figure(figsize=(9,7), facecolor = "lightcyan")
+            self.fig = plt.figure(figsize=(8.25,7), facecolor = "lightcyan")
             plt.style.use('Solarize_Light2')
             self.axis = self.fig.add_subplot(111) 
             self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
