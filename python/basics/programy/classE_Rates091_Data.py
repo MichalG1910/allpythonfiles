@@ -13,10 +13,10 @@ class Data:
     def checkConnection(self):
         hostname = "nbp.pl"
         if sys.platform == 'linux': 
-            response = os.system("ping -c 1 " + hostname)
+            response = os.system("ping -c 1 " + hostname)   
         else:
             response = os.system("ping -n 1 " + hostname)
-
+            
         if response == 0:
             pass
         else:

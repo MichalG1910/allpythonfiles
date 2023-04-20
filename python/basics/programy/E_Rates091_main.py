@@ -40,7 +40,8 @@ class Main:
         self.menu()
         
         
-    def menu(self):  
+    def menu(self):
+        
         self.menuBar = Menu(self.win)
         self.win.config(menu=self.menuBar)
         fileMenu = Menu(self.menuBar, tearoff=0)
@@ -49,10 +50,10 @@ class Main:
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=self._quit)
         self.menuBar.add_cascade(label="File", menu=fileMenu)
-        print(self.win.winfo_width())
+        print(self.win.winfo_screenmmwidth())
         print(self.win.winfo_screenwidth())
         print(self.win.winfo_geometry())
-        self.menuBar.add_cascade(label=" ".ljust(int(self.win.winfo_width()/3.27)),state='disabled', menu=fileMenu)
+        #self.menuBar.add_cascade(label=" ".rjust(int(self.win.winfo_width()/3.24)),state='disabled', menu=fileMenu)
         #for s in range(60):
         #    menuBar.add_separator()
         self.menuBar.add_command(command=self.change_theme,image=self.icon)
@@ -83,10 +84,10 @@ class Main:
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
-        #window.attributes("-fullscreen", True) # pełny ekran
+        #window.attributes("-fullscreen", False) # pełny ekran
     
     def themeButton(self, window):            
-        self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
+        self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
         self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=2)
         self.accentbutton.image = self.icon
         self.accentbutton.grid(row=0, column=13,columnspan=2, padx=5, pady=5, sticky=tk.W)
@@ -94,12 +95,12 @@ class Main:
     def change_theme(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             self.win.tk.call("set_theme", "light")
-            self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
+            self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
             self.accentbutton.configure(image=self.icon)
             self.menuBar.destroy()
             self.menu()
             self.accentbutton.image = self.icon
-            self.menuBar.image = self.icon
+            
             try:
                 dataObj.xValues 
             except AttributeError:
@@ -108,12 +109,12 @@ class Main:
             
         else:
             self.win.tk.call("set_theme", "dark")
-            self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
+            self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
             self.accentbutton.configure(image=self.icon)
             self.menuBar.destroy()
             self.menu()
             self.accentbutton.image = self.icon
-            self.menuBar.image = self.icon
+            
             try:
                 dataObj.xValues 
             except AttributeError:
@@ -314,7 +315,7 @@ class Main:
             ttk.Label(echangeRateFrame, text= "Zmiana", foreground="#007fff").grid(column=3, row=0, sticky=tk.W, padx=2)
             
             for t in range(len(dataObj.rates)):
-                ttk.Label(echangeRateFrame,  width=30, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
+                ttk.Label(echangeRateFrame,  width=20, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
                 ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=1, pady=1)
                 ttk.Label(echangeRateFrame,  width=10, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
                 if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
@@ -344,7 +345,7 @@ class Main:
             ttk.Label(tab2, text= f"\nTabela {dataObj.no1} zawiera tylko wybrane waluty").grid(columnspan=4, row=len(dataObj.rates1)+2, sticky=tk.W, padx=3, pady=3)
             
             for v in range(len(dataObj.rates1)):
-                ttk.Label(buySellFrame,  width=28, text= f'{dataObj.currencyList1[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=20, text= f'{dataObj.currencyList1[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
                 ttk.Label(buySellFrame,  width=5, text= f'{dataObj.codeList1[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
                 ttk.Label(buySellFrame,  width=9, text= f'{dataObj.valueList1[v]}').grid(column=2, row=v+1, sticky=tk.W, padx=3, pady=3)
                 ttk.Label(buySellFrame,  width=8, text= f'{dataObj.askList1[v]}').grid(column=3, row=v+1, sticky=tk.W, padx=3, pady=3)
@@ -395,7 +396,7 @@ class Main:
             
             for key,values in dataObj.codeCurrencyDict.items():
                 self.codeCurrencyList.append(f"{key}  {values}")
-            currencyChosen = ttk.Combobox(last30Frame, width= 40, textvariable= currencyLast30, state= "readonly")
+            currencyChosen = ttk.Combobox(last30Frame, width= 30, textvariable= currencyLast30, state= "readonly")
             currencyChosen["values"] = self.codeCurrencyList 
             currencyChosen.grid(column= 0, columnspan=3, row= 0, padx=5,pady=5)
             currencyChosen.current(7)
@@ -416,11 +417,11 @@ class Main:
                 self.timeRangeVariableList.clear()
                 self.chVariableList.clear()
                 for t in range(len(dataObj.rates)):
-                    if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}', font=("Arial",8)).grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                    else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}', font=("Arial",8)).grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
+                    if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}', font=("Segoe Ui",8)).grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                    else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}', font=("Segoe Ui",8)).grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
                     
                     globals()['timeRange{}'.format(t)] = tk.StringVar()
-                    globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10, font=("Arial",8))
+                    globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10, font=("Segoe Ui",8))
                     globals()['rangeChosen{}'.format(t)]["values"] = ("", "30 dni", "60 dni", "90 dni","pół roku", "rok", "2 lata", "5 lat", "10 lat", "15 lat") 
                     #globals()['rangeChosen{}'.format(t)].current(0)
                     if t <= ratesHalf: globals()['rangeChosen{}'.format(t)].grid(column= 1, row= t+1, padx=2, pady=2)
@@ -527,7 +528,7 @@ class Main:
                 self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="wyczyść/rysuj", labelanchor="n", style='clam.TLabelframe', width=80)  
                 self.startclearFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.E)
                 ttk.Button(self.startclearFrame, text = "wyczyść", command = clearView, width=7).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
-                ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow, width=7).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
+                ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow, width=5).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def markF():
                 self.a = 1
@@ -558,7 +559,7 @@ class Main:
                     
                 self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=80)  
                 self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
-                ttk.Button(self.markFrame, text = "wszystko", command = markAll).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
+                ttk.Button(self.markFrame, text = "wszystko", command = markAll, width=8).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
                 ttk.Button(self.markFrame, text = "z zakresem czasu", command = markTimeRange).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
             def multiSettingsF():

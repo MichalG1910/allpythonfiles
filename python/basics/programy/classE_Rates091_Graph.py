@@ -1,4 +1,4 @@
-import time
+import time, sys
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 import matplotlib.pyplot as plt
@@ -9,15 +9,22 @@ import tkinter as tk
 import numpy as np
 class Graph:
     agr_number = 0
-        
+    
+    def figSizeGet(self):
+        if sys.platform == 'linux': 
+            self.figSizeA = 9
+        else:
+            self.figSizeA = 8.25    
+    
     def emptyGraph(self, root):
+        self.figSizeGet()
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-            self.fig = plt.figure(figsize=(8.25,7), facecolor = "dimgray") # win figsize=(8.25,7)
+            self.fig = plt.figure(figsize=(self.figSizeA,7), facecolor = "dimgray") # win figsize=(8.25,7)
             plt.style.use('dark_background')
             self.axis = self.fig.add_subplot(111) 
             self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
         else:
-            self.fig = plt.figure(figsize=(8.25,7), facecolor = "lightcyan")
+            self.fig = plt.figure(figsize=(self.figSizeA,7), facecolor = "white")
             plt.style.use('Solarize_Light2')
             self.axis = self.fig.add_subplot(111) 
             self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
@@ -40,12 +47,12 @@ class Graph:
             self.emptyGraph(root)
         else:
             if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-                self.fig = plt.figure(figsize=(9,7), facecolor = "dimgray")
+                self.fig = plt.figure(figsize=(self.figSizeA,7), facecolor = "dimgray")
                 plt.style.use('dark_background')
                 self.axis = self.fig.add_subplot(111) 
                 self.axis.grid(linestyle="solid", color="darkslategray",  linewidth=0.4)
             else:
-                self.fig = plt.figure(figsize=(9,7), facecolor = "lightcyan")
+                self.fig = plt.figure(figsize=(self.figSizeA,7), facecolor = "white")
                 plt.style.use('Solarize_Light2')
                 self.axis = self.fig.add_subplot(111) 
                 self.axis.grid(linestyle="solid", color="white",  linewidth=0.4)
@@ -239,7 +246,7 @@ class Graph:
         else:
             self.winFull.tk.call("set_theme", "light")
             plt.style.use('Solarize_Light2')
-            self.figFS = plt.figure(figsize=(19,10), facecolor = "lightcyan")
+            self.figFS = plt.figure(figsize=(19,10), facecolor = "white")
             self.gridColor = "white"
     
     def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):
