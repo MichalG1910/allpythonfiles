@@ -62,7 +62,7 @@ class Graph:
             self.fig.tight_layout()
             self.putGraph(root, 4, self.fig)
         
-    def drawGraph(self, fontSize, tRange, xValues, yValues, codeMulti, oneOrMultiGraph, codeCurrencyDict):
+    def drawGraph(self, fontSize, tRange, xValues, yValues, codeMulti, oneOrMultiGraph, codeCurrencyDict, progress, root):
         xValuesLen = len(xValues)
         yRange = (max(yValues) - min(yValues)) * 0.09 
         self.timeRangeGet = tRange
@@ -143,6 +143,8 @@ class Graph:
                     #######################################################################################################
                     print(f"wykres {code} - {self.agr + 1}") ###### Do sprawdzenia wielu linii na 1 wykresie #############
                     ######################################################################################################
+                    progress()
+                    root.update()
                     self.agr += 1
                 
                 if self.winFull.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -249,20 +251,21 @@ class Graph:
             self.figFS = plt.figure(figsize=(19,10), facecolor = "white")
             self.gridColor = "white"
     
-    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL):
+    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL, progress, root):
         self.firtloopEDL = firstloopEDL
         self.agr = 0
         self.listTrSum = len(self.multiCodeCurrencyList)
         
         def addGraph():
+            
             self.axis.grid(linestyle="solid", color=self.gridColor,  linewidth=0.4)
             dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
-            self.drawGraph(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict)
+            self.drawGraph(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict, progress, root)
             if self.oneSubplotVarMulti  == 0:
                 self.figFS.tight_layout()# wykresy nie nachodzą na siebie
             else:
                 self.figFS.tight_layout( rect=[0, 0, 0.869, 1.0])
-            self.putGraph(self.winFull, 0, self.figFS)
+                self.putGraph(self.winFull, 0, self.figFS)
             self.agr += 1
         
         if self.oneSubplotVarMulti  == 1:
@@ -294,11 +297,13 @@ class Graph:
                 elif self.listTrSum > 6 and self.listTrSum <= 12: fSize = 12  
                 elif self.listTrSum > 12: fSize = 10
                 addGraph()
-                
+                progress()
+                root.update()
+
             dataObj.xValuesMultiGraph.clear() 
             dataObj.yValuesMultiGraph.clear()
             del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
-
+        
     def clearList(self):
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()

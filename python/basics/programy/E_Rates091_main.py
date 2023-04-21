@@ -1,7 +1,6 @@
 import os, math
-from re import X
 import tkinter as tk
-from tkinter import FLAT, LEFT, RIGHT, TOP, Button, Frame, ttk
+from tkinter import ttk
 from tkinter import PhotoImage
 import matplotlib.pyplot as plt
 import PIL
@@ -11,7 +10,6 @@ from classE_Rates091_Graph import Graph
 import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
-from tkinter import *
 from tkinter import font as W1
 
 
@@ -37,7 +35,9 @@ class Main:
         self.graphGui()
         self.generateReportGui()
         self.win.protocol("WM_DELETE_WINDOW", self._quit)
+        self.win.title("E_Rates v.1.1".center(int(self.win.winfo_width()/1.7)))
         self.menu()
+        
         
         
     def menu(self):
@@ -65,7 +65,9 @@ class Main:
         Text =str(" "*587)
         W2 = W1.Font(family='Segoe Ui' , size = 8) # do sprawdzania w pikselach długosci stringow
         length = W2.measure(Text)
+
         
+    
     def _minimalize(self):
         self.win.iconify()
     
@@ -84,7 +86,7 @@ class Main:
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
-        #window.attributes("-fullscreen", False) # pełny ekran
+        #window.attributes("-fullscreen", True) # pełny ekran
     
     def themeButton(self, window):            
         self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
@@ -794,9 +796,37 @@ class Main:
         dataObj.checkConnection()
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         drawGraph()'''
+    def progressBar(self):
+        self.pb = ttk.Progressbar(self.win,orient='horizontal',mode='determinate',length=380)
+        # place the progressbar
+        self.pb.grid(column=6, row=38, columnspan=2, padx=5, pady=5)
+
+        self.value_label = ttk.Label(self.win, text=self.update_progress_label())
+        self.value_label.grid(column=6, row=37, columnspan=2)
+        print(sum([i.get() for i in self.chVariableList]))
+    
+    def update_progress_label(self):
+        step = 0
+        return f"Current Progress: {int(self.pb['value'])}/{sum([i.get() for i in self.chVariableList])}"
+
+
+    def progress(self):
+        if self.pb['value'] < sum([i.get() for i in self.chVariableList]):
+            self.pb['value'] += int(100/sum([i.get() for i in self.chVariableList]))
+            self.value_label['text'] = self.update_progress_label()
+            #self.pb.step(int(100/sum([i.get() for i in self.chVariableList])))
+        else:
+            self.stop() # showinfo(message='The progress completed!')
+            self.pb.destroy()
+            self.value_label.destroy()
+
+
+    def stop(self):
+        self.pb.stop()
+        self.value_label['text'] = self.update_progress_label()
     
     def fullscreenGraphWindow(self):
-        
+        self.progressBar()   
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
@@ -810,7 +840,7 @@ class Main:
             graphObj.themeSet(self.win)
             buttonCreate()
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
-            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL)
+            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL, self.progress, self.win)
             graphObj.clearList()
             graphObj.winFull.mainloop()
          
