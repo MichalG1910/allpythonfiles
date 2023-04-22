@@ -10,8 +10,8 @@ class a:
         self.root.geometry('300x120')
         self.root.title('Progressbar Demo')
         self.pbbar()
-        self.pb.start()
-        self.start_button()
+        #self.pb.start()
+        #self.start_button()
         self.loop()
     # progressbar
     def pbbar(self):
@@ -19,7 +19,7 @@ class a:
             self.root,
             orient='horizontal',
             mode='determinate',
-            length=280, phase=1
+            length=280, phase=0
         )
         # place the progressbar
         self.pb.grid(column=0, row=0, columnspan=2, padx=10, pady=20)
@@ -35,20 +35,21 @@ class a:
             self.pb['value'] += 20
             self.value_label['text'] = self.update_progress_label()
         else:
-            showinfo(message='The progress completed!')
-        
-
-
+            pass
+            
     def stop(self):
         self.pb.stop()
         self.value_label['text'] = self.update_progress_label()
 
     def loop(self):
         while self.pb['value'] < 100:
-            self.pb.step(20)
+            
+            #self.pb.step(20)
             self.progress()
-            self.root.update()
-            time.sleep(1)
+            self.pb.update()
+            time.sleep(2)
+        self.pb.destroy()
+        self.value_label.destroy()
 
     def start_button(self):
         start_button = ttk.Button(

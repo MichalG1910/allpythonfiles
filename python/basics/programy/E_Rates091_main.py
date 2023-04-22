@@ -1,4 +1,4 @@
-import os, math
+import os, math, time
 import tkinter as tk
 from tkinter import ttk
 from tkinter import PhotoImage
@@ -796,51 +796,58 @@ class Main:
         dataObj.checkConnection()
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         drawGraph()'''
+    
     def progressBar(self):
-        self.pb = ttk.Progressbar(self.win,orient='horizontal',mode='determinate',length=380)
+        graphObj.winFullSet()
+        self.progressStep = 0
+        self.loadGraph, self.tStart, self.tEnd = None,0.0, 0.0
+        
+        #graphObj.winFull.geometry('300x120')
+        self.pb = ttk.Progressbar(graphObj.winFull,orient='horizontal',mode='determinate',length=1300)
         # place the progressbar
-        self.pb.grid(column=6, row=38, columnspan=2, padx=5, pady=5)
+        self.pb.grid(column=2, row=0, columnspan=6, padx=5, sticky=tk.W)
 
-        self.value_label = ttk.Label(self.win, text=self.update_progress_label())
-        self.value_label.grid(column=6, row=37, columnspan=2)
+        self.value_label = ttk.Label(graphObj.winFull, text=self.update_progress_label(), width=30)
+        self.value_label.grid(column=0, row=0, columnspan=2, padx=10, sticky=tk.W)
         print(sum([i.get() for i in self.chVariableList]))
     
     def update_progress_label(self):
-        step = 0
-        return f"Current Progress: {int(self.pb['value'])}/{sum([i.get() for i in self.chVariableList])}"
-
+        return f"{self.loadGraph}: {self.progressStep}/{sum([i.get() for i in self.chVariableList])}"
 
     def progress(self):
-        if self.pb['value'] < sum([i.get() for i in self.chVariableList]):
-            self.pb['value'] += int(100/sum([i.get() for i in self.chVariableList]))
+        self.progressStep += 1
+        self.loadGraph = graphObj.multiCodeCurrencyList[self.progressStep-1]
+        
+        if self.pb['value'] < 100: #int(sum([i.get() for i in self.chVariableList])):
+            self.pb['value'] += (100/sum([i.get() for i in self.chVariableList]))
             self.value_label['text'] = self.update_progress_label()
             #self.pb.step(int(100/sum([i.get() for i in self.chVariableList])))
-        else:
-            self.stop() # showinfo(message='The progress completed!')
-            self.pb.destroy()
-            self.value_label.destroy()
-
-
-    def stop(self):
-        self.pb.stop()
-        self.value_label['text'] = self.update_progress_label()
+            graphObj.winFull.update()
+            if self.pb['value']>99:
+                self.loadGraph = f'Wczytano'
+                self.value_label['text'] = self.update_progress_label()
+                time.sleep(0.5)
+                self.pb.destroy()
+            #self.pb.step
     
     def fullscreenGraphWindow(self):
-        self.progressBar()   
+        
+        self.progressBar()
+          
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
-            ttk.Button(graphObj.winFull, text = "Zamknij okno", command = graphObj._quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
-            ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+            ttk.Button(graphObj.winFull, text = "Zamknij okno", command = graphObj._quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+            ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=8).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
         
         def drawGraph():
             dataObj.checkConnection()
-            graphObj.winFullSet()
+            #graphObj.winFullSet()
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
-            buttonCreate()
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
-            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL, self.progress, self.win)
+            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL, self.progress, self.pb)
+            buttonCreate()
             graphObj.clearList()
             graphObj.winFull.mainloop()
          
@@ -856,7 +863,7 @@ class Main:
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
                 drawGraph()
-       
+        
 graphObj = Graph()   
 dataObj = Data()
 mainObj = Main()       

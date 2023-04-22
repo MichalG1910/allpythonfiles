@@ -144,7 +144,7 @@ class Graph:
                     print(f"wykres {code} - {self.agr + 1}") ###### Do sprawdzenia wielu linii na 1 wykresie #############
                     ######################################################################################################
                     progress()
-                    root.update()
+                    #root.update()
                     self.agr += 1
                 
                 if self.winFull.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -298,12 +298,12 @@ class Graph:
                 elif self.listTrSum > 12: fSize = 10
                 addGraph()
                 progress()
-                root.update()
-
+                #root.update()
+            self.putGraph(self.winFull, 0, self.figFS)
             dataObj.xValuesMultiGraph.clear() 
             dataObj.yValuesMultiGraph.clear()
             del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
-        
+            
     def clearList(self):
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()
