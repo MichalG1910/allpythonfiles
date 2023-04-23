@@ -805,10 +805,10 @@ class Main:
         #graphObj.winFull.geometry('300x120')
         self.pb = ttk.Progressbar(graphObj.winFull,orient='horizontal',mode='determinate',length=1300)
         # place the progressbar
-        self.pb.grid(column=2, row=0, columnspan=6, padx=5, sticky=tk.W)
+        self.pb.grid(column=2, row=0, columnspan=6, padx=10, pady=10, sticky=tk.W)
 
         self.value_label = ttk.Label(graphObj.winFull, text=self.update_progress_label(), width=30)
-        self.value_label.grid(column=0, row=0, columnspan=2, padx=10, sticky=tk.W)
+        self.value_label.grid(column=0, row=0, columnspan=2, padx=10, pady=10, sticky=tk.W)
         print(sum([i.get() for i in self.chVariableList]))
     
     def update_progress_label(self):
@@ -837,8 +837,8 @@ class Main:
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
-            ttk.Button(graphObj.winFull, text = "Zamknij okno", command = graphObj._quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
-            ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=8).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
+            ttk.Button(graphObj.winFull, text = "Zamknij okno", command = graphObj._quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
+            ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=8).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
         
         def drawGraph():
             dataObj.checkConnection()
@@ -846,7 +846,7 @@ class Main:
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
-            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL, self.progress, self.pb)
+            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL, self.progress)
             buttonCreate()
             graphObj.clearList()
             graphObj.winFull.mainloop()
