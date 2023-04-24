@@ -38,8 +38,6 @@ class Main:
         self.win.title("E_Rates v.1.1".center(int(self.win.winfo_width()/1.7)))
         self.menu()
         
-        
-        
     def menu(self):
         
         self.menuBar = Menu(self.win)
@@ -800,7 +798,7 @@ class Main:
     def progressBar(self):
         graphObj.winFullSet()
         self.progressStep = 0
-        self.loadGraph, self.tStart, self.tEnd = None,0.0, 0.0
+        self.loadGraph = None
         
         #graphObj.winFull.geometry('300x120')
         self.pb = ttk.Progressbar(graphObj.winFull,orient='horizontal',mode='determinate',length=1300)
