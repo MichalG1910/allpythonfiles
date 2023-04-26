@@ -16,7 +16,6 @@ class ToolTip(object): # object?
         if self.tipwindow or not self.text:
             return
         x, y, _cx, cy = self.widget.bbox("insert") # pwrdpd. tworzy ramke naszego okna podpowiedzi (x - wsp.x, y - wsp.y, _cx - szerokość, cy - wysokość). Wysokość, szerokość na podstawie naszego wprowadzonego tekstu podpowiedzi
-        print(cy)
         x = x + self.widget.winfo_rootx() + 27 # ustalamy naszą wsp.x - winfo_rootx() - pobiera współrzędną x naszego widgeta (+27 - przesunięcie naszej podpowiedzi)
         y = y + cy + self.widget.winfo_rooty() +27
         self.tipwindow = tw = ttk.Toplevel(self.widget) # tworzymy zmienną na nasze okienko z klasy Toplevel
@@ -25,7 +24,7 @@ class ToolTip(object): # object?
 
         label = ttk.Label(tw, text=self.text, justify=ttk.LEFT, # tworzymy label do wyświetlenia w naszym oknie podpowiedzi Toplewel
                       background="grey", foreground="black", relief=ttk.SOLID, borderwidth=1,
-                      font=("tahoma", "8", "normal"))
+                      font=("Segoe Ui", "10", "normal"))
         label.grid(ipadx=1) # dodajemy padding do naszego label. (ipadx - powoduje, że nie przesłania części naszego widgeta- usuń i a zobaczysz różnice)
 
     def hidetip(self): # funkcja howa nasze okienko i niszczy zmienną tw

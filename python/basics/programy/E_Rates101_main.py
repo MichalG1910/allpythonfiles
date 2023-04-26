@@ -95,8 +95,10 @@ class Main:
     def quitButton(self):
         boldStyle = ttk.Style()
         boldStyle.configure ("Bold.TButton", weight = "bold", foreground='black', font=20)
-        ttk.Button(self.win,text="X", command=self._exit, width=2, style = "Bold.TButton").grid(row=0, column=13, padx=5, pady=5, columnspan=2, sticky=tk.E)
-        
+        quitB = ttk.Button(self.win,text="X", command=self._exit, width=2, style = "Bold.TButton")
+        quitB.grid(row=0, column=13, padx=5, pady=5, columnspan=2, sticky=tk.E)
+        self.createToolTip(quitB, "Zamknij")
+
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
@@ -107,8 +109,7 @@ class Main:
         self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=2)
         self.accentbutton.image = self.icon
         self.accentbutton.grid(row=0, column=13,columnspan=2, padx=5, pady=5, sticky=tk.W)
-
-        self.createToolTip(self.accentbutton, "dostosuj kolory jasny/ciemny")
+        self.createToolTip(self.accentbutton, "motyw jasny/ciemny")
     
     def change_theme(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -381,8 +382,12 @@ class Main:
                     
                 self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=80)  
                 self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
-                ttk.Button(self.markFrame, text = "wszystko", command = markAll, width=8).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
-                ttk.Button(self.markFrame, text = "z zakresem czasu", command = markTimeRange).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
+                all = ttk.Button(self.markFrame, text = "wszystko", command = markAll, width=8)
+                all.grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
+                withTimeRange = ttk.Button(self.markFrame, text = "z zakresem czasu", command = markTimeRange)
+                withTimeRange.grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
+                self.createToolTip(all, "Zaznacz/odznacz wszystkie pola checkbox")
+                self.createToolTip(withTimeRange, "Zaznacz/odznacz pola checkbox\nz wybranym zakresem czasu")
             
             def multiSettingsF():
                 def otherOptions(*ignoredArgs):
@@ -507,15 +512,19 @@ class Main:
         tabControlRep.add(tab1, text="Raporty")
         tabControlRep.add(tab2, text="Inne")
         tabControlRep.grid(column=7, columnspan=3, rowspan=3,row=1, padx=4, pady=4)
-
+        
         reportFrame = ttk.LabelFrame(tab1, text= "Generuj Raport", labelanchor="n")
         reportFrame.grid(column=7, row=1, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
+        self.createToolTip(reportFrame, "wygeneruj i zapisz raporty (txt, csv) z wybranego\nokresu czasu w katalogu domyślnym 'Reports'")
         ttk.Label(reportFrame, text= "data od (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
         ttk.Label(reportFrame, text= "data do (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
-        ttk.Entry(reportFrame, width= 10, textvariable= self.startDate).grid(column= 8, row= 1, padx=5, pady=5)
-        
+        startDateBox = ttk.Entry(reportFrame, width= 10, textvariable= self.startDate)
+        startDateBox.grid(column= 8, row= 1, padx=5, pady=5)
+        self.createToolTip(startDateBox, "Wpisz datę początkową raportu do wygenerowania.\nData ta nie może być starsza niż 2004-05-04")
+
         endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
+        self.createToolTip(endDateBox, "Wpisz datę początkową raportu do wygenerowania\nDomyślnie data ostatniego dostępnego\nraporu na http://api.nbp.pl")
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
         ttk.Button(reportFrame, text = "Generuj", command = runReport, width=8).grid(column = 9, row = 0 , rowspan=3, padx=5, pady=5, sticky=tk.N)  
         ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)
