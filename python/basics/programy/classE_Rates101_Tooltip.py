@@ -20,7 +20,7 @@ class ToolTip(object):
         y = y + cy + self.widget.winfo_rooty() +27 + changeCoordinatesY
         self.tipwindow = tw = ttk.Toplevel(self.widget) 
         tw.wm_overrideredirect(1)
-        tw.wm_geometry("+%d+%d" % (x, y)) 
+        tw.wm_geometry(f"+{x}+{y}") 
 
         label = ttk.Label(tw, text=self.text, justify=ttk.LEFT,
                       background="grey", foreground="black", relief=ttk.SOLID, borderwidth=1,

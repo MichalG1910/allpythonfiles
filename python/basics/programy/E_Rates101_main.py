@@ -532,7 +532,7 @@ class Main:
         ttk.Button(reportFrame, text = "Generuj", command = runReport, width=8).grid(column = 9, row = 0 , rowspan=3, padx=5, pady=5, sticky=tk.N)  
         gcCollectButton = ttk.Button(tab2, text = "Garbage Collector", command = self.gcCollect, width=16)
         gcCollectButton.grid(column = 6, row = 1, padx=5)
-        self.createToolTip(gcCollectButton, "Ręczne uruchomienie Garbage Collector\n- inicjuje uruchomienie instrukcji, która odpowiada\nza automatyczne zwalnianie pamięci poprzez\nregularną weryfikację stanu pamięci i usuwanie\ntych obiektów, które uznane są za niepotrzebne ")
+        self.createToolTip(gcCollectButton, "Ręczne uruchomienie Garbage Collector\n- inicjuje uruchomienie instrukcji, która odpowiada\nza automatyczne zwalnianie pamięci poprzez\nregularną weryfikację stanu pamięci i usuwanie\ntych obiektów, które uznane są za niepotrzebne ", 0, 20)
     
     def progressBar(self):
         graphObj.winFullSet()
