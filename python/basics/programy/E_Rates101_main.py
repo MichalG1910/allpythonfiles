@@ -6,7 +6,7 @@ import PIL
 import PIL._tkinter_finder
 from classE_Rates101_Data import Data
 from classE_Rates101_Graph import Graph
-from classE_Rates101_Tooltip import ToolTip as tt
+from classE_Rates101_Tooltip import ToolTip
 import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
@@ -83,10 +83,10 @@ class Main:
     def gcCollect(self):
         gc.collect()
     
-    def createToolTip(self, widget, text): 
-        toolTip = tt(widget)
+    def createToolTip(self, widget, text, corX=0, corY=0): 
+        toolTip = ToolTip(widget)
         def enter(event):
-            toolTip.showtip(text)
+            toolTip.showtip(text, corX, corY)
         def leave(event): 
             toolTip.hidetip()
         widget.bind('<Enter>', enter)
@@ -97,7 +97,7 @@ class Main:
         boldStyle.configure ("Bold.TButton", weight = "bold", foreground='black', font=20)
         quitB = ttk.Button(self.win,text="X", command=self._exit, width=2, style = "Bold.TButton")
         quitB.grid(row=0, column=13, padx=5, pady=5, columnspan=2, sticky=tk.E)
-        self.createToolTip(quitB, "Zamknij")
+        self.createToolTip(quitB, "Zamknij", -50, 20)
 
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
@@ -109,7 +109,7 @@ class Main:
         self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=2)
         self.accentbutton.image = self.icon
         self.accentbutton.grid(row=0, column=13,columnspan=2, padx=5, pady=5, sticky=tk.W)
-        self.createToolTip(self.accentbutton, "motyw jasny/ciemny")
+        self.createToolTip(self.accentbutton, "motyw jasny/ciemny", -125, 20)
     
     def change_theme(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
@@ -233,6 +233,7 @@ class Main:
             tabControl.add(tab3, text="Waluta ostatnie 30")
             last30Frame = ttk.LabelFrame(tab3, text="Waluta ostatnie 30 notowań", labelanchor="n", style='clam.TLabelframe')  
             last30Frame.grid(column=1, row=1, columnspan=4, rowspan=30, padx=5, sticky=tk.W)
+            self.createToolTip(last30Frame, "Generuje ostatnich 30 notowań dla wskazanej waluty") 
             
             for key,values in dataObj.codeCurrencyDict.items():
                 self.codeCurrencyList.append(f"{key}  {values}")
@@ -386,8 +387,8 @@ class Main:
                 all.grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
                 withTimeRange = ttk.Button(self.markFrame, text = "z zakresem czasu", command = markTimeRange)
                 withTimeRange.grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
-                self.createToolTip(all, "Zaznacz/odznacz wszystkie pola checkbox")
-                self.createToolTip(withTimeRange, "Zaznacz/odznacz pola checkbox\nz wybranym zakresem czasu")
+                self.createToolTip(all, "Zaznacz/odznacz wszystkie pola checkbox", 0, 20)
+                self.createToolTip(withTimeRange, "Zaznacz/odznacz pola checkbox\nz wybranym zakresem czasu", 0, 20)
             
             def multiSettingsF():
                 def otherOptions(*ignoredArgs):
@@ -421,8 +422,9 @@ class Main:
                 
                 self.multiSettingsFrame = ttk.LabelFrame(self.tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.E)
-                ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView).grid(column = 0, row=0, padx=5, pady=5)
-                
+                viewButton = ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView)
+                viewButton.grid(column = 0, row=0, padx=5, pady=5)
+                self.createToolTip(viewButton, "widok 1 - standardowy\nwidok 2 - możliwość rysowania wielu wykresów dla jednej\nwaluty w różnych zakresach czasu (w jednym oknie) ", 0, 20) 
                 ttk.Label(self.multiSettingsFrame, text= "linia trendu ").grid(column=0, row=2, sticky=tk.W, pady=5,padx=5)  
                 trendLineCheck = ttk.Checkbutton(self.multiSettingsFrame, variable=self.trendLineVarMulti )
                 trendLineCheck.grid(column=1, row=2, sticky=tk.W) 
@@ -432,7 +434,8 @@ class Main:
                 annotateCheck.grid(column=1, row=3, sticky=tk.W) 
                 
                 multiLineFrame = ttk.LabelFrame(self.multiSettingsFrame, text= "rysuj na jednym wykresie ", labelanchor="n", style='clam.TLabelframe')
-                multiLineFrame.grid(column=2, row=0, sticky=tk.W, pady=5,padx=5)  
+                multiLineFrame.grid(column=2, row=0, sticky=tk.W, pady=5,padx=5)
+                self.createToolTip(multiLineFrame, "Narysuj wiele linii walut\nna jednym zbiorczym wykresie", -30, -10)  
                 ttk.Label(multiLineFrame, text= "zakres czasu ").grid(column=2,rowspan=3, sticky=tk.W, pady=5,padx=5)  
                 self.oneSubplotMultiGraph = ttk.Checkbutton(multiLineFrame, variable=self.oneSubplotVarMulti, command=otherOptions )
                 self.oneSubplotMultiGraph.grid(column=4, row=0, sticky=tk.W) 
@@ -515,7 +518,7 @@ class Main:
         
         reportFrame = ttk.LabelFrame(tab1, text= "Generuj Raport", labelanchor="n")
         reportFrame.grid(column=7, row=1, columnspan=3, rowspan=3, padx=5, sticky=tk.W)
-        self.createToolTip(reportFrame, "wygeneruj i zapisz raporty (txt, csv) z wybranego\nokresu czasu w katalogu domyślnym 'Reports'")
+        self.createToolTip(reportFrame, "wygeneruj i zapisz raporty (txt, csv) z wybranego\nokresu czasu w katalogu domyślnym 'Reports'", -80)
         ttk.Label(reportFrame, text= "data od (RRRR-MM-DD): ").grid(column=7, row=1, sticky=tk.W, pady=5, padx=5) 
         ttk.Label(reportFrame, text= "data do (RRRR-MM-DD):").grid(column=7, row=2, sticky=tk.W, pady=5, padx=5)
         startDateBox = ttk.Entry(reportFrame, width= 10, textvariable= self.startDate)
@@ -524,10 +527,12 @@ class Main:
 
         endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
-        self.createToolTip(endDateBox, "Wpisz datę początkową raportu do wygenerowania\nDomyślnie data ostatniego dostępnego\nraporu na http://api.nbp.pl")
+        self.createToolTip(endDateBox, "Wpisz datę końcową raportu do wygenerowania\nDomyślnie data ostatniego dostępnego\nraporu na http://api.nbp.pl")
         endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
         ttk.Button(reportFrame, text = "Generuj", command = runReport, width=8).grid(column = 9, row = 0 , rowspan=3, padx=5, pady=5, sticky=tk.N)  
-        ttk.Button(tab2, text = "gc collect", command = self.gcCollect, width=12).grid(column = 6, row = 1, padx=5)
+        gcCollectButton = ttk.Button(tab2, text = "Garbage Collector", command = self.gcCollect, width=16)
+        gcCollectButton.grid(column = 6, row = 1, padx=5)
+        self.createToolTip(gcCollectButton, "Ręczne uruchomienie Garbage Collector\n- inicjuje uruchomienie instrukcji, która odpowiada\nza automatyczne zwalnianie pamięci poprzez\nregularną weryfikację stanu pamięci i usuwanie\ntych obiektów, które uznane są za niepotrzebne ")
     
     def progressBar(self):
         graphObj.winFullSet()
