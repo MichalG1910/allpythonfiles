@@ -47,7 +47,7 @@ class Main:
         self.menuBar.add_command(label = "__", command = self._minimalize)
         self.menuBar.add_command(label = "x", command = self._exit)
         self.menuBar.image = self.icon
-    
+         
     def openFileDir(self):
         def openPlatform():
             if sys.platform == 'linux': subprocess.Popen(['xdg-open', f"{dataObj.filePath}/reports"])

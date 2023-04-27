@@ -1,5 +1,8 @@
 https://www.pythonguis.com/tutorials/packaging-tkinter-applications-windows-pyinstaller/ - instrukcja tworzenia pliku exe z opcjami
 
+aby poprawnie zainicjowac tworzenie pliku wykonywalnego, umieśc wszystkie pliki programu w katalogu domowym (dla linux)
+
+
 
 pyinstaller --onefile app.py
 
@@ -14,7 +17,7 @@ pyinstaller --icon=icon.ico app.py - dodawanie ikony
 pyinstaller --onefile --windowed --icon=icon.ico app.py
 
 
-ZMIANY PRZESZLY
+
 
 
 
