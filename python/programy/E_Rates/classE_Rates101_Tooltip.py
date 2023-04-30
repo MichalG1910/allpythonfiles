@@ -1,6 +1,3 @@
-#======================
-# imports
-#======================
 import tkinter as ttk
 
 class ToolTip(object): 

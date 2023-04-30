@@ -47,7 +47,7 @@ class Main:
         self.menuBar.add_command(label = "__", command = self._minimalize)
         self.menuBar.add_command(label = "x", command = self._exit)
         self.menuBar.image = self.icon
-         
+    
     def openFileDir(self):
         def openPlatform():
             if sys.platform == 'linux': subprocess.Popen(['xdg-open', f"{dataObj.filePath}/reports"])
@@ -96,7 +96,7 @@ class Main:
         boldStyle = ttk.Style()
         boldStyle.configure ("Bold.TButton", weight = "bold", foreground='black', font=20)
         quitB = ttk.Button(self.win,text="X", command=self._exit, width=2, style = "Bold.TButton")
-        quitB.grid(row=0, column=13, padx=5, pady=5, columnspan=2, sticky=tk.E)
+        quitB.grid(row=0, column=13, ipadx=9.4, pady=5, columnspan=3, sticky=tk.E)
         self.createToolTip(quitB, "Zamknij", -50, 20)
 
     def winStyle(self, window):
@@ -108,7 +108,7 @@ class Main:
         self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
         self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=2)
         self.accentbutton.image = self.icon
-        self.accentbutton.grid(row=0, column=13,columnspan=2, padx=5, pady=5, sticky=tk.W)
+        self.accentbutton.grid(row=0, column=13,columnspan=2, ipadx=9.4, pady=5, sticky=tk.W)
         self.createToolTip(self.accentbutton, "motyw jasny/ciemny", -125, 20)
     
     def change_theme(self):
@@ -344,7 +344,7 @@ class Main:
             def createTab4():
                 self.tab4 = ttk.Frame(tabMultiGraph)
                 tabMultiGraph.add(self.tab4, text="wiele wykresów")
-                tabMultiGraph.grid(column=10, columnspan=4, rowspan=34, row=1, padx=4, pady=4, sticky=tk.N)
+                tabMultiGraph.grid(column=10, columnspan=4, rowspan=len(dataObj.rates)+2, row=1, padx=4, pady=4, sticky=tk.N)
                 self.multiGraphFrame = ttk.LabelFrame(self.tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiGraphFrame.grid(column=0, row=1, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
             
@@ -567,8 +567,8 @@ class Main:
         graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
-            ttk.Button(graphObj.winFull, text = "Zamknij okno", command = graphObj._quit, width=12).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.E)
-            ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=8).grid(column = 10, row = 0 , padx=5, pady=5, sticky=tk.W)
+            ttk.Button(graphObj.winFull, text = "Zamknij", command = graphObj._quit, width=7).grid(column = 10, columnspan = 3, row = 0 , padx=5, pady=5, sticky=tk.E)
+            ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=7).grid(column = 10, columnspan = 2, row = 0 , padx=5, pady=5, sticky=tk.W)
         
         def drawGraph():
             dataObj.checkConnection()
