@@ -1,0 +1,40 @@
+ilośc sprawdzanych dni: 1
+ilość raportów NBP z tych dni (tylko dni pracujące): 1
+
+
+Exchange rates: A,083/A/NBP/2023,2023-04-28
+    currency:              code:        value:
+--  ---------------------  -------  ----------
+ 1  bat (Tajlandia)        THB      0.1225
+ 2  dolar amerykański      USD      4.1753
+ 3  dolar australijski     AUD      2.7483
+ 4  dolar Hongkongu        HKD      0.532
+ 5  dolar kanadyjski       CAD      3.0565
+ 6  dolar nowozelandzki    NZD      2.559
+ 7  dolar singapurski      SGD      3.1239
+ 8  euro                   EUR      4.5889
+ 9  forint (Węgry)         HUF      0.012302
+10  frank szwajcarski      CHF      4.6619
+11  funt szterling         GBP      5.2005
+12  hrywna (Ukraina)       UAH      0.1136
+13  jen (Japonia)          JPY      0.0308
+14  korona czeska          CZK      0.1954
+15  korona duńska          DKK      0.6157
+16  korona islandzka       ISK      0.030777
+17  korona norweska        NOK      0.3881
+18  korona szwedzka        SEK      0.4041
+19  lej rumuński           RON      0.9296
+20  lew (Bułgaria)         BGN      2.3463
+21  lira turecka           TRY      0.2146
+22  nowy izraelski szekel  ILS      1.1486
+23  peso chilijskie        CLP      0.005197
+24  peso filipińskie       PHP      0.0753
+25  peso meksykańskie      MXN      0.2311
+26  rand (RPA)             ZAR      0.2268
+27  real (Brazylia)        BRL      0.8388
+28  ringgit (Malezja)      MYR      0.9365
+29  rupia indonezyjska     IDR      0.00028462
+30  rupia indyjska         INR      0.051018
+31  won (Korea Pd.)        KRW      0.003116
+32  yuan renminbi (Chiny)  CNY      0.6031
+33  SDR (MFW)              XDR      5.615

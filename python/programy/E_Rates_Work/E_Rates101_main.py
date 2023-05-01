@@ -28,7 +28,7 @@ class Main:
         self.graphGui()
         self.generateReportGui()
         self.win.protocol("WM_DELETE_WINDOW", self._exit)
-        self.win.title("E_Rates v.1.1".center(int(self.win.winfo_width()/1.7)))
+        self.win.title("E_Rates v.1.1".center(int(self.win.winfo_width()/2.1)))
         self.menu()
         
     def menu(self):
