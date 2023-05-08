@@ -228,7 +228,9 @@ class Graph:
         
     def winFullSet(self):
         self.winFull = tk.Tk()
-        self.winFull.attributes("-fullscreen", True)
+        self.winFull.overrideredirect(True)
+        self.winFull.geometry("{0}x{1}+0+0".format(self.winFull.winfo_screenwidth(), self.winFull.winfo_screenheight()))
+        #self.winFull.attributes("-fullscreen", True)
     
     def themeSet(self, root):    
         if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
