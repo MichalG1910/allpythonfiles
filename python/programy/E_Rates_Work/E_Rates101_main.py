@@ -95,7 +95,7 @@ class Main:
     def quitButton(self):
         boldStyle = ttk.Style()
         boldStyle.configure ("Bold.TButton", weight = "bold", foreground='black', font=20)
-        quitB = ttk.Button(self.win,text="X", command=self._exit, width=2, style = "Bold.TButton")
+        quitB = ttk.Button(self.win,text="X", command=self._exit, width=1, style = "Bold.TButton")
         quitB.grid(row=0, column=13, ipadx=9.4, pady=5, columnspan=3, sticky=tk.E)
         self.createToolTip(quitB, "Zamknij", -50, 20)
 
@@ -106,7 +106,7 @@ class Main:
     
     def themeButton(self, window):            
         self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
-        self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=2)
+        self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=1)
         self.accentbutton.image = self.icon
         self.accentbutton.grid(row=0, column=13,columnspan=2, ipadx=9.4, pady=5, sticky=tk.W)
         self.createToolTip(self.accentbutton, "motyw jasny/ciemny", -125, 20)

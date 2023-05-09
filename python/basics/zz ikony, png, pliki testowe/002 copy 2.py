@@ -23,7 +23,7 @@ class user:
       self.password =  tk.StringVar()
       self.validateLogin = partial(self.validateLogin, self.username, self.password)
 
-      userLabel = ttk.Label(self.win, text="user: ").grid(column=0, row=0, padx=10, pady=10)
+      userLabel = ttk.Label(self.win, text="username: ").grid(column=0, row=0, padx=10, pady=10)
       userEntry = ttk.Entry(self.win, textvariable=self.username, width=30).grid(column=1, row=0, padx=10, pady=10)
       passwordLabel = ttk.Label(self.win, text="password: " ).grid(column=0, row=1, padx=10, pady=10)
       passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*', width=30).grid(column=1, row=1, padx=10, pady=10)
