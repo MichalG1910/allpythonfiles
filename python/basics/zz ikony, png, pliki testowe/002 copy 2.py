@@ -31,7 +31,7 @@ class user:
       
    #establishing the connection
    def createDatabase(self):
-      conn = psycopg2.connect(database="postgres", user=self.username, password=self.password, host='127.0.0.1', port= '5432')
+      conn = psycopg2.connect(database="postgres", user=self.username.get(), password=self.password.get(), host='127.0.0.1', port= '5432')
       conn.autocommit = True
       #Creating a cursor object using the cursor() method
       cursor = conn.cursor()
