@@ -7,10 +7,10 @@ cursor.execute("DROP TABLE IF EXISTS employee") # jeśli tabela "employee" istni
 # tworzymy zapytanie SQL tworzące tabele employee z kolumnami jak niżej
 sql ='''CREATE TABLE employee       
 (
-   FIRST_NAME CHAR(20) NOT NULL,
-   LAST_NAME CHAR(20),
+   FIRST_NAME VARCHAR(20) NOT NULL,
+   LAST_NAME VARCHAR(20),
    AGE INT,
-   SEX CHAR(1),
+   SEX VARCHAR(1),
    INCOME FLOAT
 )'''
 cursor.execute(sql)

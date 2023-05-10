@@ -13,7 +13,7 @@ cursor.execute('''SELECT * from employee''') # zapytanie SQL zwracające wszystk
 
 result = cursor.fetchone(); # fetchone() - metoda pobiera następny wiersz w wyniku zapytania i zwraca go jako krotkę.
 print(result) # ('Ramya', 'Rama priya', 27, 'F', 9000.0)
-
+print()
 result = cursor.fetchall(); # fetchall() - metoda pobiera wszystkie wiersze w zbiorze wyników zapytania i zwraca je jako listę krotek. (Jeśli wykonamy to po pobraniu kilku wierszy, zwróci pozostałe).
 print(result) 
 ''' [('Vinay', 'Battacharya', 20, 'M', 6000.0),

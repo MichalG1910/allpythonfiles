@@ -18,7 +18,7 @@ cursor.execute('''INSERT INTO employee(FIRST_NAME, LAST_NAME, AGE, SEX,
 
 # konstrukcja z executemany(), która dodaje wiele wierszy do naszej tabeli w jednym bloku
 insert_stmt = '''INSERT INTO employee (FIRST_NAME, LAST_NAME, AGE, SEX, 
-    INCOME) VALUES (%s, %s, %s, %s, %s)''',
+    INCOME) VALUES (%s, %s, %s, %s, %s)'''
 data = [('Krishna', 'Sharma', 19, 'M', 2000), 
    ('Raj', 'Kandukuri', 20, 'M', 7000),
    ('Ramya', 'Ramapriya', 25, 'M', 5000),
