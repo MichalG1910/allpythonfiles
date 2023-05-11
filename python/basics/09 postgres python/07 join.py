@@ -2,12 +2,12 @@ import psycopg2
 
 conn = psycopg2.connect(database="mydb", user='postgres', password='password', host='127.0.0.1', port= '5432') 
 cursor = conn.cursor()
-'''
+
 cursor.execute("ALTER TABLE employee ADD COLUMN contact_id SERIAL NOT NULL ") # dodajemy kolumne do tabeli employee (dzięki typowi SERIAL zostanie ona automatycznie wypełniona kolejnymi numerami)
 cursor.execute("SELECT * from employee")
 print(cursor.fetchall())
 conn.commit()
-'''
+
 # tworzymy tabelę contact w DB 
 sql ='''CREATE TABLE contact       
 (

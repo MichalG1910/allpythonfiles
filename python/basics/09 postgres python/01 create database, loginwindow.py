@@ -11,7 +11,7 @@ class user:
       self.win.mainloop()
    ############################################### proste okno logowania #########################################
    def createWin(self):
-      self.win.geometry('300x150+600+300')
+      self.win.geometry('250x150+600+300')
    
    def validateLogin(self, username, password): # funkcja uruchamiająca tworzenie  bazy danych
       print("username entered :", username.get())
@@ -24,9 +24,9 @@ class user:
       self.validateLogin = partial(self.validateLogin, self.username, self.password) # klasa do sprawdzenia poprawności loginu i hasła
 
       userLabel = ttk.Label(self.win, text="username: ").grid(column=0, row=0, padx=10, pady=10)
-      userEntry = ttk.Entry(self.win, textvariable=self.username, width=30).grid(column=1, row=0, padx=10, pady=10)
+      userEntry = ttk.Entry(self.win, textvariable=self.username).grid(column=1, row=0, padx=10, pady=10, sticky='nsew')
       passwordLabel = ttk.Label(self.win, text="password: " ).grid(column=0, row=1, padx=10, pady=10)
-      passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*', width=30).grid(column=1, row=1, padx=10, pady=10) # show='*' - tekst wpisywany w polu entry zostanie wyświetlony jako * (przydatne do haseł, by nie były widoczne)
+      passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*').grid(column=1, row=1, padx=10, pady=10, sticky='nsew') # show='*' - tekst wpisywany w polu entry zostanie wyświetlony jako * (przydatne do haseł, by nie były widoczne)
       loginButton = ttk.Button(self.win, text="Login", command=self.validateLogin, width=10).grid(column=1, row=2,  padx=10, pady=10, )
  ####################################################################################################################     
   
