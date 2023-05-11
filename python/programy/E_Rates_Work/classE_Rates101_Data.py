@@ -4,7 +4,7 @@ import pandas as pd
 from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
-
+# 165 wiersz
 class Data:
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
@@ -132,10 +132,10 @@ class Data:
             self.repeat -= 1
 
         self.data = longerList
-        del longerList     
+        del longerList   
             
     def dataFormatting(self, midBid):
-        self.csvList, self.printList, self.erDataList =[],[],[]
+        self.csvList, self.printList, self.erDataList , self.effectiveDateList=[],[],[],[]
         
         for dict in self.data:
             table = dict["table"]
@@ -143,7 +143,7 @@ class Data:
             self.effectiveDate= dict["effectiveDate"]
             self.rates = dict["rates"]
             self.printList.append([table, self.no, self.effectiveDate])
-            self.currencyList, self.codeList, self.valueList, self.askList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],[],{}
+            self.currencyList, self.codeList, self.valueList, self.askList, self.codeCurrencyDict= [],[],[],[],{}
             self.effectiveDateList.append(self.effectiveDate)
             
             for rate in self.rates:
@@ -162,7 +162,7 @@ class Data:
 
                 if self.num == 2:
                     self.csvList.append([currency,self.code,self.effectiveDate,mid])
-        
+                    print(self.csvList)
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
