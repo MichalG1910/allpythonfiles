@@ -4,7 +4,7 @@ import pandas as pd
 from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
-
+# 95-96, 112 - zmieniono do testów postgres
 class Data:
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
@@ -92,8 +92,8 @@ class Data:
                 mBox.showinfo("Błędny format danych raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informaacji na stronie http://api.nbp.pl")
             elif self.eDate > self.today or self.sDate > self.eDate:
                 mBox.showerror("Uwaga", "Niewłaściwa data, wprowadź nową datę")
-            elif str(self.eDate) > str(self.firstloopEDL):
-                mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
+            #elif str(self.eDate) > str(self.firstloopEDL):
+                #mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
             else:
                 self.step = 91
                 self.sumdays = self.eDate - self.sDate
@@ -109,7 +109,7 @@ class Data:
                     self.reportCreate(startDate, endDate) 
                     self.csv_ER_report(startDate, endDate) 
                     
-                    del self.data, self.report, self.csvList, self.printList, self.erDataList, self.response
+                    del self.data, self.report, self.printList, self.erDataList, self.response # ,self.csvList
                     
     def ReportLoop(self):
         runDate = self.sDate
@@ -162,7 +162,7 @@ class Data:
 
                 if self.num == 2:
                     self.csvList.append([currency,self.code,self.effectiveDate,mid])
-        
+                    
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
@@ -194,6 +194,7 @@ class Data:
             file_write(self.start)
         
     def csv_ER_report(self, startDate, endDate):
+        
         csvLen = len(self.csvList)   
         exc=0
         self.csv = open(f"{self.filePath}/reports/CSV_exchangerates_{startDate}_{endDate}.csv", "w")           
