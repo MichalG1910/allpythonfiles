@@ -45,18 +45,30 @@ class Scenario:
       self.DBCheckButton = ttk.Checkbutton(scenarioFrame, variable=self.DBCheckVar,)
       self.DBCheckButton.grid(column=1, columnspan=2, row=1, padx=10, pady=10, sticky=tk.E) # state= "disabled"
       
-      userLabel = ttk.Label(self.win, text="username: ").grid(column=0, row=2, padx=23, pady=10, sticky=tk.W)
-      userEntry = ttk.Entry(self.win, textvariable=self.username, state='disabled').grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
-      passwordLabel = ttk.Label(self.win, text="password: " ).grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
-      passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*', state='disabled').grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      self.userLabel = ttk.Label(self.win, text="username: ", foreground='grey')
+      self.userLabel.grid(column=0, row=2, padx=23, pady=10, sticky=tk.W)
+      self.userEntry = ttk.Entry(self.win, textvariable=self.username, state='disabled')
+      self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      self.passwordLabel = ttk.Label(self.win, text="password: ", foreground='grey')
+      self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
+      self.passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*', state='disabled')
+      self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       loginButton = ttk.Button(self.win, text="Login", command=self.validateLogin, width=10).grid(column=0, row=4,  padx=10, pady=10)
       
    def scenarioSelection1(self, *ignoredArgs):
       self.noDBCheckVar.set(0) 
       self.DBCheckVar.set(1)
+      self.userEntry.configure(state='disabled')
+      self.passwordEntry.configure(state='disabled')
+      self.userLabel.configure(foreground='grey')
+      self.passwordLabel.configure(foreground='grey')
    def scenarioSelection2(self, *ignoredArgs):         
       self.DBCheckVar.set(0) 
       self.noDBCheckVar.set(1)
+      self.userEntry.configure(state='normal')
+      self.passwordEntry.configure(state='normal')
+      self.userLabel.configure(foreground='white')
+      self.passwordLabel.configure(foreground='white')
    
    def trace(self):         
       self.noDBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection1())
