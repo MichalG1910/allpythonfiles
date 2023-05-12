@@ -10,10 +10,11 @@ class Scenario:
       self.createWin()
       self.winStyle(self.win)
       self.createFields()
+      self.trace()
       self.win.mainloop()
    
    def createWin(self):
-      self.win.geometry('320x250+600+300')
+      self.win.geometry('320x300+600+300')
       self.win.title('E_Rates')
    
    def winStyle(self, window):
@@ -39,15 +40,27 @@ class Scenario:
       scenarioFrame.grid(column=0, row=0, padx=23, ipadx=5, pady=10, sticky=tk.EW,)
       noDatabaseLabel = ttk.Label(scenarioFrame, text="pracuj w trybie bez bazy danych").grid(column=0, columnspan=1, row=0, padx=10, pady=10, sticky=tk.W)
       DatabaseLabel = ttk.Label(scenarioFrame, text="pracuj w trybie z bazą danych").grid(column=0, row=1, padx=10, pady=10, sticky=tk.W)
-      noDBCheckButton = ttk.Checkbutton(scenarioFrame, variable=self.noDBCheckVar ).grid(column=1, row=0, padx=10, pady=10, sticky=tk.E) # state= "disabled"
-      DBCheckButton = ttk.Checkbutton(scenarioFrame, variable=self.DBCheckVar ).grid(column=1, columnspan=2, row=1, padx=10, pady=10, sticky=tk.E) # state= "disabled"
+      self.noDBCheckButton = ttk.Checkbutton(scenarioFrame, variable=self.noDBCheckVar )
+      self.noDBCheckButton.grid(column=1, row=0, padx=10, pady=10, sticky=tk.E) # state= "disabled"
+      self.DBCheckButton = ttk.Checkbutton(scenarioFrame, variable=self.DBCheckVar,)
+      self.DBCheckButton.grid(column=1, columnspan=2, row=1, padx=10, pady=10, sticky=tk.E) # state= "disabled"
       
       userLabel = ttk.Label(self.win, text="username: ").grid(column=0, row=2, padx=23, pady=10, sticky=tk.W)
-      userEntry = ttk.Entry(self.win, textvariable=self.username).grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      userEntry = ttk.Entry(self.win, textvariable=self.username, state='disabled').grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       passwordLabel = ttk.Label(self.win, text="password: " ).grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
-      passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*').grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*', state='disabled').grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       loginButton = ttk.Button(self.win, text="Login", command=self.validateLogin, width=10).grid(column=0, row=4,  padx=10, pady=10)
       
+   def scenarioSelection1(self, *ignoredArgs):
+      self.noDBCheckVar.set(0) 
+      self.DBCheckVar.set(1)
+   def scenarioSelection2(self, *ignoredArgs):         
+      self.DBCheckVar.set(0) 
+      self.noDBCheckVar.set(1)
+   
+   def trace(self):         
+      self.noDBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection1())
+      self.DBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection2())
    def cursorObj(self, DB="postgres"):
       self.conn = psycopg2.connect(database=DB, user=self.username.get(), password=self.password.get(), host='127.0.0.1', port= '5432')
       self.cursor = self.conn.cursor()
