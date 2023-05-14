@@ -76,7 +76,7 @@ class Data:
             self.last30EDList.append(last30ED), self.last30MidList.append(last30Mid)
         self.last30EDList.reverse(), self.last30MidList.reverse()
     
-    def generateReport(self,startDate, endDate):
+    def generateReport(self,startDate, endDate, firstloopEDL = datetime.date.today()):
         self.num = 2
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",startDate) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",endDate):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
@@ -92,8 +92,8 @@ class Data:
                 mBox.showinfo("Błędny format danych raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informaacji na stronie http://api.nbp.pl")
             elif self.eDate > self.today or self.sDate > self.eDate:
                 mBox.showerror("Uwaga", "Niewłaściwa data, wprowadź nową datę")
-            #elif str(self.eDate) > str(self.firstloopEDL):
-                #mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
+            elif str(self.eDate) > str(firstloopEDL):
+                mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
             else:
                 self.step = 91
                 self.sumdays = self.eDate - self.sDate

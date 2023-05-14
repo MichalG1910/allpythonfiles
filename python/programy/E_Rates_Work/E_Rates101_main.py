@@ -7,13 +7,17 @@ import PIL._tkinter_finder
 from classE_Rates101_Data import Data
 from classE_Rates101_Graph import Graph
 from classE_Rates101_Tooltip import ToolTip
+from classE_Rates101_Database import Scenario
 import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
+#513 wiersz - zmiana do DB
+
 class Main:
     agr_number = 0
     
     def __init__(self):
+        scenObj.operatingMode()
         self.win = tk.Tk()
         dataObj.checkConnection()
         dataObj.createReportDir()
@@ -508,7 +512,7 @@ class Main:
         self.endDate = tk.StringVar()
 
         def runReport():
-            dataObj.generateReport(self.startDate.get(), self.endDate.get()) 
+            dataObj.generateReport(self.startDate.get(), self.endDate.get(), dataObj.firstloopEDL) 
         
         tabControlRep = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 
@@ -595,10 +599,11 @@ class Main:
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
                 drawGraph()
-                       
+
+scenObj = Scenario()                        
 graphObj = Graph()   
 dataObj = Data()
-mainObj = Main()       
+mainObj = Main()      
 mainObj.win.mainloop()
 
           

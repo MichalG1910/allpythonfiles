@@ -1,16 +1,17 @@
-import psycopg2, os, sys
+import psycopg2, os, sys, datetime
 import tkinter as tk
 from tkinter import ttk
 from functools import partial
 from classE_Rates101_Data import Data
 
 class Scenario:
-   def __init__(self):
+   def operatingMode(self):
       self.win = tk.Tk()
       self.createWin()
       self.winStyle(self.win)
       self.createFields()
       self.trace()
+      self.today = datetime.date.today()
       self.win.mainloop()
    
    def createWin(self):
@@ -20,7 +21,13 @@ class Scenario:
    def winStyle(self, window):
         window.tk.call('source', os.path.join(os.path.dirname(sys.argv[0]), 'azure.tcl'))
         window.tk.call("set_theme", "dark")
-        
+
+   def start(self):
+      if self.DBCheckVar.get() == 1:
+         self.validateLogin()
+      else:
+         self.win.quit()
+         self.win.destroy()  
    
    def validateLogin(self, username, password):
       print("username entered :", username.get())
@@ -34,6 +41,7 @@ class Scenario:
       self.password =  tk.StringVar()
       self.noDBCheckVar = tk.IntVar()
       self.DBCheckVar = tk.IntVar()
+      self.noDBCheckVar.set(1)
       self.validateLogin = partial(self.validateLogin, self.username, self.password)
 
       scenarioFrame = ttk.LabelFrame(self.win, text='Wybierz tryb pracy programu', labelanchor="n", style='clam.TLabelframe',)
@@ -53,7 +61,7 @@ class Scenario:
       self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
       self.passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*', state='disabled')
       self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
-      loginButton = ttk.Button(self.win, text="Login", command=self.validateLogin, width=10).grid(column=0, row=4,  padx=10, pady=10)
+      loginButton = ttk.Button(self.win, text="Start", command=self.start, width=10).grid(column=0, row=4,  padx=10, pady=10)
       
    def scenarioSelection1(self, *ignoredArgs):
       self.noDBCheckVar.set(0) 
@@ -62,6 +70,7 @@ class Scenario:
       self.passwordEntry.configure(state='disabled')
       self.userLabel.configure(foreground='grey')
       self.passwordLabel.configure(foreground='grey')
+   
    def scenarioSelection2(self, *ignoredArgs):         
       self.DBCheckVar.set(0) 
       self.noDBCheckVar.set(1)
@@ -73,6 +82,7 @@ class Scenario:
    def trace(self):         
       self.noDBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection1())
       self.DBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection2())
+   
    def cursorObj(self, DB="postgres"):
       self.conn = psycopg2.connect(database=DB, user=self.username.get(), password=self.password.get(), host='127.0.0.1', port= '5432')
       self.cursor = self.conn.cursor()
@@ -84,7 +94,7 @@ class Scenario:
       try:
          self.cursor.execute('''CREATE DATABASE mydb''')
          self.startDate = '2004-05-04'
-         self.endDate = '2023-05-11'#dataObj.effectiveDateList[-1]
+         self.endDate =str(self.today)
          print("Database created successfully........")
       except psycopg2.errors.DuplicateDatabase:
          print("Database already exist........")
@@ -116,5 +126,5 @@ class Scenario:
       print("Data inserted to tabel rates........")
       self.conn.commit()
       self.conn.close()
-scenarioObj = Scenario()
+
 
