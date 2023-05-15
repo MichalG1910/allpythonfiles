@@ -13,8 +13,12 @@ class Scenario:
       self.createFields()
       self.trace()
       self.today = datetime.date.today()
+      self.logWin.protocol("WM_DELETE_WINDOW", self._exitApp)
       self.logWin.mainloop()
-   
+      
+   def _exitApp(self):
+      exit()
+
    def createLogWin(self):
       self.logWin.geometry('320x300+600+300')
       self.logWin.title('E_Rates')
@@ -39,8 +43,10 @@ class Scenario:
    def start(self):
       if self.DBCheckVar.get() == 1:
          self.validateLogin()
+         self.workingMode = 'Database'
       else:
          self.logwin_quit()
+         self.workingMode = 'Online_No_Database'
    
    def validateLogin(self, username, password):
       print("username entered :", username.get())
@@ -121,7 +127,6 @@ class Scenario:
    def insertToTabel(self):
       self.cursorObj("e_ratesdb")
       dataObj = Data()
-      delCsvList = 'no'
       dataObj.generateReport(self.startDate, self.endDate)
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
       value) VALUES (%s, %s, %s, %s)'''
