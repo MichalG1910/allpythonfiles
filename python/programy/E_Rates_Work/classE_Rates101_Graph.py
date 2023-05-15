@@ -12,7 +12,7 @@ class Graph:
     
     def figSizeGet(self):
         if sys.platform == 'linux': 
-            self.figSizeA = 9
+            self.figSizeA = 8.75
         else:
             self.figSizeA = 8.25    
     
