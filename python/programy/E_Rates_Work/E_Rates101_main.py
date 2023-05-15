@@ -512,7 +512,7 @@ class Main:
         self.endDate = tk.StringVar()
 
         def runReport():
-            dataObj.generateReport(self.startDate.get(), self.endDate.get(), dataObj.firstloopEDL) 
+            dataObj.generateReport(self.startDate.get(), self.endDate.get(), 'yes', dataObj.firstloopEDL) 
         
         tabControlRep = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 

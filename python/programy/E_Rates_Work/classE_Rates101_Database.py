@@ -119,7 +119,8 @@ class Scenario:
    def insertToEmptyTabel(self):
       self.cursorObj("mydb")
       dataObj = Data()
-      dataObj.generateReport(self.startDate, self.endDate)
+      delCsvList = 'no'
+      dataObj.generateReport(self.startDate, self.endDate, delCsvList)
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
       value) VALUES (%s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvList)

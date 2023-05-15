@@ -76,7 +76,7 @@ class Data:
             self.last30EDList.append(last30ED), self.last30MidList.append(last30Mid)
         self.last30EDList.reverse(), self.last30MidList.reverse()
     
-    def generateReport(self,startDate, endDate, firstloopEDL = datetime.date.today()):
+    def generateReport(self,startDate, endDate, deleteCsvList = 'no', firstloopEDL = datetime.date.today()):
         self.num = 2
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",startDate) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",endDate):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
@@ -109,7 +109,8 @@ class Data:
                     self.reportCreate(startDate, endDate) 
                     self.csv_ER_report(startDate, endDate) 
                     
-                    del self.data, self.report, self.printList, self.erDataList, self.response # ,self.csvList
+                    del self.data, self.report, self.printList, self.erDataList, self.response  
+                    if deleteCsvList == 'yes': del self.csvList
                     
     def ReportLoop(self):
         runDate = self.sDate
