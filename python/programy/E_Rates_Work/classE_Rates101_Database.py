@@ -7,21 +7,21 @@ from classE_Rates101_Tooltip import ToolTip
 
 class Scenario:
    def operatingMode(self):
-      self.win = tk.Tk()
-      self.createWin()
-      self.winStyle(self.win)
+      self.logWin = tk.Tk()
+      self.createLogWin()
+      self.WinStyle(self.logWin)
       self.createFields()
       self.trace()
       self.today = datetime.date.today()
-      self.win.mainloop()
+      self.logWin.mainloop()
    
-   def createWin(self):
-      self.win.geometry('320x300+600+300')
-      self.win.title('E_Rates')
+   def createLogWin(self):
+      self.logWin.geometry('320x300+600+300')
+      self.logWin.title('E_Rates')
    
-   def winStyle(self, window):
-        window.tk.call('source', os.path.join(os.path.dirname(sys.argv[0]), 'azure.tcl'))
-        window.tk.call("set_theme", "dark")
+   def WinStyle(self, logWindow):
+        logWindow.tk.call('source', os.path.join(os.path.dirname(sys.argv[0]), 'azure.tcl'))
+        logWindow.tk.call("set_theme", "dark")
 
    def createToolTip(self, widget, text, corX=0, corY=0): 
         toolTip = ToolTip(widget)
@@ -32,12 +32,15 @@ class Scenario:
         widget.bind('<Enter>', enter)
         widget.bind('<Leave>', leave)
 
+   def logwin_quit(self):
+      self.logWin.quit()
+      self.logWin.destroy()
+   
    def start(self):
       if self.DBCheckVar.get() == 1:
          self.validateLogin()
       else:
-         self.win.quit()
-         self.win.destroy()  
+         self.logwin_quit()
    
    def validateLogin(self, username, password):
       print("username entered :", username.get())
@@ -53,7 +56,7 @@ class Scenario:
       self.noDBCheckVar.set(1)
       self.validateLogin = partial(self.validateLogin, self.username, self.password)
 
-      scenarioFrame = ttk.LabelFrame(self.win, text='Wybierz tryb pracy programu', labelanchor="n", style='clam.TLabelframe')
+      scenarioFrame = ttk.LabelFrame(self.logWin, text='Wybierz tryb pracy programu', labelanchor="n", style='clam.TLabelframe')
       scenarioFrame.grid(column=0, row=0, padx=23, ipadx=5, pady=10, sticky=tk.EW,)
       noDatabaseLabel = ttk.Label(scenarioFrame, text="pracuj w trybie bez bazy danych")
       noDatabaseLabel.grid(column=0, columnspan=1, row=0, padx=10, pady=10, sticky=tk.W)
@@ -66,15 +69,15 @@ class Scenario:
       self.DBCheckButton = ttk.Checkbutton(scenarioFrame, variable=self.DBCheckVar,)
       self.DBCheckButton.grid(column=1, columnspan=2, row=1, padx=10, pady=10, sticky=tk.E) # state= "disabled"
       
-      self.userLabel = ttk.Label(self.win, text="username: ", foreground='grey')
+      self.userLabel = ttk.Label(self.logWin, text="username: ", foreground='grey')
       self.userLabel.grid(column=0, row=2, padx=23, pady=10, sticky=tk.W)
-      self.userEntry = ttk.Entry(self.win, textvariable=self.username, state='disabled')
+      self.userEntry = ttk.Entry(self.logWin, textvariable=self.username, state='disabled')
       self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
-      self.passwordLabel = ttk.Label(self.win, text="password: ", foreground='grey')
+      self.passwordLabel = ttk.Label(self.logWin, text="password: ", foreground='grey')
       self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
-      self.passwordEntry = ttk.Entry(self.win, textvariable=self.password, show='*', state='disabled')
+      self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show='*', state='disabled')
       self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
-      loginButton = ttk.Button(self.win, text="Start", command=self.start, width=10).grid(column=0, row=4,  padx=10, pady=10)
+      loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=4,  padx=10, pady=10)
       
    def scenarioSelection1(self, *ignoredArgs):
       self.noDBCheckVar.set(0) 
@@ -101,7 +104,7 @@ class Scenario:
       self.cursor = self.conn.cursor()
 
    def createTabel(self):
-      self.cursorObj("E_RatesDB")
+      self.cursorObj("e_ratesdb")
       sql ='''CREATE TABLE IF NOT EXISTS rates       
       (
          rates_id SERIAL NOT NULL PRIMARY KEY,
@@ -116,10 +119,10 @@ class Scenario:
       self.conn.close()
    
    def insertToTabel(self):
-      self.cursorObj("E_RatesDB")
+      self.cursorObj("e_ratesdb")
       dataObj = Data()
       delCsvList = 'no'
-      dataObj.generateReport(self.startDate, self.endDate, delCsvList)
+      dataObj.generateReport(self.startDate, self.endDate)
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
       value) VALUES (%s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvList)
@@ -130,25 +133,31 @@ class Scenario:
    def updateDatabase(self):
       self.cursorObj()
       self.conn.autocommit = True
-      
+      self.endDate =str(self.today)
+
       try:
-         self.cursor.execute('''CREATE DATABASE E_RatesDB''')
+         self.cursor.execute('''CREATE DATABASE e_ratesdb''')
          self.startDate = '2004-05-04'
-         self.endDate =str(self.today)
          print("Database created successfully........")
          self.conn.close()
          self.createTabel()
          self.insertToTabel()
+         self.logwin_quit()
       except psycopg2.errors.DuplicateDatabase:
-         self.cursorObj("E_RatesDB")
-         self.cursor.execute('''SELECT MAX(date) from rates''') # SELECT MAX(DATE date) from E_RatesDB
-         print(f"Database already exist (last update: {self.cursor.fetchall()})........")
-         lastDBDate = (list(self.cursor.fetchall().split('-')))
+         self.cursorObj("e_ratesdb")
+         self.cursor.execute('''SELECT MAX(date) from rates''') # SELECT MAX(DATE date) from e_ratesdb
+         fetchDate = self.cursor.fetchall()[0][0]
+         print(f"Database already exist (last update: {fetchDate})........")
+         lastDBDate = (list(fetchDate.split('-')))
          convertDate = [int(i) for i in lastDBDate] 
          lastDBUpdate = datetime.date(convertDate[0], convertDate[1], convertDate[2])
          if lastDBUpdate < self.today:
-            self.startDate = lastDBUpdate + datetime.timedelta(days=1)
+            self.startDate = str(lastDBUpdate + datetime.timedelta(days=1))
             self.insertToTabel()
+            print("Database updated........")
+            self.logwin_quit()
+         else:
+            self.logwin_quit()
 
 
 
