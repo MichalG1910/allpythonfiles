@@ -39,6 +39,7 @@ class Main:
         if scenObj.workingMode == 'Online_No_Database':
             dataObj.latestNBPreport()
         if scenObj.workingMode == 'Database':
+            dataObj.firstloopEDL = scenObj.fetchDate
             scenObj.latestNBPreportDB()
     def menu(self):
         self.menuBar = Menu(self.win)
@@ -472,7 +473,7 @@ class Main:
         
         if scenObj.workingMode == 'Database':
             mediumTab(scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown, scenObj.fetchDate)
-            bidAskTab()
+            bidAskTab(dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.effectiveDateList[-1])
             currencyLast30()
             multiGraph()
             

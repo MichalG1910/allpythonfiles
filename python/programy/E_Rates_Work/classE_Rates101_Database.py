@@ -109,59 +109,66 @@ class Scenario:
       self.conn = psycopg2.connect(database=DB, user=self.username.get(), password=self.password.get(), host='127.0.0.1', port= '5432')
       self.cursor = self.conn.cursor()
 
-   def createTabel(self):
+   def createTabelRates(self):
       self.cursorObj("e_ratesdb")
       sql ='''CREATE TABLE IF NOT EXISTS rates       
       (
          rates_id SERIAL NOT NULL PRIMARY KEY,
          currency VARCHAR(30),
          code VARCHAR(20),
-         date VARCHAR(20),
-         value VARCHAR(20),
-         bid VARCHAR(20),
-         ask VARCHAR(20),
+         date DATE,
+         value VARCHAR(20)
       )'''
       self.cursor.execute(sql)
-      print("Table created successfully........")
+      print("Table rates created successfully........")
       self.conn.commit()
       self.conn.close()
    
-   def insertToTabel(self):
+   def insertToTabelRates(self):
       self.cursorObj("e_ratesdb")
       dataObj = Data()
       dataObj.generateReport(self.startDate, self.endDate)
-      dataObj.NBPbidAsk()
-      for v in dataObj.csvListWithAsk:
-         agr = 0
-         for i in dataObj.csvList:
-            if v[1] == i[1] and v[2] == i[2]:
-               dataObj.csvList[agr].append([v[3], v[4]])
-               agr += 1
-            else:
-               dataObj.csvList[agr].append(['***not available***', '***not available***'])
-               agr += 1
-
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
-      value, bid, ask) VALUES (%s, %s, %s, %s, %s, %s)'''
+      value) VALUES (%s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvList)
       print("Data inserted to tabel rates........")
       self.conn.commit()
       self.conn.close()
-
+   
+   def createTabelBidAsk(self):
+      self.cursorObj("e_ratesdb")
+      sql ='''CREATE TABLE IF NOT EXISTS bidask       
+      (
+         bidask_id SERIAL NOT NULL PRIMARY KEY,
+         currency VARCHAR(30),
+         code VARCHAR(20),
+         date Date,
+         bid VARCHAR(20),
+         ask VARCHAR(20)
+      )'''
+      self.cursor.execute(sql)
+      print("Table bidask created successfully........")
+      self.conn.commit()
+      self.conn.close()
+   
+   def insertToTabelBidAsk(self):
+      self.cursorObj("e_ratesdb")
+      dataObj = Data()
       dataObj.NBPbidAsk()
-      dataObj.valueList
-      dataObj.askList
-      insert_bidAsk = '''INSERT INTO rates (bid, ask) VALUES (%s, %s)'''
-      self.cursor.executemany(insert_bidAsk, dataObj.valueList, dataObj.askList) # moze nie działac
-      print("Data inserted to tabel rates........")
+      insert_stmt = '''INSERT INTO bidask (currency, code, date, 
+      bid, ask) VALUES (%s, %s, %s, %s, %s)'''
+      self.cursor.executemany(insert_stmt, dataObj.csvListWithAsk)
+      print("Data inserted to tabel bidask........")
       self.conn.commit()
       self.conn.close()
    
    def updateDatabase(self):
-      self.cursorObj("e_ratesdb")
-      self.cursor.execute('''SELECT MAX(date) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
-      self.fetchDate = self.cursor.fetchall()[0][0]
-      self.conn.close()
+      
+      def getLastDate():
+         self.cursorObj("e_ratesdb")
+         self.cursor.execute('''SELECT MAX(date) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
+         self.fetchDate = str(self.cursor.fetchall()[0][0])
+         self.conn.close()
       
       self.cursorObj()
       self.conn.autocommit = True
@@ -172,17 +179,22 @@ class Scenario:
          self.startDate = '2004-05-04'
          print("Database created successfully........")
          self.conn.close()
-         self.createTabel()
-         self.insertToTabel()
+         self.createTabelRates()
+         self.insertToTabelRates()
+         self.createTabelBidAsk()
+         self.insertToTabelBidAsk()
+         getLastDate()
          self.logwin_quit()
       except psycopg2.errors.DuplicateDatabase:
+         getLastDate()
          print(f"Database already exist (last update: {self.fetchDate})........")
          lastDBDate = (list(self.fetchDate.split('-')))
          convertDate = [int(i) for i in lastDBDate] 
          lastDBUpdate = datetime.date(convertDate[0], convertDate[1], convertDate[2])
          if lastDBUpdate < self.today:
             self.startDate = str(lastDBUpdate + datetime.timedelta(days=1))
-            self.insertToTabel()
+            self.insertToTabelRates()
+            self.insertToTabelBidAsk()
             print("Database updated........")
             self.logwin_quit()
          else:
@@ -191,21 +203,22 @@ class Scenario:
    def latestNBPreportDB(self):
       self.currencyList, self.codeList, self.valueList =[],[],[]
       self.cursorObj("e_ratesdb")
-      self.cursor.execute('''SELECT * FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
-      print(self.cursor.fetchall())
-      self.lastList = self.cursor.fetchall
-      
-      for t in len(self.lastList):
+      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
+      #print(self.cursor.fetchall())
+      self.lastList = self.cursor.fetchall()
+      #print(self.lastList)
+      for t in self.lastList:
          self.currencyList.append(t[1])
          self.codeList.append(t[2])  
-         self.valueList.append(t[4])  
+         self.valueList.append(t[3])  
 
-      self.cursor.execute('''SELECT * FROM rates WHERE date IN (SELECT MAX(date)-'1 days' FROM rates)''') 
-      self.lastListMinus1Day = self.cursor.fetchall
+      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date)- INTERVAL '1 days' FROM rates)''') 
+      self.lastListMinus1Day = self.cursor.fetchall()
+      print(self.lastListMinus1Day)
       self.ratesUpDown = self.lastListMinus1Day + self.lastList
       self.conn.close()
 
-      del self.currencyList, self.codeList, self.valueList, self.lastList, self.lastListMinus1Day, self.ratesUpDown
+      #del self.currencyList, self.codeList, self.valueList, self.lastList, self.lastListMinus1Day, self.ratesUpDown
 
    def NBPbidAskDB(self):
       pass
