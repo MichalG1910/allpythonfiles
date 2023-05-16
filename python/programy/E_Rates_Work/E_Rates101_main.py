@@ -23,7 +23,7 @@ class Main:
         dataObj.createReportDir()
         dataObj.NBPbidAsk()
         dataObj.NBPratesUpDown()
-        dataObj.latestNBPreport()
+        self.mode()
         self.winStyle(self.win)
         self.themeButton(self.win)
         self.quitButton()
@@ -34,7 +34,12 @@ class Main:
         self.win.protocol("WM_DELETE_WINDOW", self._exit)
         self.win.title("E_Rates v.1.1".center(int(self.win.winfo_width()/2.1)))
         self.menu()
-        
+
+    def mode(self):
+        if scenObj.workingMode == 'Online_No_Database':
+            dataObj.latestNBPreport()
+        if scenObj.workingMode == 'Database':
+            scenObj.latestNBPreportDB()
     def menu(self):
         self.menuBar = Menu(self.win)
         self.win.config(menu=self.menuBar)
@@ -145,12 +150,12 @@ class Main:
             graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
 
     def exchangeRatesTabel(self):
-        def mediumTab(): 
+        def mediumTab(currencyList, codeList, valueList, ratesUpDown, lastDate): 
             tab1 = ttk.Frame(tabControl)
             
             tabControl.add(tab1,  text="Kursy", compound='left')  
             tabControl.grid(column=0, columnspan=4, rowspan=34, row=1, padx=4, pady=4, sticky=tk.N)
-            echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
+            echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {lastDate}", labelanchor="n", style='clam.TLabelframe')  
             echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
             
             ttk.Label(echangeRateFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
@@ -158,17 +163,17 @@ class Main:
             ttk.Label(echangeRateFrame, text= "Kurs PLN", foreground="#007fff").grid(column=2, row=0, sticky=tk.W, padx=2)
             ttk.Label(echangeRateFrame, text= "Zmiana", foreground="#007fff").grid(column=3, row=0, sticky=tk.W, padx=2)
             
-            for t in range(len(dataObj.rates)):
-                ttk.Label(echangeRateFrame,  width=20, text= f'{dataObj.currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
-                ttk.Label(echangeRateFrame,  width=5, text= f'{dataObj.codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=1, pady=1)
-                ttk.Label(echangeRateFrame,  width=10, text= f'{dataObj.valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
-                if float(dataObj.ratesUpDown[t+33][3])>float(dataObj.ratesUpDown[t][3]):
+            for t in range(len(currencyList)):
+                ttk.Label(echangeRateFrame,  width=20, text= f'{currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
+                ttk.Label(echangeRateFrame,  width=5, text= f'{codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=1, pady=1)
+                ttk.Label(echangeRateFrame,  width=10, text= f'{valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
+                if float(ratesUpDown[t+33][3])>float(ratesUpDown[t][3]):
                     col = "Green"
-                elif float(dataObj.ratesUpDown[t+33][3])<float(dataObj.ratesUpDown[t][3]):
+                elif float(ratesUpDown[t+33][3])<float(ratesUpDown[t][3]):
                     col = "Red"
                 else:
                     col = "White"
-                procent = round((((float(dataObj.ratesUpDown[t+33][3])/float(dataObj.ratesUpDown[t][3])) -1) * 100), 2)
+                procent = round((((float(ratesUpDown[t+33][3])/float(ratesUpDown[t][3])) -1) * 100), 2)
                 if procent > 0:
                     ttk.Label(echangeRateFrame,  width=8, text= f'\u25B2 {procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
                 elif procent == 0:
@@ -457,11 +462,20 @@ class Main:
              
         tabControl = ttk.Notebook(self.win)
         tabMultiGraph = ttk.Notebook(self.win)
-        mediumTab()
-        bidAskTab()
-        currencyLast30()
-        multiGraph()
-        del dataObj.ratesUpDown
+        
+        if scenObj.workingMode == 'Online_No_Database':
+            mediumTab(dataObj.currencyList, dataObj.codeList, dataObj.valueList, dataObj.ratesUpDown, dataObj.effectiveDateList[-1])
+            bidAskTab()
+            currencyLast30()
+            multiGraph()
+            del dataObj.ratesUpDown
+        
+        if scenObj.workingMode == 'Database':
+            mediumTab(scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown, scenObj.fetchDate)
+            bidAskTab()
+            currencyLast30()
+            multiGraph()
+            
         
     def graphGui(self): 
         self.currencyName = tk.StringVar()

@@ -166,11 +166,21 @@ class Scenario:
          else:
             self.logwin_quit()
       
-   def mediumTabData(self):
+   def latestNBPreportDB(self):
+      self.currencyList, self.codeList, self.valueList =[],[],[]
       self.cursorObj("e_ratesdb")
       self.cursor.execute('''SELECT * FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
       print(self.cursor.fetchall())
+      self.lastList = self.cursor.fetchall
       
+      for t in len(self.lastList):
+         self.currencyList.append(t[1])
+         self.codeList.append(t[2])  
+         self.valueList.append(t[4])  
+
+      self.cursor.execute('''SELECT * FROM rates WHERE date IN (SELECT MAX(date)-'1 days' FROM rates)''') 
+      self.lastListMinus1Day = self.cursor.fetchall
+      self.ratesUpDown = self.lastListMinus1Day + self.lastList
       self.conn.close()
 
 
