@@ -136,6 +136,11 @@ class Scenario:
       self.conn.close()
    
    def updateDatabase(self):
+      self.cursorObj("e_ratesdb")
+      self.cursor.execute('''SELECT MAX(date) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
+      self.fetchDate = self.cursor.fetchall()[0][0]
+      self.conn.close()
+      
       self.cursorObj()
       self.conn.autocommit = True
       self.endDate =str(self.today)
@@ -149,11 +154,8 @@ class Scenario:
          self.insertToTabel()
          self.logwin_quit()
       except psycopg2.errors.DuplicateDatabase:
-         self.cursorObj("e_ratesdb")
-         self.cursor.execute('''SELECT MAX(date) from rates''') # SELECT MAX(DATE date) from e_ratesdb
-         fetchDate = self.cursor.fetchall()[0][0]
-         print(f"Database already exist (last update: {fetchDate})........")
-         lastDBDate = (list(fetchDate.split('-')))
+         print(f"Database already exist (last update: {self.fetchDate})........")
+         lastDBDate = (list(self.fetchDate.split('-')))
          convertDate = [int(i) for i in lastDBDate] 
          lastDBUpdate = datetime.date(convertDate[0], convertDate[1], convertDate[2])
          if lastDBUpdate < self.today:
@@ -163,6 +165,14 @@ class Scenario:
             self.logwin_quit()
          else:
             self.logwin_quit()
+      
+   def mediumTabData(self):
+      self.cursorObj("e_ratesdb")
+      self.cursor.execute('''SELECT * FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
+      print(self.cursor.fetchall())
+      
+      self.conn.close()
+
 
 
 
