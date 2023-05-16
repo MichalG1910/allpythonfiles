@@ -136,7 +136,7 @@ class Data:
         del longerList     
             
     def dataFormatting(self, midBid):
-        self.csvList, self.printList, self.erDataList =[],[],[]
+        self.csvList, self.csvListWithAsk, self.printList, self.erDataList =[],[],[],[]
         
         for dict in self.data:
             table = dict["table"]
@@ -160,6 +160,7 @@ class Data:
                 if self.num == 3: 
                     ask = rate["ask"]
                     self.askList.append(ask)
+                    self.csvListWithAsk.append([currency, self.code, self.effectiveDate, mid, ask])
 
                 if self.num == 2:
                     self.csvList.append([currency,self.code,self.effectiveDate,mid])

@@ -117,7 +117,9 @@ class Scenario:
          currency VARCHAR(30),
          code VARCHAR(20),
          date VARCHAR(20),
-         value VARCHAR(20)
+         value VARCHAR(20),
+         bid VARCHAR(20),
+         ask VARCHAR(20),
       )'''
       self.cursor.execute(sql)
       print("Table created successfully........")
@@ -128,9 +130,29 @@ class Scenario:
       self.cursorObj("e_ratesdb")
       dataObj = Data()
       dataObj.generateReport(self.startDate, self.endDate)
+      dataObj.NBPbidAsk()
+      for v in dataObj.csvListWithAsk:
+         agr = 0
+         for i in dataObj.csvList:
+            if v[1] == i[1] and v[2] == i[2]:
+               dataObj.csvList[agr].append([v[3], v[4]])
+               agr += 1
+            else:
+               dataObj.csvList[agr].append(['***not available***', '***not available***'])
+               agr += 1
+
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
-      value) VALUES (%s, %s, %s, %s)'''
+      value, bid, ask) VALUES (%s, %s, %s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvList)
+      print("Data inserted to tabel rates........")
+      self.conn.commit()
+      self.conn.close()
+
+      dataObj.NBPbidAsk()
+      dataObj.valueList
+      dataObj.askList
+      insert_bidAsk = '''INSERT INTO rates (bid, ask) VALUES (%s, %s)'''
+      self.cursor.executemany(insert_bidAsk, dataObj.valueList, dataObj.askList) # moze nie działac
       print("Data inserted to tabel rates........")
       self.conn.commit()
       self.conn.close()
@@ -183,6 +205,10 @@ class Scenario:
       self.ratesUpDown = self.lastListMinus1Day + self.lastList
       self.conn.close()
 
+      del self.currencyList, self.codeList, self.valueList, self.lastList, self.lastListMinus1Day, self.ratesUpDown
+
+   def NBPbidAskDB(self):
+      pass
 
 
 

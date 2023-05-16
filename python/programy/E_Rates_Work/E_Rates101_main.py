@@ -181,11 +181,11 @@ class Main:
                 else: 
                     ttk.Label(echangeRateFrame,  width=8, text= f'\u25BC {abs(procent)}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
         
-        def bidAskTab():
+        def bidAskTab(currencyList, codeList, valueList, askList, lastDate):
             tab2 = ttk.Frame(tabControl)
             tabControl.add(tab2, text="kupno/sprzedaż")
-            buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {dataObj.effectiveDateList[-1]}", labelanchor="n", style='clam.TLabelframe')  
-            buySellFrame.grid(column=1, row=1, columnspan=4, rowspan=(len(dataObj.rates1)+1), padx=5, sticky=tk.W)
+            buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {lastDate}", labelanchor="n", style='clam.TLabelframe')  
+            buySellFrame.grid(column=1, row=1, columnspan=4, rowspan=(len(currencyList)+1), padx=5, sticky=tk.W)
             
             ttk.Label(buySellFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
             ttk.Label(buySellFrame, text= "Kod", foreground="#007fff").grid(column=1, row=0, sticky=tk.W, padx=5)
@@ -194,10 +194,10 @@ class Main:
             ttk.Label(tab2, text= f"\nTabela {dataObj.no1} zawiera tylko wybrane waluty").grid(columnspan=4, row=len(dataObj.rates1)+2, sticky=tk.W, padx=3, pady=3)
             
             for v in range(len(dataObj.rates1)):
-                ttk.Label(buySellFrame,  width=20, text= f'{dataObj.currencyList1[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(buySellFrame,  width=5, text= f'{dataObj.codeList1[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(buySellFrame,  width=9, text= f'{dataObj.valueList1[v]}').grid(column=2, row=v+1, sticky=tk.W, padx=3, pady=3)
-                ttk.Label(buySellFrame,  width=8, text= f'{dataObj.askList1[v]}').grid(column=3, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=20, text= f'{currencyList[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=5, text= f'{codeList[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=9, text= f'{valueList[v]}').grid(column=2, row=v+1, sticky=tk.W, padx=3, pady=3)
+                ttk.Label(buySellFrame,  width=8, text= f'{askList[v]}').grid(column=3, row=v+1, sticky=tk.W, padx=3, pady=3)
         
         def currencyLast30():
             currencyLast30 = tk.StringVar()
@@ -465,7 +465,7 @@ class Main:
         
         if scenObj.workingMode == 'Online_No_Database':
             mediumTab(dataObj.currencyList, dataObj.codeList, dataObj.valueList, dataObj.ratesUpDown, dataObj.effectiveDateList[-1])
-            bidAskTab()
+            bidAskTab(dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.effectiveDateList[-1])
             currencyLast30()
             multiGraph()
             del dataObj.ratesUpDown
