@@ -205,19 +205,29 @@ class Main:
             self.codeCurrencyList = []
 
             def getLast30Tabel():
-                dataObj.last30Data(currencyLast30.get())
+                if scenObj.workingMode == 'Online_No_Database':
+                    dataObj.last30Data(currencyLast30.get())
+                    last30EDList = dataObj.last30EDList
+                    last30MidList = last30MidList
+                if scenObj.workingMode == 'Database':
+                    scenObj.last30DataDB(currencyLast30.get())
+                    last30EDList = scenObj.last30EDList
+                    last30MidList = scenObj.last30MidList
+                #print(dataObj.last30EDList)
+                #print()
+                #print(last30MidList)
                 for i in range(30):
-                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30EDList[i]}').grid(column=0, row=i+2, sticky=tk.W, padx=1, pady=1)
-                    ttk.Label(last30Frame,  width=10, text= f'{dataObj.last30MidList[i]}').grid(column=1, row=i+2, sticky=tk.W, padx=1, pady=1)
+                    ttk.Label(last30Frame,  width=10, text= f'{last30EDList[i]}').grid(column=0, row=i+2, sticky=tk.W, padx=1, pady=1)
+                    ttk.Label(last30Frame,  width=10, text= f'{last30MidList[i]}').grid(column=1, row=i+2, sticky=tk.W, padx=1, pady=1)
                 #rise fall
                 for m in range(29):
-                    if float(dataObj.last30MidList[m])>float(dataObj.last30MidList[m+1]): 
+                    if float(last30MidList[m])>float(last30MidList[m+1]): 
                         col = "Green"
-                    elif float(dataObj.last30MidList[m])<float(dataObj.last30MidList[m+1]):
+                    elif float(last30MidList[m])<float(last30MidList[m+1]):
                         col = "Red"
                     else:
                         col = "White" 
-                    procent = round((((float(dataObj.last30MidList[m])/float(dataObj.last30MidList[m+1])) -1) * 100), 2)
+                    procent = round((((float(last30MidList[m])/float(last30MidList[m+1])) -1) * 100), 2)
                     if procent > 0:
                         ttk.Label(last30Frame,  width=8, text= f'\u25B2 {procent}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=1, pady=1)
                     elif procent == 0:
@@ -225,13 +235,13 @@ class Main:
                     else:
                         ttk.Label(last30Frame,  width=8, text= f'\u25BC {abs(procent)}%', foreground=col).grid(column=2, row=m+2, sticky=tk.W, padx=1, pady=1)
                 #rise fall 30
-                if float(dataObj.last30MidList[0])>float(dataObj.last30MidList[-1]):
+                if float(last30MidList[0])>float(last30MidList[-1]):
                     col1 = "Green"
-                elif float(dataObj.last30MidList[0])<float(dataObj.last30MidList[-1]):
+                elif float(last30MidList[0])<float(last30MidList[-1]):
                     col1 = "Red"
                 else:
                     col1 = "White" 
-                procent = round((((float(dataObj.last30MidList[0])/float(dataObj.last30MidList[-1])) -1) * 100), 2)
+                procent = round((((float(last30MidList[0])/float(last30MidList[-1])) -1) * 100), 2)
                 if procent > 0:
                     ttk.Label(last30Frame,  width=8, text= f'\u25B2 {procent}%', foreground=col1).grid(column=3, row=2, sticky=tk.W, padx=1, pady=1)
                 elif procent == 0:
@@ -469,13 +479,16 @@ class Main:
             bidAskTab(dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.effectiveDateList[-1])
             currencyLast30()
             multiGraph()
+            
             del dataObj.currencyList, dataObj.codeList, dataObj.valueList, dataObj.ratesUpDown
             del dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1
+        
         if scenObj.workingMode == 'Database':
             mediumTab(scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown, scenObj.fetchDate)
             bidAskTab(scenObj.currencyList1, scenObj.codeList1, scenObj.valueList1, scenObj.askList1, scenObj.fetchDate)
             currencyLast30()
             multiGraph()
+            
             del scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown
             del scenObj.currencyList1, scenObj.codeList1, scenObj.valueList1, scenObj.askList1
         

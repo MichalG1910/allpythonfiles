@@ -235,5 +235,17 @@ class Scenario:
       
       self.conn.close()
 
+   def last30DataDB(self, code):
+      self.last30EDList,self.last30MidList = [],[]
+      self.cursorObj("e_ratesdb")
+      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = {code[0:3]} ORDER BY rates_id DESC LIMIT 30)''') 
+      self.last30List = self.cursor.fetchall()
+
+      for t in self.last30List:
+         self.last30EDList.append(str(t[0]))
+         self.last30MidList.append(t[1])
+      
+      self.conn.close()
+
 
 
