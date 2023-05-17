@@ -469,13 +469,14 @@ class Main:
             bidAskTab(dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.effectiveDateList[-1])
             currencyLast30()
             multiGraph()
-            del dataObj.ratesUpDown
+            del dataObj.currencyList, dataObj.codeList, dataObj.valueList, dataObj.ratesUpDown
         
         if scenObj.workingMode == 'Database':
             mediumTab(scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown, scenObj.fetchDate)
             bidAskTab(dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.effectiveDateList[-1])
             currencyLast30()
             multiGraph()
+            del scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown
             
         
     def graphGui(self): 
