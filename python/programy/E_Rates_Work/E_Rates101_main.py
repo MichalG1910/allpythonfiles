@@ -470,14 +470,14 @@ class Main:
             currencyLast30()
             multiGraph()
             del dataObj.currencyList, dataObj.codeList, dataObj.valueList, dataObj.ratesUpDown
-        
+            del dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1
         if scenObj.workingMode == 'Database':
             mediumTab(scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown, scenObj.fetchDate)
-            bidAskTab(dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.effectiveDateList[-1])
+            bidAskTab(scenObj.currencyList1, scenObj.codeList1, scenObj.valueList1, scenObj.askList1, scenObj.fetchDate)
             currencyLast30()
             multiGraph()
             del scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown
-            
+            del scenObj.currencyList1, scenObj.codeList1, scenObj.valueList1, scenObj.askList1
         
     def graphGui(self): 
         self.currencyName = tk.StringVar()

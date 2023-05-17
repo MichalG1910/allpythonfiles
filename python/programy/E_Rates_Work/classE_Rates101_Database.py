@@ -206,9 +206,8 @@ class Scenario:
       self.currencyList, self.codeList, self.valueList =[],[],[]
       self.cursorObj("e_ratesdb")
       self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
-      #print(self.cursor.fetchall())
       self.lastList = self.cursor.fetchall()
-      #print(self.lastList)
+      
       for t in self.lastList:
          self.currencyList.append(t[1])
          self.codeList.append(t[2])  
@@ -220,10 +219,21 @@ class Scenario:
       self.ratesUpDown = self.lastListMinus1Day + self.lastList
       self.conn.close()
 
-      #del self.currencyList, self.codeList, self.valueList, self.lastList, self.lastListMinus1Day, self.ratesUpDown
+      del self.lastList, self.lastListMinus1Day
 
    def NBPbidAskDB(self):
-      pass
+      self.currencyList1, self.codeList1, self.valueList1, self.askList1 =[],[],[],[]
+      self.cursorObj("e_ratesdb")
+      self.cursor.execute('''SELECT currency, code, bid, ask FROM bidask WHERE date IN (SELECT MAX(date) FROM bidask)''') 
+      self.lastList = self.cursor.fetchall()
+      
+      for t in self.lastList:
+         self.currencyList1.append(t[0])
+         self.codeList1.append(t[1])  
+         self.valueList1.append(t[2])  
+         self.askList1.append(t[3])  
+      
+      self.conn.close()
 
 
 
