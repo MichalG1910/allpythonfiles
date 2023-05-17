@@ -59,7 +59,7 @@ class Scenario:
       self.password =  tk.StringVar()
       self.noDBCheckVar = tk.IntVar()
       self.DBCheckVar = tk.IntVar()
-      self.noDBCheckVar.set(1)
+      self.DBCheckVar.set(1) # ma być 0
       self.validateLogin = partial(self.validateLogin, self.username, self.password)
 
       scenarioFrame = ttk.LabelFrame(self.logWin, text='Wybierz tryb pracy programu', labelanchor="n", style='clam.TLabelframe')
@@ -77,11 +77,13 @@ class Scenario:
       
       self.userLabel = ttk.Label(self.logWin, text="username: ", foreground='grey')
       self.userLabel.grid(column=0, row=2, padx=23, pady=10, sticky=tk.W)
-      self.userEntry = ttk.Entry(self.logWin, textvariable=self.username, state='disabled')
+      self.userEntry = ttk.Entry(self.logWin, textvariable=self.username)# state=disabled
+      self.userEntry.insert(0,'postgres')# do usuniecia
       self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       self.passwordLabel = ttk.Label(self.logWin, text="password: ", foreground='grey')
       self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
-      self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show='*', state='disabled')
+      self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show='*' ) #state='disabled'
+      self.passwordEntry.insert(0,'grabarzmichal1910')# do usuniecia
       self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=4,  padx=10, pady=10)
       
