@@ -82,7 +82,7 @@ class Scenario:
       self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       self.passwordLabel = ttk.Label(self.logWin, text="password: ", foreground='grey')
       self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
-      self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show='*' ) #state='disabled'
+      self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show=f"\u25CF" ) #state='disabled'
       self.passwordEntry.insert(0,'grabarzmichal1910')# do usuniecia
       self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=4,  padx=10, pady=10)
@@ -146,7 +146,8 @@ class Scenario:
          code VARCHAR(20),
          date Date,
          bid VARCHAR(20),
-         ask VARCHAR(20)
+         ask VARCHAR(20),
+         table_name VARCHAR(20)
       )'''
       self.cursor.execute(sql)
       print("Table bidask created successfully........")
@@ -158,7 +159,7 @@ class Scenario:
       dataObj = Data()
       dataObj.NBPbidAsk()
       insert_stmt = '''INSERT INTO bidask (currency, code, date, 
-      bid, ask) VALUES (%s, %s, %s, %s, %s)'''
+      bid, ask, table_name) VALUES (%s, %s, %s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvListWithAsk)
       print("Data inserted to tabel bidask........")
       self.conn.commit()
@@ -215,16 +216,15 @@ class Scenario:
 
       self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date)- INTERVAL '1 days' FROM rates)''') 
       self.lastListMinus1Day = self.cursor.fetchall()
-      print(self.lastListMinus1Day)
       self.ratesUpDown = self.lastListMinus1Day + self.lastList
       self.conn.close()
 
       del self.lastList, self.lastListMinus1Day
 
    def NBPbidAskDB(self):
-      self.currencyList1, self.codeList1, self.valueList1, self.askList1 =[],[],[],[]
+      self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.table_name1=[],[],[],[],[]
       self.cursorObj("e_ratesdb")
-      self.cursor.execute('''SELECT currency, code, bid, ask FROM bidask WHERE date IN (SELECT MAX(date) FROM bidask)''') 
+      self.cursor.execute('''SELECT currency, code, bid, ask, table_name FROM bidask WHERE date IN (SELECT MAX(date) FROM bidask)''') 
       self.lastList = self.cursor.fetchall()
       
       for t in self.lastList:
@@ -232,13 +232,14 @@ class Scenario:
          self.codeList1.append(t[1])  
          self.valueList1.append(t[2])  
          self.askList1.append(t[3])  
+         self.table_name1.append(t[4])
       
       self.conn.close()
 
    def last30DataDB(self, code):
       self.last30EDList,self.last30MidList = [],[]
       self.cursorObj("e_ratesdb")
-      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = {code[0:3]} ORDER BY rates_id DESC LIMIT 30)''') 
+      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' ORDER BY rates_id DESC LIMIT 30''') 
       self.last30List = self.cursor.fetchall()
 
       for t in self.last30List:

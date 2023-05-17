@@ -62,7 +62,7 @@ class Data:
     def NBPbidAsk(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/c/?format=json"
         self.NBPreport(3, url, "bid")
-        self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.rates1, self.no1 = self.currencyList, self.codeList, self.valueList, self.askList, self.rates, self.no
+        self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.table_name1 = self.currencyList, self.codeList, self.valueList, self.askList, self.table_name
     
     def last30Data(self, code):
         code = (code[0:3]).lower()
@@ -140,10 +140,10 @@ class Data:
         
         for dict in self.data:
             table = dict["table"]
-            self.no = dict["no"]
+            self.table_name = dict["no"]
             self.effectiveDate= dict["effectiveDate"]
             self.rates = dict["rates"]
-            self.printList.append([table, self.no, self.effectiveDate])
+            self.printList.append([table, self.table_name, self.effectiveDate])
             self.currencyList, self.codeList, self.valueList, self.askList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],[],{}
             self.effectiveDateList.append(self.effectiveDate)
             
@@ -160,7 +160,7 @@ class Data:
                 if self.num == 3: 
                     ask = rate["ask"]
                     self.askList.append(ask)
-                    self.csvListWithAsk.append([currency, self.code, self.effectiveDate, mid, ask])
+                    self.csvListWithAsk.append([currency, self.code, self.effectiveDate, mid, ask, self.table_name])
 
                 if self.num == 2:
                     self.csvList.append([currency,self.code,self.effectiveDate,mid])
