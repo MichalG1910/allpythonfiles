@@ -107,12 +107,12 @@ class Scenario:
       self.noDBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection1())
       self.DBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection2())
    
-   def cursorObj(self, DB="postgres"):
-      self.conn = psycopg2.connect(database=DB, user=self.username.get(), password=self.password.get(), host='127.0.0.1', port= '5432')
+   def cursorObj(self, getusername, getpassword, DB="postgres"):
+      self.conn = psycopg2.connect(database=DB, user=getusername, password=getpassword, host='127.0.0.1', port= '5432')
       self.cursor = self.conn.cursor()
 
    def createTabelRates(self):
-      self.cursorObj("e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       sql ='''CREATE TABLE IF NOT EXISTS rates       
       (
          rates_id SERIAL NOT NULL PRIMARY KEY,
@@ -126,10 +126,10 @@ class Scenario:
       self.conn.commit()
       self.conn.close()
    
-   def insertToTabelRates(self):
-      self.cursorObj("e_ratesdb")
+   def insertToTabelRates(self, mboxIgnore = 'no'):
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       dataObj = Data()
-      dataObj.generateReport(self.startDate, self.endDate)
+      dataObj.generateReport(self.startDate, self.endDate, mboxIgnore)
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
       value) VALUES (%s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvList)
@@ -138,7 +138,7 @@ class Scenario:
       self.conn.close()
    
    def createTabelBidAsk(self):
-      self.cursorObj("e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       sql ='''CREATE TABLE IF NOT EXISTS bidask       
       (
          bidask_id SERIAL NOT NULL PRIMARY KEY,
@@ -155,7 +155,7 @@ class Scenario:
       self.conn.close()
    
    def insertToTabelBidAsk(self):
-      self.cursorObj("e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       dataObj = Data()
       dataObj.NBPbidAsk()
       insert_stmt = '''INSERT INTO bidask (currency, code, date, 
@@ -168,12 +168,12 @@ class Scenario:
    def updateDatabase(self):
       
       def getLastDate():
-         self.cursorObj("e_ratesdb")
+         self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
          self.cursor.execute('''SELECT MAX(date) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
          self.fetchDate = str(self.cursor.fetchall()[0][0])
          self.conn.close()
       
-      self.cursorObj()
+      self.cursorObj(self.username.get(), self.password.get())
       self.conn.autocommit = True
       self.endDate =str(self.today)
 
@@ -196,16 +196,20 @@ class Scenario:
          lastDBUpdate = datetime.date(convertDate[0], convertDate[1], convertDate[2])
          if lastDBUpdate < self.today:
             self.startDate = str(lastDBUpdate + datetime.timedelta(days=1))
-            self.insertToTabelRates()
-            self.insertToTabelBidAsk()
-            print("Database updated........")
-            self.logwin_quit()
+            try:
+               self.mboxIgnore = 'yes'
+               self.insertToTabelRates(self.mboxIgnore)
+               self.insertToTabelBidAsk()
+               print("Database updated........")
+               self.logwin_quit()
+            except AttributeError:
+               self.logwin_quit()
          else:
             self.logwin_quit()
       
    def latestNBPreportDB(self):
-      self.currencyList, self.codeList, self.valueList, self.codeCurrencyDict =[],[],[],[]
-      self.cursorObj("e_ratesdb")
+      self.currencyList, self.codeList, self.valueList, self.codeCurrencyDict =[],[],[],{}
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
       self.lastList = self.cursor.fetchall()
       
@@ -224,7 +228,7 @@ class Scenario:
 
    def NBPbidAskDB(self):
       self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.table_name1=[],[],[],[],[]
-      self.cursorObj("e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       self.cursor.execute('''SELECT currency, code, bid, ask, table_name FROM bidask WHERE date IN (SELECT MAX(date) FROM bidask)''') 
       self.lastList = self.cursor.fetchall()
       
@@ -239,7 +243,7 @@ class Scenario:
 
    def last30DataDB(self, code):
       self.last30EDList,self.last30MidList = [],[]
-      self.cursorObj("e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(), "e_ratesdb")
       self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' ORDER BY rates_id DESC LIMIT 30''') 
       self.last30List = self.cursor.fetchall()
 
@@ -248,7 +252,7 @@ class Scenario:
          self.last30MidList.append(t[1])
       
       self.conn.close()
-   def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, firstloopEDL = None): # pwrd ostatnie 2 do del
+   def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, username, password, firstloopEDL = None): # pwrd ostatnie 2 do del
       self.xValuesMultiGraph, self.yValuesMultiGraph = [],[]
    
       if timeRange == "30 dni":
@@ -271,14 +275,15 @@ class Scenario:
          limit = 5460
          
 
-      self.cursorObj("e_ratesdb")
-      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' ORDER BY rates_id DESC LIMIT {limit}''') 
+      self.cursorObj(username, password, "e_ratesdb") 
+      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' AND date > (SELECT MAX(date) - INTERVAL '{limit} days' FROM rates)''') 
+      
       xyValues = self.cursor.fetchall()
       
       for t in xyValues:
          self.xValuesMultiGraph.append(str(t[0]))
          self.yValuesMultiGraph.append(float(t[1]))
-   
+      
       self.codeMulti = (code[0:3]).lower()
       self.conn.close()
 

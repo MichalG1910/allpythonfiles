@@ -76,7 +76,7 @@ class Data:
             self.last30EDList.append(last30ED), self.last30MidList.append(last30Mid)
         self.last30EDList.reverse(), self.last30MidList.reverse()
     
-    def generateReport(self,startDate, endDate, deleteCsvList = 'no', firstloopEDL = datetime.date.today()):
+    def generateReport(self,startDate, endDate, mboxIgnore = 'no', deleteCsvList = 'no', firstloopEDL = datetime.date.today()):
         self.num = 2
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",startDate) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",endDate):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
@@ -100,8 +100,9 @@ class Data:
                 self.daysLen = self.sumdays.days + 1
                 self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{startDate}/{endDate}/?format=json")
                 
-                if self.response.ok == False and self.daysLen < 91:
-                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                if self.response.ok == False and self.daysLen < 91: 
+                    if mboxIgnore == 'no':
+                        mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                 else:
                     self.checkConnection()
                     self.ReportLoop()

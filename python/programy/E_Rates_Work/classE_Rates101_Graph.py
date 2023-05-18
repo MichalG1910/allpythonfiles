@@ -137,9 +137,22 @@ class Graph:
                 self.axis.set_title("Waluty wykres zbiorczy", fontsize=fontSize, color="silver")
                 
                 for code in self.multiCodeCurrencyList:
-                    dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firtloopEDL)
-                    locals()['line{}'.format(code[0:3])], = self.axis.plot(dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, color=colorpalette[self.agr], linewidth=1)
-                    limitList += dataObj.yValuesMultiGraph
+
+                    if self.workingMode == 'Online_No_Database':
+                        dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firstloopEDL)
+                        self.xValuesMultiGraph = dataObj.xValuesMultiGraph
+                        self.yValuesMultiGraph = dataObj.yValuesMultiGraph
+                        #codeMulti = dataObj.codeMulti
+
+                    if self.workingMode == 'Database':
+                        scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, self.username, self.password, self.firstloopEDL) 
+                        self.xValuesMultiGraph = scenObj.xValuesMultiGraph
+                        self.yValuesMultiGraph = scenObj.yValuesMultiGraph
+                        #codeMulti = scenObj.codeMulti
+
+                    #dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firstloopEDL)
+                    locals()['line{}'.format(code[0:3])], = self.axis.plot(self.xValuesMultiGraph, self.yValuesMultiGraph, color=colorpalette[self.agr], linewidth=1)
+                    limitList += self.yValuesMultiGraph
                     lineName.append(locals()['line{}'.format(code[0:3])])
                     progressbar() # po każdym przejściu pętli uruchamia funkcję Main.progress() w celu zaktualizowania progressbar
                     self.agr += 1
@@ -244,8 +257,11 @@ class Graph:
             self.figFS = plt.figure(figsize=(19,10), facecolor = "white")
             self.gridColor = "white"
     
-    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL, progressbar, workingMode):
-        self.firtloopEDL = firstloopEDL
+    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL, progressbar, workingMode, username, password):
+        self.firstloopEDL = firstloopEDL
+        self.username = username
+        self.password = password
+        self.workingMode = workingMode
         self.agr = 0
         self.listTrSum = len(self.multiCodeCurrencyList)
         
@@ -258,7 +274,7 @@ class Graph:
                 self.yValuesMultiGraph = dataObj.yValuesMultiGraph
                 codeMulti = dataObj.codeMulti
             if workingMode == 'Database':
-                scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2) 
+                scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, username, password, firstloopEDL) 
                 self.xValuesMultiGraph = scenObj.xValuesMultiGraph
                 self.yValuesMultiGraph = scenObj.yValuesMultiGraph
                 codeMulti = scenObj.codeMulti  
@@ -266,13 +282,13 @@ class Graph:
             # tu musze zrobic wpiecie##############################################################
 
             self.drawGraph(fSize, self.multiTimeRangeList[self.agr], self.xValuesMultiGraph, self.yValuesMultiGraph, codeMulti, 2,codeCurrencyDict, progressbar)
-            print(self.xValuesMultiGraph)
+            '''print(self.xValuesMultiGraph)
             print()
             print(self.yValuesMultiGraph)
             print()
             print(type(self.yValuesMultiGraph[0]))
             print(codeMulti)
-            print('#######################################################################################################')
+            print('#######################################################################################################')'''
             if self.oneSubplotVarMulti  == 0:
                 self.figFS.tight_layout() # wykresy nie nachodzą na siebie
             else:

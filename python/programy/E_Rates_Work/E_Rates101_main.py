@@ -161,7 +161,7 @@ class Main:
             tabControl.add(tab1,  text="Kursy", compound='left')  
             tabControl.grid(column=0, columnspan=4, rowspan=34, row=1, padx=4, pady=4, sticky=tk.N)
             echangeRateFrame = ttk.LabelFrame(tab1, text= f"Średnie kursy walut {lastDate}", labelanchor="n", style='clam.TLabelframe')  
-            echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(len(dataObj.rates)+1), padx=5, sticky=tk.W)
+            echangeRateFrame.grid(column=1, row=0, columnspan=4, rowspan=(self.lenCurrencyList+1), padx=5, sticky=tk.W)
             
             ttk.Label(echangeRateFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
             ttk.Label(echangeRateFrame, text= "Kod", foreground="#007fff").grid(column=1, row=0, sticky=tk.W, padx=5)
@@ -191,7 +191,7 @@ class Main:
             tab2 = ttk.Frame(tabControl)
             tabControl.add(tab2, text="kupno/sprzedaż")
             buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {lastDate}", labelanchor="n", style='clam.TLabelframe')  
-            buySellFrame.grid(column=1, row=1, columnspan=4, rowspan=(self.lenCurrencyList+1), padx=5, sticky=tk.W)
+            buySellFrame.grid(column=1, row=1, columnspan=4, rowspan=(self.lenCurrencyList1+1), padx=5, sticky=tk.W)
             
             ttk.Label(buySellFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
             ttk.Label(buySellFrame, text= "Kod", foreground="#007fff").grid(column=1, row=0, sticky=tk.W, padx=5)
@@ -373,13 +373,13 @@ class Main:
             def createTab4():
                 self.tab4 = ttk.Frame(tabMultiGraph)
                 tabMultiGraph.add(self.tab4, text="wiele wykresów")
-                tabMultiGraph.grid(column=10, columnspan=4, rowspan=len(dataObj.rates)+2, row=1, padx=4, pady=4, sticky=tk.N)
+                tabMultiGraph.grid(column=10, columnspan=4, rowspan=self.lenCurrencyList+2, row=1, padx=4, pady=4, sticky=tk.N)
                 self.multiGraphFrame = ttk.LabelFrame(self.tab4, text="Rysowanie wielu wykresów", labelanchor="n", style='clam.TLabelframe')  
                 self.multiGraphFrame.grid(column=0, row=1, columnspan=6, rowspan=30, padx=5, sticky=tk.W)
             
             def startClearF():
                 self.startclearFrame = ttk.LabelFrame(self.multiGraphFrame, text="wyczyść/rysuj", labelanchor="n", style='clam.TLabelframe', width=80)  
-                self.startclearFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.E)
+                self.startclearFrame.grid(column=0, row=self.lenCurrencyList+1, columnspan=6, padx=5, pady=5, sticky=tk.E)
                 ttk.Button(self.startclearFrame, text = "wyczyść", command = clearView, width=7).grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
                 ttk.Button(self.startclearFrame, text = "rysuj", command = self.fullscreenGraphWindow, width=5).grid(column = 1, row=0, padx=5, pady=5, sticky=tk.E)
             
@@ -411,7 +411,7 @@ class Main:
                         self.b += 1
                     
                 self.markFrame = ttk.LabelFrame(self.multiGraphFrame, text="zaznacz/odznacz", labelanchor="n", style='clam.TLabelframe', width=80)  
-                self.markFrame.grid(column=0, row=len(dataObj.rates)+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
+                self.markFrame.grid(column=0, row=self.lenCurrencyList+1, columnspan=6, padx=5, pady=5, sticky=tk.W)
                 all = ttk.Button(self.markFrame, text = "wszystko", command = markAll, width=8)
                 all.grid(column = 0, row=0, padx=5, pady=5, sticky=tk.W)
                 withTimeRange = ttk.Button(self.markFrame, text = "z zakresem czasu", command = markTimeRange)
@@ -423,7 +423,7 @@ class Main:
                 def otherOptions(*ignoredArgs):
                     if self.oneSubplotVarMulti.get() == 1:
                         if self.viewNum == 1:
-                            for t in range(len(dataObj.rates)): 
+                            for t in range(self.lenCurrencyList): 
                                 globals()['rangeChosen{}'.format(t)].current(self.allRange["values"].index(self.allRangeVar.get()))  
                         else:
                             for f in range(15):
@@ -450,7 +450,7 @@ class Main:
                 self.allRangeVar= tk.StringVar()
                 
                 self.multiSettingsFrame = ttk.LabelFrame(self.tab4, text="Ustawienia wykresów", labelanchor="n", style='clam.TLabelframe')  
-                self.multiSettingsFrame.grid(column=0, row=len(dataObj.rates)+2, columnspan=6, padx=5, sticky=tk.E)
+                self.multiSettingsFrame.grid(column=0, row=self.lenCurrencyList+2, columnspan=6, padx=5, sticky=tk.E)
                 viewButton = ttk.Button(self.multiSettingsFrame, text = "zmień widok", command = changeView)
                 viewButton.grid(column = 0, row=0, padx=5, pady=5)
                 self.createToolTip(viewButton, "widok 1 - standardowy\nwidok 2 - możliwość rysowania wielu wykresów dla jednej\nwaluty w różnych zakresach czasu (w jednym oknie) ", 0, 20) 
@@ -617,7 +617,7 @@ class Main:
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
-            graphObj.drawGraphLoop(self.codeCurrencyDict, self.firstloopEDL, self.progress, scenObj.workingMode)
+            graphObj.drawGraphLoop(self.codeCurrencyDict, self.firstloopEDL, self.progress, scenObj.workingMode, scenObj.username.get(), scenObj.password.get())
             buttonCreate()
             graphObj.clearList()
             graphObj.winFull.mainloop()
