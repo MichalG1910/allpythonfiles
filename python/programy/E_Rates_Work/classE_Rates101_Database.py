@@ -204,7 +204,7 @@ class Scenario:
             self.logwin_quit()
       
    def latestNBPreportDB(self):
-      self.currencyList, self.codeList, self.valueList =[],[],[]
+      self.currencyList, self.codeList, self.valueList, self.codeCurrencyDict =[],[],[],[]
       self.cursorObj("e_ratesdb")
       self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
       self.lastList = self.cursor.fetchall()
@@ -213,6 +213,7 @@ class Scenario:
          self.currencyList.append(t[1])
          self.codeList.append(t[2])  
          self.valueList.append(t[3])  
+         self.codeCurrencyDict[t[2]] = t[1] ###################
 
       self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date)- INTERVAL '1 days' FROM rates)''') 
       self.lastListMinus1Day = self.cursor.fetchall()
@@ -246,6 +247,39 @@ class Scenario:
          self.last30EDList.append(str(t[0]))
          self.last30MidList.append(t[1])
       
+      self.conn.close()
+   def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, firstloopEDL = None): # pwrd ostatnie 2 do del
+      self.xValuesMultiGraph, self.yValuesMultiGraph = [],[]
+   
+      if timeRange == "30 dni":
+         limit = 30
+      elif timeRange == "60 dni":
+         limit = 60
+      elif timeRange == "90 dni":
+         limit = 90       
+      elif timeRange == "pół roku":
+         limit = 182
+      elif timeRange == "rok":
+         limit = 364
+      elif timeRange == "2 lata":
+         limit = 728
+      elif timeRange == "5 lat":
+         limit = 1820
+      elif timeRange == "10 lat":
+         limit = 3640 
+      elif timeRange == "15 lat":
+         limit = 5460
+         
+
+      self.cursorObj("e_ratesdb")
+      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' ORDER BY rates_id DESC LIMIT {limit}''') 
+      xyValues = self.cursor.fetchall()
+      
+      for t in xyValues:
+         self.xValuesMultiGraph.append(str(t[0]))
+         self.yValuesMultiGraph.append(float(t[1]))
+   
+      self.codeMulti = (code[0:3]).lower()
       self.conn.close()
 
 

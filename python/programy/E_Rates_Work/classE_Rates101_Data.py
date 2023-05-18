@@ -171,7 +171,7 @@ class Data:
             
             self.erDataList.append(erData)
             del erData
-            
+        
     def reportCreate(self, startDate, endDate):
         def file_write(fileWrite):
             erDataListLen = len(self.erDataList)

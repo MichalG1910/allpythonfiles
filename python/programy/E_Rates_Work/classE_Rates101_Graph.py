@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import PIL
 import PIL._tkinter_finder
 from classE_Rates101_Data import Data
+from classE_Rates101_Database import Scenario
 import tkinter as tk
 import numpy as np
 
@@ -197,7 +198,7 @@ class Graph:
 
     ############################    fullscreenGraphWindow   #######################################################    
         
-    def multiGraphList(self, viewNum, rates, trvl, chvl = None, codevl = None, codeCurrencyList = None):
+    def multiGraphList(self, viewNum, lenCurrencyList, trvl, chvl = None, codevl = None, codeCurrencyList = None):
         self.multiTimeRangeList, self.multiCodeCurrencyList = [], []
         
         if viewNum == 2:
@@ -207,7 +208,7 @@ class Graph:
                     self.multiTimeRangeList.append(trvl[a])
     
         else:
-            for b in range(len(rates)):
+            for b in range(lenCurrencyList):
                 if chvl[b] == 1:      
                     self.multiCodeCurrencyList.append(codeCurrencyList[b])
                     self.multiTimeRangeList.append(trvl[b])
@@ -243,16 +244,35 @@ class Graph:
             self.figFS = plt.figure(figsize=(19,10), facecolor = "white")
             self.gridColor = "white"
     
-    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL, progressbar):
+    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL, progressbar, workingMode):
         self.firtloopEDL = firstloopEDL
         self.agr = 0
         self.listTrSum = len(self.multiCodeCurrencyList)
         
         def addGraph():
-            
             self.axis.grid(linestyle="solid", color=self.gridColor,  linewidth=0.4)
-            dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
-            self.drawGraph(fSize, self.multiTimeRangeList[self.agr], dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph, dataObj.codeMulti, 2,codeCurrencyDict, progressbar)
+            
+            if workingMode == 'Online_No_Database':
+                dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, firstloopEDL)
+                self.xValuesMultiGraph = dataObj.xValuesMultiGraph
+                self.yValuesMultiGraph = dataObj.yValuesMultiGraph
+                codeMulti = dataObj.codeMulti
+            if workingMode == 'Database':
+                scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2) 
+                self.xValuesMultiGraph = scenObj.xValuesMultiGraph
+                self.yValuesMultiGraph = scenObj.yValuesMultiGraph
+                codeMulti = scenObj.codeMulti  
+        
+            # tu musze zrobic wpiecie##############################################################
+
+            self.drawGraph(fSize, self.multiTimeRangeList[self.agr], self.xValuesMultiGraph, self.yValuesMultiGraph, codeMulti, 2,codeCurrencyDict, progressbar)
+            print(self.xValuesMultiGraph)
+            print()
+            print(self.yValuesMultiGraph)
+            print()
+            print(type(self.yValuesMultiGraph[0]))
+            print(codeMulti)
+            print('#######################################################################################################')
             if self.oneSubplotVarMulti  == 0:
                 self.figFS.tight_layout() # wykresy nie nachodzą na siebie
             else:
@@ -292,16 +312,16 @@ class Graph:
                 progressbar()
                 
             self.putGraph(self.winFull, 0, self.figFS)
-            dataObj.xValuesMultiGraph.clear() 
-            dataObj.yValuesMultiGraph.clear()
-            del dataObj.xValuesMultiGraph, dataObj.yValuesMultiGraph
+            self.xValuesMultiGraph.clear() 
+            self.yValuesMultiGraph.clear()
+            del self.xValuesMultiGraph, self.yValuesMultiGraph
             
     def clearList(self):
         self.multiCodeCurrencyList.clear() 
         self.multiTimeRangeList.clear()
           
 dataObj = Data() 
-
+scenObj = Scenario()
 
 
 

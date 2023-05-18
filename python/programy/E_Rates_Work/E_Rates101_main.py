@@ -38,11 +38,12 @@ class Main:
         if scenObj.workingMode == 'Online_No_Database':
             dataObj.NBPbidAsk()
             dataObj.latestNBPreport()
+            self.firstloopEDL = dataObj.firstloopEDL
         if scenObj.workingMode == 'Database':
-            dataObj.firstloopEDL = scenObj.fetchDate
             scenObj.NBPbidAskDB()
             scenObj.latestNBPreportDB()
-            
+            self.firstloopEDL = scenObj.fetchDate
+    
     def menu(self):
         self.menuBar = Menu(self.win)
         self.win.config(menu=self.menuBar)
@@ -153,7 +154,8 @@ class Main:
             graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
 
     def exchangeRatesTabel(self):
-        def mediumTab(currencyList, codeList, valueList, ratesUpDown, lastDate): 
+        def mediumTab(currencyList, codeList, valueList, ratesUpDown, lastDate):
+            self.lenCurrencyList = len(currencyList) 
             tab1 = ttk.Frame(tabControl)
             
             tabControl.add(tab1,  text="Kursy", compound='left')  
@@ -166,7 +168,7 @@ class Main:
             ttk.Label(echangeRateFrame, text= "Kurs PLN", foreground="#007fff").grid(column=2, row=0, sticky=tk.W, padx=2)
             ttk.Label(echangeRateFrame, text= "Zmiana", foreground="#007fff").grid(column=3, row=0, sticky=tk.W, padx=2)
             
-            for t in range(len(currencyList)):
+            for t in range(self.lenCurrencyList):
                 ttk.Label(echangeRateFrame,  width=20, text= f'{currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
                 ttk.Label(echangeRateFrame,  width=5, text= f'{codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=1, pady=1)
                 ttk.Label(echangeRateFrame,  width=10, text= f'{valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
@@ -185,18 +187,19 @@ class Main:
                     ttk.Label(echangeRateFrame,  width=8, text= f'\u25BC {abs(procent)}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
         
         def bidAskTab(currencyList, codeList, valueList, askList, lastDate, table_name):
+            self.lenCurrencyList1 = len(currencyList)
             tab2 = ttk.Frame(tabControl)
             tabControl.add(tab2, text="kupno/sprzedaż")
             buySellFrame = ttk.LabelFrame(tab2, text= f"Kupno / Sprzedaż {lastDate}", labelanchor="n", style='clam.TLabelframe')  
-            buySellFrame.grid(column=1, row=1, columnspan=4, rowspan=(len(currencyList)+1), padx=5, sticky=tk.W)
+            buySellFrame.grid(column=1, row=1, columnspan=4, rowspan=(self.lenCurrencyList+1), padx=5, sticky=tk.W)
             
             ttk.Label(buySellFrame, text= "Waluta", foreground="#007fff").grid(column=0, row=0, sticky=tk.W, padx=5)
             ttk.Label(buySellFrame, text= "Kod", foreground="#007fff").grid(column=1, row=0, sticky=tk.W, padx=5)
             ttk.Label(buySellFrame, text= "Kupno", foreground="#007fff").grid(column=2, row=0, sticky=tk.W, padx=2)
             ttk.Label(buySellFrame, text= "Sprzedaż", foreground="#007fff").grid(column=3, row=0, sticky=tk.W, padx=2)
-            ttk.Label(tab2, text= f"\nTabela {table_name} zawiera tylko wybrane waluty").grid(columnspan=4, row=len(currencyList)+2, sticky=tk.W, padx=3, pady=3)
-            print(len(currencyList))
-            for v in range(len(currencyList)):
+            ttk.Label(tab2, text= f"\nTabela {table_name} zawiera tylko wybrane waluty").grid(columnspan=4, row=self.lenCurrencyList+2, sticky=tk.W, padx=3, pady=3)
+            
+            for v in range(self.lenCurrencyList1):
                 ttk.Label(buySellFrame,  width=20, text= f'{currencyList[v]}').grid(column=0, row=v+1, sticky=tk.W, padx=3, pady=3)
                 ttk.Label(buySellFrame,  width=5, text= f'{codeList[v]}').grid(column=1, row=v+1, sticky=tk.W, padx=3, pady=3)
                 ttk.Label(buySellFrame,  width=9, text= f'{valueList[v]}').grid(column=2, row=v+1, sticky=tk.W, padx=3, pady=3)
@@ -205,19 +208,23 @@ class Main:
         def currencyLast30():
             currencyLast30 = tk.StringVar()
             self.codeCurrencyList = []
-
+            
+            if scenObj.workingMode == 'Online_No_Database':
+                self.codeCurrencyDict = dataObj.codeCurrencyDict
+            if scenObj.workingMode == 'Database':
+                self.codeCurrencyDict = scenObj.codeCurrencyDict
+            
             def getLast30Tabel():
                 if scenObj.workingMode == 'Online_No_Database':
                     dataObj.last30Data(currencyLast30.get())
                     last30EDList = dataObj.last30EDList
                     last30MidList = dataObj.last30MidList
+                    
                 if scenObj.workingMode == 'Database':
                     scenObj.last30DataDB(currencyLast30.get())
                     last30EDList = scenObj.last30EDList
                     last30MidList = scenObj.last30MidList
-                #print(dataObj.last30EDList)
-                #print()
-                #print(last30MidList)
+            
                 for i in range(30):
                     ttk.Label(last30Frame,  width=10, text= f'{last30EDList[i]}').grid(column=0, row=i+2, sticky=tk.W, padx=1, pady=1)
                     ttk.Label(last30Frame,  width=10, text= f'{last30MidList[i]}').grid(column=1, row=i+2, sticky=tk.W, padx=1, pady=1)
@@ -257,7 +264,7 @@ class Main:
             last30Frame.grid(column=1, row=1, columnspan=4, rowspan=30, padx=5, sticky=tk.W)
             self.createToolTip(last30Frame, "Generuje ostatnich 30 notowań dla wskazanej waluty") 
             
-            for key,values in dataObj.codeCurrencyDict.items():
+            for key,values in self.codeCurrencyDict.items():
                 self.codeCurrencyList.append(f"{key}  {values}")
             currencyChosen = ttk.Combobox(last30Frame, width= 30, textvariable= currencyLast30, state= "readonly")
             currencyChosen["values"] = self.codeCurrencyList 
@@ -270,8 +277,8 @@ class Main:
             ttk.Label(last30Frame, text= "Zmiana", foreground="#007fff").grid(column=2, row=1, sticky=tk.W, padx=2)
             ttk.Label(last30Frame, text= "Zmiana 30\n notowań", foreground="#007fff").grid(column=3, row=1, sticky=tk.W, padx=2)
             
-        def multiGraph():
-            ratesHalf = math.floor(len(dataObj.rates) / 2)
+        def multiGraph(currencyList):
+            ratesHalf = math.floor(self.lenCurrencyList / 2) # zmieniono
             self.timeRangeVariableList, self.chVariableList, self.codeVariableList, self.listchv, trl1, cvl1, code1 = [],[],[],[],[],[],[]
             
 
@@ -279,9 +286,9 @@ class Main:
                 self.viewNum = 1
                 self.timeRangeVariableList.clear()
                 self.chVariableList.clear()
-                for t in range(len(dataObj.rates)):
-                    if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{dataObj.currencyList[t]}', font=("Segoe Ui",8)).grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
-                    else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{dataObj.currencyList[t]}', font=("Segoe Ui",8)).grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
+                for t in range(self.lenCurrencyList): # zmieniono
+                    if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{currencyList[t]}', font=("Segoe Ui",8)).grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
+                    else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{currencyList[t]}', font=("Segoe Ui",8)).grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
                     
                     globals()['timeRange{}'.format(t)] = tk.StringVar()
                     globals()['rangeChosen{}'.format(t)]= ttk.Combobox(self.multiGraphFrame, width= 8, textvariable= globals()['timeRange{}'.format(t)], state= "readonly",height=10, font=("Segoe Ui",8))
@@ -480,7 +487,7 @@ class Main:
             mediumTab(dataObj.currencyList, dataObj.codeList, dataObj.valueList, dataObj.ratesUpDown, dataObj.effectiveDateList[-1])
             bidAskTab(dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.effectiveDateList[-1], dataObj.table_name1)
             currencyLast30()
-            multiGraph()
+            multiGraph(dataObj.currencyList)
             
             del dataObj.currencyList, dataObj.codeList, dataObj.valueList, dataObj.ratesUpDown
             del dataObj.currencyList1, dataObj.codeList1, dataObj.valueList1, dataObj.askList1, dataObj.table_name1
@@ -489,7 +496,7 @@ class Main:
             mediumTab(scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown, scenObj.fetchDate)
             bidAskTab(scenObj.currencyList1, scenObj.codeList1, scenObj.valueList1, scenObj.askList1, scenObj.fetchDate, scenObj.table_name1[0])
             currencyLast30()
-            multiGraph()
+            multiGraph(scenObj.currencyList)
             
             del scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.ratesUpDown
             del scenObj.currencyList1, scenObj.codeList1, scenObj.valueList1, scenObj.askList1, scenObj.table_name1
@@ -506,7 +513,7 @@ class Main:
         def newGraph():
             graphObj.getVar(self.trendLineVar.get(), self.annotateVar.get())
             dataObj.checkConnection()
-            dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1, dataObj.firstloopEDL)
+            dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1, self.firstloopEDL)
             graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
             
         tabControlGui = ttk.Notebook(self.win) 
@@ -543,7 +550,7 @@ class Main:
         self.endDate = tk.StringVar()
 
         def runReport():
-            dataObj.generateReport(self.startDate.get(), self.endDate.get(), 'yes', dataObj.firstloopEDL) 
+            dataObj.generateReport(self.startDate.get(), self.endDate.get(), 'yes', self.firstloopEDL) 
         
         tabControlRep = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 
@@ -599,7 +606,7 @@ class Main:
            
     def fullscreenGraphWindow(self):
         self.progressBar()
-        graphObj.multiGraphList(self.viewNum, dataObj.rates, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
+        graphObj.multiGraphList(self.viewNum, self.lenCurrencyList, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
             ttk.Button(graphObj.winFull, text = "Zamknij", command = graphObj._quit, width=7).grid(column = 10, columnspan = 3, row = 0 , padx=5, pady=5, sticky=tk.E)
@@ -610,7 +617,7 @@ class Main:
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
-            graphObj.drawGraphLoop(dataObj.codeCurrencyDict, dataObj.firstloopEDL, self.progress)
+            graphObj.drawGraphLoop(self.codeCurrencyDict, self.firstloopEDL, self.progress, scenObj.workingMode)
             buttonCreate()
             graphObj.clearList()
             graphObj.winFull.mainloop()
