@@ -110,10 +110,15 @@ class Data:
                 if self.response.ok == False and self.daysLen < 91: 
                     if mboxIgnore == 'no':
                         mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
-                '''
+                
                 if self.sDate > self.firstLoopDate: 
                     if mboxIgnore == 'no':
                         mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                '''
+                if self.response.ok == False and self.daysLen < 91:
+                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                else:
+                    self.ReportLoop()
                 '''
                 else:
                     if workingMode == 'Online_No_Database':

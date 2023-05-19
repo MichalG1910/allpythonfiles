@@ -564,7 +564,7 @@ class Main:
             dataObj.generateReport(self.startDate.get(), self.startDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
             if dataObj.workingMode == 'Online_No_Database':
                 dataObj.checkConnection()
-                dataObj.ReportLoop()
+                #dataObj.ReportLoop()
                 dataObj.dataFormatting("mid")
                 dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
                 dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
