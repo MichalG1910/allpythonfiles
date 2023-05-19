@@ -253,7 +253,7 @@ class Scenario:
       
       self.conn.close()
    def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, username, password, firstloopEDL = None): # pwrd ostatnie 2 do del
-      self.xValuesMultiGraph, self.yValuesMultiGraph = [],[]
+      self.xValuesMultiGraph, self.yValuesMultiGraph, self.xValues, self.yValues = [],[],[],[]
    
       if timeRange == "30 dni":
          limit = 30
@@ -279,13 +279,22 @@ class Scenario:
       self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' AND date > (SELECT MAX(date) - INTERVAL '{limit} days' FROM rates)''') 
       
       xyValues = self.cursor.fetchall()
+      if oneOrMultiNum == 2:
+         for t in xyValues:
+            self.xValuesMultiGraph.append(str(t[0]))
+            self.yValuesMultiGraph.append(float(t[1]))
+         self.codeMulti = (code[0:3]).lower()
+      else:
+         for t in xyValues:
+            self.xValues.append(str(t[0]))
+            self.yValues.append(float(t[1]))
+         self.codeOne = (code[0:3]).lower()
       
-      for t in xyValues:
-         self.xValuesMultiGraph.append(str(t[0]))
-         self.yValuesMultiGraph.append(float(t[1]))
-      
-      self.codeMulti = (code[0:3]).lower()
       self.conn.close()
+
+   def newGraph(self):
+      pass
+
 
 
 

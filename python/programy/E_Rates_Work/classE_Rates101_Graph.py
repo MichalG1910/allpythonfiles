@@ -265,6 +265,9 @@ class Graph:
         self.agr = 0
         self.listTrSum = len(self.multiCodeCurrencyList)
         
+        if workingMode == 'Online_No_Database':
+            dataObj.checkConnection()
+        
         def addGraph():
             self.axis.grid(linestyle="solid", color=self.gridColor,  linewidth=0.4)
             
@@ -273,7 +276,7 @@ class Graph:
                 self.xValuesMultiGraph = dataObj.xValuesMultiGraph
                 self.yValuesMultiGraph = dataObj.yValuesMultiGraph
                 codeMulti = dataObj.codeMulti
-            if workingMode == 'Database':
+            elif workingMode == 'Database':
                 scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, username, password, firstloopEDL) 
                 self.xValuesMultiGraph = scenObj.xValuesMultiGraph
                 self.yValuesMultiGraph = scenObj.yValuesMultiGraph

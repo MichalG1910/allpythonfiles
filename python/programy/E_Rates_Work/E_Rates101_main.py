@@ -512,9 +512,20 @@ class Main:
         
         def newGraph():
             graphObj.getVar(self.trendLineVar.get(), self.annotateVar.get())
-            dataObj.checkConnection()
-            dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1, self.firstloopEDL)
-            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
+            
+            if scenObj.workingMode == 'Online_No_Database':
+                dataObj.checkConnection()
+                dataObj.getDataForGraph(self.currencyName.get(), self.timeRange.get(), 1, self.firstloopEDL)
+                self.xValues = dataObj.xValues
+                self.yValues = dataObj.yValues
+                self.codeOne = dataObj.codeOne
+            
+            elif scenObj.workingMode == 'Database':
+                scenObj.getDataForGraphDB(self.currencyName.get(), self.timeRange.get(), 1, scenObj.username.get(), scenObj.password.get(), self.firstloopEDL) 
+                self.xValues = scenObj.xValues
+                self.yValues = scenObj.yValues
+                self.codeOne = scenObj.codeOne
+            graphObj.refreshGraph(self.win, self.timeRange.get(), self.xValues, self.yValues, self.codeOne, self.codeCurrencyDict)
             
         tabControlGui = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlGui), ttk.Frame(tabControlGui) 
@@ -613,7 +624,7 @@ class Main:
             ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=7).grid(column = 10, columnspan = 2, row = 0 , padx=5, pady=5, sticky=tk.W)
         
         def drawGraph():
-            dataObj.checkConnection()
+            
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
