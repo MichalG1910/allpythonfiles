@@ -579,9 +579,12 @@ class Main:
         self.endDate = tk.StringVar()
 
         def runReport():
-            dataObj.stop_RunReport = 'no'
-            dataObj.reporteErrorChecking(self.startDate.get(), self.endDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
-            self.generateReport()
+            if scenObj.workingMode == 'Online_No_Database':
+                dataObj.stop_RunReport = 'no'
+                dataObj.reporteErrorChecking(self.startDate.get(), self.endDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
+                self.generateReport()
+            if scenObj.workingMode == 'Database':
+                scenObj.ReportLoopDB(self.startDate.get(), self.endDate.get())
         
         tabControlRep = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 

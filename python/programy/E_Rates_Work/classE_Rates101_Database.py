@@ -4,6 +4,8 @@ from tkinter import ttk
 from functools import partial
 from classE_Rates101_Data import Data
 from classE_Rates101_Tooltip import ToolTip
+import pandas as pd
+from tabulate import tabulate
 
 class Scenario:
    def operatingMode(self):
@@ -299,14 +301,22 @@ class Scenario:
       
       self.conn.close()
 
-   def ReportLoop(self, startDate, endDate):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
-      self.cursor.execute('''SELECT currency, code, date, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
-      self.lastList = self.cursor.fetchall()
-
+   def ReportLoopDB(self, startDate, endDate):
       dataObj = Data()
-      dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
-      dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
+      self.erDataList = []
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursor.execute('''SELECT currency, code, date, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') # beetween
+      self.dataToReportList = self.cursor.fetchall()
+      # data wiersz 202
+      for a in self.dataToReportList:
+         erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
+                      'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
+                      'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
+      self.erDataList.append(erData)
+      del erData
+      dataObj.reporteErrorChecking(startDate, endDate, 'Database', 'no')
+      dataObj.reportCreate(startDate, endDate) 
+      dataObj.csv_ER_report(startDate, endDate)
 
 
 
