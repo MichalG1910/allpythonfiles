@@ -561,7 +561,22 @@ class Main:
         self.endDate = tk.StringVar()
 
         def runReport():
-            dataObj.generateReport(self.startDate.get(), self.endDate.get(), 'yes', self.firstloopEDL) 
+            dataObj.generateReport(self.startDate.get(), self.startDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
+            if dataObj.workingMode == 'Online_No_Database':
+                dataObj.checkConnection()
+                dataObj.ReportLoop()
+                dataObj.dataFormatting("mid")
+                dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
+                dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
+            if dataObj.workingMode == 'Database':
+                pass
+                scenObj.ReportLoop(self.startDate.get(), self.startDate.get())
+            dataObj.dataFormatting("mid")
+            dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
+            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get()) 
+            
+            del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
+            if dataObj.deleteCsvList == 'yes': del dataObj.csvList
         
         tabControlRep = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 

@@ -129,7 +129,7 @@ class Scenario:
    def insertToTabelRates(self, mboxIgnore = 'no'):
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       dataObj = Data()
-      dataObj.generateReport(self.startDate, self.endDate, mboxIgnore)
+      dataObj.generateReport(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
       value) VALUES (%s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvList)
@@ -292,8 +292,10 @@ class Scenario:
       
       self.conn.close()
 
-   def newGraph(self):
-      pass
+   def ReportLoop(self, startDate, endDate):
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursor.execute('''SELECT currency, code, date, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
+      self.lastList = self.cursor.fetchall()
 
 
 

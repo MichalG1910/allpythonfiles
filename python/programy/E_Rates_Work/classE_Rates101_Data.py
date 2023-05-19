@@ -4,6 +4,7 @@ import pandas as pd
 from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
+
 # 95-96, 112 - zmieniono do testów postgres
 class Data:
     def __init__(self):
@@ -76,7 +77,9 @@ class Data:
             self.last30EDList.append(last30ED), self.last30MidList.append(last30Mid)
         self.last30EDList.reverse(), self.last30MidList.reverse()
     
-    def generateReport(self,startDate, endDate, mboxIgnore = 'no', deleteCsvList = 'no', firstloopEDL = datetime.date.today()):
+    def generateReport(self,startDate, endDate, workingMode,  mboxIgnore = 'no', deleteCsvList = 'no', firstloopEDL = str(datetime.date.today())):
+        self.workingMode = workingMode
+        self.deleteCsvList = deleteCsvList
         self.num = 2
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",startDate) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",endDate):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
@@ -85,8 +88,11 @@ class Data:
             sdList = [int(i) for i in date1_list] 
             date2_list = (list(endDate.split('-')))
             edList = [int(i) for i in date2_list]
+            date3_list = (list(firstloopEDL.split('-')))
+            firsLoopList = [int(i) for i in date3_list]
             self.sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             self.eDate = datetime.date(edList[0], edList[1], edList[2])
+            self.firstLoopDate = datetime.date(firsLoopList[0], firsLoopList[1], firsLoopList[2])
             
             if self.sDate < datetime.date(2004,5,4):
                 mBox.showinfo("Błędny format danych raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informaacji na stronie http://api.nbp.pl")
@@ -98,21 +104,31 @@ class Data:
                 self.step = 91
                 self.sumdays = self.eDate - self.sDate
                 self.daysLen = self.sumdays.days + 1
-                self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{startDate}/{endDate}/?format=json")
-                
+                if workingMode == 'Online_No_Database':
+                    self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{startDate}/{endDate}/?format=json")
+                '''
                 if self.response.ok == False and self.daysLen < 91: 
                     if mboxIgnore == 'no':
                         mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                '''
+                if self.sDate > self.firstLoopDate: 
+                    if mboxIgnore == 'no':
+                        mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                '''
                 else:
-                    self.checkConnection()
-                    self.ReportLoop()
+                    if workingMode == 'Online_No_Database':
+                        self.checkConnection()
+                        self.ReportLoop()
+                    if workingMode == 'Database':
+                        pass
+                        #scenObj.ReportLoop(startDate, endDate)
                     self.dataFormatting("mid")
                     self.reportCreate(startDate, endDate) 
                     self.csv_ER_report(startDate, endDate) 
                     
                     del self.data, self.report, self.printList, self.erDataList, self.response  
                     if deleteCsvList == 'yes': del self.csvList
-                    
+                    '''
     def ReportLoop(self):
         runDate = self.sDate
         self.repeat = math.ceil(self.daysLen / self.step) 
@@ -286,7 +302,7 @@ class Data:
         elif timeRange == "15 lat":
             self.dayRange, self.repeat, self.step = 5460, 60, 91
             timeRangeLoop()  
- 
+
     
     
 
