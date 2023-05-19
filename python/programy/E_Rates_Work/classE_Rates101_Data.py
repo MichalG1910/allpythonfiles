@@ -77,12 +77,14 @@ class Data:
             self.last30EDList.append(last30ED), self.last30MidList.append(last30Mid)
         self.last30EDList.reverse(), self.last30MidList.reverse()
     
-    def generateReport(self,startDate, endDate, workingMode,  mboxIgnore = 'no', deleteCsvList = 'no', firstloopEDL = str(datetime.date.today())):
+    def reporteErrorChecking(self,startDate, endDate, workingMode,  mboxIgnore = 'no', deleteCsvList = 'no', firstloopEDL = str(datetime.date.today())):
+        print(startDate, endDate)
         self.workingMode = workingMode
         self.deleteCsvList = deleteCsvList
         self.num = 2
         if not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",startDate) or not re.match(r"^20[0-2][0-9][-](0[1-9]|1[0-2])[-](0[1-9]|[1-2][0-9]|3[0-1])$",endDate):
             mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
+            self.stop_RunReport = 'yes'
         else:
             date1_list = (list(startDate.split('-')))
             sdList = [int(i) for i in date1_list] 
@@ -93,19 +95,31 @@ class Data:
             self.sDate = datetime.date(sdList[0], sdList[1], sdList[2])
             self.eDate = datetime.date(edList[0], edList[1], edList[2])
             self.firstLoopDate = datetime.date(firsLoopList[0], firsLoopList[1], firsLoopList[2])
-            
+            print(self.eDate, self.firstLoopDate)
             if self.sDate < datetime.date(2004,5,4):
                 mBox.showinfo("Błędny format danych raportu NBP", "Możliwe jest pobranie raportu ze strony NBP\nzaczynając od daty 2004-05-04. Wcześniejsze raporty mają inny format danych. Więcej informaacji na stronie http://api.nbp.pl")
+                self.stop_RunReport = 'yes'
             elif self.eDate > self.today or self.sDate > self.eDate:
                 mBox.showerror("Uwaga", "Niewłaściwa data, wprowadź nową datę")
-            elif str(self.eDate) > str(firstloopEDL):
+                self.stop_RunReport = 'yes'
+            elif self.eDate > self.firstLoopDate:
                 mBox.showinfo("Raport NBP nie opublikowany", "Zwykle publikacja odbywa się w dni robocze około godziny 13:00\nWprowadź inną datę")
+                self.stop_RunReport = 'yes'
             else:
                 self.step = 91
                 self.sumdays = self.eDate - self.sDate
                 self.daysLen = self.sumdays.days + 1
                 if workingMode == 'Online_No_Database':
+                    print('tu jestem')
                     self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{startDate}/{endDate}/?format=json")
+                    print(self.response)
+                    if self.response.ok == False and self.daysLen < 91:
+                        mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")   
+                        self.stop_RunReport = 'yes'
+                elif workingMode == 'Database':
+                    if self.sDate > self.firstLoopDate:
+                        mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
+                        self.stop_RunReport = 'yes'
                 '''
                 if self.response.ok == False and self.daysLen < 91: 
                     if mboxIgnore == 'no':
@@ -115,10 +129,8 @@ class Data:
                     if mboxIgnore == 'no':
                         mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                 '''
-                if self.response.ok == False and self.daysLen < 91:
-                    mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
-                else:
-                    self.ReportLoop()
+                
+                    
                 '''
                 else:
                     if workingMode == 'Online_No_Database':

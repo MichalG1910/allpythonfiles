@@ -71,7 +71,7 @@ class Main:
         else:
             os.mkdir(os.path.join(dataObj.filePath, "reports")) 
             openPlatform()
-        
+        graphObj.getVar
     def info(self):
         infoWin = tk.Tk()
         infoWin.geometry("335x180+800+400")
@@ -555,28 +555,33 @@ class Main:
         trendLineCheck = ttk.Checkbutton(tab2, variable=self.trendLineVar ).grid(column=3, row=2, sticky=tk.W) 
         ttk.Label(tab2, text= "min/max wartość ").grid(column=2, row=3, sticky=tk.W, pady=5,padx=5)  
         annotateCheck = ttk.Checkbutton(tab2, variable=self.annotateVar ).grid(column=3, row=3, sticky=tk.W) 
-        
+    
+    def generateReport(self):
+        if dataObj.workingMode == 'Online_No_Database' and dataObj.stop_RunReport == 'no':
+            dataObj.checkConnection()
+            dataObj.ReportLoop()
+            dataObj.dataFormatting("mid")
+            dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
+            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
+        '''
+        elif dataObj.workingMode == 'Database':
+            scenObj.ReportLoop(self.startDate.get(), self.startDate.get())
+            dataObj.dataFormatting("mid")
+            dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
+            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get()) 
+        '''
+        if dataObj.stop_RunReport == 'no':
+            del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
+            if dataObj.deleteCsvList == 'yes': del dataObj.csvList   
+    
     def generateReportGui(self):
         self.startDate = tk.StringVar()
         self.endDate = tk.StringVar()
 
         def runReport():
-            dataObj.generateReport(self.startDate.get(), self.startDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
-            if dataObj.workingMode == 'Online_No_Database':
-                dataObj.checkConnection()
-                #dataObj.ReportLoop()
-                dataObj.dataFormatting("mid")
-                dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
-                dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
-            if dataObj.workingMode == 'Database':
-                pass
-                scenObj.ReportLoop(self.startDate.get(), self.startDate.get())
-            dataObj.dataFormatting("mid")
-            dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
-            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get()) 
-            
-            del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
-            if dataObj.deleteCsvList == 'yes': del dataObj.csvList
+            dataObj.stop_RunReport = 'no'
+            dataObj.reporteErrorChecking(self.startDate.get(), self.endDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
+            self.generateReport()
         
         tabControlRep = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 
@@ -631,7 +636,6 @@ class Main:
                 self.pb.destroy()
            
     def fullscreenGraphWindow(self):
-        self.progressBar()
         graphObj.multiGraphList(self.viewNum, self.lenCurrencyList, [i.get() for i in self.timeRangeVariableList], [i.get() for i in self.chVariableList], [i.get() for i in self.codeVariableList], self.codeCurrencyList)
         
         def buttonCreate():
@@ -639,7 +643,7 @@ class Main:
             ttk.Button(graphObj.winFull, text = "zapisz", command = graphObj.runSaveGraphPNG2, width=7).grid(column = 10, columnspan = 2, row = 0 , padx=5, pady=5, sticky=tk.W)
         
         def drawGraph():
-            
+            self.progressBar()
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
@@ -650,16 +654,19 @@ class Main:
          
         if self.oneSubplotVarMulti.get() != 1:   
             if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:     
-                graphObj.winFull.destroy()
+                #graphObj.winFull.destroy()
                 mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
             elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-                graphObj.winFull.destroy()
+                #graphObj.winFull.destroy()
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
                 drawGraph()
         else:
-            if "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-                graphObj.winFull.destroy()
+            if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> self.lenCurrencyList:     
+                #graphObj.winFull.destroy()
+                mBox.showinfo(f"rysuj od 1 do {self.lenCurrencyList} wykresów", f"ilość rysowanych wykresów musi wynosić conajmniej 1 , i nie więcej niż {self.lenCurrencyList}.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
+            elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
+                #graphObj.winFull.destroy()
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
                 drawGraph()
