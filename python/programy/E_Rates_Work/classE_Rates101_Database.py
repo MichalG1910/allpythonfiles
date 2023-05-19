@@ -129,7 +129,9 @@ class Scenario:
    def insertToTabelRates(self, mboxIgnore = 'no'):
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       dataObj = Data()
-      dataObj.generateReport(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
+      dataObj.reporteErrorChecking(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
+      dataObj.ReportLoop()
+      dataObj.dataFormatting("mid")
       insert_stmt = '''INSERT INTO rates (currency, code, date, 
       value) VALUES (%s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvList)
@@ -196,13 +198,18 @@ class Scenario:
          lastDBUpdate = datetime.date(convertDate[0], convertDate[1], convertDate[2])
          if lastDBUpdate < self.today:
             self.startDate = str(lastDBUpdate + datetime.timedelta(days=1))
+            self.fetchDate = str(self.today)
             try:
                self.mboxIgnore = 'yes'
+               print(self.startDate)
+               print(self.fetchDate)
                self.insertToTabelRates(self.mboxIgnore)
                self.insertToTabelBidAsk()
                print("Database updated........")
+               getLastDate()
                self.logwin_quit()
             except AttributeError:
+               print('Database not updated........')
                self.logwin_quit()
          else:
             self.logwin_quit()
@@ -297,6 +304,9 @@ class Scenario:
       self.cursor.execute('''SELECT currency, code, date, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
       self.lastList = self.cursor.fetchall()
 
+      dataObj = Data()
+      dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
+      dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
 
 
 
