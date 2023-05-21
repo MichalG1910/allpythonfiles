@@ -128,16 +128,18 @@ class Scenario:
       self.conn.commit()
       self.conn.close()
    
-   def insertToTabelRates(self, mboxIgnore = 'no'):
+   def insertToTabelRates(self, mboxIgnore = 'yes'):
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       dataObj = Data()
       dataObj.reporteErrorChecking(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
-      dataObj.ReportLoop()
-      dataObj.dataFormatting("mid")
-      insert_stmt = '''INSERT INTO rates (currency, code, date, 
-      value) VALUES (%s, %s, %s, %s)'''
-      self.cursor.executemany(insert_stmt, dataObj.csvList)
-      print("Data inserted to tabel rates........")
+      if dataObj.stop_RunReport == 'no':
+         dataObj.ReportLoop()
+         dataObj.dataFormatting("mid")
+         insert_stmt = '''INSERT INTO rates (currency, code, date, 
+         value) VALUES (%s, %s, %s, %s)'''
+         self.cursor.executemany(insert_stmt, dataObj.csvList)
+         print("Data inserted to tabel rates........")
+      mboxIgnore = 'yes'
       self.conn.commit()
       self.conn.close()
    
@@ -202,12 +204,12 @@ class Scenario:
             self.startDate = str(lastDBUpdate + datetime.timedelta(days=1))
             self.fetchDate = str(self.today)
             try:
+               dataObj = Data()
                self.mboxIgnore = 'yes'
-               print(self.startDate)
-               print(self.fetchDate)
                self.insertToTabelRates(self.mboxIgnore)
-               self.insertToTabelBidAsk()
-               print("Database updated........")
+               if dataObj.stop_RunReport == 'no':
+                  self.insertToTabelBidAsk()
+                  print("Database updated........")
                getLastDate()
                self.logwin_quit()
             except AttributeError:
