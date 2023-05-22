@@ -44,7 +44,7 @@ class Data:
     def latestNBPreport(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/a?format=json"
         self.NBPreport(1, url, "mid")
-        self.reportCreate(startDate=None, endDate=None)
+        self.reportCreate(self.daysLen, self.data, self.erDataList, self.effectiveDateList[-1], startDate=None, endDate=None)
         self.terminalPrint()
         
         del self.data, self.response, self.printList, self.erDataList 
@@ -171,7 +171,7 @@ class Data:
         self.data = longerList
         del longerList     
             
-    def dataFormatting(self, midBid):
+    def dataFormatting(self, midBid, tabelNameId=1):
         self.csvList, self.csvListWithAsk, self.printList, self.erDataList =[],[],[],[]
         
         for dict in self.data:
@@ -199,24 +199,26 @@ class Data:
                     self.csvListWithAsk.append([currency, self.code, self.effectiveDate, mid, ask, self.table_name])
 
                 if self.num == 2:
-                    self.csvList.append([currency,self.code,self.effectiveDate,mid])
+                    self.csvList.append([currency,self.code,self.effectiveDate,mid, tabelNameId])
                     
             erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
                       'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
                       'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
             
+            tabelNameId += 1
             self.erDataList.append(erData)
             del erData
-        
-    def reportCreate(self, startDate, endDate):
+    
+    def reportCreate(self, daysLen, data, erDataList, lastDate, startDate, endDate ):
+    
         def file_write(fileWrite):
             erDataListLen = len(self.erDataList)
             rpt=0
-            fileWrite.write(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(self.data)}\n' )
+            fileWrite.write(f'ilośc sprawdzanych dni: {daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(data)}\n' )
             
             while rpt < erDataListLen:
-                erFrame = pd.DataFrame(self.erDataList[rpt])
-                fileWrite.write(f"\n\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n")
+                erFrame = pd.DataFrame(erDataList[rpt])
+                fileWrite.write(f"\n\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n") # printlist przemyśl
                 fileWrite.write(tabulate(erFrame, showindex=True, headers=erFrame.columns))
                 rpt += 1
 
@@ -228,11 +230,10 @@ class Data:
             self.report = open(f"{self.filePath}/reports/report_exchangerates_{startDate}_{endDate}.txt", "w")
             file_write(self.report)
         else:    
-            self.start = open(f"{self.filePath}/reports/report_exchangerates_{self.effectiveDateList[-1]}.txt", "w")
+            self.start = open(f"{self.filePath}/reports/report_exchangerates_{lastDate}.txt", "w")
             file_write(self.start)
         
     def csv_ER_report(self, startDate, endDate):
-        
         csvLen = len(self.csvList)   
         exc=0
         self.csv = open(f"{self.filePath}/reports/CSV_exchangerates_{startDate}_{endDate}.csv", "w")           

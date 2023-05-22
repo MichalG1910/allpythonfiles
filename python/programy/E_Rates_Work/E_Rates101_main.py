@@ -561,15 +561,14 @@ class Main:
             dataObj.checkConnection()
             dataObj.ReportLoop()
             dataObj.dataFormatting("mid")
-            dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
+            dataObj.reportCreate(dataObj.daysLen, dataObj.data, dataObj.erDataList, dataObj.effectiveDateList[-1], self.startDate.get(), self.endDate.get()) 
             dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
-        '''
+        
         elif dataObj.workingMode == 'Database':
-            scenObj.ReportLoop(self.startDate.get(), self.startDate.get())
-            dataObj.dataFormatting("mid")
-            dataObj.reportCreate(self.startDate.get(), self.endDate.get()) 
+            scenObj.ReportLoopDB(self.startDate.get(), self.startDate.get())
+            dataObj.reportCreate(scenObj.daysInterval, scenObj.erDataList, scenObj.erDataList, scenObj.fetchDate, self.startDate.get(), self.endDate.get()) 
             dataObj.csv_ER_report(self.startDate.get(), self.endDate.get()) 
-        '''
+        
         if dataObj.stop_RunReport == 'no':
             del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
             if dataObj.deleteCsvList == 'yes': del dataObj.csvList   

@@ -104,6 +104,8 @@ class Graph:
                 self.tickList = list(range(0,xValuesLen, a))
             if self.sumChVar == 1: 
                 a = round(xValuesLen / 40)
+                if a == 0:
+                    a = 1
                 self.tickList = list(range(0,xValuesLen, a))
                 if len(self.tickList) < 40: self.tickList.append(xValuesLen -1)
             if self.sumChVar == 2 or self.sumChVar == 3 or self.sumChVar == 4: 

@@ -122,6 +122,7 @@ class Scenario:
          code VARCHAR(20),
          date DATE,
          value VARCHAR(20)
+         tablename_id INT NOT NULL
       )'''
       self.cursor.execute(sql)
       print("Table rates created successfully........")
@@ -134,12 +135,35 @@ class Scenario:
       dataObj.reporteErrorChecking(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
       if dataObj.stop_RunReport == 'no':
          dataObj.ReportLoop()
-         dataObj.dataFormatting("mid")
+         dataObj.dataFormatting("mid", self.tableName_id)
          insert_stmt = '''INSERT INTO rates (currency, code, date, 
-         value) VALUES (%s, %s, %s, %s)'''
+         value, tablename_id) VALUES (%s, %s, %s, %s, %s)'''
          self.cursor.executemany(insert_stmt, dataObj.csvList)
-         print("Data inserted to tabel rates........")
+         print("Data inserted to table rates........")
       mboxIgnore = 'yes'
+      self.conn.commit()
+      self.conn.close()
+   
+   def createTabelNames(self):
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      sql ='''CREATE TABLE IF NOT EXISTS tablenames       
+      (
+         tablename_id SERIAL NOT NULL PRIMARY KEY,
+         table VARCHAR(5),
+         tablename VARCHAR(20),
+         date DATE
+      )'''
+      self.cursor.execute(sql)
+      print("Table tablenames created successfully........")
+      self.conn.commit()
+      self.conn.close()
+   
+   def insertToTabelNames(self):
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      dataObj = Data()
+      insert_stmt = '''INSERT INTO tablenames (table, tablename, date) VALUES (%s, %s, %s, %s)'''
+      self.cursor.executemany(insert_stmt, dataObj.printList)
+      print("Data inserted to tablenames........")
       self.conn.commit()
       self.conn.close()
    
@@ -179,23 +203,33 @@ class Scenario:
          self.fetchDate = str(self.cursor.fetchall()[0][0])
          self.conn.close()
       
+      def getLastTabelNameId():
+         self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+         self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
+         self.tableName_id = self.cursor.fetchall()
+         self.conn.close()
+      
       self.cursorObj(self.username.get(), self.password.get())
       self.conn.autocommit = True
       self.endDate =str(self.today)
 
       try:
          self.cursor.execute('''CREATE DATABASE e_ratesdb''')
+         self.tableName_id = 1
          self.startDate = '2004-05-04'
          print("Database created successfully........")
          self.conn.close()
          self.createTabelRates()
          self.insertToTabelRates()
+         self.createTabelNames()
+         self.insertToTabelNames()
          self.createTabelBidAsk()
          self.insertToTabelBidAsk()
          getLastDate()
          self.logwin_quit()
       except psycopg2.errors.DuplicateDatabase:
          getLastDate()
+         getLastTabelNameId()
          print(f"Database already exist (last update: {self.fetchDate})........")
          lastDBDate = (list(self.fetchDate.split('-')))
          convertDate = [int(i) for i in lastDBDate] 
@@ -206,8 +240,10 @@ class Scenario:
             try:
                dataObj = Data()
                self.mboxIgnore = 'yes'
+               self.tableName_id += 1
                self.insertToTabelRates(self.mboxIgnore)
                if dataObj.stop_RunReport == 'no':
+                  self.insertToTabelNames()
                   self.insertToTabelBidAsk()
                   print("Database updated........")
                getLastDate()
@@ -304,21 +340,36 @@ class Scenario:
       self.conn.close()
 
    def ReportLoopDB(self, startDate, endDate):
-      dataObj = Data()
       self.erDataList = []
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
-      self.cursor.execute('''SELECT currency, code, date, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') # beetween
-      self.dataToReportList = self.cursor.fetchall()
-      # data wiersz 202
-      for a in self.dataToReportList:
-         erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
-                      'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
-                      'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
-      self.erDataList.append(erData)
-      del erData
-      dataObj.reporteErrorChecking(startDate, endDate, 'Database', 'no')
-      dataObj.reportCreate(startDate, endDate) 
-      dataObj.csv_ER_report(startDate, endDate)
+      startDateGet = (list(startDate.split('-')))
+      convertDateS = [int(i) for i in startDateGet] 
+      startDate = datetime.date(convertDateS[0], convertDateS[1], convertDateS[2])
+      
+      endDateGet = (list(endDate.split('-')))
+      convertDateE = [int(i) for i in endDateGet] 
+      endDate = datetime.date(convertDateE[0], convertDateE[1], convertDateE[2])
 
+      interval = list(str(endDate - startDate).split(' '))
+      self.daysInterval = int(interval[0])
+
+      dataObj = Data()
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      
+      for a in range(self.daysInterval):
+         self.cursor.execute(f'''SELECT currency FROM rates WHERE date = '{startDate}' ''') # beetween
+         self.currencyList = self.cursor.fetchall()
+         self.cursor.execute(f'''SELECT code FROM rates WHERE date = '{startDate}' ''') # beetween
+         self.codeList = self.cursor.fetchall()
+         self.cursor.execute(f'''SELECT value FROM rates WHERE date = '{startDate}' ''') # beetween
+         self.valueList = self.cursor.fetchall()
+            
+         erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
+                        'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
+                        'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
+         startDate = startDate + datetime.timedelta(days=1)
+
+         self.erDataList.append(erData)
+         del erData
+      
 
 
