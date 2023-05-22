@@ -44,7 +44,7 @@ class Data:
     def latestNBPreport(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/a?format=json"
         self.NBPreport(1, url, "mid")
-        self.reportCreate(self.daysLen, self.data, self.erDataList, self.effectiveDateList[-1], startDate=None, endDate=None)
+        self.reportCreate(self.daysLen, self.data, self.erDataList, self.effectiveDateList[-1],self.printList, startDate=None, endDate=None)
         self.terminalPrint()
         
         del self.data, self.response, self.printList, self.erDataList 
@@ -209,16 +209,16 @@ class Data:
             self.erDataList.append(erData)
             del erData
     
-    def reportCreate(self, daysLen, data, erDataList, lastDate, startDate, endDate ):
+    def reportCreate(self, daysLen, data, erDataList, lastDate, printList, startDate, endDate ):
     
         def file_write(fileWrite):
-            erDataListLen = len(self.erDataList)
+            erDataListLen = len(erDataList)
             rpt=0
             fileWrite.write(f'ilośc sprawdzanych dni: {daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące): {len(data)}\n' )
             
             while rpt < erDataListLen:
                 erFrame = pd.DataFrame(erDataList[rpt])
-                fileWrite.write(f"\n\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}\n") # printlist przemyśl
+                fileWrite.write(f"\n\nExchange rates: {printList[rpt][0]}, {printList[rpt][1]}, {printList[rpt][2]}\n") # printlist przemyśl
                 fileWrite.write(tabulate(erFrame, showindex=True, headers=erFrame.columns))
                 rpt += 1
 

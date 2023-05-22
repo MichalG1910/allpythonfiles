@@ -172,13 +172,13 @@ class Main:
                 ttk.Label(echangeRateFrame,  width=20, text= f'{currencyList[t]}').grid(column=0, row=t+1, sticky=tk.W, padx=1, pady=1)
                 ttk.Label(echangeRateFrame,  width=5, text= f'{codeList[t]}').grid(column=1, row=t+1, sticky=tk.W, padx=1, pady=1)
                 ttk.Label(echangeRateFrame,  width=10, text= f'{valueList[t]}').grid(column=2, row=t+1, sticky=tk.W, padx=1, pady=1)
-                if float(ratesUpDown[t+33][3])>float(ratesUpDown[t][3]):
+                if float(ratesUpDown[t+self.lenCurrencyList][3])>float(ratesUpDown[t][3]):
                     col = "Green"
-                elif float(ratesUpDown[t+33][3])<float(ratesUpDown[t][3]):
+                elif float(ratesUpDown[t+self.lenCurrencyList][3])<float(ratesUpDown[t][3]):
                     col = "Red"
                 else:
                     col = "White"
-                procent = round((((float(ratesUpDown[t+33][3])/float(ratesUpDown[t][3])) -1) * 100), 2)
+                procent = round((((float(ratesUpDown[t+self.lenCurrencyList][3])/float(ratesUpDown[t][3])) -1) * 100), 2)
                 if procent > 0:
                     ttk.Label(echangeRateFrame,  width=8, text= f'\u25B2 {procent}%', foreground=col).grid(column=3, row=t+1, sticky=tk.W, padx=1, pady=1)
                 elif procent == 0:
@@ -557,17 +557,17 @@ class Main:
         annotateCheck = ttk.Checkbutton(tab2, variable=self.annotateVar ).grid(column=3, row=3, sticky=tk.W) 
     
     def generateReport(self):
-        if dataObj.workingMode == 'Online_No_Database' and dataObj.stop_RunReport == 'no':
+        if scenObj.workingMode == 'Online_No_Database' and dataObj.stop_RunReport == 'no':
             dataObj.checkConnection()
             dataObj.ReportLoop()
             dataObj.dataFormatting("mid")
-            dataObj.reportCreate(dataObj.daysLen, dataObj.data, dataObj.erDataList, dataObj.effectiveDateList[-1], self.startDate.get(), self.endDate.get()) 
+            dataObj.reportCreate(dataObj.daysLen, dataObj.data, dataObj.erDataList, dataObj.effectiveDateList[-1], dataObj.printList, self.startDate.get(), self.endDate.get()) 
             dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
         
-        elif dataObj.workingMode == 'Database':
-            scenObj.ReportLoopDB(self.startDate.get(), self.startDate.get())
-            dataObj.reportCreate(scenObj.daysInterval, scenObj.erDataList, scenObj.erDataList, scenObj.fetchDate, self.startDate.get(), self.endDate.get()) 
-            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get()) 
+        elif scenObj.workingMode == 'Database':
+            scenObj.ReportLoopDB(self.startDate.get(), self.endDate.get())
+            dataObj.reportCreate(scenObj.daysInterval, scenObj.erDataList, scenObj.erDataList, scenObj.fetchDate, scenObj.printList, self.startDate.get(), self.endDate.get()) 
+            #dataObj.csv_ER_report(self.startDate.get(), self.endDate.get()) 
         
         if dataObj.stop_RunReport == 'no':
             del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
@@ -583,7 +583,7 @@ class Main:
                 dataObj.reporteErrorChecking(self.startDate.get(), self.endDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
                 self.generateReport()
             if scenObj.workingMode == 'Database':
-                scenObj.ReportLoopDB(self.startDate.get(), self.endDate.get())
+                self.generateReport()
         
         tabControlRep = ttk.Notebook(self.win) 
         tab1, tab2 = ttk.Frame(tabControlRep),  ttk.Frame(tabControlRep) 

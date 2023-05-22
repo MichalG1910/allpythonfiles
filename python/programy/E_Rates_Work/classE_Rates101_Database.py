@@ -121,7 +121,7 @@ class Scenario:
          currency VARCHAR(30),
          code VARCHAR(20),
          date DATE,
-         value VARCHAR(20)
+         value VARCHAR(20),
          tablename_id INT NOT NULL
       )'''
       self.cursor.execute(sql)
@@ -140,6 +140,7 @@ class Scenario:
          value, tablename_id) VALUES (%s, %s, %s, %s, %s)'''
          self.cursor.executemany(insert_stmt, dataObj.csvList)
          print("Data inserted to table rates........")
+         self.printList = dataObj.printList
       mboxIgnore = 'yes'
       self.conn.commit()
       self.conn.close()
@@ -149,8 +150,8 @@ class Scenario:
       sql ='''CREATE TABLE IF NOT EXISTS tablenames       
       (
          tablename_id SERIAL NOT NULL PRIMARY KEY,
-         table VARCHAR(5),
-         tablename VARCHAR(20),
+         table_symbol VARCHAR(5),
+         table_name VARCHAR(20),
          date DATE
       )'''
       self.cursor.execute(sql)
@@ -161,8 +162,8 @@ class Scenario:
    def insertToTabelNames(self):
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       dataObj = Data()
-      insert_stmt = '''INSERT INTO tablenames (table, tablename, date) VALUES (%s, %s, %s, %s)'''
-      self.cursor.executemany(insert_stmt, dataObj.printList)
+      insert_stmt = '''INSERT INTO tablenames (table_symbol, table_name, date) VALUES (%s, %s, %s)'''
+      self.cursor.executemany(insert_stmt, self.printList)
       print("Data inserted to tablenames........")
       self.conn.commit()
       self.conn.close()
@@ -206,7 +207,8 @@ class Scenario:
       def getLastTabelNameId():
          self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
          self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
-         self.tableName_id = self.cursor.fetchall()
+         self.tableName_id = self.cursor.fetchall()[0][0]
+         print(self.tableName_id)
          self.conn.close()
       
       self.cursorObj(self.username.get(), self.password.get())
@@ -266,7 +268,7 @@ class Scenario:
          self.valueList.append(t[3])  
          self.codeCurrencyDict[t[2]] = t[1] ###################
 
-      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date)- INTERVAL '1 days' FROM rates)''') 
+      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE tablename_id IN (SELECT MAX(tablename_id) -1 FROM rates)''') 
       self.lastListMinus1Day = self.cursor.fetchall()
       self.ratesUpDown = self.lastListMinus1Day + self.lastList
       self.conn.close()
@@ -344,32 +346,59 @@ class Scenario:
       startDateGet = (list(startDate.split('-')))
       convertDateS = [int(i) for i in startDateGet] 
       startDate = datetime.date(convertDateS[0], convertDateS[1], convertDateS[2])
-      
+      #startDate1 = startDate
+
       endDateGet = (list(endDate.split('-')))
       convertDateE = [int(i) for i in endDateGet] 
       endDate = datetime.date(convertDateE[0], convertDateE[1], convertDateE[2])
-
+      print(startDate, endDate)
       interval = list(str(endDate - startDate).split(' '))
+      print(interval)
       self.daysInterval = int(interval[0])
 
-      dataObj = Data()
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       
-      for a in range(self.daysInterval):
-         self.cursor.execute(f'''SELECT currency FROM rates WHERE date = '{startDate}' ''') # beetween
-         self.currencyList = self.cursor.fetchall()
-         self.cursor.execute(f'''SELECT code FROM rates WHERE date = '{startDate}' ''') # beetween
-         self.codeList = self.cursor.fetchall()
-         self.cursor.execute(f'''SELECT value FROM rates WHERE date = '{startDate}' ''') # beetween
-         self.valueList = self.cursor.fetchall()
-            
-         erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.rates)+1)),
-                        'code:': pd.Series(self.codeList, index=range(1,len(self.rates)+1)),
-                        'value:': pd.Series(self.valueList, index=range(1,len(self.rates)+1))}
-         startDate = startDate + datetime.timedelta(days=1)
-
-         self.erDataList.append(erData)
-         del erData
+      self.currencyList, self.codeList, self.valueList = [],[],[]
+      self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') # beetween
+      self.reportLoopList = self.cursor.fetchall()
+      print(self.reportLoopList)
+      for a in self.reportLoopList:
+         self.currencyList.append(a[0]) 
+         self.codeList.append(a[1]) 
+         self.valueList.append(a[2]) 
+         
+      erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
+                  'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
+                  'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
+      self.erDataList.append(erData)
+      del erData
+         
       
+      """
+      for a in range(self.daysInterval + 1):
+         self.currencyList, self.codeList, self.valueList = [],[],[]
+         self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date = '{startDate1}' ''') # beetween
+         self.reportLoopList = self.cursor.fetchall()
+         if self.reportLoopList == []:
+            pass
+         else:
+            for b in self.reportLoopList:
+               self.currencyList.append(b[0]) 
+               self.codeList.append(b[1]) 
+               self.valueList.append(b[2]) 
+               
+            erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
+                        'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
+                        'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
+            self.erDataList.append(erData)
+            del erData
+            
+         startDate1 = startDate1 + datetime.timedelta(days=1)
+      """
+      
+      self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') # beetween
+      self.printList = self.cursor.fetchall()
+      self.conn.close()
+         
 
 
