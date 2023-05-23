@@ -563,15 +563,17 @@ class Main:
             dataObj.dataFormatting("mid")
             dataObj.reportCreate(dataObj.daysLen, dataObj.data, dataObj.erDataList, dataObj.effectiveDateList[-1], dataObj.printList, self.startDate.get(), self.endDate.get()) 
             dataObj.csv_ER_report(self.startDate.get(), self.endDate.get(), dataObj.csvList)
+            del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
+            if dataObj.deleteCsvList == 'yes': del dataObj.csvList
         
         elif scenObj.workingMode == 'Database':
             scenObj.ReportLoopDB(self.startDate.get(), self.endDate.get())
             dataObj.reportCreate(scenObj.daysInterval, scenObj.erDataList, scenObj.erDataList, scenObj.fetchDate, scenObj.printList, self.startDate.get(), self.endDate.get()) 
             dataObj.csv_ER_report(self.startDate.get(), self.endDate.get(), scenObj.csvList) 
+            del scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.reportLoopList, scenObj.erDataList, scenObj.printList, scenObj.csvList, scenObj.countDate
         
-        if dataObj.stop_RunReport == 'no':
-            del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
-            if dataObj.deleteCsvList == 'yes': del dataObj.csvList   
+        #if dataObj.stop_RunReport == 'no':
+               
     
     def generateReportGui(self):
         self.startDate = tk.StringVar()

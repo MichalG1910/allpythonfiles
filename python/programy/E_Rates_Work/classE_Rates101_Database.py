@@ -358,19 +358,28 @@ class Scenario:
 
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       
+      self.cursor.execute(f'''SELECT COUNT(date) WHERE date BETWEEN '{startDate}' AND '{endDate}' GROUP BY date''') 
+      self.countDate = self.cursor.fetchall()
+      print(self.countDate)
+
       self.currencyList, self.codeList, self.valueList = [],[],[]
-      self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') # beetween
+      self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''')
       self.reportLoopList = self.cursor.fetchall()
-      print(self.reportLoopList)
-      for a in self.reportLoopList:
-         self.currencyList.append(a[0]) 
-         self.codeList.append(a[1]) 
-         self.valueList.append(a[2]) 
-         
-      erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
-                  'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
-                  'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
-      self.erDataList.append(erData)
+      
+      for b in self.countDate:
+         c = b
+         for a in self.reportLoopList:
+            self.currencyList.append(a[0]) 
+            self.codeList.append(a[1]) 
+            self.valueList.append(a[2])
+            self.reportLoopList.remove(a) # self.reportLoopList.pop(0) - (0 - indeks)
+            c -= 1
+            if c==0: break
+         # del self.reportLoopList[0:b] jak tamto nie zadziała
+         erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
+                     'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
+                     'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
+         self.erDataList.append(erData)
       del erData
          
       
@@ -403,6 +412,8 @@ class Scenario:
       self.csvList = self.cursor.fetchall()
       
       self.conn.close()
+
+      
          
 
 
