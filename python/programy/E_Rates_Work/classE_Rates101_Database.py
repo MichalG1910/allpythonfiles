@@ -141,6 +141,7 @@ class Scenario:
          self.cursor.executemany(insert_stmt, dataObj.csvList)
          print("Data inserted to table rates........")
          self.printList = dataObj.printList
+         self.stop_RunReport = dataObj.stop_RunReport
       mboxIgnore = 'yes'
       self.conn.commit()
       self.conn.close()
@@ -240,11 +241,10 @@ class Scenario:
             self.startDate = str(lastDBUpdate + datetime.timedelta(days=1))
             self.fetchDate = str(self.today)
             try:
-               dataObj = Data()
                self.mboxIgnore = 'yes'
                self.tableName_id += 1
                self.insertToTabelRates(self.mboxIgnore)
-               if dataObj.stop_RunReport == 'no':
+               if self.stop_RunReport == 'no':
                   self.insertToTabelNames()
                   self.insertToTabelBidAsk()
                   print("Database updated........")
@@ -359,30 +359,31 @@ class Scenario:
 
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       
-      self.cursor.execute(f'''SELECT COUNT(date) WHERE date BETWEEN '{startDate}' AND '{endDate}' GROUP BY date''') 
+      self.cursor.execute(f'''SELECT COUNT(date) FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' GROUP BY date ORDER BY date''') 
       self.countDate = self.cursor.fetchall()
-      print(self.countDate)
+      #print(self.countDate)
 
-      self.currencyList, self.codeList, self.valueList = [],[],[]
-      self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''')
+      
+      self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY rates_id ''')
       self.reportLoopList = self.cursor.fetchall()
       
       for b in self.countDate:
-         c = b
+         c = b[0]-1
+         self.currencyList, self.codeList, self.valueList = [],[],[]
          for a in self.reportLoopList:
             self.currencyList.append(a[0]) 
             self.codeList.append(a[1]) 
             self.valueList.append(a[2])
-            self.reportLoopList.remove(a) # self.reportLoopList.pop(0) - (0 - indeks)
+            #self.reportLoopList.remove(a) # self.reportLoopList.pop(0) - (0 - indeks)
             if c==0: break
             c -= 1
-         # del self.reportLoopList[0:b] jak tamto nie zadziała
+         del self.reportLoopList[0:b[0]] #jak tamto nie zadziała
          erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
                      'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
                      'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
          self.erDataList.append(erData)
       del erData
-         
+      print('self.countDate: ', len(self.countDate), 'self.erDataList: ', len(self.erDataList)) 
       
       """
       for a in range(self.daysInterval + 1):
@@ -406,15 +407,21 @@ class Scenario:
          startDate1 = startDate1 + datetime.timedelta(days=1)
       """
       
-      self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames WHERE date BETWEEN '{startDate}' AND '{endDate}' ''')
+      self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY tablename_id''')
       self.printList = self.cursor.fetchall()
-      
-      self.cursor.execute(f'''SELECT currency, code, date, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') 
+      print('self.printList: ', len(self.printList))
+      self.cursor.execute(f'''SELECT currency, code, date, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY rates_id''') 
       self.csvList = self.cursor.fetchall()
       
       self.conn.close()
-
       
-         
+      
+      '''
+      --SELECT rates_id, currency, code, date, value FROM rates WHERE date BETWEEN '2023-01-01' AND '2023-05-23'
+      --SELECT COUNT(date) FROM rates WHERE date BETWEEN '2023-01-01' AND '2023-05-23' GROUP BY date
+      --SELECT COUNT(date) FROM rates WHERE date BETWEEN '2004-05-04' AND '2005-05-04' GROUP BY date
+      --SELECT COUNT(date) FROM rates WHERE date BETWEEN '2004-05-04' AND '2023-05-23' GROUP BY date ORDER BY date
+      --DELETE FROM rates where date = '2023-05-23'
+      '''
 
 
