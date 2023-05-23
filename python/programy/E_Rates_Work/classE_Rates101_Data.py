@@ -233,14 +233,14 @@ class Data:
             self.start = open(f"{self.filePath}/reports/report_exchangerates_{lastDate}.txt", "w")
             file_write(self.start)
         
-    def csv_ER_report(self, startDate, endDate):
-        csvLen = len(self.csvList)   
+    def csv_ER_report(self, startDate, endDate, csvList):
+        csvLen = len(csvList)   
         exc=0
         self.csv = open(f"{self.filePath}/reports/CSV_exchangerates_{startDate}_{endDate}.csv", "w")           
         self.csv.write(f"currency,code,date,value\n")
             
         while exc < csvLen:
-            self.csv.write(f"{self.csvList[exc][0]},{self.csvList[exc][1]},{self.csvList[exc][2]},{self.csvList[exc][3]}\n")
+            self.csv.write(f"{csvList[exc][0]},{csvList[exc][1]},{csvList[exc][2]},{csvList[exc][3]}\n")
             exc += 1
 
         self.csv.close()

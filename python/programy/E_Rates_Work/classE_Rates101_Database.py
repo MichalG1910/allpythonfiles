@@ -396,8 +396,12 @@ class Scenario:
          startDate1 = startDate1 + datetime.timedelta(days=1)
       """
       
-      self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') # beetween
+      self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames WHERE date BETWEEN '{startDate}' AND '{endDate}' ''')
       self.printList = self.cursor.fetchall()
+      
+      self.cursor.execute(f'''SELECT currency, code, date, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') 
+      self.csvList = self.cursor.fetchall()
+      
       self.conn.close()
          
 

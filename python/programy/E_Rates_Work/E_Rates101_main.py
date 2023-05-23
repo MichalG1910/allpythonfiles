@@ -562,12 +562,12 @@ class Main:
             dataObj.ReportLoop()
             dataObj.dataFormatting("mid")
             dataObj.reportCreate(dataObj.daysLen, dataObj.data, dataObj.erDataList, dataObj.effectiveDateList[-1], dataObj.printList, self.startDate.get(), self.endDate.get()) 
-            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get())
+            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get(), dataObj.csvList)
         
         elif scenObj.workingMode == 'Database':
             scenObj.ReportLoopDB(self.startDate.get(), self.endDate.get())
             dataObj.reportCreate(scenObj.daysInterval, scenObj.erDataList, scenObj.erDataList, scenObj.fetchDate, scenObj.printList, self.startDate.get(), self.endDate.get()) 
-            #dataObj.csv_ER_report(self.startDate.get(), self.endDate.get()) 
+            dataObj.csv_ER_report(self.startDate.get(), self.endDate.get(), scenObj.csvList) 
         
         if dataObj.stop_RunReport == 'no':
             del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
