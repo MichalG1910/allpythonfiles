@@ -359,8 +359,12 @@ class Scenario:
 
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
       
+      self.cursor.execute(f'''SELECT COUNT(date) WHERE date BETWEEN '{startDate}' AND '{endDate}' GROUP BY date''') 
+      self.countDate = self.cursor.fetchall()
+      print(self.countDate)
+
       self.currencyList, self.codeList, self.valueList = [],[],[]
-      self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') # beetween
+      self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''')
       self.reportLoopList = self.cursor.fetchall()
       
       for b in self.countDate:
@@ -409,6 +413,8 @@ class Scenario:
       self.csvList = self.cursor.fetchall()
       
       self.conn.close()
+
+      
          
 
 
