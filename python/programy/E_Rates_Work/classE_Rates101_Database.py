@@ -343,6 +343,7 @@ class Scenario:
 
    def ReportLoopDB(self, startDate, endDate):
       self.erDataList = []
+      
       startDateGet = (list(startDate.split('-')))
       convertDateS = [int(i) for i in startDateGet] 
       startDate = datetime.date(convertDateS[0], convertDateS[1], convertDateS[2])
@@ -373,8 +374,8 @@ class Scenario:
             self.codeList.append(a[1]) 
             self.valueList.append(a[2])
             self.reportLoopList.remove(a) # self.reportLoopList.pop(0) - (0 - indeks)
-            c -= 1
             if c==0: break
+            c -= 1
          # del self.reportLoopList[0:b] jak tamto nie zadziała
          erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
                      'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
