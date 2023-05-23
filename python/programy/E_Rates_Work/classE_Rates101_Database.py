@@ -343,6 +343,7 @@ class Scenario:
 
    def ReportLoopDB(self, startDate, endDate):
       self.erDataList = []
+      
       startDateGet = (list(startDate.split('-')))
       convertDateS = [int(i) for i in startDateGet] 
       startDate = datetime.date(convertDateS[0], convertDateS[1], convertDateS[2])
@@ -361,16 +362,21 @@ class Scenario:
       self.currencyList, self.codeList, self.valueList = [],[],[]
       self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ''') # beetween
       self.reportLoopList = self.cursor.fetchall()
-      print(self.reportLoopList)
-      for a in self.reportLoopList:
-         self.currencyList.append(a[0]) 
-         self.codeList.append(a[1]) 
-         self.valueList.append(a[2]) 
-         
-      erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
-                  'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
-                  'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
-      self.erDataList.append(erData)
+      
+      for b in self.countDate:
+         c = b
+         for a in self.reportLoopList:
+            self.currencyList.append(a[0]) 
+            self.codeList.append(a[1]) 
+            self.valueList.append(a[2])
+            self.reportLoopList.remove(a) # self.reportLoopList.pop(0) - (0 - indeks)
+            if c==0: break
+            c -= 1
+         # del self.reportLoopList[0:b] jak tamto nie zadziała
+         erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
+                     'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
+                     'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
+         self.erDataList.append(erData)
       del erData
          
       
