@@ -67,8 +67,13 @@ class Scenario:
       dataObj.checkConnection(self.workingMode)
       print("username entered :", username.get())
       print("password entered :", password.get())
-      self.updateDatabase()
-     
+      if dataObj.checkConnectionFailure == False:
+         self.updateDatabase()
+      else:
+         self.getLastDate()
+         self.getLastTabelNameId()
+         self.logwin_quit()
+         
    def createFields(self):
       self.username =  tk.StringVar()
       self.password =  tk.StringVar()
@@ -210,21 +215,20 @@ class Scenario:
       self.conn.commit()
       self.conn.close()
    
-   def updateDatabase(self):
-      
-      def getLastDate():
+   def getLastDate(self):
          self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
          self.cursor.execute('''SELECT MAX(date) FROM rates''') 
          self.fetchDate = str(self.cursor.fetchall()[0][0])
          self.conn.close()
       
-      def getLastTabelNameId():
-         self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
-         self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') 
-         self.tableName_id = self.cursor.fetchall()[0][0]
-         print(self.tableName_id)
-         self.conn.close()
-      
+   def getLastTabelNameId(self):
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') 
+      self.tableName_id = self.cursor.fetchall()[0][0]
+      print(self.tableName_id)
+      self.conn.close()
+   
+   def updateDatabase(self):
       self.cursorObj(self.username.get(), self.password.get())
       self.conn.autocommit = True
       self.endDate =str(self.today)
@@ -241,11 +245,11 @@ class Scenario:
          self.insertToTabelNames()
          self.createTabelBidAsk()
          self.insertToTabelBidAsk()
-         getLastDate()
+         self.getLastDate()
          self.logwin_quit()
       except psycopg2.errors.DuplicateDatabase:
-         getLastDate()
-         getLastTabelNameId()
+         self.getLastDate()
+         self.getLastTabelNameId()
          print(f"Database already exist (last update: {self.fetchDate})........")
          lastDBDate = (list(self.fetchDate.split('-')))
          convertDate = [int(i) for i in lastDBDate] 
@@ -261,7 +265,7 @@ class Scenario:
                   self.insertToTabelNames()
                   self.insertToTabelBidAsk()
                   print("Database updated........")
-               getLastDate()
+               self.getLastDate()
                self.logwin_quit()
             except AttributeError:
                print('Database not updated........')

@@ -18,7 +18,7 @@ class Data:
             response = os.system("ping -n 1 " + hostname)
             
         if response == 0:
-            pass
+            self.checkConnectionFailure = False
         else:
             if workingMode == 'Online_No_Database':
                 answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?\nNie = Opuść program") 
@@ -29,7 +29,7 @@ class Data:
             elif workingMode == 'Database':
                 answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Baza danych nie zostanie zaktualizowana\nUruchomić program w trybie offline?") 
                 if answer == True:
-                    pass
+                    self.checkConnectionFailure = True
                 else:
                     exit()
     def createReportDir(self):

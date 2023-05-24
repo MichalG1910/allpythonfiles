@@ -17,11 +17,9 @@ class Main:
     
     def __init__(self):
         scenObj.operatingMode()
-        dataObj.checkConnection()
-        self.win = tk.Tk()
         dataObj.createReportDir()
-        dataObj.NBPratesUpDown()
         self.mode()
+        self.win = tk.Tk()
         self.winStyle(self.win)
         self.themeButton(self.win)
         self.quitButton()
@@ -35,13 +33,17 @@ class Main:
 
     def mode(self):
         if scenObj.workingMode == 'Online_No_Database':
+            dataObj.checkConnection()
+            dataObj.NBPratesUpDown()
             dataObj.NBPbidAsk()
             dataObj.latestNBPreport()
             self.firstloopEDL = dataObj.firstloopEDL
+            self.codeCurrencyDict = dataObj.codeCurrencyDict
         if scenObj.workingMode == 'Database':
             scenObj.NBPbidAskDB()
             scenObj.latestNBPreportDB()
             self.firstloopEDL = scenObj.fetchDate
+            self.codeCurrencyDict = scenObj.codeCurrencyDict
     
     def menu(self):
         self.menuBar = Menu(self.win)
@@ -136,7 +138,7 @@ class Main:
                 dataObj.xValues 
             except AttributeError:
                 dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
-            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
+            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, self.codeCurrencyDict)
             
         else:
             self.win.tk.call("set_theme", "dark")
@@ -150,7 +152,7 @@ class Main:
                 dataObj.xValues 
             except AttributeError:
                 dataObj.xValues, dataObj.yValues, dataObj.codeOne = None, None, None
-            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, dataObj.codeCurrencyDict)
+            graphObj.refreshGraph(self.win, self.timeRange.get(), dataObj.xValues, dataObj.yValues, dataObj.codeOne, self.codeCurrencyDict)
 
     def exchangeRatesTabel(self):
         def mediumTab(currencyList, codeList, valueList, ratesUpDown, lastDate):
@@ -207,12 +209,12 @@ class Main:
         def currencyLast30():
             currencyLast30 = tk.StringVar()
             self.codeCurrencyList = []
-            
+            '''
             if scenObj.workingMode == 'Online_No_Database':
                 self.codeCurrencyDict = dataObj.codeCurrencyDict
             if scenObj.workingMode == 'Database':
                 self.codeCurrencyDict = scenObj.codeCurrencyDict
-            
+            '''
             def getLast30Tabel():
                 if scenObj.workingMode == 'Online_No_Database':
                     dataObj.last30Data(currencyLast30.get())
@@ -507,7 +509,7 @@ class Main:
         self.annotateVar = tk.IntVar()
 
         def runSaveGraphPNG1():
-            graphObj.saveGraphPNG(1, dataObj.codeOne, self.timeRange.get())
+            graphObj.saveGraphPNG(1, self.codeOne, self.timeRange.get())
         
         def newGraph():
             graphObj.getVar(self.trendLineVar.get(), self.annotateVar.get())
@@ -565,7 +567,7 @@ class Main:
             del dataObj.data, dataObj.report, dataObj.printList, dataObj.erDataList, dataObj.response  
             if dataObj.deleteCsvList == 'yes': del dataObj.csvList
         
-        elif scenObj.workingMode == 'Database':
+        elif scenObj.workingMode == 'Database' and dataObj.stop_RunReport == 'no':
             scenObj.ReportLoopDB(self.startDate.get(), self.endDate.get())
             dataObj.reportCreate(scenObj.daysInterval, scenObj.erDataList, scenObj.erDataList, scenObj.fetchDate, scenObj.printList, self.startDate.get(), self.endDate.get()) 
             dataObj.csv_ER_report(self.startDate.get(), self.endDate.get(), scenObj.csvList) 
@@ -581,6 +583,7 @@ class Main:
                 dataObj.reporteErrorChecking(self.startDate.get(), self.endDate.get(), scenObj.workingMode, 'no', 'yes', self.firstloopEDL) 
                 self.generateReport()
             if scenObj.workingMode == 'Database':
+                dataObj.reporteErrorChecking(self.startDate.get(), self.endDate.get(), scenObj.workingMode)
                 self.generateReport()
         
         tabControlRep = ttk.Notebook(self.win) 
@@ -601,7 +604,7 @@ class Main:
         endDateBox = ttk.Entry(reportFrame, width= 10,  textvariable= self.endDate)
         endDateBox.grid(column= 8, row= 2, padx=5, pady=5)
         self.createToolTip(endDateBox, "Wpisz datę końcową raportu do wygenerowania\nDomyślnie data ostatniego dostępnego\nraporu na http://api.nbp.pl")
-        endDateBox.insert(tk.END, dataObj.effectiveDateList[-1])
+        endDateBox.insert(tk.END, self.firstloopEDL)
         ttk.Button(reportFrame, text = "Generuj", command = runReport, width=8).grid(column = 9, row = 0 , rowspan=3, padx=5, pady=5, sticky=tk.N)  
         gcCollectButton = ttk.Button(tab2, text = "Garbage Collector", command = self.gcCollect, width=16)
         gcCollectButton.grid(column = 6, row = 1, padx=5)
