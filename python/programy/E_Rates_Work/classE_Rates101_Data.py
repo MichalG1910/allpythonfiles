@@ -5,7 +5,6 @@ from tabulate import tabulate
 import PIL
 import PIL._tkinter_finder
 
-# 95-96, 112 - zmieniono do testów postgres
 class Data:
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
@@ -121,32 +120,7 @@ class Data:
                     if self.sDate > self.firstLoopDate:
                         mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                         self.stop_RunReport = 'yes'
-                '''
-                if self.response.ok == False and self.daysLen < 91: 
-                    if mboxIgnore == 'no':
-                        mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                 
-                if self.sDate > self.firstLoopDate: 
-                    if mboxIgnore == 'no':
-                        mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
-                '''
-                
-                    
-                '''
-                else:
-                    if workingMode == 'Online_No_Database':
-                        self.checkConnection()
-                        self.ReportLoop()
-                    if workingMode == 'Database':
-                        pass
-                        #scenObj.ReportLoop(startDate, endDate)
-                    self.dataFormatting("mid")
-                    self.reportCreate(startDate, endDate) 
-                    self.csv_ER_report(startDate, endDate) 
-                    
-                    del self.data, self.report, self.printList, self.erDataList, self.response  
-                    if deleteCsvList == 'yes': del self.csvList
-                    '''
     def ReportLoop(self):
         runDate = self.sDate
         self.repeat = math.ceil(self.daysLen / self.step) 

@@ -11,7 +11,6 @@ from classE_Rates101_Database import Scenario
 import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
-#513 wiersz - zmiana do DB
 
 class Main:
     agr_number = 0
@@ -278,7 +277,7 @@ class Main:
             ttk.Label(last30Frame, text= "Zmiana 30\n notowań", foreground="#007fff").grid(column=3, row=1, sticky=tk.W, padx=2)
             
         def multiGraph(currencyList):
-            ratesHalf = math.floor(self.lenCurrencyList / 2) # zmieniono
+            ratesHalf = math.floor(self.lenCurrencyList / 2) 
             self.timeRangeVariableList, self.chVariableList, self.codeVariableList, self.listchv, trl1, cvl1, code1 = [],[],[],[],[],[],[]
             
 
@@ -286,7 +285,7 @@ class Main:
                 self.viewNum = 1
                 self.timeRangeVariableList.clear()
                 self.chVariableList.clear()
-                for t in range(self.lenCurrencyList): # zmieniono
+                for t in range(self.lenCurrencyList): 
                     if t <= ratesHalf: ttk.Label(self.multiGraphFrame,  width=17, text= f'{currencyList[t]}', font=("Segoe Ui",8)).grid(column=0, row=t+1, sticky=tk.W, padx=3, pady=3)
                     else: ttk.Label(self.multiGraphFrame,  width=18, text= f'{currencyList[t]}', font=("Segoe Ui",8)).grid(column=3, row=t-ratesHalf, sticky=tk.W, padx=3, pady=3)
                     
@@ -571,10 +570,7 @@ class Main:
             dataObj.reportCreate(scenObj.daysInterval, scenObj.erDataList, scenObj.erDataList, scenObj.fetchDate, scenObj.printList, self.startDate.get(), self.endDate.get()) 
             dataObj.csv_ER_report(self.startDate.get(), self.endDate.get(), scenObj.csvList) 
             del scenObj.currencyList, scenObj.codeList, scenObj.valueList, scenObj.reportLoopList, scenObj.erDataList, scenObj.printList, scenObj.csvList, scenObj.countDate
-        
-        #if dataObj.stop_RunReport == 'no':
                
-    
     def generateReportGui(self):
         self.startDate = tk.StringVar()
         self.endDate = tk.StringVar()
@@ -658,19 +654,15 @@ class Main:
          
         if self.oneSubplotVarMulti.get() != 1:   
             if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> 15:     
-                #graphObj.winFull.destroy()
                 mBox.showinfo("rysuj od 1 do 15 wykresów", "ilość rysowanych wykresów musi wynosić conajmniej 1, \ni nie więcej niż 15.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
             elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-                #graphObj.winFull.destroy()
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
                 drawGraph()
         else:
             if sum([i.get() for i in self.chVariableList]) < 1 or sum([i.get() for i in self.chVariableList])> self.lenCurrencyList:     
-                #graphObj.winFull.destroy()
                 mBox.showinfo(f"rysuj od 1 do {self.lenCurrencyList} wykresów", f"ilość rysowanych wykresów musi wynosić conajmniej 1 , i nie więcej niż {self.lenCurrencyList}.\nSprawdź, czy w wykresy do narysowania są zaznaczone w checklist")
             elif "" in graphObj.multiCodeCurrencyList or "" in graphObj.multiTimeRangeList:
-                #graphObj.winFull.destroy()
                 mBox.showinfo("uzupełnij wszystkie pola", "uzupełnij wszystkie pola wykresow zaznazczonych do narysowania")
             else:
                 drawGraph()

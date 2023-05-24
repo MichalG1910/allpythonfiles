@@ -5,7 +5,6 @@ from functools import partial
 from classE_Rates101_Data import Data
 from classE_Rates101_Tooltip import ToolTip
 import pandas as pd
-from tabulate import tabulate
 
 class Scenario:
    def operatingMode(self):
@@ -55,7 +54,6 @@ class Scenario:
       print("password entered :", password.get())
       self.updateDatabase()
      
-      
    def createFields(self):
       self.username =  tk.StringVar()
       self.password =  tk.StringVar()
@@ -201,13 +199,13 @@ class Scenario:
       
       def getLastDate():
          self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
-         self.cursor.execute('''SELECT MAX(date) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
+         self.cursor.execute('''SELECT MAX(date) FROM rates''') 
          self.fetchDate = str(self.cursor.fetchall()[0][0])
          self.conn.close()
       
       def getLastTabelNameId():
          self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
-         self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') # SELECT MAX(DATE date) from e_ratesdb
+         self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') 
          self.tableName_id = self.cursor.fetchall()[0][0]
          print(self.tableName_id)
          self.conn.close()
@@ -266,7 +264,7 @@ class Scenario:
          self.currencyList.append(t[1])
          self.codeList.append(t[2])  
          self.valueList.append(t[3])  
-         self.codeCurrencyDict[t[2]] = t[1] ###################
+         self.codeCurrencyDict[t[2]] = t[1]
 
       self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE tablename_id IN (SELECT MAX(tablename_id) -1 FROM rates)''') 
       self.lastListMinus1Day = self.cursor.fetchall()
@@ -301,7 +299,7 @@ class Scenario:
          self.last30MidList.append(t[1])
       
       self.conn.close()
-   def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, username, password, firstloopEDL = None): # pwrd ostatnie 2 do del
+   def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, username, password, firstloopEDL = None): 
       self.xValuesMultiGraph, self.yValuesMultiGraph, self.xValues, self.yValues = [],[],[],[]
    
       if timeRange == "30 dni":
@@ -323,7 +321,6 @@ class Scenario:
       elif timeRange == "15 lat":
          limit = 5460
          
-
       self.cursorObj(username, password, "e_ratesdb") 
       self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' AND date > (SELECT MAX(date) - INTERVAL '{limit} days' FROM rates)''') 
       
@@ -347,7 +344,6 @@ class Scenario:
       startDateGet = (list(startDate.split('-')))
       convertDateS = [int(i) for i in startDateGet] 
       startDate = datetime.date(convertDateS[0], convertDateS[1], convertDateS[2])
-      #startDate1 = startDate
 
       endDateGet = (list(endDate.split('-')))
       convertDateE = [int(i) for i in endDateGet] 
@@ -361,9 +357,7 @@ class Scenario:
       
       self.cursor.execute(f'''SELECT COUNT(date) FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' GROUP BY date ORDER BY date''') 
       self.countDate = self.cursor.fetchall()
-      #print(self.countDate)
-
-      
+     
       self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY rates_id ''')
       self.reportLoopList = self.cursor.fetchall()
       
@@ -377,7 +371,8 @@ class Scenario:
             #self.reportLoopList.remove(a) # self.reportLoopList.pop(0) - (0 - indeks)
             if c==0: break
             c -= 1
-         del self.reportLoopList[0:b[0]] #jak tamto nie zadziała
+         del self.reportLoopList[0:b[0]] 
+         
          erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
                      'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
                      'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}

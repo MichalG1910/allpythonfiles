@@ -283,8 +283,6 @@ class Graph:
                 self.xValuesMultiGraph = scenObj.xValuesMultiGraph
                 self.yValuesMultiGraph = scenObj.yValuesMultiGraph
                 codeMulti = scenObj.codeMulti  
-        
-            # tu musze zrobic wpiecie##############################################################
 
             self.drawGraph(fSize, self.multiTimeRangeList[self.agr], self.xValuesMultiGraph, self.yValuesMultiGraph, codeMulti, 2,codeCurrencyDict, progressbar)
             '''print(self.xValuesMultiGraph)
