@@ -44,13 +44,12 @@ class Data:
     def latestNBPreport(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/a?format=json"
         self.NBPreport(1, url, "mid")
-        self.reportCreate(self.daysLen, self.data, self.erDataList, self.effectiveDateList[-1],self.printList, startDate=None, endDate=None)
-        self.terminalPrint()
-        
-        del self.data, self.response, self.printList, self.erDataList 
+        #self.reportCreate(self.daysLen, self.data, self.erDataList, self.effectiveDateList[-1],self.printList, startDate=None, endDate=None)
+        #self.terminalPrint() 
         
         self.start = None
         self.firstloopEDL = self.effectiveDateList[-1]
+        del self.data, self.response, self.printList, self.erDataList
 
     def NBPratesUpDown(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/a/last/2/?format=json"
@@ -58,12 +57,12 @@ class Data:
        
         self.ratesUpDown = self.csvList
         del self.csvList
-        
     
     def NBPbidAsk(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/c/?format=json"
         self.NBPreport(3, url, "bid")
         self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.table_name1 = self.currencyList, self.codeList, self.valueList, self.askList, self.table_name
+        del self.currencyList, self.codeList, self.valueList, self.askList, self.table_name
     
     def last30Data(self, code):
         code = (code[0:3]).lower()
@@ -244,7 +243,7 @@ class Data:
             exc += 1
 
         self.csv.close()
-            
+    '''       
     def terminalPrint(self):
         printListLen = len(self.printList)
         rpt=0
@@ -255,7 +254,7 @@ class Data:
             print(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}")
             print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
             rpt += 1
-        
+    '''
     def getDataForGraph(self, currencyName, timeRange, oneOrMultiNum, firstloopEDL = None):
         self.code = (currencyName[0:3]).lower()
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
