@@ -21,7 +21,7 @@ class Scenario:
       exit()
 
    def createLogWin(self):
-      self.logWin.geometry('320x300+600+300')
+      self.logWin.geometry('320x360+600+300')
       self.logWin.title('E_Rates')
    
    def WinStyle(self, logWindow):
@@ -40,16 +40,31 @@ class Scenario:
    def logwin_quit(self):
       self.logWin.quit()
       self.logWin.destroy()
+
+   def updateDBProgressBar(self):
+        
+        self.pb = ttk.Progressbar(self.logWin,orient='horizontal',mode='indeterminate',length=280)
+        self.pb.grid(column=0, row=6, padx=20, pady=5, sticky=tk.EW)
+
+        self.value_label = ttk.Label(self.logWin, text=self.update_progress_label(), anchor= 'n')
+        self.value_label.grid(column=0, row=5, columnspan=2, padx=10, pady=5, sticky=tk.EW)
+        self.pb.start(5)
+   def update_progress_label(self):
+      return f"DB Updating....."
    
    def start(self):
       if self.DBCheckVar.get() == 1:
-         self.validateLogin()
          self.workingMode = 'Database'
+         self.updateDBProgressBar()
+         self.validateLogin()
+         
       else:
-         self.logwin_quit()
          self.workingMode = 'Online_No_Database'
-   
+         self.logwin_quit()
+         
    def validateLogin(self, username, password):
+      dataObj = Data()
+      dataObj.checkConnection(self.workingMode)
       print("username entered :", username.get())
       print("password entered :", password.get())
       self.updateDatabase()

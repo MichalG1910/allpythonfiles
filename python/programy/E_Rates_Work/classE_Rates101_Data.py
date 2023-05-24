@@ -10,7 +10,7 @@ class Data:
         self.filePath = os.path.dirname(sys.argv[0]) # ścieżka do naszego pliku exchange_rates
         self.today = datetime.date.today()
         
-    def checkConnection(self):
+    def checkConnection(self, workingMode = 'Online_No_Database'):
         hostname = "nbp.pl"
         if sys.platform == 'linux': 
             response = os.system("ping -c 1 " + hostname)   
@@ -20,12 +20,18 @@ class Data:
         if response == 0:
             pass
         else:
-            answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?\nNie = Opuść program") 
-            if answer == True:
-                self.checkConnection()
-            else:
-                exit()
-            
+            if workingMode == 'Online_No_Database':
+                answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Spróbować ponownie połączenia?\nNie = Opuść program") 
+                if answer == True:
+                    self.checkConnection()
+                else:
+                    exit()
+            elif workingMode == 'Database':
+                answer = mBox.askyesno("Brak połączenia z serwerem NBP", "Baza danych nie zostanie zaktualizowana\nUruchomić program w trybie offline?") 
+                if answer == True:
+                    pass
+                else:
+                    exit()
     def createReportDir(self):
         if os.path.exists(f"{self.filePath}/reports"):
             pass

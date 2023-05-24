@@ -11,14 +11,14 @@ from classE_Rates101_Database import Scenario
 import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
-
+# https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.html
 class Main:
     agr_number = 0
     
     def __init__(self):
         scenObj.operatingMode()
-        self.win = tk.Tk()
         dataObj.checkConnection()
+        self.win = tk.Tk()
         dataObj.createReportDir()
         dataObj.NBPratesUpDown()
         self.mode()
