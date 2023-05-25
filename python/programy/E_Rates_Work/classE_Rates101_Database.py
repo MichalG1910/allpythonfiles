@@ -5,6 +5,7 @@ from functools import partial
 from classE_Rates101_Data import Data
 from classE_Rates101_Tooltip import ToolTip
 import pandas as pd
+from threading import Thread
 
 class Scenario:
    def operatingMode(self):
@@ -16,7 +17,7 @@ class Scenario:
       self.today = datetime.date.today()
       self.logWin.protocol("WM_DELETE_WINDOW", self._exitApp)
       self.logWin.mainloop()
-      
+   
    def _exitApp(self):
       exit()
 
@@ -43,12 +44,13 @@ class Scenario:
 
    def updateDBProgressBar(self):
         
-        self.pb = ttk.Progressbar(self.logWin,orient='horizontal',mode='indeterminate',length=280)
+        self.pb = ttk.Progressbar(self.logWin,orient='horizontal',mode='indeterminate',length=280,)
         self.pb.grid(column=0, row=6, padx=20, pady=5, sticky=tk.EW)
 
         self.value_label = ttk.Label(self.logWin, text=self.update_progress_label(), anchor= 'n')
         self.value_label.grid(column=0, row=5, columnspan=2, padx=10, pady=5, sticky=tk.EW)
-        self.pb.start(5)
+        self.pb.update()
+        
    def update_progress_label(self):
       return f"DB Updating....."
    
@@ -437,5 +439,7 @@ class Scenario:
       --SELECT COUNT(date) FROM rates WHERE date BETWEEN '2004-05-04' AND '2023-05-23' GROUP BY date ORDER BY date
       --DELETE FROM rates where date = '2023-05-23'
       '''
+
+
 
 
