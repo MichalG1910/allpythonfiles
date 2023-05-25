@@ -127,9 +127,9 @@ class Data:
                         mBox.showinfo("Brak raportu NBP z tego dnia/dni!", "W tym przedziale dat nie opublikowano żadnego raportu.\nZwykle publikacja raportu odbywa się w dni robocze około godziny 13:00\nWprowadź inny zakres dat")
                         self.stop_RunReport = 'yes'
                 
-    def ReportLoop(self):
+    def ReportLoop(self, progressBarDB = None):
         runDate = self.sDate
-        self.repeat = math.ceil(self.daysLen / self.step) 
+        self.repeat = self.repeating = math.ceil(self.daysLen / self.step) 
         stepDate = runDate + datetime.timedelta(days=self.step)
         stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
         longerList = []
@@ -146,11 +146,16 @@ class Data:
             runDate = runDate + stepTimedelta
             stepDate = stepDate + stepTimedelta
             self.repeat -= 1
-
+            try:
+                progressBarDB(self.repeating)
+                #progressBarDB((self.repeat+self.daysLen)/50)
+            except TypeError:
+                pass
+                
         self.data = longerList
         del longerList     
             
-    def dataFormatting(self, midBid, tabelNameId=1):
+    def dataFormatting(self, midBid, tabelNameId=1, progressBarDB=None):
         self.csvList, self.csvListWithAsk, self.printList, self.erDataList =[],[],[],[]
         
         for dict in self.data:
@@ -161,7 +166,12 @@ class Data:
             self.printList.append([table, self.table_name, self.effectiveDate])
             self.currencyList, self.codeList, self.valueList, self.askList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],[],{}
             self.effectiveDateList.append(self.effectiveDate)
-            
+            try:
+                progressBarDB(len(self.data))
+                #progressBarDB((len(self.data)+1+math.ceil(len(self.data)+1)/91)*5)
+            except TypeError:
+                pass
+
             for rate in self.rates:
                 currency = rate["currency"]
                 self.code = rate["code"]
@@ -187,6 +197,7 @@ class Data:
             tabelNameId += 1
             self.erDataList.append(erData)
             del erData
+            
     
     def reportCreate(self, daysLen, data, erDataList, lastDate, printList, startDate, endDate ):
     

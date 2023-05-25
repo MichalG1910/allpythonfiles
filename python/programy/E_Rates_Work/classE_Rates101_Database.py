@@ -5,7 +5,7 @@ from functools import partial
 from classE_Rates101_Data import Data
 from classE_Rates101_Tooltip import ToolTip
 import pandas as pd
-from threading import Thread
+from tkinter import messagebox as mBox
 
 class Scenario:
    def operatingMode(self):
@@ -43,16 +43,37 @@ class Scenario:
       self.logWin.destroy()
 
    def updateDBProgressBar(self):
-        
-        self.pb = ttk.Progressbar(self.logWin,orient='horizontal',mode='indeterminate',length=280,)
-        self.pb.grid(column=0, row=6, padx=20, pady=5, sticky=tk.EW)
+      self.progressStep = -1
+      self.pb = ttk.Progressbar(self.logWin,orient='horizontal',mode='determinate',length=280,)
+      self.pb.grid(column=0, row=6, padx=20, pady=5, sticky=tk.EW)
 
-        self.value_label = ttk.Label(self.logWin, text=self.update_progress_label(), anchor= 'n')
-        self.value_label.grid(column=0, row=5, columnspan=2, padx=10, pady=5, sticky=tk.EW)
-        self.pb.update()
-        
+      self.value_label = ttk.Label(self.logWin, text=self.update_progress_label(), anchor= 'n')
+      self.value_label.grid(column=0, row=5, columnspan=2, padx=10, pady=5, sticky=tk.EW)
+      
+      self.pb.update()
+      self.loadGraph = [ "Database e_ratesdb created successfully........",
+                           "Table rates created successfully........",
+                           "sending requests/receiving data from API NBP........",
+                           "Data inserted to table rates........",
+                           "Table tablenames created successfully........",
+                           "Data inserted to tablenames........",
+                           "Table bidask created successfully........",
+                           "Data inserted to tabel bidask........"]
+   def progress(self, repeating):
+      self.progressStep += 1
+      print(self.progressStep)
+      
+      if self.pb['value'] < 100: 
+         self.pb['value'] += ((100/repeating)/2)* 0.99
+         self.pb.update()
+         
+         if self.pb['value']>99:
+               #time.sleep(0.5)
+               self.pb.destroy()
+   
    def update_progress_label(self):
-      return f"DB Updating....."
+      self.progressStep += 1
+      return f"{self.loadGraph[self.progressStep]}"
    
    def start(self):
       if self.DBCheckVar.get() == 1:
@@ -72,9 +93,12 @@ class Scenario:
       if dataObj.checkConnectionFailure == False:
          self.updateDatabase()
       else:
-         self.getLastDate()
-         self.getLastTabelNameId()
-         self.logwin_quit()
+         try:
+            self.getLastDate()
+            self.getLastTabelNameId()
+            self.logwin_quit()
+         except psycopg2.OperationalError:
+            mBox.showinfo("Brak możliwości korzystania z programu", "Brak połączenia z internetem/\nBrak bazy danych do wykorzystania\nZamykanie programu")
          
    def createFields(self):
       self.username =  tk.StringVar()
@@ -154,8 +178,8 @@ class Scenario:
       dataObj = Data()
       dataObj.reporteErrorChecking(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
       if dataObj.stop_RunReport == 'no':
-         dataObj.ReportLoop()
-         dataObj.dataFormatting("mid", self.tableName_id)
+         dataObj.ReportLoop(self.progress)
+         dataObj.dataFormatting("mid", self.tableName_id, self.progress )
          insert_stmt = '''INSERT INTO rates (currency, code, date, 
          value, tablename_id) VALUES (%s, %s, %s, %s, %s)'''
          self.cursor.executemany(insert_stmt, dataObj.csvList)
@@ -240,13 +264,20 @@ class Scenario:
          self.tableName_id = 1
          self.startDate = '2004-05-04'
          print("Database created successfully........")
+         self.value_label['text'] = self.update_progress_label()
          self.conn.close()
          self.createTabelRates()
+         self.value_label['text'] = self.update_progress_label()
          self.insertToTabelRates()
+         self.value_label['text'] = self.update_progress_label()
          self.createTabelNames()
+         self.value_label['text'] = self.update_progress_label()
          self.insertToTabelNames()
+         self.value_label['text'] = self.update_progress_label()
          self.createTabelBidAsk()
+         self.value_label['text'] = self.update_progress_label()
          self.insertToTabelBidAsk()
+         self.value_label['text'] = self.update_progress_label()
          self.getLastDate()
          self.logwin_quit()
       except psycopg2.errors.DuplicateDatabase:
