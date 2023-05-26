@@ -49,19 +49,9 @@ class Scenario:
 
       self.value_label = ttk.Label(self.logWin, text=self.update_progress_label(), anchor= 'n')
       self.value_label.grid(column=0, row=5, columnspan=2, padx=10, pady=5, sticky=tk.EW)
-      
       self.pb.update()
-      self.loadGraph = [ "Database e_ratesdb created successfully........",
-                           "Table rates created successfully........",
-                           "sending requests/receiving data from API NBP........",
-                           "Data inserted to table rates........",
-                           "Table tablenames created successfully........",
-                           "Data inserted to tablenames........",
-                           "Table bidask created successfully........",
-                           "Data inserted to tabel bidask........"]
+      
    def progress(self, repeating):
-      self.progressStep += 1
-      print(self.progressStep)
       
       if self.pb['value'] < 100: 
          self.pb['value'] += ((100/repeating)/2)* 0.99
@@ -72,13 +62,22 @@ class Scenario:
                self.pb.destroy()
    
    def update_progress_label(self):
+      self.loadGraph = [   
+         "Database e_ratesdb created successfully........",
+         "Table rates created successfully........",
+         "sending requests/receiving data from API NBP........",
+         "Data inserted to table rates........",
+         "Table tablenames created successfully........",
+         "Data inserted to tablenames........",
+         "Table bidask created successfully........",
+         "Data inserted to tabel bidask........"
+         ]
       self.progressStep += 1
       return f"{self.loadGraph[self.progressStep]}"
    
    def start(self):
       if self.DBCheckVar.get() == 1:
          self.workingMode = 'Database'
-         self.updateDBProgressBar()
          self.validateLogin()
          
       else:
@@ -261,23 +260,31 @@ class Scenario:
 
       try:
          self.cursor.execute('''CREATE DATABASE e_ratesdb''')
+         self.updateDBProgressBar()
          self.tableName_id = 1
          self.startDate = '2004-05-04'
          print("Database created successfully........")
          self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
          self.conn.close()
          self.createTabelRates()
          self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
          self.insertToTabelRates()
          self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
          self.createTabelNames()
          self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
          self.insertToTabelNames()
          self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
          self.createTabelBidAsk()
          self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
          self.insertToTabelBidAsk()
          self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
          self.getLastDate()
          self.logwin_quit()
       except psycopg2.errors.DuplicateDatabase:
