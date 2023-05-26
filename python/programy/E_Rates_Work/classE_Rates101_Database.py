@@ -22,7 +22,7 @@ class Scenario:
       exit()
 
    def createLogWin(self):
-      self.logWin.geometry('320x360+600+300')
+      self.logWin.geometry('320x345+600+300')
       self.logWin.title('E_Rates')
    
    def WinStyle(self, logWindow):
