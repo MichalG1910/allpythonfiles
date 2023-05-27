@@ -22,8 +22,8 @@ class Scenario:
       exit()
 
    def createLogWin(self):
-      self.logWin.geometry('320x345+600+300')
-      self.logWin.title('E_Rates')
+         self.logWin.geometry('320x345+600+300')
+         self.logWin.title('E_Rates')  
    
    def WinStyle(self, logWindow):
         logWindow.tk.call('source', os.path.join(os.path.dirname(sys.argv[0]), 'azure.tcl'))
@@ -88,7 +88,7 @@ class Scenario:
       dataObj = Data()
       dataObj.checkConnection(self.workingMode)
       print("username entered :", username.get())
-      print("password entered :", password.get())
+      print("password entered :", password.get().show())
       if dataObj.checkConnectionFailure == False:
          self.updateDatabase()
       else:
@@ -122,12 +122,12 @@ class Scenario:
       
       self.userLabel = ttk.Label(self.logWin, text="username: ", foreground='grey')
       self.userLabel.grid(column=0, row=2, padx=23, pady=10, sticky=tk.W)
-      self.userEntry = ttk.Entry(self.logWin, textvariable=self.username)# state=disabled
+      self.userEntry = ttk.Entry(self.logWin, textvariable=self.username, width=18)# state=disabled
       self.userEntry.insert(0,'postgres')# do usuniecia
-      self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE,)
       self.passwordLabel = ttk.Label(self.logWin, text="password: ", foreground='grey')
       self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
-      self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show=f"\u25CF" ) #state='disabled'
+      self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show=f"\u25CF", width=18) #state='disabled'
       self.passwordEntry.insert(0,'grabarzmichal1910')# do usuniecia
       self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=4,  padx=10, pady=10)
@@ -309,6 +309,7 @@ class Scenario:
                self.logwin_quit()
             except AttributeError:
                print('Database not updated........')
+               self.getLastDate()
                self.logwin_quit()
          else:
             self.logwin_quit()
