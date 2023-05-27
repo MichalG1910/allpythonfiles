@@ -1,6 +1,6 @@
 # Project Name
-> Outline a brief description of your project.
-> Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
+E_Rates
+https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.html
 
 ## Table of Contents
 * [General Info](#general-information)
@@ -17,17 +17,15 @@
 
 
 ## General Information
-- Provide general information about your project here.
-- What problem does it (intend to) solve?
-- What is the purpose of your project?
-- Why did you undertake it?
-<!-- You don't have to answer all the questions - just the ones relevant to your project. -->
+- The application is used to download/visualize current and historical exchange rates from a given time period published by the National Bank of Poland (NBP). It uses the bank's API (api.nbp.pl).
+- The aim of the project was to expand the knowledge and consolidate the author's skills in programming in Python and to use in practice knowledge of SQL and Postgresql databases.
 
 
 ## Technologies Used
-- Tech 1 - version 1.0
-- Tech 2 - version 2.0
-- Tech 3 - version 3.0
+- python 3.11.2
+- PostgreSQL 15.2
+- Tkinter 8.6
+- Matplotlib 3.5.2
 
 
 ## Features
