@@ -22,13 +22,14 @@ class Main:
         self.win = tk.Tk()
         self.winStyle(self.win)
         self.themeButton(self.win)
-        self.quitButton()
+        #self.quitButton()
         graphObj.emptyGraph(self.win)
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
         self.win.protocol("WM_DELETE_WINDOW", self._exit)
         self.menu()
+        self.win.title("E_Rates v.1.1".center(int(self.win.winfo_width()/2.1)))
         
 
     def mode(self):
@@ -122,8 +123,8 @@ class Main:
         self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
         self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=1)
         self.accentbutton.image = self.icon
-        self.accentbutton.grid(row=0, column=13,columnspan=2, ipadx=9.4, pady=5, sticky=tk.W)
-        self.createToolTip(self.accentbutton, "motyw jasny/ciemny", -125, 20)
+        #self.accentbutton.grid(row=0, column=13,columnspan=2, ipadx=9.4, pady=5, sticky=tk.W)
+        #self.createToolTip(self.accentbutton, "motyw jasny/ciemny", -125, 20)
     
     def change_theme(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":

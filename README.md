@@ -52,10 +52,10 @@ List the ready features here:
 
 
 ## Screenshots
-![dark mode main window](https://github.com/MichalG1910/allpythonfiles/img/dark mode main window.png)
-![light mode main window](https://github.com/MichalG1910/allpythonfiles/img/light mode main window.png)
-![15 charts in fullscreen mode](https://github.com/MichalG1910/allpythonfiles/img/15 charts.png)
-![one multichart in fullscreen mode](https://github.com/MichalG1910/allpythonfiles/img/one multichart.png)
+![dark mode main window](https://github.com/MichalG1910/allpythonfiles/img/dark_mode_main_window.png)
+![light mode main window](https://github.com/MichalG1910/allpythonfiles/img/light_mode_main_window.png)
+![15 charts in fullscreen mode](https://github.com/MichalG1910/allpythonfiles/img/15_charts.png)
+![one multichart in fullscreen mode](https://github.com/MichalG1910/allpythonfiles/img/one_multichart.png)
 
 
 
