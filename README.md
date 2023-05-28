@@ -45,6 +45,7 @@ List the ready features here:
   - with min/max value
   - each generated graph can be saved in .png format in default directory "Reports"
   - available time periods: 30 days, 60 days, 90 days, half a year, one year, 2 years, 5 years, 10 years, 15 years
+  - available two views to generate multiple charts
 - Generating reports in a given time period (start date, end date):
   - in .txt format with full tables for each day
   - in .csv format (ready to be imported into a spreadsheet)
@@ -52,10 +53,10 @@ List the ready features here:
 
 
 ## Screenshots
-![dark mode main window](https://github.com/MichalG1910/allpythonfiles/img/dark_mode_main_window.png)
-![light mode main window](https://github.com/MichalG1910/allpythonfiles/img/light_mode_main_window.png)
-![15 charts in fullscreen mode](https://github.com/MichalG1910/allpythonfiles/img/15_charts.png)
-![one multichart in fullscreen mode](https://github.com/MichalG1910/allpythonfiles/img/one_multichart.png)
+![dark mode main window](./img/dark_mode_main_window.png)
+![light mode main window](./img/light_mode_main_window.png)
+![15 charts in fullscreen mode](./img/15_charts.png)
+![one multichart in fullscreen mode](./img/one_multichart.png)
 
 
 
