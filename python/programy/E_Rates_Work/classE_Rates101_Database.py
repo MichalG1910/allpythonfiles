@@ -88,7 +88,7 @@ class Scenario:
       dataObj = Data()
       dataObj.checkConnection(self.workingMode)
       print("username entered :", username.get())
-      print("password entered :", password.get().show())
+      print("password entered :", password.get())
       if dataObj.checkConnectionFailure == False:
          self.updateDatabase()
       else:

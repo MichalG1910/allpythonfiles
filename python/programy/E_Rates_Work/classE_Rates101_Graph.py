@@ -100,7 +100,9 @@ class Graph:
             
         def tickListScale():
             if self.sumChVar == 0 or self.sumChVar > 15: 
-                a = round(xValuesLen / 25)
+                a = round(xValuesLen / 40)
+                if a == 0:
+                    a = 1
                 self.tickList = list(range(0,xValuesLen, a))
             if self.sumChVar == 1: 
                 a = round(xValuesLen / 40)
