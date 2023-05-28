@@ -30,9 +30,25 @@ https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.htm
 
 ## Features
 List the ready features here:
-- Awesome feature 1
-- Awesome feature 2
-- Awesome feature 3
+- Works on operating systems: Linux, Windows
+- Three working modes:
+  - online - all necessary data are downloaded from NBP servers (database is not required)
+  - online with a database - after starting, it creates/updates the database. All data later is retrieved from this current database.
+  - offline - runs without internet connection. All data is taken from the database.
+- Available in two themes: dark and light
+- Current tables: average exchange rates, bid/ask exchange rates
+- Generating charts of exchange rates in relation to PLN in various display configurations:
+  - 1 currency rate chart in the main window
+  - from 1 to 15 currency charts in one fullscreen window
+  - from 1 to all published exchange rates on one chart in a fullscreen window
+  - with a trend line,
+  - with min/max value
+  - each generated graph can be saved in .png format in default directory "Reports"
+  - available time periods: 30 days, 60 days, 90 days, half a year, one year, 2 years, 5 years, 10 years, 15 years
+- Generating reports in a given time period (start date, end date):
+  - in .txt format with full tables for each day
+  - in .csv format (ready to be imported into a spreadsheet)
+  - each generated report is saved in the default directory "Reports"  
 
 
 ## Screenshots
