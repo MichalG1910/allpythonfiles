@@ -22,7 +22,7 @@ class Scenario:
       exit()
 
    def createLogWin(self):
-         self.logWin.geometry('320x345+600+300')
+         self.logWin.geometry('320x420+600+300')
          self.logWin.title('E_Rates')  
    
    def WinStyle(self, logWindow):
@@ -102,6 +102,8 @@ class Scenario:
    def createFields(self):
       self.username =  tk.StringVar()
       self.password =  tk.StringVar()
+      self.hostName = tk.StringVar() # address
+      self.port = tk.StringVar()
       self.noDBCheckVar = tk.IntVar()
       self.DBCheckVar = tk.IntVar()
       self.DBCheckVar.set(1) # ma być 0
@@ -130,23 +132,41 @@ class Scenario:
       self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show=f"\u25CF", width=18) #state='disabled'
       self.passwordEntry.insert(0,'grabarzmichal1910')# do usuniecia
       self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
-      loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=4,  padx=10, pady=10)
+      self.hostNameLabel = ttk.Label(self.logWin, text="host address: ", foreground='grey')
+      self.hostNameLabel.grid(column=0, row=4, padx=23, pady=10, sticky=tk.W)
+      self.hostNameEntry = ttk.Entry(self.logWin, textvariable=self.hostName, width=18) #state='disabled'
+      self.hostNameEntry.insert(0,'127.0.0.1')# do usuniecia
+      self.hostNameEntry.grid(column=0, row=4, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      self.portLabel = ttk.Label(self.logWin, text="port: ", foreground='grey')
+      self.portLabel.grid(column=0, row=5, padx=23, pady=10, sticky=tk.W)
+      self.portEntry = ttk.Entry(self.logWin, textvariable=self.port, width=18) #state='disabled'
+      self.portEntry.insert(0,'5432')# do usuniecia
+      self.portEntry.grid(column=0, row=5, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=6,  padx=10, pady=10)
       
    def scenarioSelection1(self, *ignoredArgs):
       self.noDBCheckVar.set(0) 
       self.DBCheckVar.set(1)
-      self.userEntry.configure(state='disabled')
-      self.passwordEntry.configure(state='disabled')
+      self.userEntry.configure(state='disabled', foreground='grey')
+      self.passwordEntry.configure(state='disabled', foreground='grey')
       self.userLabel.configure(foreground='grey')
       self.passwordLabel.configure(foreground='grey')
+      self.hostNameEntry.configure(state='disabled', foreground='grey')
+      self.portEntry.configure(state='disabled', foreground='grey')
+      self.hostNameLabel.configure(foreground='grey')
+      self.portLabel.configure(foreground='grey')
    
    def scenarioSelection2(self, *ignoredArgs):         
       self.DBCheckVar.set(0) 
       self.noDBCheckVar.set(1)
-      self.userEntry.configure(state='normal')
-      self.passwordEntry.configure(state='normal')
+      self.userEntry.configure(state='normal', foreground='white')
+      self.passwordEntry.configure(state='normal', foreground='white')
       self.userLabel.configure(foreground='white')
       self.passwordLabel.configure(foreground='white')
+      self.hostNameEntry.configure(state='normal', foreground='white')
+      self.portEntry.configure(state='normal', foreground='white')
+      self.hostNameLabel.configure(foreground='white')
+      self.portLabel.configure(foreground='white')
    
    def trace(self):         
       self.noDBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection1())
