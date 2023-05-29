@@ -9,7 +9,7 @@ https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.htm
 * [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Usage](#usage)
-* [Project Status](#project-status)
+* [Theme](#theme)
 * [Room for Improvement](#room-for-improvement)
 * [Acknowledgements](#acknowledgements)
 * [Contact](#contact)
@@ -36,10 +36,10 @@ List the ready features here:
   - online with a database - after starting, it creates/updates the database. All data later is retrieved from this current database.
   - offline - runs without internet connection. All data is taken from the database.
 - Available in two themes: dark and light
-- Current tables: average exchange rates, bid/ask exchange rates
+- Current tables: average exchange rates, bid/ask exchange rates, Last 30 exchange rate quotes
 - Generating charts of exchange rates in relation to PLN in various display configurations:
   - 1 currency rate chart in the main window
-  - from 1 to 15 currency charts in one fullscreen window
+  - from 1 to 15 currency charts in different/same time periods in one full-screen window
   - from 1 to all published exchange rates on one chart in a fullscreen window
   - with a trend line,
   - with min/max value
@@ -62,9 +62,8 @@ List the ready features here:
 
 
 ## Setup
-What are the project requirements/dependencies? Where are they listed? A requirements.txt or a Pipfile.lock file perhaps? Where is it located?
-
-Proceed to describe how to install / setup one's local environment / get started with the project.
+- To run the script in the mode of work without a database, it is enough to copy the repository files to the computer with the python interpreter installed. Custom libraries used in the script and required to run: tkinter, gc, PIL, psycopg2, functools, pandas, numpy, tabulate.
+- To run the script in database mode, PostgreSQL must be installed and the server configured. For more information, please visit https://www.postgresql.org/download/
 
 
 ## Usage
@@ -74,8 +73,9 @@ Provide various use cases and code examples here.
 `write-your-code-here`
 
 
-## Project Status
-Project is: _in progress_ / _complete_ / _no longer being worked on_. If you are no longer working on it, provide reasons why.
+## Theme
+The beautiful theme created by rdbdnde 'Azure theme for ttk' is responsible for the appearance of the application
+https://github.com/rdbende/Azure-ttk-theme
 
 
 ## Room for Improvement
