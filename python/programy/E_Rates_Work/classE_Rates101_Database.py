@@ -22,7 +22,7 @@ class Scenario:
       exit()
 
    def createLogWin(self):
-         self.logWin.geometry('320x420+600+300')
+         self.logWin.geometry('320x460+600+300')
          self.logWin.title('E_Rates')  
    
    def WinStyle(self, logWindow):
@@ -45,10 +45,10 @@ class Scenario:
    def updateDBProgressBar(self):
       self.progressStep = -1
       self.pb = ttk.Progressbar(self.logWin,orient='horizontal',mode='determinate',length=280,)
-      self.pb.grid(column=0, row=6, padx=20, pady=5, sticky=tk.EW)
+      self.pb.grid(column=0, row=8, padx=20, pady=5, sticky=tk.EW)
 
       self.value_label = ttk.Label(self.logWin, text=self.update_progress_label(), anchor= 'n')
-      self.value_label.grid(column=0, row=5, columnspan=2, padx=10, pady=5, sticky=tk.EW)
+      self.value_label.grid(column=0, row=7, columnspan=2, padx=10, pady=5, sticky=tk.EW)
       self.pb.update()
       
    def progress(self, repeating):
@@ -84,11 +84,13 @@ class Scenario:
          self.workingMode = 'Online_No_Database'
          self.logwin_quit()
          
-   def validateLogin(self, username, password):
+   def validateLogin(self, username, password, hostname, port):
       dataObj = Data()
       dataObj.checkConnection(self.workingMode)
       print("username entered :", username.get())
       print("password entered :", password.get())
+      print("hostname entered :", hostname.get())
+      print("password entered :", port.get())
       if dataObj.checkConnectionFailure == False:
          self.updateDatabase()
       else:
@@ -98,16 +100,16 @@ class Scenario:
             self.logwin_quit()
          except psycopg2.OperationalError:
             mBox.showinfo("Brak możliwości korzystania z programu", "Brak połączenia z internetem/\nBrak bazy danych do wykorzystania\nZamykanie programu")
-         
+            exit()
    def createFields(self):
       self.username =  tk.StringVar()
       self.password =  tk.StringVar()
-      self.hostName = tk.StringVar() # address
+      self.hostName = tk.StringVar() 
       self.port = tk.StringVar()
       self.noDBCheckVar = tk.IntVar()
       self.DBCheckVar = tk.IntVar()
       self.DBCheckVar.set(1) # ma być 0
-      self.validateLogin = partial(self.validateLogin, self.username, self.password)
+      self.validateLogin = partial(self.validateLogin, self.username, self.password, self.hostName, self.port)
 
       scenarioFrame = ttk.LabelFrame(self.logWin, text='Wybierz tryb pracy programu', labelanchor="n", style='clam.TLabelframe')
       scenarioFrame.grid(column=0, row=0, padx=23, ipadx=5, pady=10, sticky=tk.EW,)
@@ -127,21 +129,25 @@ class Scenario:
       self.userEntry = ttk.Entry(self.logWin, textvariable=self.username, width=18)# state=disabled
       self.userEntry.insert(0,'postgres')# do usuniecia
       self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE,)
+      
       self.passwordLabel = ttk.Label(self.logWin, text="password: ", foreground='grey')
       self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
       self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show=f"\u25CF", width=18) #state='disabled'
       self.passwordEntry.insert(0,'grabarzmichal1910')# do usuniecia
       self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
-      self.hostNameLabel = ttk.Label(self.logWin, text="host address: ", foreground='grey')
+      
+      self.hostNameLabel = ttk.Label(self.logWin, text="host name:\n(address) ", foreground='grey')
       self.hostNameLabel.grid(column=0, row=4, padx=23, pady=10, sticky=tk.W)
       self.hostNameEntry = ttk.Entry(self.logWin, textvariable=self.hostName, width=18) #state='disabled'
       self.hostNameEntry.insert(0,'127.0.0.1')# do usuniecia
       self.hostNameEntry.grid(column=0, row=4, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      
       self.portLabel = ttk.Label(self.logWin, text="port: ", foreground='grey')
       self.portLabel.grid(column=0, row=5, padx=23, pady=10, sticky=tk.W)
       self.portEntry = ttk.Entry(self.logWin, textvariable=self.port, width=18) #state='disabled'
       self.portEntry.insert(0,'5432')# do usuniecia
       self.portEntry.grid(column=0, row=5, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      
       loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=6,  padx=10, pady=10)
       
    def scenarioSelection1(self, *ignoredArgs):
@@ -172,12 +178,12 @@ class Scenario:
       self.noDBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection1())
       self.DBCheckVar.trace('w', lambda unused0, unused1, unused2 : self.scenarioSelection2())
    
-   def cursorObj(self, getusername, getpassword, DB="postgres"):
-      self.conn = psycopg2.connect(database=DB, user=getusername, password=getpassword, host='127.0.0.1', port= '5432')
+   def cursorObj(self, getusername, getpassword, DB="postgres", gethostname = '127.0.0.1', getport = '5432'):
+      self.conn = psycopg2.connect(database=DB, user=getusername, password=getpassword, host=gethostname, port= getport)
       self.cursor = self.conn.cursor()
 
    def createTabelRates(self):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       sql ='''CREATE TABLE IF NOT EXISTS rates       
       (
          rates_id SERIAL NOT NULL PRIMARY KEY,
@@ -193,9 +199,10 @@ class Scenario:
       self.conn.close()
    
    def insertToTabelRates(self, mboxIgnore = 'yes'):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       dataObj = Data()
       dataObj.reporteErrorChecking(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
+      
       if dataObj.stop_RunReport == 'no':
          dataObj.ReportLoop(self.progress)
          dataObj.dataFormatting("mid", self.tableName_id, self.progress )
@@ -210,7 +217,7 @@ class Scenario:
       self.conn.close()
    
    def createTabelNames(self):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       sql ='''CREATE TABLE IF NOT EXISTS tablenames       
       (
          tablename_id SERIAL NOT NULL PRIMARY KEY,
@@ -224,7 +231,7 @@ class Scenario:
       self.conn.close()
    
    def insertToTabelNames(self):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       dataObj = Data()
       insert_stmt = '''INSERT INTO tablenames (table_symbol, table_name, date) VALUES (%s, %s, %s)'''
       self.cursor.executemany(insert_stmt, self.printList)
@@ -233,7 +240,7 @@ class Scenario:
       self.conn.close()
    
    def createTabelBidAsk(self):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       sql ='''CREATE TABLE IF NOT EXISTS bidask       
       (
          bidask_id SERIAL NOT NULL PRIMARY KEY,
@@ -250,7 +257,7 @@ class Scenario:
       self.conn.close()
    
    def insertToTabelBidAsk(self):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       dataObj = Data()
       dataObj.NBPbidAsk()
       insert_stmt = '''INSERT INTO bidask (currency, code, date, 
@@ -261,20 +268,20 @@ class Scenario:
       self.conn.close()
    
    def getLastDate(self):
-         self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+         self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
          self.cursor.execute('''SELECT MAX(date) FROM rates''') 
          self.fetchDate = str(self.cursor.fetchall()[0][0])
          self.conn.close()
       
    def getLastTabelNameId(self):
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') 
       self.tableName_id = self.cursor.fetchall()[0][0]
       print(self.tableName_id)
       self.conn.close()
    
    def updateDatabase(self):
-      self.cursorObj(self.username.get(), self.password.get())
+      self.cursorObj(self.username.get(), self.password.get(),"postgres", self.hostName.get(), self.port.get())
       self.conn.autocommit = True
       self.endDate =str(self.today)
 
@@ -336,8 +343,8 @@ class Scenario:
       
    def latestNBPreportDB(self):
       self.currencyList, self.codeList, self.valueList, self.codeCurrencyDict =[],[],[],{}
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
-      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates)''') 
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb",self.hostName.get(), self.port.get())
+      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE date IN (SELECT MAX(date) FROM rates) ORDER BY rates_id''') 
       self.lastList = self.cursor.fetchall()
       
       for t in self.lastList:
@@ -346,7 +353,7 @@ class Scenario:
          self.valueList.append(t[3])  
          self.codeCurrencyDict[t[2]] = t[1]
 
-      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE tablename_id IN (SELECT MAX(tablename_id) -1 FROM rates)''') 
+      self.cursor.execute('''SELECT rates_id, currency, code, value FROM rates WHERE tablename_id IN (SELECT MAX(tablename_id) -1 FROM rates) ORDER BY rates_id''') 
       self.lastListMinus1Day = self.cursor.fetchall()
       self.ratesUpDown = self.lastListMinus1Day + self.lastList
       self.conn.close()
@@ -355,8 +362,8 @@ class Scenario:
 
    def NBPbidAskDB(self):
       self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.table_name1=[],[],[],[],[]
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
-      self.cursor.execute('''SELECT currency, code, bid, ask, table_name FROM bidask WHERE date IN (SELECT MAX(date) FROM bidask)''') 
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
+      self.cursor.execute('''SELECT currency, code, bid, ask, table_name FROM bidask WHERE date IN (SELECT MAX(date) FROM bidask) ORDER BY bidask_id''') 
       self.lastList = self.cursor.fetchall()
       
       for t in self.lastList:
@@ -370,7 +377,7 @@ class Scenario:
 
    def last30DataDB(self, code):
       self.last30EDList,self.last30MidList = [],[]
-      self.cursorObj(self.username.get(), self.password.get(), "e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(), "e_ratesdb", self.hostName.get(), self.port.get())
       self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' ORDER BY rates_id DESC LIMIT 30''') 
       self.last30List = self.cursor.fetchall()
 
@@ -379,7 +386,7 @@ class Scenario:
          self.last30MidList.append(t[1])
       
       self.conn.close()
-   def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, username, password, firstloopEDL = None): 
+   def getDataForGraphDB(self, code, timeRange, oneOrMultiNum, username, password, hostName, port, firstloopEDL = None): 
       self.xValuesMultiGraph, self.yValuesMultiGraph, self.xValues, self.yValues = [],[],[],[]
    
       if timeRange == "30 dni":
@@ -401,8 +408,8 @@ class Scenario:
       elif timeRange == "15 lat":
          limit = 5460
          
-      self.cursorObj(username, password, "e_ratesdb") 
-      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' AND date > (SELECT MAX(date) - INTERVAL '{limit} days' FROM rates)''') 
+      self.cursorObj(username, password, "e_ratesdb", hostName, port) 
+      self.cursor.execute(f'''SELECT date, value FROM rates WHERE code = '{code[0:3]}' AND date > (SELECT MAX(date) - INTERVAL '{limit} days' FROM rates) ORDER BY rates_id''') 
       
       xyValues = self.cursor.fetchall()
       if oneOrMultiNum == 2:
@@ -433,7 +440,7 @@ class Scenario:
       print(interval)
       self.daysInterval = int(interval[0])
 
-      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb")
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       
       self.cursor.execute(f'''SELECT COUNT(date) FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' GROUP BY date ORDER BY date''') 
       self.countDate = self.cursor.fetchall()

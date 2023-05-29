@@ -146,12 +146,13 @@ class Data:
             runDate = runDate + stepTimedelta
             stepDate = stepDate + stepTimedelta
             self.repeat -= 1
-            try:
+            try: 
                 progressBarDB(self.repeating)
                 #progressBarDB((self.repeat+self.daysLen)/50)
-            except TypeError:
+            except:
                 pass
-                
+
+               
         self.data = longerList
         del longerList     
             
@@ -169,7 +170,7 @@ class Data:
             try:
                 progressBarDB(len(self.data))
                 #progressBarDB((len(self.data)+1+math.ceil(len(self.data)+1)/91)*5)
-            except TypeError:
+            except:
                 pass
 
             for rate in self.rates:

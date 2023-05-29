@@ -149,7 +149,7 @@ class Graph:
                         #codeMulti = dataObj.codeMulti
 
                     if self.workingMode == 'Database':
-                        scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, self.username, self.password, self.firstloopEDL) 
+                        scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, self.username, self.password, self.hostname, self.port, self.firstloopEDL) 
                         self.xValuesMultiGraph = scenObj.xValuesMultiGraph
                         self.yValuesMultiGraph = scenObj.yValuesMultiGraph
                         #codeMulti = scenObj.codeMulti
@@ -261,10 +261,12 @@ class Graph:
             self.figFS = plt.figure(figsize=(19,10), facecolor = "white")
             self.gridColor = "white"
     
-    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL, progressbar, workingMode, username, password):
+    def drawGraphLoop(self, codeCurrencyDict, firstloopEDL, progressbar, workingMode, username, password, hostname, port):
         self.firstloopEDL = firstloopEDL
         self.username = username
         self.password = password
+        self.hostname = hostname
+        self.port = port
         self.workingMode = workingMode
         self.agr = 0
         self.listTrSum = len(self.multiCodeCurrencyList)
@@ -281,7 +283,7 @@ class Graph:
                 self.yValuesMultiGraph = dataObj.yValuesMultiGraph
                 codeMulti = dataObj.codeMulti
             elif workingMode == 'Database':
-                scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, username, password, firstloopEDL) 
+                scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, username, password, hostname, port, firstloopEDL) 
                 self.xValuesMultiGraph = scenObj.xValuesMultiGraph
                 self.yValuesMultiGraph = scenObj.yValuesMultiGraph
                 codeMulti = scenObj.codeMulti  

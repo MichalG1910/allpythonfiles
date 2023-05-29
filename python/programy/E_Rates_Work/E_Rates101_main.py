@@ -74,6 +74,7 @@ class Main:
             os.mkdir(os.path.join(dataObj.filePath, "reports")) 
             openPlatform()
         graphObj.getVar
+    
     def info(self):
         infoWin = tk.Tk()
         infoWin.geometry("335x180+800+400")
@@ -523,7 +524,7 @@ class Main:
                 self.codeOne = dataObj.codeOne
             
             elif scenObj.workingMode == 'Database':
-                scenObj.getDataForGraphDB(self.currencyName.get(), self.timeRange.get(), 1, scenObj.username.get(), scenObj.password.get(), self.firstloopEDL) 
+                scenObj.getDataForGraphDB(self.currencyName.get(), self.timeRange.get(), 1, scenObj.username.get(), scenObj.password.get(), scenObj.hostName.get(), scenObj.port.get(), self.firstloopEDL) 
                 self.xValues = scenObj.xValues
                 self.yValues = scenObj.yValues
                 self.codeOne = scenObj.codeOne
@@ -651,7 +652,7 @@ class Main:
             self.winStyle(graphObj.winFull)
             graphObj.themeSet(self.win)
             graphObj.getVar(self.trendLineVarMulti.get(), self.annotateVarMulti.get(), self.oneSubplotVarMulti.get())
-            graphObj.drawGraphLoop(self.codeCurrencyDict, self.firstloopEDL, self.progress, scenObj.workingMode, scenObj.username.get(), scenObj.password.get())
+            graphObj.drawGraphLoop(self.codeCurrencyDict, self.firstloopEDL, self.progress, scenObj.workingMode, scenObj.username.get(), scenObj.password.get(), scenObj.hostName.get(), scenObj.port.get())
             buttonCreate()
             graphObj.clearList()
             graphObj.winFull.mainloop()
