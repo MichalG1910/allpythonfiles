@@ -11,7 +11,7 @@ from classE_Rates101_Database import Scenario
 import gc
 from tkinter import messagebox as mBox
 from tkinter import Menu
-# https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.html
+
 class Main:
     agr_number = 0
     
@@ -21,8 +21,7 @@ class Main:
         self.mode()
         self.win = tk.Tk()
         self.winStyle(self.win)
-        self.themeButton(self.win)
-        #self.quitButton()
+        #self.themeButton(self.win)
         graphObj.emptyGraph(self.win)
         self.exchangeRatesTabel()
         self.graphGui()
@@ -47,6 +46,8 @@ class Main:
             self.codeCurrencyDict = scenObj.codeCurrencyDict
     
     def menu(self):
+        self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
+
         self.menuBar = Menu(self.win)
         self.win.config(menu=self.menuBar)
         
@@ -77,7 +78,11 @@ class Main:
     
     def info(self):
         infoWin = tk.Tk()
-        infoWin.geometry("335x180+800+400")
+        if sys.platform == 'linux':
+            infoWin.geometry("300x180+800+400")
+        else:
+            infoWin.geometry("335x180+800+400")
+        
         self.winStyle(infoWin)
         ttk.Label(infoWin, text='E_Rates v1.01\napril 2022\nMichał Grabarz').grid(column=0, row=0, padx=55, pady=10)
         ttk.Label(infoWin, text='-ta aplikacja została napisana w celu nauki jezyka Python\n-this app was written to learn python', font=("Segoe Ui",8,), foreground='grey').grid(column=0, row=1, padx=20, pady=10)
@@ -107,34 +112,25 @@ class Main:
             toolTip.hidetip()
         widget.bind('<Enter>', enter)
         widget.bind('<Leave>', leave)
-    
-    def quitButton(self):
-        boldStyle = ttk.Style()
-        boldStyle.configure ("Bold.TButton", weight = "bold", foreground='black', font=20)
-        quitB = ttk.Button(self.win,text="X", command=self._exit, width=1, style = "Bold.TButton")
-        quitB.grid(row=0, column=13, ipadx=9.4, pady=5, columnspan=3, sticky=tk.E)
-        self.createToolTip(quitB, "Zamknij", -50, 20)
 
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
         #window.attributes("-fullscreen", True) # okno otwiera się na pełnym ekranie
-    
+    '''
     def themeButton(self, window):            
         self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
         self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=1)
         self.accentbutton.image = self.icon
         #self.accentbutton.grid(row=0, column=13,columnspan=2, ipadx=9.4, pady=5, sticky=tk.W)
         #self.createToolTip(self.accentbutton, "motyw jasny/ciemny", -125, 20)
-    
+    '''
     def change_theme(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             self.win.tk.call("set_theme", "light")
             self.icon = PhotoImage(file=f'{dataObj.filePath}/dark4.png')
-            self.accentbutton.configure(image=self.icon)
             self.menuBar.destroy()
             self.menu()
-            self.accentbutton.image = self.icon
             
             try:
                 dataObj.xValues 
@@ -145,10 +141,8 @@ class Main:
         else:
             self.win.tk.call("set_theme", "dark")
             self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
-            self.accentbutton.configure(image=self.icon)
             self.menuBar.destroy()
             self.menu()
-            self.accentbutton.image = self.icon
             
             try:
                 dataObj.xValues 
@@ -211,12 +205,7 @@ class Main:
         def currencyLast30():
             currencyLast30 = tk.StringVar()
             self.codeCurrencyList = []
-            '''
-            if scenObj.workingMode == 'Online_No_Database':
-                self.codeCurrencyDict = dataObj.codeCurrencyDict
-            if scenObj.workingMode == 'Database':
-                self.codeCurrencyDict = scenObj.codeCurrencyDict
-            '''
+            
             def getLast30Tabel():
                 if scenObj.workingMode == 'Online_No_Database':
                     dataObj.last30Data(currencyLast30.get())
@@ -284,7 +273,6 @@ class Main:
             ratesHalf = math.floor(self.lenCurrencyList / 2) 
             self.timeRangeVariableList, self.chVariableList, self.codeVariableList, self.listchv, trl1, cvl1, code1 = [],[],[],[],[],[],[]
             
-
             def createView1():
                 self.viewNum = 1
                 self.timeRangeVariableList.clear()

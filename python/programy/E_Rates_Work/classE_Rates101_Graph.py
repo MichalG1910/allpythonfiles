@@ -146,15 +146,13 @@ class Graph:
                         dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firstloopEDL)
                         self.xValuesMultiGraph = dataObj.xValuesMultiGraph
                         self.yValuesMultiGraph = dataObj.yValuesMultiGraph
-                        #codeMulti = dataObj.codeMulti
+                        
 
                     if self.workingMode == 'Database':
                         scenObj.getDataForGraphDB(code, self.multiTimeRangeList[self.agr], 2, self.username, self.password, self.hostname, self.port, self.firstloopEDL) 
                         self.xValuesMultiGraph = scenObj.xValuesMultiGraph
                         self.yValuesMultiGraph = scenObj.yValuesMultiGraph
-                        #codeMulti = scenObj.codeMulti
-
-                    #dataObj.getDataForGraph(code, self.multiTimeRangeList[self.agr], 2, self.firstloopEDL)
+                        
                     locals()['line{}'.format(code[0:3])], = self.axis.plot(self.xValuesMultiGraph, self.yValuesMultiGraph, color=colorpalette[self.agr], linewidth=1)
                     limitList += self.yValuesMultiGraph
                     lineName.append(locals()['line{}'.format(code[0:3])])
@@ -289,13 +287,6 @@ class Graph:
                 codeMulti = scenObj.codeMulti  
 
             self.drawGraph(fSize, self.multiTimeRangeList[self.agr], self.xValuesMultiGraph, self.yValuesMultiGraph, codeMulti, 2,codeCurrencyDict, progressbar)
-            '''print(self.xValuesMultiGraph)
-            print()
-            print(self.yValuesMultiGraph)
-            print()
-            print(type(self.yValuesMultiGraph[0]))
-            print(codeMulti)
-            print('#######################################################################################################')'''
             if self.oneSubplotVarMulti  == 0:
                 self.figFS.tight_layout() # wykresy nie nachodzą na siebie
             else:

@@ -32,6 +32,7 @@ class Data:
                     self.checkConnectionFailure = True
                 else:
                     exit()
+    
     def createReportDir(self):
         if os.path.exists(f"{self.filePath}/reports"):
             pass
@@ -48,9 +49,7 @@ class Data:
     
     def latestNBPreport(self):
         url = "https://api.nbp.pl/api/exchangerates/tables/a?format=json"
-        self.NBPreport(1, url, "mid")
-        #self.reportCreate(self.daysLen, self.data, self.erDataList, self.effectiveDateList[-1],self.printList, startDate=None, endDate=None)
-        #self.terminalPrint() 
+        self.NBPreport(1, url, "mid") 
         
         self.start = None
         self.firstloopEDL = self.effectiveDateList[-1]
@@ -148,11 +147,9 @@ class Data:
             self.repeat -= 1
             try: 
                 progressBarDB(self.repeating)
-                #progressBarDB((self.repeat+self.daysLen)/50)
             except:
                 pass
 
-               
         self.data = longerList
         del longerList     
             
@@ -169,7 +166,6 @@ class Data:
             self.effectiveDateList.append(self.effectiveDate)
             try:
                 progressBarDB(len(self.data))
-                #progressBarDB((len(self.data)+1+math.ceil(len(self.data)+1)/91)*5)
             except:
                 pass
 
@@ -198,8 +194,7 @@ class Data:
             tabelNameId += 1
             self.erDataList.append(erData)
             del erData
-            
-    
+        
     def reportCreate(self, daysLen, data, erDataList, lastDate, printList, startDate, endDate ):
     
         def file_write(fileWrite):
@@ -235,18 +230,7 @@ class Data:
             exc += 1
 
         self.csv.close()
-    '''       
-    def terminalPrint(self):
-        printListLen = len(self.printList)
-        rpt=0
-        print(f'ilośc sprawdzanych dni: {self.daysLen}\nilość raportów NBP z tych dni (tylko dni pracujące):', len(self.data) )
-        
-        while rpt < printListLen:
-            erFrame = pd.DataFrame(self.erDataList[rpt])
-            print(f"\nExchange rates: {self.printList[rpt][0]},{self.printList[rpt][1]},{self.printList[rpt][2]}")
-            print(tabulate(erFrame, showindex=True, headers=erFrame.columns))
-            rpt += 1
-    '''
+    
     def getDataForGraph(self, currencyName, timeRange, oneOrMultiNum, firstloopEDL = None):
         self.code = (currencyName[0:3]).lower()
         self.graphMidList, self.graphEffectiveDateList, self.gdList = [],[],[]
@@ -288,7 +272,6 @@ class Data:
                 self.xValuesMultiGraph = self.graphEffectiveDateList
                 self.yValuesMultiGraph = self.graphMidList
                 self.codeMulti = self.code
-            
             
             del graphData, self.graphEffectiveDateList, self.graphMidList, self.code
             

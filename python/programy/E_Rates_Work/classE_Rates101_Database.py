@@ -22,7 +22,7 @@ class Scenario:
       exit()
 
    def createLogWin(self):
-         self.logWin.geometry('320x460+600+300')
+         self.logWin.geometry('320x480+600+300')
          self.logWin.title('E_Rates')  
    
    def WinStyle(self, logWindow):
@@ -45,10 +45,10 @@ class Scenario:
    def updateDBProgressBar(self):
       self.progressStep = -1
       self.pb = ttk.Progressbar(self.logWin,orient='horizontal',mode='determinate',length=280,)
-      self.pb.grid(column=0, row=8, padx=20, pady=5, sticky=tk.EW)
+      self.pb.grid(column=0, row=9, padx=20, pady=5, sticky=tk.EW)
 
       self.value_label = ttk.Label(self.logWin, text=self.update_progress_label(), anchor= 'n')
-      self.value_label.grid(column=0, row=7, columnspan=2, padx=10, pady=5, sticky=tk.EW)
+      self.value_label.grid(column=0, row=8, columnspan=2, padx=10, pady=5, sticky=tk.EW)
       self.pb.update()
       
    def progress(self, repeating):
@@ -58,7 +58,6 @@ class Scenario:
          self.pb.update()
          
          if self.pb['value']>99:
-               #time.sleep(0.5)
                self.pb.destroy()
    
    def update_progress_label(self):
@@ -78,19 +77,24 @@ class Scenario:
    def start(self):
       if self.DBCheckVar.get() == 1:
          self.workingMode = 'Database'
-         self.validateLogin()
-         
+         try:
+            self.loginErrorLabel.configure(text="")
+            self.validateLogin()
+            
+         except psycopg2.OperationalError:
+            self.loginErrorLabel.configure(text="niepoprawne dane do logowania na serwer")
       else:
          self.workingMode = 'Online_No_Database'
          self.logwin_quit()
-         
+          
    def validateLogin(self, username, password, hostname, port):
       dataObj = Data()
       dataObj.checkConnection(self.workingMode)
       print("username entered :", username.get())
-      print("password entered :", password.get())
+      print("password entered :", len(password.get()) * '\u25CF')
       print("hostname entered :", hostname.get())
       print("password entered :", port.get())
+      
       if dataObj.checkConnectionFailure == False:
          self.updateDatabase()
       else:
@@ -101,6 +105,7 @@ class Scenario:
          except psycopg2.OperationalError:
             mBox.showinfo("Brak możliwości korzystania z programu", "Brak połączenia z internetem/\nBrak bazy danych do wykorzystania\nZamykanie programu")
             exit()
+   
    def createFields(self):
       self.username =  tk.StringVar()
       self.password =  tk.StringVar()
@@ -124,31 +129,34 @@ class Scenario:
       self.DBCheckButton = ttk.Checkbutton(scenarioFrame, variable=self.DBCheckVar,)
       self.DBCheckButton.grid(column=1, columnspan=2, row=1, padx=10, pady=10, sticky=tk.E) # state= "disabled"
       
+      self.loginErrorLabel = ttk.Label(self.logWin,foreground='red', justify='center',font=("Segoe Ui",10))
+      self.loginErrorLabel.grid(columnspan=2, row=2, padx=23, sticky=tk.W)
+      
       self.userLabel = ttk.Label(self.logWin, text="username: ", foreground='grey')
-      self.userLabel.grid(column=0, row=2, padx=23, pady=10, sticky=tk.W)
+      self.userLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
       self.userEntry = ttk.Entry(self.logWin, textvariable=self.username, width=18)# state=disabled
       self.userEntry.insert(0,'postgres')# do usuniecia
-      self.userEntry.grid(column=0, row=2, padx=23, ipadx=20, pady=10, sticky=tk.NE,)
+      self.userEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE,)
       
       self.passwordLabel = ttk.Label(self.logWin, text="password: ", foreground='grey')
-      self.passwordLabel.grid(column=0, row=3, padx=23, pady=10, sticky=tk.W)
+      self.passwordLabel.grid(column=0, row=4, padx=23, pady=10, sticky=tk.W)
       self.passwordEntry = ttk.Entry(self.logWin, textvariable=self.password, show=f"\u25CF", width=18) #state='disabled'
       self.passwordEntry.insert(0,'grabarzmichal1910')# do usuniecia
-      self.passwordEntry.grid(column=0, row=3, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      self.passwordEntry.grid(column=0, row=4, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       
       self.hostNameLabel = ttk.Label(self.logWin, text="host name:\n(address) ", foreground='grey')
-      self.hostNameLabel.grid(column=0, row=4, padx=23, pady=10, sticky=tk.W)
+      self.hostNameLabel.grid(column=0, row=5, padx=23, pady=10, sticky=tk.W)
       self.hostNameEntry = ttk.Entry(self.logWin, textvariable=self.hostName, width=18) #state='disabled'
       self.hostNameEntry.insert(0,'127.0.0.1')# do usuniecia
-      self.hostNameEntry.grid(column=0, row=4, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      self.hostNameEntry.grid(column=0, row=5, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       
       self.portLabel = ttk.Label(self.logWin, text="port: ", foreground='grey')
-      self.portLabel.grid(column=0, row=5, padx=23, pady=10, sticky=tk.W)
+      self.portLabel.grid(column=0, row=6, padx=23, pady=10, sticky=tk.W)
       self.portEntry = ttk.Entry(self.logWin, textvariable=self.port, width=18) #state='disabled'
       self.portEntry.insert(0,'5432')# do usuniecia
-      self.portEntry.grid(column=0, row=5, padx=23, ipadx=20, pady=10, sticky=tk.NE)
+      self.portEntry.grid(column=0, row=6, padx=23, ipadx=20, pady=10, sticky=tk.NE)
       
-      loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=6,  padx=10, pady=10)
+      loginButton = ttk.Button(self.logWin, text="Start", command=self.start, width=10).grid(column=0, row=7,  padx=10, pady=10)
       
    def scenarioSelection1(self, *ignoredArgs):
       self.noDBCheckVar.set(0) 
@@ -277,7 +285,6 @@ class Scenario:
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       self.cursor.execute('''SELECT MAX(tablename_id) FROM rates''') 
       self.tableName_id = self.cursor.fetchall()[0][0]
-      print(self.tableName_id)
       self.conn.close()
    
    def updateDatabase(self):
@@ -314,6 +321,7 @@ class Scenario:
          self.logWin.update()
          self.getLastDate()
          self.logwin_quit()
+      
       except psycopg2.errors.DuplicateDatabase:
          self.getLastDate()
          self.getLastTabelNameId()
@@ -435,9 +443,7 @@ class Scenario:
       endDateGet = (list(endDate.split('-')))
       convertDateE = [int(i) for i in endDateGet] 
       endDate = datetime.date(convertDateE[0], convertDateE[1], convertDateE[2])
-      print(startDate, endDate)
       interval = list(str(endDate - startDate).split(' '))
-      print(interval)
       self.daysInterval = int(interval[0])
 
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
@@ -465,46 +471,14 @@ class Scenario:
                      'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
          self.erDataList.append(erData)
       del erData
-      print('self.countDate: ', len(self.countDate), 'self.erDataList: ', len(self.erDataList)) 
-      
-      """
-      for a in range(self.daysInterval + 1):
-         self.currencyList, self.codeList, self.valueList = [],[],[]
-         self.cursor.execute(f'''SELECT currency, code, value FROM rates WHERE date = '{startDate1}' ''') # beetween
-         self.reportLoopList = self.cursor.fetchall()
-         if self.reportLoopList == []:
-            pass
-         else:
-            for b in self.reportLoopList:
-               self.currencyList.append(b[0]) 
-               self.codeList.append(b[1]) 
-               self.valueList.append(b[2]) 
-               
-            erData = {'currency:': pd.Series(self.currencyList, index=range(1,len(self.currencyList)+1)),
-                        'code:': pd.Series(self.codeList, index=range(1,len(self.currencyList)+1)),
-                        'value:': pd.Series(self.valueList, index=range(1,len(self.currencyList)+1))}
-            self.erDataList.append(erData)
-            del erData
-            
-         startDate1 = startDate1 + datetime.timedelta(days=1)
-      """
       
       self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY tablename_id''')
       self.printList = self.cursor.fetchall()
-      print('self.printList: ', len(self.printList))
+      
       self.cursor.execute(f'''SELECT currency, code, date, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY rates_id''') 
       self.csvList = self.cursor.fetchall()
       
       self.conn.close()
-      
-      
-      '''
-      --SELECT rates_id, currency, code, date, value FROM rates WHERE date BETWEEN '2023-01-01' AND '2023-05-23'
-      --SELECT COUNT(date) FROM rates WHERE date BETWEEN '2023-01-01' AND '2023-05-23' GROUP BY date
-      --SELECT COUNT(date) FROM rates WHERE date BETWEEN '2004-05-04' AND '2005-05-04' GROUP BY date
-      --SELECT COUNT(date) FROM rates WHERE date BETWEEN '2004-05-04' AND '2023-05-23' GROUP BY date ORDER BY date
-      --DELETE FROM rates where date = '2023-05-23'
-      '''
 
 
 
