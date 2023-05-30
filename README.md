@@ -1,6 +1,6 @@
-# Project Name
-E_Rates
-https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.html
+# E_Rates
+Current NBP exchange rates - visualizations, historical reports
+
 
 ## Table of Contents
 * [General Info](#general-information)
@@ -8,12 +8,9 @@ https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.htm
 * [Features](#features)
 * [Screenshots](#screenshots)
 * [Setup](#setup)
-* [Usage](#usage)
 * [Theme](#theme)
-* [Room for Improvement](#room-for-improvement)
-* [Acknowledgements](#acknowledgements)
 * [Contact](#contact)
-<!-- * [License](#license) -->
+* [License](#license)
 
 
 ## General Information
@@ -29,7 +26,6 @@ https://www.flynerd.pl/2018/06/jak-napisac-dobre-readme-projektu-na-githubie.htm
 
 
 ## Features
-List the ready features here:
 - Works on operating systems: Linux, Windows
 - Three working modes:
   - online - all necessary data are downloaded from NBP servers (database is not required)
@@ -59,50 +55,20 @@ List the ready features here:
 ![one multichart in fullscreen mode](./img/one_multichart.png)
 
 
-
-
 ## Setup
 - To run the script in the mode of work without a database, it is enough to copy the repository files to the computer with the python interpreter installed. Custom libraries used in the script and required to run: tkinter, gc, PIL, psycopg2, functools, pandas, numpy, tabulate.
 - To run the script in database mode, PostgreSQL must be installed and the server configured. For more information, please visit https://www.postgresql.org/download/
 
 
-## Usage
-How does one go about using it?
-Provide various use cases and code examples here.
-
-`write-your-code-here`
-
-
 ## Theme
-The beautiful theme created by rdbdnde 'Azure theme for ttk' is responsible for the appearance of the application
+The beautiful theme created by rdbdnde 'Azure theme for ttk' is responsible for the appearance of the program
 https://github.com/rdbende/Azure-ttk-theme
 
 
-## Room for Improvement
-Include areas you believe need improvement / could be improved. Also add TODOs for future development.
-
-Room for improvement:
-- Improvement to be done 1
-- Improvement to be done 2
-
-To do:
-- Feature to be added 1
-- Feature to be added 2
-
-
-## Acknowledgements
-Give credit here.
-- This project was inspired by...
-- This project was based on [this tutorial](https://www.example.com).
-- Many thanks to...
-
-
 ## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
+Created by Michał Grabarz grabarzmichal@gmail.com
 
 
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
 
-<!-- You don't have to include all sections - just the one's relevant to your project -->
+## License 
+This project is open source and available under the [MIT License](./License.txt)
