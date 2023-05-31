@@ -45,8 +45,6 @@ class Main:
             self.codeCurrencyDict = scenObj.codeCurrencyDict
     
     def menu(self):
-        self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
-        
         self.menuBar = Menu(self.win)
         self.win.config(menu=self.menuBar)
         
@@ -59,8 +57,8 @@ class Main:
         
         self.menuBar.add_cascade(label="File", menu=fileMenu)
         if sys.platform == 'linux':
-            self.menuBar.add_command(command=self.change_theme,icon=self.icon, compound='left')
-            self.menuBar.icon = self.icon
+            self.menuBar.add_command(command=self.change_theme,image=self.icon, compound='left',)
+            self.menuBar.image = self.icon
         else: 
             self.menuBar.add_command(command=self.change_theme,label="\u25D0", compound='left')
         self.menuBar.add_command(label = "\uFF3F", command = self._minimalize)
@@ -119,6 +117,7 @@ class Main:
     def winStyle(self, window):
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
+        self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
         #window.attributes("-fullscreen", True) # okno otwiera się na pełnym ekranie
 
     def change_theme(self):
