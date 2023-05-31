@@ -61,7 +61,7 @@ class Main:
         else: 
             self.menuBar.add_command(command=self.change_theme,label="\u25D0", compound='left')
         self.menuBar.add_command(label = "\uFF3F", command = self._minimalize)
-        self.menuBar.add_command(label = "\u2716", command = self._exit)
+        self.menuBar.add_command(label = "\u274C", command = self._exit)
         
     
     def openFileDir(self):
