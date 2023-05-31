@@ -29,7 +29,6 @@ class Main:
         self.menu()
         self.win.title("E_Rates v.1.2".center(int(self.win.winfo_width()/2.1)))
         
-
     def mode(self):
         if scenObj.workingMode == 'Online_No_Database':
             dataObj.checkConnection()
