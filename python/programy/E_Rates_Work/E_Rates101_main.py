@@ -54,14 +54,14 @@ class Main:
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=self._exit)
         
-        self.menuBar.add_cascade(label="File", menu=fileMenu)
+        self.menuBar.add_cascade(label="File", menu=fileMenu, font=("", 11))
         if sys.platform == 'linux':
             self.menuBar.add_command(command=self.change_theme,image=self.icon, compound='left',)
             self.menuBar.image = self.icon
         else: 
             self.menuBar.add_command(command=self.change_theme,label="\u25D0", compound='left')
         self.menuBar.add_command(label = "\uFF3F", command = self._minimalize)
-        self.menuBar.add_command(label = "\u274C", command = self._exit)
+        self.menuBar.add_command(label = "\u274C", command = self._exit, font=("", 12))
         
     
     def openFileDir(self):
