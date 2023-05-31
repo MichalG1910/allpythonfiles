@@ -93,7 +93,7 @@ class Scenario:
       print("username entered :", username.get())
       print("password entered :", len(password.get()) * '\u25CF')
       print("hostname entered :", hostname.get())
-      print("password entered :", port.get())
+      print("port entered     :", port.get())
       
       if dataObj.checkConnectionFailure == False:
          self.updateDatabase()
