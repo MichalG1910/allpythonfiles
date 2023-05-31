@@ -21,14 +21,13 @@ class Main:
         self.mode()
         self.win = tk.Tk()
         self.winStyle(self.win)
-        #self.themeButton(self.win)
         graphObj.emptyGraph(self.win)
         self.exchangeRatesTabel()
         self.graphGui()
         self.generateReportGui()
         self.win.protocol("WM_DELETE_WINDOW", self._exit)
         self.menu()
-        self.win.title("E_Rates v.1.1".center(int(self.win.winfo_width()/2.1)))
+        self.win.title("E_Rates v.1.2".center(int(self.win.winfo_width()/2.1)))
         
 
     def mode(self):
@@ -47,7 +46,7 @@ class Main:
     
     def menu(self):
         self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
-
+        
         self.menuBar = Menu(self.win)
         self.win.config(menu=self.menuBar)
         
@@ -59,10 +58,14 @@ class Main:
         fileMenu.add_command(label="Exit", command=self._exit)
         
         self.menuBar.add_cascade(label="File", menu=fileMenu)
-        self.menuBar.add_command(command=self.change_theme,image=self.icon)
-        self.menuBar.add_command(label = "__", command = self._minimalize)
-        self.menuBar.add_command(label = "x", command = self._exit)
-        self.menuBar.image = self.icon
+        if sys.platform == 'linux':
+            self.menuBar.add_command(command=self.change_theme,icon=self.icon, compound='left')
+            self.menuBar.icon = self.icon
+        else: 
+            self.menuBar.add_command(command=self.change_theme,label="\u25D0", compound='left')
+        self.menuBar.add_command(label = "\uFF3F", command = self._minimalize)
+        self.menuBar.add_command(label = "\u2716", command = self._exit)
+        
     
     def openFileDir(self):
         def openPlatform():
@@ -117,14 +120,7 @@ class Main:
         window.tk.call('source', os.path.join(dataObj.filePath, 'azure.tcl'))
         window.tk.call("set_theme", "dark")
         #window.attributes("-fullscreen", True) # okno otwiera się na pełnym ekranie
-    '''
-    def themeButton(self, window):            
-        self.icon = PhotoImage(file=f'{dataObj.filePath}/light4.png')
-        self.accentbutton = ttk.Button(window, image=self.icon, command=self.change_theme, width=1)
-        self.accentbutton.image = self.icon
-        #self.accentbutton.grid(row=0, column=13,columnspan=2, ipadx=9.4, pady=5, sticky=tk.W)
-        #self.createToolTip(self.accentbutton, "motyw jasny/ciemny", -125, 20)
-    '''
+
     def change_theme(self):
         if self.win.tk.call("ttk::style", "theme", "use") == "azure-dark":
             self.win.tk.call("set_theme", "light")
