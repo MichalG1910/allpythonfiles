@@ -76,50 +76,52 @@ class ReName():
             self.optionalWidget()
         if self.chCall == 0:
             self.num.destroy()
-            self.numLabel = ttk.Label(self.mainFrame, text = "                                   ").grid(column = 1, row = 8, sticky="WE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 8, sticky="WE") # przysłania
 
     def widgets(self):
 
-        self.mainFrame = ttk.LabelFrame(self.win, text='Masowa zmiana nazwy plikow',labelanchor='n')
-        self.mainFrame.grid(column=0, row=0,columnspan=3, sticky="W", padx=10, pady=(10,10))
+        self.mainFrame = ttk.LabelFrame(self.win, text='Masowa zmiana nazwy plików',labelanchor='n')
+        self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="WE", padx=10, pady=(10,10))
             
-        ttk.Label(self.mainFrame, text = "lokalizacja katalogu:").grid(column = 1, row = 1,  padx=10, pady=(20,0))
+        ttk.Label(self.mainFrame, text = "lokalizacja katalogu:").grid(column = 0, row = 1,  padx=10, pady=(20,2))
         self.location1 = tk.StringVar()
-        self.lok = ttk.Entry(self.mainFrame, text=self.directory, width= 32, textvariable= self.location1)   
-        self.lok.grid(column= 1, row= 2, sticky="W", padx=10, pady=(0,10))
+        self.lok = ttk.Entry(self.mainFrame, text=self.directory, width= 34, textvariable= self.location1)   
+        self.lok.grid(column= 0, row= 2, sticky="W", padx=10, pady=(0,5))
         
         self.icon = PhotoImage(file=f'{self.filePath}/folder24dp.png')
-        self.dirButton = ttk.Button(self.mainFrame, image= self.icon, command= self.ask_dir,)
-        self.dirButton.grid(column= 1, row= 2, sticky="E", padx=10, pady=(10))
+        TButton1 = ttk.Style()
+        TButton1.configure("New.TButton", width = 5, border = 2, padding= {0,0,0,0})
+        self.dirButton = ttk.Button(self.mainFrame, image= self.icon, command= self.ask_dir, style='New.TButton')
+        self.dirButton.grid(column= 0, row= 2, sticky="NE", padx=10)
 
-        ttk.Label(self.mainFrame, text = "Tekst do zmiany:").grid(column = 1, row = 3, padx=10, pady=(5,0))
+        ttk.Label(self.mainFrame, text = "Tekst do zmiany:").grid(column = 0, row = 3, padx=10, pady=(10,2))
         self.toConvert1 = tk.StringVar() 
         toConv = ttk.Entry(self.mainFrame, width= 40, textvariable= self.toConvert1) 
-        toConv.grid(column= 1, row= 4, padx=10, pady=10)
+        toConv.grid(column= 0, row= 4, padx=10, pady=(0,5))
 
-        ttk.Label(self.mainFrame, text = "Zmienić na:").grid(column = 1, row = 5, padx=10, pady=(10,0))
+        ttk.Label(self.mainFrame, text = "Zmienić na:").grid(column = 0, row = 5, padx=10, pady=(10,2))
         self.afterConvert1 = tk.StringVar() 
         aConv = ttk.Entry(self.mainFrame, width= 40, textvariable= self.afterConvert1) 
-        aConv.grid(column= 1, row= 6, padx=10, pady=10)
+        aConv.grid(column= 0, row= 6, padx=10, pady=(0,10))
         
         self.chVarUn = tk.IntVar() 
         check = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.call) 
         #check.deselect() # .deselect - nie będzie zaznaczony
-        check.grid(column= 1, row= 7, sticky= tk.W, padx=10, pady=10)
+        check.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
 
         exit = ttk.Button(self.mainFrame, text= "Quit", command= self._quit)
-        exit.grid(column= 1, row= 9, sticky="E", padx=10, pady=10)
+        exit.grid(column= 0, row= 9, sticky="E", padx=10, pady=10)
 
         action = ttk.Button(self.mainFrame, text= "Start", command= self.start)
-        action.grid(column= 1, row= 9, sticky="W", padx=10, pady=10)
+        action.grid(column= 0, row= 9, sticky="W", padx=10, pady=10)
 
-        self.numLabel = ttk.Label(self.mainFrame).grid(column = 1, row = 8, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 8, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
 
     def optionalWidget(self):   
-        self.numLabel = ttk.Label(self.mainFrame, text = "Format numeracji:").grid(column = 1, row = 8, sticky="W", padx=10, pady=10)
+        self.numLabel = ttk.Label(self.mainFrame, text = "Format numeracji:").grid(column = 0, row = 8, sticky="W", padx=10, pady=10)
         self.numeration1 = tk.StringVar()
         self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.numeration1)
-        self.num.grid(column= 1, row= 8, padx=85)
+        self.num.grid(column= 0, row= 8)
         
 reOop = ReName()
 reOop.win.mainloop()
