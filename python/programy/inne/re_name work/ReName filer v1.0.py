@@ -26,51 +26,54 @@ class ReName():
         #window.tk.call("LoadImages", "forest-dark")
     
     def ask_dir(self, event):
-        directory = fd.askdirectory()
-        if directory:
+        self.directory = fd.askdirectory()
+        if self.directory:
             self.lok.delete(first=0, last=self.strLen)
-            self.lok.insert(0, directory)
-            self.strLen = len(directory)
-        
+            self.lok.insert(0, self.directory)
+            self.strLen = len(self.directory)
+            self.objsPreview = os.listdir(self.location1.get())
+            for f in self.objsPreview:
+                self.previewText.insert(tk.INSERT, f"{f}\n")
 
     def _quit(self):
         self.win.quit()
         self.win.destroy()
         exit()
         
-    def start(self):
+    def start(self, preview = 'no'):
         numeration = ""
         location = self.location1.get()
         toConvert = self.toConvert1.get()
         afterConvert = self.afterConvert1.get()
         if self.chVarUn.get() == 1:
             numeration = self.numeration1.get()
-        objs = os.listdir(location)
+        self.objs = os.listdir(location)
         if numeration == "":
             a = None
         else:
             a = int(numeration)
-        for src in objs:
+        for src in self.objs:
             full_src = os.path.join(location, src)
             if os.path.isfile(full_src):
                 
                 if afterConvert == "" and a != None:
                     afterCon = "0" + str(a) + ". " if a < 10 else str(a) + ". "
-                    dst = src.replace(toConvert, afterCon)
+                    self.dst = src.replace(toConvert, afterCon)
                     a += 1
                 elif afterConvert == "" and a == None:
-                    dst = src.replace(toConvert, afterConvert)
+                    self.dst = src.replace(toConvert, afterConvert)
                 elif a == None:
-                    dst = src.replace(toConvert, afterConvert)    
+                    self.dst = src.replace(toConvert, afterConvert)    
                 else:
                     # dst = src.replace(toConvert, ( str(a)+ ". " + afterConvert))
                     afterCon = "0" + str(a) + ". " + afterConvert if a < 10 else str(a) + ". " + afterConvert
-                    dst = src.replace(toConvert, afterCon)
+                    self.dst = src.replace(toConvert, afterCon)
                     a += 1
 
-            if src != dst:
-                full_dst = os.path.join(location, dst)
-                os.rename(full_src, full_dst)
+            if src != self.dst:
+                full_dst = os.path.join(location, self.dst)
+                if preview == 'no':
+                    os.rename(full_src, full_dst)
     def call(self):
         
         self.chCall = self.chVarUn.get()      
@@ -83,7 +86,7 @@ class ReName():
     def widgets(self):
 
         self.mainFrame = ttk.LabelFrame(self.win, text='Masowa zmiana nazwy plików',labelanchor='n')
-        self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="WE", padx=10, pady=(10,10))
+        self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
             
         ttk.Label(self.mainFrame, text = "lokalizacja katalogu:").grid(column = 0, row = 1,  padx=10, pady=(20,2))
         self.location1 = tk.StringVar()
@@ -113,6 +116,9 @@ class ReName():
 
         exit = ttk.Button(self.mainFrame, text= "Quit", command= self._quit)
         exit.grid(column= 0, row= 9, sticky="E", padx=10, pady=10)
+        
+        previewButton = ttk.Button(self.mainFrame, text= "Podgląd", command= self._preview)
+        previewButton.grid(column= 0, row= 9, sticky="N", padx=10, pady=10)
 
         action = ttk.Button(self.mainFrame, text= "Start", command= self.start)
         action.grid(column= 0, row= 9, sticky="W", padx=10, pady=10)
@@ -122,14 +128,20 @@ class ReName():
     def preview(self):
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
         self.previewFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
-        self.scrolledText = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='grey', foreground='black')
-        self.scrolledText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,10), pady=(10,10))
+        self.previewText = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='white', foreground='black')
+        self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,10), pady=(10,10))
 
-        vsb = ttk.Scrollbar(self.previewFrame, command=self.scrolledText.yview, orient="vertical")
-        hsb = ttk.Scrollbar(self.previewFrame, command=self.scrolledText.xview, orient="horizontal")
-        self.scrolledText.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+        vsb = ttk.Scrollbar(self.previewFrame, command=self.previewText.yview, orient="vertical")
+        hsb = ttk.Scrollbar(self.previewFrame, command=self.previewText.xview, orient="horizontal")
+        self.previewText.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
         vsb.grid(column=2, row=0, rowspan=8, sticky="ns", padx=2)
-        hsb.grid(column=1, row=9, sticky="ew", padx=2)   
+        hsb.grid(column=1, row=9, sticky="ew", padx=2) 
+    def _preview(self):
+        self.generatePreview = 'yes'
+        self.start(self.generatePreview)
+        self.previewText.delete('1.0', tk.END)
+        for f in self.objsPreview:
+                self.previewText.insert(tk.INSERT, f"{f} --->{self.dst}\n")  
                 
 
     def optionalWidget(self):   
