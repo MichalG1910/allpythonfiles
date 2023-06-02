@@ -3,7 +3,6 @@ from tkinter import ttk
 import os, sys
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
-from tkinter import scrolledtext
 
 class ReName():
     def __init__(self):
@@ -52,6 +51,7 @@ class ReName():
             a = None
         else:
             a = int(numeration)
+        self.srcLenList, self.dstList = [],[]
         for src in self.objs:
             full_src = os.path.join(location, src)
             if os.path.isfile(full_src):
@@ -74,6 +74,8 @@ class ReName():
                 full_dst = os.path.join(location, self.dst)
                 if preview == 'no':
                     os.rename(full_src, full_dst)
+            self.srcLenList.append(len(src))
+            self.dstList.append(self.dst)
     def call(self):
         
         self.chCall = self.chVarUn.get()      
@@ -140,8 +142,18 @@ class ReName():
         self.generatePreview = 'yes'
         self.start(self.generatePreview)
         self.previewText.delete('1.0', tk.END)
+        lenList = []
+        a = 1
         for f in self.objsPreview:
-                self.previewText.insert(tk.INSERT, f"{f} --->{self.dst}\n")  
+            spaceAdd = max(self.srcLenList) - self.srcLenList[a-1]
+            self.previewText.insert(tk.INSERT, f"{f}{spaceAdd *' '*2} --->{self.dstList[a-1]}\n") 
+            self.previewText.tag_add("before", f"{a}.8", f"{a}.13")
+            self.previewText.tag_configure("before", background="white", foreground="red") 
+            self.previewText.tag_add("after", f"{a}.45", f"{a}.50")
+            self.previewText.tag_configure("after", background="white", foreground="green") 
+            lenList.append(len(f"{f}{spaceAdd *' '*2} --->{self.dstList[a-1]}\n"))
+            a += 1
+        self.previewText.configure(width=max(lenList)+5)
                 
 
     def optionalWidget(self):   
