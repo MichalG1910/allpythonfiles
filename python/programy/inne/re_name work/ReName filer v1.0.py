@@ -3,6 +3,7 @@ from tkinter import ttk
 import os, sys
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
+from tkinter import scrolledtext
 
 class ReName():
     def __init__(self):
@@ -13,6 +14,7 @@ class ReName():
         self.win.title("ReName filer v1.0")
         self.directory = None
         self.widgets()
+        self.preview()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         
@@ -116,6 +118,19 @@ class ReName():
         action.grid(column= 0, row= 9, sticky="W", padx=10, pady=10)
 
         self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 8, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+
+    def preview(self):
+        self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
+        self.previewFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
+        self.scrolledText = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='grey', foreground='black')
+        self.scrolledText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,10), pady=(10,10))
+
+        vsb = ttk.Scrollbar(self.previewFrame, command=self.scrolledText.yview, orient="vertical")
+        hsb = ttk.Scrollbar(self.previewFrame, command=self.scrolledText.xview, orient="horizontal")
+        self.scrolledText.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+        vsb.grid(column=2, row=0, rowspan=8, sticky="ns", padx=2)
+        hsb.grid(column=1, row=9, sticky="ew", padx=2)   
+                
 
     def optionalWidget(self):   
         self.numLabel = ttk.Label(self.mainFrame, text = "Format numeracji:").grid(column = 0, row = 8, sticky="W", padx=10, pady=10)
