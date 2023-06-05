@@ -22,15 +22,22 @@ class ReName():
     def winStyle(self, window):
         window.tk.call('source', os.path.join(self.filePath, 'forest-dark.tcl'))
         ttk.Style().theme_use('forest-dark')
+        ttk.Style().configure("treeview", background='red')
         #window.tk.call("LoadImages", "forest-dark")
     
     def ask_dir(self, event):
         self.directory = fd.askdirectory()
+        self.beforePreview()
+    
+    def beforePreview(self):
         if self.directory:
             self.lok.delete(first=0, last=self.strLen)
             self.lok.insert(0, self.directory)
             self.strLen = len(self.directory)
             self.objsPreview = os.listdir(self.location1.get())
+            self.objsPreview.sort()
+            self.previewText.configure(state="normal")
+            self.previewText.delete('1.0', tk.END)
             for f in self.objsPreview:
                 self.previewText.insert(tk.INSERT, f"{f}\n")
             self.previewText.configure(state="disabled")
@@ -77,6 +84,14 @@ class ReName():
                     os.rename(full_src, full_dst)
             self.srcLenList.append(len(src))
             self.dstList.append(self.dst)
+            
+        if preview == 'no':
+            self.toConvert1.set('')
+            self.afterConvert1.set('')
+            self.previewTextAfter.configure(state='normal')
+            self.previewTextAfter.delete('1.0', tk.END)
+            self.previewTextAfter.configure(state='disabled')
+            self.beforePreview()
     def call(self):
         
         self.chCall = self.chVarUn.get()      
@@ -154,18 +169,20 @@ class ReName():
     def _preview(self):
         self.generatePreview = 'yes'
         self.start(self.generatePreview)
+        self.beforePreview()
+        self.previewTextAfter.configure(state='normal')
         self.previewTextAfter.delete('1.0', tk.END)
         lenList = []
         a = 1
-        for f in self.objsPreview:
-            spaceAdd = max(self.srcLenList) - self.srcLenList[a-1]
-            self.previewTextAfter.insert(tk.INSERT, f"{self.dstList[a-1]}\n") 
+        self.objsPreview.sort()
+        self.dstList.sort()
+        for f in range(len(self.dstList)):
+            
+            self.previewTextAfter.insert(tk.INSERT, f"{self.dstList[f]}\n") 
             #self.previewText.tag_add("before", f"{a}.8", f"{a}.13")
             #self.previewText.tag_configure("before", background="white", foreground="red") 
             #self.previewText.tag_add("after", f"{a}.45", f"{a}.50")
             #self.previewText.tag_configure("after", background="white", foreground="green")
-             
-            lenList.append(len(f"{f}{spaceAdd *' '*2} --->{self.dstList[a-1]}\n"))
             a += 1
         self.previewTextAfter.configure(state='disabled')
         #self.previewText.configure(width=max(lenList)+5)
