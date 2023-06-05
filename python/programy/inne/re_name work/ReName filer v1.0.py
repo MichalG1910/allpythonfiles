@@ -13,7 +13,7 @@ class ReName():
         self.win.title("ReName filer v1.0")
         self.directory = None
         self.widgets()
-        self.preview()
+        self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         
@@ -127,33 +127,45 @@ class ReName():
 
         self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 8, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
 
-    def preview(self):
+    def previewWidgets(self):
+        def multiple_yview(*args):
+            self.previewText.yview(*args)
+            self.previewTextAfter.yview(*args)
+        def on_textscroll(*args):
+            vsb.set(*args)
+            multiple_yview('moveto', args[0])
+        
+
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
         self.previewFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.previewText = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='white', foreground='black')
-        self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,10), pady=(10,10))
+        self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,0), pady=(10,10))
+        self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='white', foreground='black',)
+        self.previewTextAfter.grid(column= 2, row= 0, rowspan=8, sticky="NSEW", padx=(0,10), pady=(10,10))
 
-        vsb = ttk.Scrollbar(self.previewFrame, command=self.previewText.yview, orient="vertical")
-        hsb = ttk.Scrollbar(self.previewFrame, command=self.previewText.xview, orient="horizontal")
-        self.previewText.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
-        vsb.grid(column=2, row=0, rowspan=8, sticky="ns", padx=2)
-        hsb.grid(column=1, row=9, sticky="ew", padx=2) 
+        vsb = ttk.Scrollbar(self.previewFrame, command=multiple_yview, orient="vertical")
+        #hsb = ttk.Scrollbar(self.previewFrame, command=(self.previewText.xview==self.previewTextAfter.xview), orient="horizontal",)
+        self.previewText.configure(yscrollcommand=on_textscroll)
+        self.previewTextAfter.configure(yscrollcommand=on_textscroll)
+        #self.previewTextAfter.configure(yscrollcommand=vsb.set)
+        vsb.grid(column=3, row=0, rowspan=8, sticky="ns", padx=2)
+        #hsb.grid(column=1, row=9, sticky="ew", padx=2) 
     def _preview(self):
         self.generatePreview = 'yes'
         self.start(self.generatePreview)
-        self.previewText.delete('1.0', tk.END)
+        self.previewTextAfter.delete('1.0', tk.END)
         lenList = []
         a = 1
         for f in self.objsPreview:
             spaceAdd = max(self.srcLenList) - self.srcLenList[a-1]
-            self.previewText.insert(tk.INSERT, f"{f}{spaceAdd *' '*2} --->{self.dstList[a-1]}\n") 
-            self.previewText.tag_add("before", f"{a}.8", f"{a}.13")
-            self.previewText.tag_configure("before", background="white", foreground="red") 
-            self.previewText.tag_add("after", f"{a}.45", f"{a}.50")
-            self.previewText.tag_configure("after", background="white", foreground="green") 
+            self.previewTextAfter.insert(tk.INSERT, f"{self.dstList[a-1]}\n") 
+            #self.previewText.tag_add("before", f"{a}.8", f"{a}.13")
+            #self.previewText.tag_configure("before", background="white", foreground="red") 
+            #self.previewText.tag_add("after", f"{a}.45", f"{a}.50")
+            #self.previewText.tag_configure("after", background="white", foreground="green") 
             lenList.append(len(f"{f}{spaceAdd *' '*2} --->{self.dstList[a-1]}\n"))
             a += 1
-        self.previewText.configure(width=max(lenList)+5)
+        #self.previewText.configure(width=max(lenList)+5)
                 
 
     def optionalWidget(self):   
