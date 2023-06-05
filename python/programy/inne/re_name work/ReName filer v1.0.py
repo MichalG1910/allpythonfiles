@@ -33,6 +33,7 @@ class ReName():
             self.objsPreview = os.listdir(self.location1.get())
             for f in self.objsPreview:
                 self.previewText.insert(tk.INSERT, f"{f}\n")
+            self.previewText.configure(state="disabled")
 
     def _quit(self):
         self.win.quit()
@@ -162,9 +163,11 @@ class ReName():
             #self.previewText.tag_add("before", f"{a}.8", f"{a}.13")
             #self.previewText.tag_configure("before", background="white", foreground="red") 
             #self.previewText.tag_add("after", f"{a}.45", f"{a}.50")
-            #self.previewText.tag_configure("after", background="white", foreground="green") 
+            #self.previewText.tag_configure("after", background="white", foreground="green")
+             
             lenList.append(len(f"{f}{spaceAdd *' '*2} --->{self.dstList[a-1]}\n"))
             a += 1
+        self.previewTextAfter.configure(state='disabled')
         #self.previewText.configure(width=max(lenList)+5)
                 
 
