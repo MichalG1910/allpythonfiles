@@ -30,6 +30,7 @@ class ReName():
         self.beforePreview()
     
     def beforePreview(self):
+        objsPreviewLenList = []
         if self.directory:
             self.lok.delete(first=0, last=self.strLen)
             self.lok.insert(0, self.directory)
@@ -38,8 +39,12 @@ class ReName():
             self.objsPreview.sort()
             self.previewText.configure(state="normal")
             self.previewText.delete('1.0', tk.END)
+            a = 0
             for f in self.objsPreview:
                 self.previewText.insert(tk.INSERT, f"{f}\n")
+                objsPreviewLenList.append(len(self.objsPreview[a]))
+                a += 1
+            self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*0.18))
             self.previewText.configure(state="disabled")
 
     def _quit(self):
@@ -50,7 +55,12 @@ class ReName():
     def start(self, preview = 'no'):
         numeration = ""
         location = self.location1.get()
-        toConvert = self.toConvert1.get()
+        try:
+            toConvert = self.previewText.selection_get() 
+            self.toConvert1.set(toConvert)
+        except:    
+            toConvert = self.toConvert1.get() 
+        
         afterConvert = self.afterConvert1.get()
         if self.chVarUn.get() == 1:
             numeration = self.numeration1.get()
@@ -66,16 +76,16 @@ class ReName():
                 
                 if afterConvert == "" and a != None:
                     afterCon = "0" + str(a) + ". " if a < 10 else str(a) + ". "
-                    self.dst = src.replace(toConvert, afterCon)
+                    self.dst = src.replace(toConvert, afterCon, 1)
                     a += 1
                 elif afterConvert == "" and a == None:
-                    self.dst = src.replace(toConvert, afterConvert)
+                    self.dst = src.replace(toConvert, afterConvert, 1)
                 elif a == None:
-                    self.dst = src.replace(toConvert, afterConvert)    
+                    self.dst = src.replace(toConvert, afterConvert, 1)    
                 else:
                     # dst = src.replace(toConvert, ( str(a)+ ". " + afterConvert))
                     afterCon = "0" + str(a) + ". " + afterConvert if a < 10 else str(a) + ". " + afterConvert
-                    self.dst = src.replace(toConvert, afterCon)
+                    self.dst = src.replace(toConvert, afterCon, 1)
                     a += 1
 
             if src != self.dst:
@@ -151,7 +161,6 @@ class ReName():
             vsb.set(*args)
             multiple_yview('moveto', args[0])
         
-
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
         self.previewFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.previewText = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='white', foreground='black')
@@ -167,25 +176,37 @@ class ReName():
         vsb.grid(column=3, row=0, rowspan=8, sticky="ns", padx=2)
         #hsb.grid(column=1, row=9, sticky="ew", padx=2) 
     def _preview(self):
+        objsPreviewLenList, dstLenList = [],[]
+        a = 1
         self.generatePreview = 'yes'
+        
         self.start(self.generatePreview)
         self.beforePreview()
+        #self.previewText.configure(state='normal')
         self.previewTextAfter.configure(state='normal')
         self.previewTextAfter.delete('1.0', tk.END)
-        lenList = []
-        a = 1
+        
         self.objsPreview.sort()
         self.dstList.sort()
         for f in range(len(self.dstList)):
-            
             self.previewTextAfter.insert(tk.INSERT, f"{self.dstList[f]}\n") 
-            #self.previewText.tag_add("before", f"{a}.8", f"{a}.13")
-            #self.previewText.tag_configure("before", background="white", foreground="red") 
-            #self.previewText.tag_add("after", f"{a}.45", f"{a}.50")
-            #self.previewText.tag_configure("after", background="white", foreground="green")
+
+            startIndex = self.objsPreview[f].find(self.toConvert1.get())
+            endIndexBefore = startIndex + len(self.toConvert1.get())
+            endIndexAfter = startIndex + len(self.afterConvert1.get())
+            self.previewText.tag_add("before", f"{a}.{startIndex}", f"{a}.{endIndexBefore}")
+            self.previewText.tag_configure("before", background="white", foreground="red") 
+            self.previewTextAfter.tag_add("after", f"{a}.{startIndex}", f"{a}.{endIndexAfter}")
+            self.previewTextAfter.tag_configure("after", background="white", foreground="green")
             a += 1
+            #objsPreviewLenList.append(len(self.objsPreview[f]))
+            dstLenList.append(len(self.dstList[f]))
+            
+        #self.previewText.configure(width=max(objsPreviewLenList)+5)
+        self.previewTextAfter.configure(width=max(dstLenList)+round(max(dstLenList)*0.18))
+        #self.previewText.configure(state='disabled')
         self.previewTextAfter.configure(state='disabled')
-        #self.previewText.configure(width=max(lenList)+5)
+        
                 
 
     def optionalWidget(self):   
