@@ -16,8 +16,8 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
-        
         # self.win.iconbitmap('./ikona2.ico')
+    
     def _quit(self):
         self.win.quit()
         self.win.destroy()
@@ -26,8 +26,6 @@ class ReName():
     def winStyle(self, window):
         window.tk.call('source', os.path.join(self.filePath, 'forest-dark.tcl'))
         ttk.Style().theme_use('forest-dark')
-        ttk.Style().configure("treeview", background='red')
-        #window.tk.call("LoadImages", "forest-dark")
     
     def ask_dir(self, event):
         self.directory = fd.askdirectory()
@@ -52,7 +50,6 @@ class ReName():
                 winWidthDict[len(self.objsPreview[a])] = self.multiplier
                 a += 1
             self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*(winWidthDict[max(objsPreviewLenList)] / 3.2)))
-            #self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*0.18))
             self.previewText.configure(state="disabled")
 
     def start(self, preview = 'no'):
@@ -105,8 +102,8 @@ class ReName():
             self.previewTextAfter.delete('1.0', tk.END)
             self.previewTextAfter.configure(state='disabled')
             self.beforePreview()
-    def call(self):
-        
+    
+    def activateOptionalWidget(self):
         self.chCall = self.chVarUn.get()      
         if self.chCall == 1:
             self.optionalWidget()
@@ -115,12 +112,15 @@ class ReName():
             self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 8, sticky="WE") # przysłania
 
     def widgets(self):
+        self.location1 = tk.StringVar()
+        self.toConvert1 = tk.StringVar()
+        self.afterConvert1 = tk.StringVar()
+        self.chVarUn = tk.IntVar()
 
         self.mainFrame = ttk.LabelFrame(self.win, text='Masowa zmiana nazwy plików',labelanchor='n')
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
             
         ttk.Label(self.mainFrame, text = "lokalizacja katalogu:").grid(column = 0, row = 1,  padx=10, pady=(20,2))
-        self.location1 = tk.StringVar()
         self.lok = ttk.Entry(self.mainFrame, text=self.directory, width= 34, textvariable= self.location1)   
         self.lok.grid(column= 0, row= 2, sticky="W", padx=10, pady=(0,5))
         
@@ -131,7 +131,6 @@ class ReName():
         self.dirButton.grid(column= 0, row= 2, sticky="NE", padx=10)
 
         ttk.Label(self.mainFrame, text = "Tekst do zmiany:").grid(column = 0, row = 3, padx=10, pady=(10,2))
-        self.toConvert1 = tk.StringVar() 
         toConv = ttk.Entry(self.mainFrame, width= 40, textvariable= self.toConvert1) 
         toConv.grid(column= 0, row= 4, padx=10, pady=(0,5))
 
@@ -140,21 +139,33 @@ class ReName():
         aConv = ttk.Entry(self.mainFrame, width= 40, textvariable= self.afterConvert1) 
         aConv.grid(column= 0, row= 6, padx=10, pady=(0,10))
         
-        self.chVarUn = tk.IntVar() 
-        check = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.call) 
-        #check.deselect() # .deselect - nie będzie zaznaczony
+         
+        check = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
         check.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
-
-        exit = ttk.Button(self.mainFrame, text= "Quit", command= self._quit)
-        exit.grid(column= 0, row= 9, sticky="E", padx=10, pady=10)
+        
+        startButton = ttk.Button(self.mainFrame, text= "Start", command= self.start)
+        startButton.grid(column= 0, row= 9, sticky="W", padx=10, pady=10)
         
         previewButton = ttk.Button(self.mainFrame, text= "Podgląd", command= self._preview)
         previewButton.grid(column= 0, row= 9, sticky="N", padx=10, pady=10)
-
-        action = ttk.Button(self.mainFrame, text= "Start", command= self.start)
-        action.grid(column= 0, row= 9, sticky="W", padx=10, pady=10)
-
+        
+        exitButton = ttk.Button(self.mainFrame, text= "Zamknij", command= self._quit)
+        exitButton.grid(column= 0, row= 9, sticky="E", padx=10, pady=10)
+        
+        backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back)
+        backButton.grid(column= 0, row= 10, sticky="W", padx=10, pady=(0,10))
+        
+        clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
+        clearButton.grid(column= 0, row= 10, sticky="N", padx=10, pady=(0,10))
+        
         self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 8, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+
+    def optionalWidget(self): 
+        self.numeration1 = tk.StringVar()
+
+        self.numLabel = ttk.Label(self.mainFrame, text = "Format numeracji:").grid(column = 0, row = 8, sticky="W", padx=10, pady=10)
+        self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.numeration1)
+        self.num.grid(column= 0, row= 8)
 
     def previewWidgets(self):
         def multiple_yview(*args):
@@ -166,9 +177,9 @@ class ReName():
         
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
         self.previewFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
-        self.previewText = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='white', foreground='black')
+        self.previewText = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black')
         self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,0), pady=(10,10))
-        self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=22, wrap= tk.NONE, background='white', foreground='black',)
+        self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black',)
         self.previewTextAfter.grid(column= 2, row= 0, rowspan=8, sticky="NSEW", padx=(0,10), pady=(10,10))
 
         vsb = ttk.Scrollbar(self.previewFrame, command=multiple_yview, orient="vertical")
@@ -181,7 +192,6 @@ class ReName():
     
     def stringLetterLowerUpper(self, string):
         upperLetter = len([i for i in string if i.isupper()==True])
-        #lowerLetter = abs(len(string) - upperLetter)
         self.multiplier = upperLetter / len(string)
     
     def _preview(self):
@@ -191,16 +201,13 @@ class ReName():
         
         self.start(self.generatePreview)
         self.beforePreview()
-        #self.previewText.configure(state='normal')
+        
         self.previewTextAfter.configure(state='normal')
         self.previewTextAfter.delete('1.0', tk.END)
-        
         self.objsPreview.sort()
-        #self.dstList.sort()
         for f in range(len(self.dstList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.dstList[f]}\n") 
             self.stringLetterLowerUpper(self.dstList[f])
-            #print(self.dstList[f], self.multiplier)
             startIndex = self.objsPreview[f].find(self.toConvert1.get())
             endIndexBefore = startIndex + len(self.toConvert1.get())
             endIndexAfter = startIndex + len(self.afterConvert1.get())
@@ -210,23 +217,29 @@ class ReName():
                 self.previewTextAfter.tag_add("after", f"{a}.{startIndex}", f"{a}.{endIndexAfter}")
                 self.previewTextAfter.tag_configure("after", background="white", foreground="green")
             a += 1
-            #objsPreviewLenList.append(len(self.objsPreview[f]))
             multiplierList.append(self.multiplier)
             dstLenList.append(len(self.dstList[f]))
             winWidthDict[len(self.dstList[f])] = self.multiplier
-        print(winWidthDict)
-        #self.previewText.configure(width=max(objsPreviewLenList)+5)
         self.previewTextAfter.configure(width=max(dstLenList)+round(max(dstLenList)*(winWidthDict[max(dstLenList)] / 3.2)))
-        #self.previewText.configure(state='disabled')
         self.previewTextAfter.configure(state='disabled')
+    
+    def _back(self):
+        pass
+    def _clear(self):
+        self.previewText.configure(state='normal', width=48)
+        self.previewText.delete('1.0', tk.END)
+        self.previewText.configure(state='disabled')
         
-                
+        self.previewTextAfter.configure(state='normal', width=48)
+        self.previewTextAfter.delete('1.0', tk.END)
+        self.previewTextAfter.configure(state='disabled')
 
-    def optionalWidget(self):   
-        self.numLabel = ttk.Label(self.mainFrame, text = "Format numeracji:").grid(column = 0, row = 8, sticky="W", padx=10, pady=10)
-        self.numeration1 = tk.StringVar()
-        self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.numeration1)
-        self.num.grid(column= 0, row= 8)
+        self.location1.set('')
+        self.toConvert1.set('')
+        self.afterConvert1.set('')
+        self.numeration1.set('')
+        self.chVarUn.set(0)
+        self.activateOptionalWidget()
         
 reOop = ReName()
 reOop.win.mainloop()
