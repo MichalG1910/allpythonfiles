@@ -18,7 +18,11 @@ class ReName():
         self.dirButton.bind("<Button-1>", self.ask_dir)
         
         # self.win.iconbitmap('./ikona2.ico')
-
+    def _quit(self):
+        self.win.quit()
+        self.win.destroy()
+        exit()
+        
     def winStyle(self, window):
         window.tk.call('source', os.path.join(self.filePath, 'forest-dark.tcl'))
         ttk.Style().theme_use('forest-dark')
@@ -30,7 +34,7 @@ class ReName():
         self.beforePreview()
     
     def beforePreview(self):
-        objsPreviewLenList = []
+        objsPreviewLenList, multiplierList, winWidthDict = [],[],{}
         if self.directory:
             self.lok.delete(first=0, last=self.strLen)
             self.lok.insert(0, self.directory)
@@ -42,16 +46,15 @@ class ReName():
             a = 0
             for f in self.objsPreview:
                 self.previewText.insert(tk.INSERT, f"{f}\n")
+                self.stringLetterLowerUpper(f)
                 objsPreviewLenList.append(len(self.objsPreview[a]))
+                multiplierList.append(self.multiplier)
+                winWidthDict[len(self.objsPreview[a])] = self.multiplier
                 a += 1
-            self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*0.18))
+            self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*(winWidthDict[max(objsPreviewLenList)] / 3.2)))
+            #self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*0.18))
             self.previewText.configure(state="disabled")
 
-    def _quit(self):
-        self.win.quit()
-        self.win.destroy()
-        exit()
-        
     def start(self, preview = 'no'):
         numeration = ""
         location = self.location1.get()
@@ -64,13 +67,13 @@ class ReName():
         afterConvert = self.afterConvert1.get()
         if self.chVarUn.get() == 1:
             numeration = self.numeration1.get()
-        self.objs = os.listdir(location)
+        #self.objs = os.listdir(location)
         if numeration == "":
             a = None
         else:
             a = int(numeration)
         self.srcLenList, self.dstList = [],[]
-        for src in self.objs:
+        for src in self.objsPreview:
             full_src = os.path.join(location, src)
             if os.path.isfile(full_src):
                 
@@ -174,9 +177,15 @@ class ReName():
         self.previewTextAfter.configure(yscrollcommand=on_textscroll)
         #self.previewTextAfter.configure(yscrollcommand=vsb.set)
         vsb.grid(column=3, row=0, rowspan=8, sticky="ns", padx=2)
-        #hsb.grid(column=1, row=9, sticky="ew", padx=2) 
+        #hsb.grid(column=1, row=9, sticky="ew", padx=2)
+    
+    def stringLetterLowerUpper(self, string):
+        upperLetter = len([i for i in string if i.isupper()==True])
+        #lowerLetter = abs(len(string) - upperLetter)
+        self.multiplier = upperLetter / len(string)
+    
     def _preview(self):
-        objsPreviewLenList, dstLenList = [],[]
+        multiplierList, dstLenList, winWidthDict = [],[],{}
         a = 1
         self.generatePreview = 'yes'
         
@@ -187,23 +196,27 @@ class ReName():
         self.previewTextAfter.delete('1.0', tk.END)
         
         self.objsPreview.sort()
-        self.dstList.sort()
+        #self.dstList.sort()
         for f in range(len(self.dstList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.dstList[f]}\n") 
-
+            self.stringLetterLowerUpper(self.dstList[f])
+            #print(self.dstList[f], self.multiplier)
             startIndex = self.objsPreview[f].find(self.toConvert1.get())
             endIndexBefore = startIndex + len(self.toConvert1.get())
             endIndexAfter = startIndex + len(self.afterConvert1.get())
-            self.previewText.tag_add("before", f"{a}.{startIndex}", f"{a}.{endIndexBefore}")
-            self.previewText.tag_configure("before", background="white", foreground="red") 
-            self.previewTextAfter.tag_add("after", f"{a}.{startIndex}", f"{a}.{endIndexAfter}")
-            self.previewTextAfter.tag_configure("after", background="white", foreground="green")
+            if startIndex != -1:
+                self.previewText.tag_add("before", f"{a}.{startIndex}", f"{a}.{endIndexBefore}")
+                self.previewText.tag_configure("before", background="white", foreground="red") 
+                self.previewTextAfter.tag_add("after", f"{a}.{startIndex}", f"{a}.{endIndexAfter}")
+                self.previewTextAfter.tag_configure("after", background="white", foreground="green")
             a += 1
             #objsPreviewLenList.append(len(self.objsPreview[f]))
+            multiplierList.append(self.multiplier)
             dstLenList.append(len(self.dstList[f]))
-            
+            winWidthDict[len(self.dstList[f])] = self.multiplier
+        print(winWidthDict)
         #self.previewText.configure(width=max(objsPreviewLenList)+5)
-        self.previewTextAfter.configure(width=max(dstLenList)+round(max(dstLenList)*0.18))
+        self.previewTextAfter.configure(width=max(dstLenList)+round(max(dstLenList)*(winWidthDict[max(dstLenList)] / 3.2)))
         #self.previewText.configure(state='disabled')
         self.previewTextAfter.configure(state='disabled')
         
