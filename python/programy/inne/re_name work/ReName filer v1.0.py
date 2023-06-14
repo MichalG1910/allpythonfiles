@@ -69,32 +69,32 @@ class ReName():
             a = None
         else:
             a = int(numeration)
-        self.srcLenList, self.dstList = [],[]
-        for src in self.objsPreview:
-            full_src = os.path.join(location, src)
-            if os.path.isfile(full_src):
+        self.oldNameLenList, self.newNameList = [],[]
+        for oldName in self.objsPreview:
+            full_oldName = os.path.join(location, oldName)
+            if os.path.isfile(full_oldName):
                 
                 if afterConvert == "" and a != None:
                     afterCon = "0" + str(a) + ". " if a < 10 else str(a) + ". "
-                    self.dst = src.replace(toConvert, afterCon, 1)
+                    self.newName = oldName.replace(toConvert, afterCon, 1)
                     a += 1
                 elif afterConvert == "" and a == None:
-                    self.dst = src.replace(toConvert, afterConvert, 1)
+                    self.newName = oldName.replace(toConvert, afterConvert, 1)
                 elif a == None:
-                    self.dst = src.replace(toConvert, afterConvert, 1)    
+                    self.newName = oldName.replace(toConvert, afterConvert, 1)    
                 else:
-                    # dst = src.replace(toConvert, ( str(a)+ ". " + afterConvert))
+                    # newName = oldName.replace(toConvert, ( str(a)+ ". " + afterConvert))
                     afterCon = "0" + str(a) + ". " + afterConvert if a < 10 else str(a) + ". " + afterConvert
-                    self.dst = src.replace(toConvert, afterCon, 1)
+                    self.newName = oldName.replace(toConvert, afterCon, 1)
                     a += 1
 
-            if src != self.dst:
-                full_dst = os.path.join(location, self.dst)
+            if oldName != self.newName:
+                full_newName = os.path.join(location, self.newName)
                 if preview == 'no':
-                    os.rename(full_src, full_dst)
-            self.srcLenList.append(len(src))
-            self.dstList.append(self.dst)
-            
+                    os.rename(full_oldName, full_newName)
+            self.oldNameLenList.append(len(oldName))
+            self.newNameList.append(self.newName)
+                
         if preview == 'no':
             self.toConvert1.set('')
             self.afterConvert1.set('')
@@ -102,6 +102,8 @@ class ReName():
             self.previewTextAfter.delete('1.0', tk.END)
             self.previewTextAfter.configure(state='disabled')
             self.beforePreview()
+
+            self.backButton.configure(state='normal')
     
     def activateOptionalWidget(self):
         self.chCall = self.chVarUn.get()      
@@ -152,8 +154,11 @@ class ReName():
         exitButton = ttk.Button(self.mainFrame, text= "Zamknij", command= self._quit)
         exitButton.grid(column= 0, row= 9, sticky="E", padx=10, pady=10)
         
-        backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back)
-        backButton.grid(column= 0, row= 10, sticky="W", padx=10, pady=(0,10))
+        disabledButton = ttk.Style()
+        disabledButton.configure("DS.TButton", foregroundg='#blue', bg='black')
+        self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton')
+        self.backButton.grid(column= 0, row= 10, sticky="W", padx=10, pady=(0,10))
+        
         
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
         clearButton.grid(column= 0, row= 10, sticky="N", padx=10, pady=(0,10))
@@ -195,7 +200,7 @@ class ReName():
         self.multiplier = upperLetter / len(string)
     
     def _preview(self):
-        multiplierList, dstLenList, winWidthDict = [],[],{}
+        multiplierList, newNameLenList, winWidthDict = [],[],{}
         a = 1
         self.generatePreview = 'yes'
         
@@ -205,9 +210,9 @@ class ReName():
         self.previewTextAfter.configure(state='normal')
         self.previewTextAfter.delete('1.0', tk.END)
         self.objsPreview.sort()
-        for f in range(len(self.dstList)):
-            self.previewTextAfter.insert(tk.INSERT, f"{self.dstList[f]}\n") 
-            self.stringLetterLowerUpper(self.dstList[f])
+        for f in range(len(self.newNameList)):
+            self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
+            self.stringLetterLowerUpper(self.newNameList[f])
             startIndex = self.objsPreview[f].find(self.toConvert1.get())
             endIndexBefore = startIndex + len(self.toConvert1.get())
             endIndexAfter = startIndex + len(self.afterConvert1.get())
@@ -218,9 +223,9 @@ class ReName():
                 self.previewTextAfter.tag_configure("after", background="white", foreground="green")
             a += 1
             multiplierList.append(self.multiplier)
-            dstLenList.append(len(self.dstList[f]))
-            winWidthDict[len(self.dstList[f])] = self.multiplier
-        self.previewTextAfter.configure(width=max(dstLenList)+round(max(dstLenList)*(winWidthDict[max(dstLenList)] / 3.2)))
+            newNameLenList.append(len(self.newNameList[f]))
+            winWidthDict[len(self.newNameList[f])] = self.multiplier
+        self.previewTextAfter.configure(width=max(newNameLenList)+round(max(newNameLenList)*(winWidthDict[max(newNameLenList)] / 3.2)))
         self.previewTextAfter.configure(state='disabled')
     
     def _back(self):
