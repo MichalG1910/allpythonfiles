@@ -54,7 +54,7 @@ class ReName():
 
     def start(self, preview = 'no'):
         numeration = ""
-        location = self.location1.get()
+        self.location = self.location1.get()
         try:
             toConvert = self.previewText.selection_get() 
             self.toConvert1.set(toConvert)
@@ -71,7 +71,7 @@ class ReName():
             a = int(numeration)
         self.oldNameLenList, self.newNameList = [],[]
         for oldName in self.objsPreview:
-            full_oldName = os.path.join(location, oldName)
+            full_oldName = os.path.join(self.location, oldName)
             if os.path.isfile(full_oldName):
                 
                 if afterConvert == "" and a != None:
@@ -89,7 +89,7 @@ class ReName():
                     a += 1
 
             if oldName != self.newName:
-                full_newName = os.path.join(location, self.newName)
+                full_newName = os.path.join(self.location, self.newName)
                 if preview == 'no':
                     os.rename(full_oldName, full_newName)
             self.oldNameLenList.append(len(oldName))
@@ -101,6 +101,7 @@ class ReName():
             self.previewTextAfter.configure(state='normal')
             self.previewTextAfter.delete('1.0', tk.END)
             self.previewTextAfter.configure(state='disabled')
+            self.oldNameList = self.objsPreview
             self.beforePreview()
 
             self.backButton.configure(state='normal')
@@ -155,8 +156,9 @@ class ReName():
         exitButton.grid(column= 0, row= 9, sticky="E", padx=10, pady=10)
         
         disabledButton = ttk.Style()
-        disabledButton.configure("DS.TButton", foregroundg='#blue', bg='black')
-        self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton')
+        disabledButton.configure("DS.TButton")
+        self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton', state='disabled')
+        disabledButton.map('DS.TButton', foreground=[('disabled', 'gray'), ('active', 'white')])
         self.backButton.grid(column= 0, row= 10, sticky="W", padx=10, pady=(0,10))
         
         
@@ -229,7 +231,15 @@ class ReName():
         self.previewTextAfter.configure(state='disabled')
     
     def _back(self):
-        pass
+        self.backButton.configure(state='disabled')
+        a = 0
+        for f in self.newNameList:
+            full_newName = os.path.join(self.location, f)
+            full_oldName = os.path.join(self.location, self.oldNameList[a])
+            os.rename(full_newName, full_oldName)
+            a += 1
+        self.beforePreview()
+
     def _clear(self):
         self.previewText.configure(state='normal', width=48)
         self.previewText.delete('1.0', tk.END)
