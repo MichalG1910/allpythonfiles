@@ -55,15 +55,16 @@ class ReName():
     def start(self, preview = 'no'):
         numeration = ""
         self.location = self.location1.get()
+        afterConvert = self.afterConvert1.get()
+        
         try:
             toConvert = self.previewText.selection_get() 
             self.toConvert1.set(toConvert)
         except:    
             toConvert = self.toConvert1.get() 
         
-        afterConvert = self.afterConvert1.get()
         if self.chVarUn.get() == 1:
-            numeration = self.numeration1.get()
+            numeration = self.standardNumeration.get()
         #self.objs = os.listdir(location)
         if numeration == "":
             a = None
@@ -112,8 +113,64 @@ class ReName():
             self.optionalWidget()
         if self.chCall == 0:
             self.num.destroy()
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 8, sticky="WE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 8, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 9, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
+    
+    def optionalWidget(self): 
+        self.standardNumeration = tk.StringVar()
+        self.standardVar = tk.IntVar()
+        self.seriesVar = tk.IntVar()
+        self.trace()
+        
+        def activateStandardEntry():
+            try:
+                self.numLabel.destroy()
+                self.num.destroy()
+                del self.numLabel, self.num 
+                self.numLabel1.destroy()
+                self.num1.destroy()
+                del self.numLabel1, self.num
+            except: pass
+            
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
+            self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.standardNumeration)
+            self.num.grid(column= 0, row= 10, sticky = "W", padx=(100,0))
+        
+        def activateSeriesEntry():
+            try:
+                self.numLabel.destroy()
+                self.num.destroy()
+                del self.numLabel, self.num
+            except: pass
+            
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:    S").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
+            self.num = ttk.Entry(self.mainFrame, width= 2, textvariable=self.standardNumeration)
+            self.num.grid(column= 0, row= 10, sticky = "W", padx=(102,0))
+            self.numLabel1 = ttk.Label(self.mainFrame, text = "E").grid(column = 0, row = 10, sticky="W", padx=(135,0), pady=2)
+            self.num1 = ttk.Entry(self.mainFrame, width= 2, textvariable=self.standardNumeration)
+            self.num1.grid(column= 0, row= 10, sticky = "W", padx=(149,0))
 
+        checkStandard = ttk.Checkbutton(self.mainFrame, text= "zwykła", variable=self.standardVar, command= activateStandardEntry) 
+        checkStandard.grid(column= 0, row= 8, sticky= tk.W, padx=10, pady=2)
+        
+        checkSeries = ttk.Checkbutton(self.mainFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= activateSeriesEntry) 
+        checkSeries.grid(column= 0, row= 9, sticky= tk.W, padx=10, pady=2)
+    
+    def numerationSelection1(self, *ignoredArgs):
+        self.standardVar.set(1) 
+        self.seriesVar.set(0)
+   
+    def numerationSelection2(self, *ignoredArgs):         
+        self.seriesVar.set(1) 
+        self.standardVar.set(0)
+    
+    def trace(self):         
+        self.standardVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection1())
+        self.seriesVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection2())
+    
     def widgets(self):
         self.location1 = tk.StringVar()
         self.toConvert1 = tk.StringVar()
@@ -142,37 +199,29 @@ class ReName():
         aConv = ttk.Entry(self.mainFrame, width= 40, textvariable= self.afterConvert1) 
         aConv.grid(column= 0, row= 6, padx=10, pady=(0,10))
         
-         
-        check = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
-        check.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
+        checkOptionalWidget = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
+        checkOptionalWidget.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
         
         startButton = ttk.Button(self.mainFrame, text= "Start", command= self.start)
-        startButton.grid(column= 0, row= 9, sticky="W", padx=10, pady=10)
+        startButton.grid(column= 0, row= 11, sticky="W", padx=10, pady=10)
         
         previewButton = ttk.Button(self.mainFrame, text= "Podgląd", command= self._preview)
-        previewButton.grid(column= 0, row= 9, sticky="N", padx=10, pady=10)
+        previewButton.grid(column= 0, row= 11, sticky="N", padx=10, pady=10)
         
         exitButton = ttk.Button(self.mainFrame, text= "Zamknij", command= self._quit)
-        exitButton.grid(column= 0, row= 9, sticky="E", padx=10, pady=10)
+        exitButton.grid(column= 0, row= 11, sticky="E", padx=10, pady=10)
         
         disabledButton = ttk.Style()
         disabledButton.configure("DS.TButton")
         self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton', state='disabled')
         disabledButton.map('DS.TButton', foreground=[('disabled', 'gray'), ('active', 'white')])
-        self.backButton.grid(column= 0, row= 10, sticky="W", padx=10, pady=(0,10))
+        self.backButton.grid(column= 0, row= 12, sticky="W", padx=10, pady=(0,10))
         
         
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
-        clearButton.grid(column= 0, row= 10, sticky="N", padx=10, pady=(0,10))
+        clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
         
-        self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 8, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
-
-    def optionalWidget(self): 
-        self.numeration1 = tk.StringVar()
-
-        self.numLabel = ttk.Label(self.mainFrame, text = "Format numeracji:").grid(column = 0, row = 8, sticky="W", padx=10, pady=10)
-        self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.numeration1)
-        self.num.grid(column= 0, row= 8)
+        self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 10, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
 
     def previewWidgets(self):
         def multiple_yview(*args):
@@ -253,11 +302,10 @@ class ReName():
         self.toConvert1.set('')
         self.afterConvert1.set('')
         try: 
-            self.numeration1.set('')
+            self.standardNumeration.set('')
             self.chVarUn.set(0)
             self.activateOptionalWidget()
         except: pass
-        
-        
+            
 reOop = ReName()
 reOop.win.mainloop()
