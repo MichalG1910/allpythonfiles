@@ -179,7 +179,7 @@ class ReName():
             self.previewText.yview(*args)
             self.previewTextAfter.yview(*args)
         def on_textscroll(*args):
-            vsb.set(*args)
+            scrollbar.set(*args)
             multiple_yview('moveto', args[0])
         
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
@@ -189,12 +189,12 @@ class ReName():
         self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black',)
         self.previewTextAfter.grid(column= 2, row= 0, rowspan=8, sticky="NSEW", padx=(0,10), pady=(10,10))
 
-        vsb = ttk.Scrollbar(self.previewFrame, command=multiple_yview, orient="vertical")
+        scrollbar = ttk.Scrollbar(self.previewFrame, command=multiple_yview, orient="vertical")
         #hsb = ttk.Scrollbar(self.previewFrame, command=(self.previewText.xview==self.previewTextAfter.xview), orient="horizontal",)
         self.previewText.configure(yscrollcommand=on_textscroll)
         self.previewTextAfter.configure(yscrollcommand=on_textscroll)
-        #self.previewTextAfter.configure(yscrollcommand=vsb.set)
-        vsb.grid(column=3, row=0, rowspan=8, sticky="ns", padx=2)
+        #self.previewTextAfter.configure(yscrollcommand=scrollbar.set)
+        scrollbar.grid(column=3, row=0, rowspan=8, sticky="ns", padx=2)
         #hsb.grid(column=1, row=9, sticky="ew", padx=2)
     
     def stringLetterLowerUpper(self, string):
@@ -252,9 +252,12 @@ class ReName():
         self.location1.set('')
         self.toConvert1.set('')
         self.afterConvert1.set('')
-        self.numeration1.set('')
-        self.chVarUn.set(0)
-        self.activateOptionalWidget()
+        try: 
+            self.numeration1.set('')
+            self.chVarUn.set(0)
+            self.activateOptionalWidget()
+        except: pass
+        
         
 reOop = ReName()
 reOop.win.mainloop()
