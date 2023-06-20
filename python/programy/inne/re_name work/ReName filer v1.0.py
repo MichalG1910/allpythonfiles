@@ -61,33 +61,55 @@ class ReName():
             toConvert = self.previewText.selection_get() 
             self.toConvert1.set(toConvert)
         except:    
-            toConvert = self.toConvert1.get() 
-        
-        if self.chVarUn.get() == 1:
-            numeration = self.standardNumeration.get()
+            toConvert = self.toConvert1.get()
+
+        print(f'chvarun: {self.chVarUn.get()}')
+        print(f'stndard: {self.standardVar.get()}   series: {self.seriesVar.get()}')
+        if self.chVarUn.get() == 1 and self.standardVar.get() == 1:
+            numeration = int(self.standardNumeration.get())
+        elif self.chVarUn.get() == 1 and self.seriesVar.get() == 1:
+            numeration = int(self.seriesNumeration1.get())
+            numeration2 = int(self.seriesNumeration2.get())
+        else: numeration = None
         #self.objs = os.listdir(location)
+        '''
         if numeration == "":
             a = None
         else:
             a = int(numeration)
+             
+            b = int(numeration2)
+        '''
+        
         self.oldNameLenList, self.newNameList = [],[]
         for oldName in self.objsPreview:
             full_oldName = os.path.join(self.location, oldName)
             if os.path.isfile(full_oldName):
                 
-                if afterConvert == "" and a != None:
-                    afterCon = "0" + str(a) + ". " if a < 10 else str(a) + ". "
-                    self.newName = oldName.replace(toConvert, afterCon, 1)
-                    a += 1
-                elif afterConvert == "" and a == None:
-                    self.newName = oldName.replace(toConvert, afterConvert, 1)
-                elif a == None:
+                if afterConvert == "" and numeration != None:                               # samo dodanie numeracji
+                    if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             #zwykła
+                        afterCon = "0" + str(numeration) + ". " if numeration < 10 else str(numeration) + ". "
+                        self.newName = oldName.replace(toConvert, afterCon, 1)
+                        numeration += 1
+                    else:                                                                   # serialowa
+                        afterCon = "S0" + str(numeration) + "E0" + str(numeration2) if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2)
+                        self.newName = oldName.replace(toConvert, afterCon, 1)
+                        numeration2 += 1
+
+                #elif afterConvert == "" and a == None:                              
+                    #self.newName = oldName.replace(toConvert, afterConvert, 1)
+                elif numeration == None:                                                    # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                     self.newName = oldName.replace(toConvert, afterConvert, 1)    
-                else:
+                else:                                                                       # zamiana + dodanie numeracji
                     # newName = oldName.replace(toConvert, ( str(a)+ ". " + afterConvert))
-                    afterCon = "0" + str(a) + ". " + afterConvert if a < 10 else str(a) + ". " + afterConvert
-                    self.newName = oldName.replace(toConvert, afterCon, 1)
-                    a += 1
+                    if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
+                        afterCon = "0" + str(numeration) + ". " + afterConvert if numeration < 10 else str(numeration) + ". " + afterConvert
+                        self.newName = oldName.replace(toConvert, afterCon, 1)
+                        numeration += 1
+                    else:
+                        afterCon = "S0" + str(numeration) + "E0" + str(numeration2) + afterConvert if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2) + afterConvert
+                        self.newName = oldName.replace(toConvert, afterCon, 1)
+                        numeration2 += 1
 
             if oldName != self.newName:
                 full_newName = os.path.join(self.location, self.newName)
@@ -119,6 +141,8 @@ class ReName():
     
     def optionalWidget(self): 
         self.standardNumeration = tk.StringVar()
+        self.seriesNumeration1 = tk.StringVar()
+        self.seriesNumeration2 = tk.StringVar()
         self.standardVar = tk.IntVar()
         self.seriesVar = tk.IntVar()
         self.trace()
@@ -147,10 +171,10 @@ class ReName():
             
             self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
             self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:    S").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
-            self.num = ttk.Entry(self.mainFrame, width= 2, textvariable=self.standardNumeration)
+            self.num = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration1)
             self.num.grid(column= 0, row= 10, sticky = "W", padx=(102,0))
             self.numLabel1 = ttk.Label(self.mainFrame, text = "E").grid(column = 0, row = 10, sticky="W", padx=(135,0), pady=2)
-            self.num1 = ttk.Entry(self.mainFrame, width= 2, textvariable=self.standardNumeration)
+            self.num1 = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration2)
             self.num1.grid(column= 0, row= 10, sticky = "W", padx=(149,0))
 
         checkStandard = ttk.Checkbutton(self.mainFrame, text= "zwykła", variable=self.standardVar, command= activateStandardEntry) 
@@ -160,13 +184,18 @@ class ReName():
         checkSeries.grid(column= 0, row= 9, sticky= tk.W, padx=10, pady=2)
     
     def numerationSelection1(self, *ignoredArgs):
-        self.standardVar.set(1) 
-        self.seriesVar.set(0)
-   
-    def numerationSelection2(self, *ignoredArgs):         
-        self.seriesVar.set(1) 
-        self.standardVar.set(0)
-    
+        if self.standardVar.get() == 0:
+            self.seriesVar.set(1)
+        elif self.standardVar.get() == 1:         
+            self.seriesVar.set(0)
+         
+        
+    def numerationSelection2(self, *ignoredArgs):
+        if self.seriesVar.get() == 0:
+            self.standardVar.set(1)
+        elif self.seriesVar.get() == 1:         
+            self.standardVar.set(0) 
+        
     def trace(self):         
         self.standardVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection1())
         self.seriesVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection2())
@@ -216,7 +245,6 @@ class ReName():
         self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton', state='disabled')
         disabledButton.map('DS.TButton', foreground=[('disabled', 'gray'), ('active', 'white')])
         self.backButton.grid(column= 0, row= 12, sticky="W", padx=10, pady=(0,10))
-        
         
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
