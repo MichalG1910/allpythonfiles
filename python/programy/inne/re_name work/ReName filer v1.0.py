@@ -56,6 +56,7 @@ class ReName():
         numeration = ""
         self.location = self.location1.get()
         afterConvert = self.afterConvert1.get()
+        self.oldNameLenList, self.newNameList = [],[]
         
         try:
             toConvert = self.previewText.selection_get() 
@@ -64,7 +65,7 @@ class ReName():
             toConvert = self.toConvert1.get()
 
         print(f'chvarun: {self.chVarUn.get()}')
-        print(f'stndard: {self.standardVar.get()}   series: {self.seriesVar.get()}')
+        print(f'standard: {self.standardVar.get()}   series: {self.seriesVar.get()}')
         if self.chVarUn.get() == 1 and self.standardVar.get() == 1:
             numeration = int(self.standardNumeration.get())
         elif self.chVarUn.get() == 1 and self.seriesVar.get() == 1:
@@ -81,7 +82,6 @@ class ReName():
             b = int(numeration2)
         '''
         
-        self.oldNameLenList, self.newNameList = [],[]
         for oldName in self.objsPreview:
             full_oldName = os.path.join(self.location, oldName)
             if os.path.isfile(full_oldName):
@@ -96,19 +96,17 @@ class ReName():
                         self.newName = oldName.replace(toConvert, afterCon, 1)
                         numeration2 += 1
 
-                #elif afterConvert == "" and a == None:                              
-                    #self.newName = oldName.replace(toConvert, afterConvert, 1)
                 elif numeration == None:                                                    # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                     self.newName = oldName.replace(toConvert, afterConvert, 1)    
                 else:                                                                       # zamiana + dodanie numeracji
                     # newName = oldName.replace(toConvert, ( str(a)+ ". " + afterConvert))
                     if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
-                        afterCon = "0" + str(numeration) + ". " + afterConvert if numeration < 10 else str(numeration) + ". " + afterConvert
-                        self.newName = oldName.replace(toConvert, afterCon, 1)
+                        addNum = "0" + str(numeration) + ". "  if numeration < 10 else str(numeration) + ". " 
+                        self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                         numeration += 1
                     else:
-                        afterCon = "S0" + str(numeration) + "E0" + str(numeration2) + afterConvert if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2) + afterConvert
-                        self.newName = oldName.replace(toConvert, afterCon, 1)
+                        addNum = "S0" + str(numeration) + "E0" + str(numeration2) if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2)
+                        self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                         numeration2 += 1
 
             if oldName != self.newName:
