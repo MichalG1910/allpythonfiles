@@ -86,20 +86,7 @@ class ReName():
             full_oldName = os.path.join(self.location, oldName)
             if os.path.isfile(full_oldName):
                 
-                if afterConvert == "" and numeration != None:                               # samo dodanie numeracji
-                    if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             #zwykła
-                        afterCon = "0" + str(numeration) + ". " if numeration < 10 else str(numeration) + ". "
-                        self.newName = oldName.replace(toConvert, afterCon, 1)
-                        numeration += 1
-                    else:                                                                   # serialowa
-                        afterCon = "S0" + str(numeration) + "E0" + str(numeration2) if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2)
-                        self.newName = oldName.replace(toConvert, afterCon, 1)
-                        numeration2 += 1
-
-                elif numeration == None:                                                    # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
-                    self.newName = oldName.replace(toConvert, afterConvert, 1)    
-                else:                                                                       # zamiana + dodanie numeracji
-                    # newName = oldName.replace(toConvert, ( str(a)+ ". " + afterConvert))
+                if numeration != None:                               # samo dodanie numeracji
                     if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
                         addNum = "0" + str(numeration) + ". "  if numeration < 10 else str(numeration) + ". " 
                         self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
@@ -109,6 +96,9 @@ class ReName():
                         self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                         numeration2 += 1
 
+                else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
+                    self.newName = oldName.replace(toConvert, afterConvert, 1)    
+                    
             if oldName != self.newName:
                 full_newName = os.path.join(self.location, self.newName)
                 if preview == 'no':
