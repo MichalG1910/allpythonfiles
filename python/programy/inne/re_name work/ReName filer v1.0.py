@@ -54,9 +54,10 @@ class ReName():
 
     def start(self, preview = 'no'):
         numeration = ""
+        separator = ""
         self.location = self.location1.get()
         afterConvert = self.afterConvert1.get()
-        self.oldNameLenList, self.newNameList = [],[]
+        self.oldNameLenList, self.newNameList, self.addNumList = [],[],[]
         
         try:
             toConvert = self.previewText.selection_get() 
@@ -64,13 +65,15 @@ class ReName():
         except:    
             toConvert = self.toConvert1.get()
 
-        print(f'chvarun: {self.chVarUn.get()}')
-        print(f'standard: {self.standardVar.get()}   series: {self.seriesVar.get()}')
+        #print(f'chvarun: {self.chVarUn.get()}')
+        #print(f'standard: {self.standardVar.get()}   series: {self.seriesVar.get()}')
         if self.chVarUn.get() == 1 and self.standardVar.get() == 1:
             numeration = int(self.standardNumeration.get())
+            separator = self.sepVar.get()
         elif self.chVarUn.get() == 1 and self.seriesVar.get() == 1:
             numeration = int(self.seriesNumeration1.get())
             numeration2 = int(self.seriesNumeration2.get())
+            separator = self.sepVar.get()
         else: numeration = None
         #self.objs = os.listdir(location)
         '''
@@ -88,13 +91,14 @@ class ReName():
                 
                 if numeration != None:                               # samo dodanie numeracji
                     if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
-                        addNum = "0" + str(numeration) + ". "  if numeration < 10 else str(numeration) + ". " 
+                        addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
                         self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                         numeration += 1
                     else:
-                        addNum = "S0" + str(numeration) + "E0" + str(numeration2) if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2)
+                        addNum = "S0" + str(numeration) + "E0" + str(numeration2) + separator if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2) + separator
                         self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                         numeration2 += 1
+                    self.addNumList.append(addNum)
 
                 else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                     self.newName = oldName.replace(toConvert, afterConvert, 1)    
@@ -133,6 +137,7 @@ class ReName():
         self.seriesNumeration2 = tk.StringVar()
         self.standardVar = tk.IntVar()
         self.seriesVar = tk.IntVar()
+        self.sepVar = tk.StringVar()
         self.trace()
         
         def activateStandardEntry():
@@ -148,7 +153,10 @@ class ReName():
             self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
             self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
             self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.standardNumeration)
-            self.num.grid(column= 0, row= 10, sticky = "W", padx=(100,0))
+            self.num.grid(column= 0, row= 10, sticky = "W", padx=(80,0))
+            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 10, sticky="W", padx=(180,0), pady=2)
+            self.sepEntry = ttk.Entry(self.mainFrame, width= 4, textvariable=self.sepVar)
+            self.sepEntry.grid(column= 0, row= 10, sticky = "W", padx=(245,0))
         
         def activateSeriesEntry():
             try:
@@ -158,12 +166,15 @@ class ReName():
             except: pass
             
             self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:    S").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
+            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od: S").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
             self.num = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration1)
-            self.num.grid(column= 0, row= 10, sticky = "W", padx=(102,0))
-            self.numLabel1 = ttk.Label(self.mainFrame, text = "E").grid(column = 0, row = 10, sticky="W", padx=(135,0), pady=2)
+            self.num.grid(column= 0, row= 10, sticky = "W", padx=(89,0))
+            self.numLabel1 = ttk.Label(self.mainFrame, text = "E").grid(column = 0, row = 10, sticky="W", padx=(122,0), pady=2)
             self.num1 = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration2)
-            self.num1.grid(column= 0, row= 10, sticky = "W", padx=(149,0))
+            self.num1.grid(column= 0, row= 10, sticky = "W", padx=(136,0))
+            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 10, sticky="W", padx=(180,0), pady=2)
+            self.sepEntry = ttk.Entry(self.mainFrame, width= 4, textvariable=self.sepVar)
+            self.sepEntry.grid(column= 0, row= 10, sticky = "W", padx=(245,0))
 
         checkStandard = ttk.Checkbutton(self.mainFrame, text= "zwykła", variable=self.standardVar, command= activateStandardEntry) 
         checkStandard.grid(column= 0, row= 8, sticky= tk.W, padx=10, pady=2)
@@ -280,14 +291,19 @@ class ReName():
         for f in range(len(self.newNameList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
             self.stringLetterLowerUpper(self.newNameList[f])
-            startIndex = self.objsPreview[f].find(self.toConvert1.get())
-            endIndexBefore = startIndex + len(self.toConvert1.get())
-            endIndexAfter = startIndex + len(self.afterConvert1.get())
-            if startIndex != -1:
-                self.previewText.tag_add("before", f"{a}.{startIndex}", f"{a}.{endIndexBefore}")
+            startIndexBefore = self.objsPreview[f].find(self.toConvert1.get())
+            startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
+            endIndexBefore = startIndexBefore + len(self.toConvert1.get())
+            endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
+            if startIndexBefore != -1:
+                self.previewText.tag_add("before", f"{a}.{startIndexBefore}", f"{a}.{endIndexBefore}")
                 self.previewText.tag_configure("before", background="white", foreground="red") 
-                self.previewTextAfter.tag_add("after", f"{a}.{startIndex}", f"{a}.{endIndexAfter}")
+                self.previewTextAfter.tag_add("after", f"{a}.{startIndexAfter}", f"{a}.{endIndexAfter}")
                 self.previewTextAfter.tag_configure("after", background="white", foreground="green")
+                if self.chVarUn.get() == 1:
+                    self.previewTextAfter.tag_add("after", f"{a}.{0}", f"{a}.{len(self.addNumList[f])}")
+                    self.previewTextAfter.tag_configure("after", background="white", foreground="green")
+
             a += 1
             multiplierList.append(self.multiplier)
             newNameLenList.append(len(self.newNameList[f]))
