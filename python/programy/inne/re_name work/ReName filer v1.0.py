@@ -3,6 +3,7 @@ from tkinter import ttk
 import os, sys
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
+from os import listdir
 
 class ReName():
     def __init__(self):
@@ -16,8 +17,9 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
+        self._tree(self.win, path='\\')
         # self.win.iconbitmap('./ikona2.ico')
-    
+        print(listdir('/'))
     def _quit(self):
         self.win.quit()
         self.win.destroy()
@@ -259,7 +261,7 @@ class ReName():
             multiple_yview('moveto', args[0])
         
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
-        self.previewFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
+        self.previewFrame.grid(column=2, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.previewText = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black')
         self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,0), pady=(10,10))
         self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black',)
@@ -338,6 +340,48 @@ class ReName():
             self.chVarUn.set(0)
             self.activateOptionalWidget()
         except: pass
-            
+
+
+    def _tree(self, master, path):
+        self.nodes = dict()
+        #self.treeFrame = ttk.LabelFrame(self.win, text='TREE',labelanchor='n')
+        #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
+        self.treeFrame = ttk.Frame(master, width=80, height=80)
+        self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=20,)
+        self.tree = ttk.Treeview(self.treeFrame, height=16,)
+        ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
+        xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
+        self.tree.configure(yscroll=ysb.set, xscroll=xsb.set)
+        self.tree.heading('#0', text='Project tree', anchor='w')
+
+        self.tree.grid()
+        ysb.grid(row=0, column=1, sticky='ns')
+        xsb.grid(row=1, column=0, sticky='ew')
+        
+
+        abspath = os.path.abspath(path)
+        self.insert_node('', abspath, abspath)
+        self.tree.bind('<<TreeviewOpen>>', self.open_node)
+
+    def insert_node(self, parent, text, abspath):
+       # node = self.tree.insert(parent, 'end', text=text, open=False)
+        if os.path.isdir(abspath):
+            node = self.tree.insert(parent, 'end', text=text, image=self.icon, open=False)
+            self.nodes[node] = abspath
+            self.tree.insert(node, 'end')
+        else:
+            node = self.tree.insert(parent, 'end', text=text, open=False)
+
+
+    def open_node(self, event):
+        node = self.tree.focus()
+        abspath = self.nodes.pop(node, None)
+        if abspath:
+            self.tree.delete(self.tree.get_children(node))
+            for p in os.listdir(abspath):
+                self.insert_node(node, p, os.path.join(abspath, p))
+
+         
 reOop = ReName()
 reOop.win.mainloop()
+

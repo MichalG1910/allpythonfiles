@@ -29,7 +29,7 @@ class App(tk.Frame):
                 self.process_directory(oid, abspath)
 
 root = tk.Tk()
-path_to_my_project = "c:\\grabarz"
+path_to_my_project = "C:\\Users\mgrabarz3\Desktop\zmiana"
 app = App(root, path=path_to_my_project)
 app.mainloop()
 
