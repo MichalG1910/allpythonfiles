@@ -17,7 +17,7 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
-        self._tree(self.win, path='\\')
+        self._tree(self.win, path='./')
         # self.win.iconbitmap('./ikona2.ico')
         print(listdir('/'))
     def _quit(self):
@@ -364,13 +364,15 @@ class ReName():
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
 
     def insert_node(self, parent, text, abspath):
+        fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
+        folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
        # node = self.tree.insert(parent, 'end', text=text, open=False)
         if os.path.isdir(abspath):
-            node = self.tree.insert(parent, 'end', text=text, image=self.icon, open=False)
+            node = self.tree.insert(parent, 'end', text=text, image=folderIcon, open=False)
             self.nodes[node] = abspath
             self.tree.insert(node, 'end')
         else:
-            node = self.tree.insert(parent, 'end', text=text, open=False)
+            node = self.tree.insert(parent, 'end', text=text, image=fileIcon, open=False)
 
 
     def open_node(self, event):
