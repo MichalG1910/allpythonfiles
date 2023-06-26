@@ -17,9 +17,50 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
-        self._tree(self.win, path='./')
+        self._tree(self.win, path='\\')
+        #self.tree.bind('<Double-Button-1>', self.selectItem)
+        self.tree.bind("<Double-1>", self.OnDoubleClick)
+        self.treeLoc = ''
+        #self.traceFolder()
         # self.win.iconbitmap('./ikona2.ico')
-        print(listdir('/'))
+       
+    def OnDoubleClick(self, event):
+        item = self.tree.selection()[0]
+        parent_iid = self.tree.parent(item)
+        node = []
+        # go backward until reaching root
+        while parent_iid != '':
+            node.insert(0, self.tree.item(parent_iid)['text'])
+            parent_iid = self.tree.parent(parent_iid)
+        i = self.tree.item(item, "text")
+        path = os.path.join(*node, i)
+        print(path) # zamien \ na /
+        self.location1.set(path)
+        self.beforePreview()
+    '''
+    def selectItem(self, event):
+        curItem = self.tree.focus()
+        self.treeLoc = self.treeLoc + self.tree.item(curItem)['text']
+        self.location1.set(self.treeLoc)
+        print (self.tree.item(curItem))
+    '''
+    '''
+    def selectItem(self, event):
+        curItem = self.tree.item(self.tree.focus())
+        col = self.tree.identify_column(event.x)
+        print ('curItem = ', curItem)
+        print ('col = ', col)
+
+        if col == '#0':
+            cell_value = curItem['text']
+        elif col == '#1':
+            cell_value = curItem['values'][0]
+        elif col == '#2':
+            cell_value = curItem['values'][1]
+        elif col == '#3':
+            cell_value = curItem['values'][2]
+        print ('cell_value = ', cell_value)
+'''
     def _quit(self):
         self.win.quit()
         self.win.destroy()
@@ -32,6 +73,18 @@ class ReName():
     def ask_dir(self, event):
         self.directory = fd.askdirectory()
         self.beforePreview()
+    
+    
+    '''
+    def folderSelection1(self, *ignoredArgs):
+        print('aaa')
+        self.location = self.tree.selection_get()
+        print(self.location)
+        self.location1.set(self.location)
+        
+    def traceFolder(self):         
+        self.location1.trace('w', lambda unused0, unused1, unused2 : self.folderSelection1())
+     '''   
     
     def beforePreview(self):
         objsPreviewLenList, multiplierList, winWidthDict = [],[],{}
@@ -343,6 +396,9 @@ class ReName():
 
 
     def _tree(self, master, path):
+        self.fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
+        self.folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
+        self.openfolderIcon = PhotoImage(file=f'{self.filePath}/openfolder18t.png')
         self.nodes = dict()
         #self.treeFrame = ttk.LabelFrame(self.win, text='TREE',labelanchor='n')
         #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
@@ -364,15 +420,15 @@ class ReName():
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
 
     def insert_node(self, parent, text, abspath):
-        fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
-        folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
+        self.parent = parent
+        self.text = text
        # node = self.tree.insert(parent, 'end', text=text, open=False)
         if os.path.isdir(abspath):
-            node = self.tree.insert(parent, 'end', text=text, image=folderIcon, open=False)
+            node = self.tree.insert(parent, 'end', text=text, image=self.folderIcon, open=False)
             self.nodes[node] = abspath
             self.tree.insert(node, 'end')
         else:
-            node = self.tree.insert(parent, 'end', text=text, image=fileIcon, open=False)
+            node = self.tree.insert(parent, 'end', text=text, image=self.fileIcon, open=False)
 
 
     def open_node(self, event):
