@@ -17,14 +17,15 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
-        self._tree(self.win, path='\\')
+        self._tree(self.win, path='/home')
         #self.tree.bind('<Double-Button-1>', self.selectItem)
         self.tree.bind("<Double-1>", self.OnDoubleClick)
-        self.treeLoc = ''
         #self.traceFolder()
         # self.win.iconbitmap('./ikona2.ico')
        
     def OnDoubleClick(self, event):
+        self._clear()
+        self.directory = False
         item = self.tree.selection()[0]
         parent_iid = self.tree.parent(item)
         node = []
@@ -35,6 +36,7 @@ class ReName():
         i = self.tree.item(item, "text")
         path = os.path.join(*node, i)
         print(path) # zamien \ na /
+         
         self.location1.set(path)
         self.beforePreview()
     '''
@@ -71,6 +73,7 @@ class ReName():
         ttk.Style().theme_use('forest-dark')
     
     def ask_dir(self, event):
+        self._clear()
         self.directory = fd.askdirectory()
         self.beforePreview()
     
@@ -92,20 +95,21 @@ class ReName():
             self.lok.delete(first=0, last=self.strLen)
             self.lok.insert(0, self.directory)
             self.strLen = len(self.directory)
-            self.objsPreview = os.listdir(self.location1.get())
-            self.objsPreview.sort()
-            self.previewText.configure(state="normal")
-            self.previewText.delete('1.0', tk.END)
-            a = 0
-            for f in self.objsPreview:
+        self.objsPreview = os.listdir(self.location1.get())
+        self.objsPreview.sort()
+        self.previewText.configure(state="normal")
+        self.previewText.delete('1.0', tk.END)
+        a = 0
+        for f in self.objsPreview:
+            if os.path.isfile(os.path.join(self.location1.get(), f)):
                 self.previewText.insert(tk.INSERT, f"{f}\n")
                 self.stringLetterLowerUpper(f)
                 objsPreviewLenList.append(len(self.objsPreview[a]))
                 multiplierList.append(self.multiplier)
                 winWidthDict[len(self.objsPreview[a])] = self.multiplier
                 a += 1
-            self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*(winWidthDict[max(objsPreviewLenList)] / 3.2)))
-            self.previewText.configure(state="disabled")
+        self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*(winWidthDict[max(objsPreviewLenList)] / 3.2)))
+        self.previewText.configure(state="disabled")
 
     def start(self, preview = 'no'):
         numeration = ""
@@ -158,12 +162,12 @@ class ReName():
                 else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                     self.newName = oldName.replace(toConvert, afterConvert, 1)    
                     
-            if oldName != self.newName:
-                full_newName = os.path.join(self.location, self.newName)
-                if preview == 'no':
-                    os.rename(full_oldName, full_newName)
-            self.oldNameLenList.append(len(oldName))
-            self.newNameList.append(self.newName)
+                if oldName != self.newName:
+                    full_newName = os.path.join(self.location, self.newName)
+                    if preview == 'no':
+                        os.rename(full_oldName, full_newName)
+                self.oldNameLenList.append(len(oldName))
+                self.newNameList.append(self.newName)
                 
         if preview == 'no':
             self.toConvert1.set('')
