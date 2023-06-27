@@ -17,7 +17,7 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
-        self._tree(self.win, path='/home')
+        self._tree(self.win, path='\\')
         #self.tree.bind('<Double-Button-1>', self.selectItem)
         self.tree.bind("<Double-1>", self.OnDoubleClick)
         #self.traceFolder()
@@ -116,7 +116,7 @@ class ReName():
         separator = ""
         self.location = self.location1.get()
         afterConvert = self.afterConvert1.get()
-        self.oldNameLenList, self.newNameList, self.addNumList = [],[],[]
+        self.oldNameList, self.oldNameLenList, self.newNameList, self.addNumList = [],[],[],[]
         
         try:
             toConvert = self.previewText.selection_get() 
@@ -168,14 +168,15 @@ class ReName():
                         os.rename(full_oldName, full_newName)
                 self.oldNameLenList.append(len(oldName))
                 self.newNameList.append(self.newName)
-                
+                self.oldNameList.append(oldName)
+        
         if preview == 'no':
             self.toConvert1.set('')
             self.afterConvert1.set('')
             self.previewTextAfter.configure(state='normal')
             self.previewTextAfter.delete('1.0', tk.END)
             self.previewTextAfter.configure(state='disabled')
-            self.oldNameList = self.objsPreview
+            #self.oldNameList = self.objsPreview
             self.beforePreview()
 
             self.backButton.configure(state='normal')
@@ -350,7 +351,7 @@ class ReName():
         for f in range(len(self.newNameList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
             self.stringLetterLowerUpper(self.newNameList[f])
-            startIndexBefore = self.objsPreview[f].find(self.toConvert1.get())
+            startIndexBefore = self.oldNameList[f].find(self.toConvert1.get())
             startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
             endIndexBefore = startIndexBefore + len(self.toConvert1.get())
             endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
@@ -376,7 +377,8 @@ class ReName():
         for f in self.newNameList:
             full_newName = os.path.join(self.location, f)
             full_oldName = os.path.join(self.location, self.oldNameList[a])
-            os.rename(full_newName, full_oldName)
+            if full_newName != full_oldName:
+                os.rename(full_newName, full_oldName)
             a += 1
         self.beforePreview()
 
