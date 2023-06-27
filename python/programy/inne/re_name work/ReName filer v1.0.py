@@ -18,9 +18,7 @@ class ReName():
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self._tree(self.win, path='\\')
-        #self.tree.bind('<Double-Button-1>', self.selectItem)
         self.tree.bind("<Double-1>", self.OnDoubleClick)
-        #self.traceFolder()
         # self.win.iconbitmap('./ikona2.ico')
        
     def OnDoubleClick(self, event):
@@ -35,34 +33,9 @@ class ReName():
             parent_iid = self.tree.parent(parent_iid)
         i = self.tree.item(item, "text")
         path = os.path.join(*node, i)
-        print(path) # zamien \ na /
-         
         self.location1.set(path)
         self.beforePreview()
-    '''
-    def selectItem(self, event):
-        curItem = self.tree.focus()
-        self.treeLoc = self.treeLoc + self.tree.item(curItem)['text']
-        self.location1.set(self.treeLoc)
-        print (self.tree.item(curItem))
-    '''
-    '''
-    def selectItem(self, event):
-        curItem = self.tree.item(self.tree.focus())
-        col = self.tree.identify_column(event.x)
-        print ('curItem = ', curItem)
-        print ('col = ', col)
-
-        if col == '#0':
-            cell_value = curItem['text']
-        elif col == '#1':
-            cell_value = curItem['values'][0]
-        elif col == '#2':
-            cell_value = curItem['values'][1]
-        elif col == '#3':
-            cell_value = curItem['values'][2]
-        print ('cell_value = ', cell_value)
-'''
+    
     def _quit(self):
         self.win.quit()
         self.win.destroy()
@@ -76,18 +49,6 @@ class ReName():
         self._clear()
         self.directory = fd.askdirectory()
         self.beforePreview()
-    
-    
-    '''
-    def folderSelection1(self, *ignoredArgs):
-        print('aaa')
-        self.location = self.tree.selection_get()
-        print(self.location)
-        self.location1.set(self.location)
-        
-    def traceFolder(self):         
-        self.location1.trace('w', lambda unused0, unused1, unused2 : self.folderSelection1())
-     '''   
     
     def beforePreview(self):
         objsPreviewLenList, multiplierList, winWidthDict = [],[],{}
@@ -124,8 +85,6 @@ class ReName():
         except:    
             toConvert = self.toConvert1.get()
 
-        #print(f'chvarun: {self.chVarUn.get()}')
-        #print(f'standard: {self.standardVar.get()}   series: {self.seriesVar.get()}')
         if self.chVarUn.get() == 1 and self.standardVar.get() == 1:
             numeration = int(self.standardNumeration.get())
             separator = self.sepVar.get()
@@ -134,15 +93,6 @@ class ReName():
             numeration2 = int(self.seriesNumeration2.get())
             separator = self.sepVar.get()
         else: numeration = None
-        #self.objs = os.listdir(location)
-        '''
-        if numeration == "":
-            a = None
-        else:
-            a = int(numeration)
-             
-            b = int(numeration2)
-        '''
         
         for oldName in self.objsPreview:
             full_oldName = os.path.join(self.location, oldName)
@@ -154,13 +104,13 @@ class ReName():
                             addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
                             self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                             numeration += 1
-                        else:
+                        else:                                                                   # serialowa
                             addNum = "S0" + str(numeration) + "E0" + str(numeration2) + separator if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2) + separator
                             self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                             numeration2 += 1
                         self.addNumList.append(addNum)
                     
-                    elif oldName.find(toConvert) != -1:
+                    elif oldName.find(toConvert) != -1:             # dodanie numeracji i zmiana cześci nazwy
                         print(oldName.find(toConvert), '    ', toConvert,' ', oldName)
                         if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
                             addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
@@ -263,7 +213,6 @@ class ReName():
         elif self.standardVar.get() == 1:         
             self.seriesVar.set(0)
          
-        
     def numerationSelection2(self, *ignoredArgs):
         if self.seriesVar.get() == 0:
             self.standardVar.set(1)
