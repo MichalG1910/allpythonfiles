@@ -149,16 +149,31 @@ class ReName():
             if os.path.isfile(full_oldName):
                 
                 if numeration != None:                               # samo dodanie numeracji
-                    if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
-                        addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
-                        self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
-                        numeration += 1
+                    if self.toConvert1.get() == '' and self.afterConvert1.get() == '':
+                        if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
+                            addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
+                            self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
+                            numeration += 1
+                        else:
+                            addNum = "S0" + str(numeration) + "E0" + str(numeration2) + separator if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2) + separator
+                            self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
+                            numeration2 += 1
+                        self.addNumList.append(addNum)
+                    
+                    elif oldName.find(toConvert) != -1:
+                        print(oldName.find(toConvert), '    ', toConvert,' ', oldName)
+                        if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
+                            addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
+                            self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
+                            numeration += 1
+                        else:
+                            addNum = "S0" + str(numeration) + "E0" + str(numeration2) + separator if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2) + separator
+                            self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
+                            numeration2 += 1
+                        self.addNumList.append(addNum)
                     else:
-                        addNum = "S0" + str(numeration) + "E0" + str(numeration2) + separator if numeration2 < 10 else "S0" + str(numeration) + "E" + str(numeration2) + separator
-                        self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
-                        numeration2 += 1
-                    self.addNumList.append(addNum)
-
+                        self.newName = oldName.replace(toConvert, afterConvert, 1) 
+                        self.addNumList.append(0)
                 else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                     self.newName = oldName.replace(toConvert, afterConvert, 1)    
                     
@@ -347,7 +362,9 @@ class ReName():
         
         self.previewTextAfter.configure(state='normal')
         self.previewTextAfter.delete('1.0', tk.END)
-        self.objsPreview.sort()
+        print(self.oldNameList)
+        print()
+        print(self.newNameList)
         for f in range(len(self.newNameList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
             self.stringLetterLowerUpper(self.newNameList[f])
