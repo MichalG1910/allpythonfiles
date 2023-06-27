@@ -17,7 +17,7 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
-        self._tree(self.win, path='\\')
+        self._tree(self.win, path='/home')
         self.tree.bind("<Double-1>", self.OnDoubleClick)
         # self.win.iconbitmap('./ikona2.ico')
        
