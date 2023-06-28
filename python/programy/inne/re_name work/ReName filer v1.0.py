@@ -17,7 +17,7 @@ class ReName():
         self.previewWidgets()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
-        self._tree(self.win, path='/home')
+        self._tree(self.win, path='\\')
         self.tree.bind("<Double-1>", self.OnDoubleClick)
         # self.win.iconbitmap('./ikona2.ico')
        
@@ -111,7 +111,6 @@ class ReName():
                         self.addNumList.append(addNum)
                     
                     elif oldName.find(toConvert) != -1:             # dodanie numeracji i zmiana cześci nazwy
-                        print(oldName.find(toConvert), '    ', toConvert,' ', oldName)
                         if self.chVarUn.get() == 1 and self.standardVar.get() == 1:             # zwykła
                             addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
                             self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
@@ -303,7 +302,6 @@ class ReName():
     
     def _preview(self):
         multiplierList, newNameLenList, winWidthDict = [],[],{}
-        a = 1
         self.generatePreview = 'yes'
         
         self.start(self.generatePreview)
@@ -311,9 +309,7 @@ class ReName():
         
         self.previewTextAfter.configure(state='normal')
         self.previewTextAfter.delete('1.0', tk.END)
-        print(self.oldNameList)
-        print()
-        print(self.newNameList)
+        
         for f in range(len(self.newNameList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
             self.stringLetterLowerUpper(self.newNameList[f])
@@ -322,15 +318,14 @@ class ReName():
             endIndexBefore = startIndexBefore + len(self.toConvert1.get())
             endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
             if startIndexBefore != -1:
-                self.previewText.tag_add("before", f"{a}.{startIndexBefore}", f"{a}.{endIndexBefore}")
+                self.previewText.tag_add("before", f"{f+1}.{startIndexBefore}", f"{f+1}.{endIndexBefore}")
                 self.previewText.tag_configure("before", background="white", foreground="red") 
-                self.previewTextAfter.tag_add("after", f"{a}.{startIndexAfter}", f"{a}.{endIndexAfter}")
+                self.previewTextAfter.tag_add("after", f"{f+1}.{startIndexAfter}", f"{f+1}.{endIndexAfter}")
                 self.previewTextAfter.tag_configure("after", background="white", foreground="green")
                 if self.chVarUn.get() == 1:
-                    self.previewTextAfter.tag_add("after", f"{a}.{0}", f"{a}.{len(self.addNumList[f])}")
+                    self.previewTextAfter.tag_add("after", f"{f+1}.{0}", f"{f+1}.{len(self.addNumList[f])}")
                     self.previewTextAfter.tag_configure("after", background="white", foreground="green")
 
-            a += 1
             multiplierList.append(self.multiplier)
             newNameLenList.append(len(self.newNameList[f]))
             winWidthDict[len(self.newNameList[f])] = self.multiplier
