@@ -16,8 +16,8 @@ class ReName():
         self.widgets()
         self.previewWidgets()
         self.strLen = None
-        self.dirButton.bind("<Button-1>", self.ask_dir)
         self._tree(self.win, path='\\')
+        self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", self.OnDoubleClick)
         # self.win.iconbitmap('./ikona2.ico')
        
@@ -69,7 +69,10 @@ class ReName():
                 multiplierList.append(self.multiplier)
                 winWidthDict[len(self.objsPreview[a])] = self.multiplier
                 a += 1
-        self.previewText.configure(width=max(objsPreviewLenList)+round(max(objsPreviewLenList)*(winWidthDict[max(objsPreviewLenList)] / 3.2)))
+        winWidthList = [key * winWidthDict[key] for key in winWidthDict]
+        print(winWidthList)
+        if (max(objsPreviewLenList)+round(max(winWidthList) / 3.2)) > 48:
+            self.previewText.configure(width=max(objsPreviewLenList)+round(max(winWidthList) / 3.2))
         self.previewText.configure(state="disabled")
 
     def start(self, preview = 'no'):
@@ -299,6 +302,8 @@ class ReName():
     def stringLetterLowerUpper(self, string):
         upperLetter = len([i for i in string if i.isupper()==True])
         self.multiplier = upperLetter / len(string)
+        if self.multiplier < 0.5:
+            self.multiplier = 0.5
     
     def _preview(self):
         multiplierList, newNameLenList, winWidthDict = [],[],{}
@@ -313,6 +318,7 @@ class ReName():
         for f in range(len(self.newNameList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
             self.stringLetterLowerUpper(self.newNameList[f])
+            #print(self.multiplier)
             startIndexBefore = self.oldNameList[f].find(self.toConvert1.get())
             startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
             endIndexBefore = startIndexBefore + len(self.toConvert1.get())
@@ -329,7 +335,10 @@ class ReName():
             multiplierList.append(self.multiplier)
             newNameLenList.append(len(self.newNameList[f]))
             winWidthDict[len(self.newNameList[f])] = self.multiplier
-        self.previewTextAfter.configure(width=max(newNameLenList)+round(max(newNameLenList)*(winWidthDict[max(newNameLenList)] / 3.2)))
+       
+        winWidthList = [key * winWidthDict[key] for key in winWidthDict]
+        if (max(newNameLenList)+round((max(winWidthList) / 3.2))) > 48:
+            self.previewTextAfter.configure(width=max(newNameLenList)+round((max(winWidthList) / 3.2)))
         self.previewTextAfter.configure(state='disabled')
     
     def _back(self):
