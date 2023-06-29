@@ -55,6 +55,11 @@ print("kotek".isalpha()) # True - sprawdza, czy łańcuch znaków składa sie z 
 print("123kotek".isalpha()) # False
 print(" kotek".isalpha()) # False
 
+print("\ndigit")
+print("123kotek".isdigit()) # False - sprawdza, czy łańcuch znaków składa sie z samych cyfr
+print("123789".isdigit()) # True
+print(" 1234 ".isdigit()) # False
+
 print(" ")
 
 print("test".islower()) # True - sprawdza, czy łańcuch znaków składa sie z samych małych liter

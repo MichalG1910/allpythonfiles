@@ -51,7 +51,8 @@ class ReName():
         self.beforePreview()
     
     def beforePreview(self):
-        objsPreviewLenList, multiplierList, winWidthDict = [],[],{}
+        #objsPreviewLenList, multiplierList, winWidthDict = [],[],{}
+        self.nameWidthList = []
         if self.directory:
             self.lok.delete(first=0, last=self.strLen)
             self.lok.insert(0, self.directory)
@@ -61,18 +62,23 @@ class ReName():
         self.previewText.configure(state="normal")
         self.previewText.delete('1.0', tk.END)
         a = 0
-        for f in self.objsPreview:
-            if os.path.isfile(os.path.join(self.location1.get(), f)):
-                self.previewText.insert(tk.INSERT, f"{f}\n")
-                self.stringLetterLowerUpper(f)
-                objsPreviewLenList.append(len(self.objsPreview[a]))
-                multiplierList.append(self.multiplier)
-                winWidthDict[len(self.objsPreview[a])] = self.multiplier
+        for name in self.objsPreview:
+            if os.path.isfile(os.path.join(self.location1.get(), name)):
+                self.previewText.insert(tk.INSERT, f"{name}\n")
+                self.stringLetterLowerUpper(name)
+                self.nameWidthList.append(self.stringWidth)
+                #objsPreviewLenList.append(len(self.objsPreview[a]))
+                #multiplierList.append(self.multiplier)
+                #winWidthDict[len(self.objsPreview[a])] = self.multiplier
                 a += 1
+        '''
         winWidthList = [key * winWidthDict[key] for key in winWidthDict]
         print(winWidthList)
         if (max(objsPreviewLenList)+round(max(winWidthList) / 3.2)) > 48:
             self.previewText.configure(width=max(objsPreviewLenList)+round(max(winWidthList) / 3.2))
+        '''
+        print(self.nameWidthList)
+        self.previewText.configure(width=round(max(self.nameWidthList)))
         self.previewText.configure(state="disabled")
 
     def start(self, preview = 'no'):
@@ -300,11 +306,31 @@ class ReName():
         #hsb.grid(column=1, row=9, sticky="ew", padx=2)
     
     def stringLetterLowerUpper(self, string):
+        self.stringWidth = 0
+        self.letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.2, 'j':0.2, 'k':0.8, 'l':0.1, 'ł':0.6, 'm':0.9, 'n':0.8,
+                            'ń':0.8, 'o':0.8, 'ó':0.8, 'p':0.8, 'q':0.8, 'r':0.8, 's':0.8, 'ś':0.8, 't':0.8, 'u':0.8, 'v':0.8, 'w':0.9, 'x':0.8, 'y':0.9, 'z':0.8, 'ź':0.8, 'ż':0.8, 'A':1.1,
+                            'Ą':1.1, 'B':1.1, 'C':1.1, 'Ć':1.1, 'D':1.1, 'E':1.1, 'Ę':1.1, 'F':1.1, 'G':1.1, 'H':1.1, 'I':1.1, 'J':1.1, 'K':1.1, 'L':1.1, 'Ł':1.1, 'M':1.1, 'N':1.1, 'Ń':1.1, 'O':1.1, 'Ó':1.1, 'P':1.1, 'Q':1.1, 'R':1.1, 
+                            'S':1.1, 'Ś':1.1, 'T':1.1, 'U':1.1, 'V':1.1, 'W':1.1, 'X':1.1, 'Y':1.1, 'Z':1.1, 'Ź':1.1, 'Ż':1.1, '0':0.7, '1':0.65, '2':0.7, '3':0.7, '4':0.7, '5':0.7, '6':0.7, '7':0.7, '8':0.7, '9':0.7, 
+                            '`':0.2, '~':0.5, '!':0.1, '@':1, '#':1, '$':1, '%':1.1, '^':0.6, '&':1, '*':0.4, '(':0.2, ')':0.2, '-':0.3, '_':1, '=':1, '+':1, '[':0.3, ']':0.3, '{':0.2, '}':0.2, 
+                            '\\':1, '|':0.1, ';':0.1, ':':0.1, "'":0.1, '"':0.1, ',':0.1, '<':0.8, '.':0.1, '>':0.8, '/':0.5, '?':0.5, ' ':1, "    ":4, '—':1}
+        
+        for l in string:
+            if l.islower():
+                self.stringWidth += self.letterWidth[l] * 1.4
+            elif l.isupper():
+                self.stringWidth += self.letterWidth[l] * 1.2
+            elif l.isdigit():
+                self.stringWidth += self.letterWidth[l] * 1.40
+            else:
+                self.stringWidth += self.letterWidth[l] * 1.5
+
+        
+        '''
         upperLetter = len([i for i in string if i.isupper()==True])
         self.multiplier = upperLetter / len(string)
         if self.multiplier < 0.5:
             self.multiplier = 0.5
-    
+    '''
     def _preview(self):
         multiplierList, newNameLenList, winWidthDict = [],[],{}
         self.generatePreview = 'yes'
