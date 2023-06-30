@@ -77,7 +77,6 @@ class ReName():
         if (max(objsPreviewLenList)+round(max(winWidthList) / 3.2)) > 48:
             self.previewText.configure(width=max(objsPreviewLenList)+round(max(winWidthList) / 3.2))
         '''
-        print(self.nameWidthList)
         self.previewText.configure(width=round(max(self.nameWidthList)))
         self.previewText.configure(state="disabled")
 
@@ -307,22 +306,23 @@ class ReName():
     
     def stringLetterLowerUpper(self, string):
         self.stringWidth = 0
-        self.letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.2, 'j':0.2, 'k':0.8, 'l':0.1, 'ł':0.6, 'm':0.9, 'n':0.8,
+        self.letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.33, 'j':0.33, 'k':0.8, 'l':0.33, 'ł':0.6, 'm':0.9, 'n':0.8,
                             'ń':0.8, 'o':0.8, 'ó':0.8, 'p':0.8, 'q':0.8, 'r':0.8, 's':0.8, 'ś':0.8, 't':0.8, 'u':0.8, 'v':0.8, 'w':0.9, 'x':0.8, 'y':0.9, 'z':0.8, 'ź':0.8, 'ż':0.8, 'A':1.1,
-                            'Ą':1.1, 'B':1.1, 'C':1.1, 'Ć':1.1, 'D':1.1, 'E':1.1, 'Ę':1.1, 'F':1.1, 'G':1.1, 'H':1.1, 'I':1.1, 'J':1.1, 'K':1.1, 'L':1.1, 'Ł':1.1, 'M':1.1, 'N':1.1, 'Ń':1.1, 'O':1.1, 'Ó':1.1, 'P':1.1, 'Q':1.1, 'R':1.1, 
-                            'S':1.1, 'Ś':1.1, 'T':1.1, 'U':1.1, 'V':1.1, 'W':1.1, 'X':1.1, 'Y':1.1, 'Z':1.1, 'Ź':1.1, 'Ż':1.1, '0':0.7, '1':0.65, '2':0.7, '3':0.7, '4':0.7, '5':0.7, '6':0.7, '7':0.7, '8':0.7, '9':0.7, 
-                            '`':0.2, '~':0.5, '!':0.1, '@':1, '#':1, '$':1, '%':1.1, '^':0.6, '&':1, '*':0.4, '(':0.2, ')':0.2, '-':0.3, '_':1, '=':1, '+':1, '[':0.3, ']':0.3, '{':0.2, '}':0.2, 
-                            '\\':1, '|':0.1, ';':0.1, ':':0.1, "'":0.1, '"':0.1, ',':0.1, '<':0.8, '.':0.1, '>':0.8, '/':0.5, '?':0.5, ' ':1, "    ":4, '—':1}
+                            'Ą':1.1, 'B':1.1, 'C':1.1, 'Ć':1.1, 'D':1.1, 'E':1.2, 'Ę':1.1, 'F':1.1, 'G':1.2, 'H':1.1, 'I':0.35, 'J':1.1, 'K':1.2, 'L':1.1, 'Ł':1.1, 'M':1.3, 'N':1.1, 'Ń':1.1, 
+                            'O':1.1, 'Ó':1.1, 'P':1.2, 'Q':1.2, 'R':1.1, 'S':1.1, 'Ś':1.1, 'T':1.1, 'U':1.1, 'V':1.1, 'W':1.3, 'X':1.1, 'Y':1.1, 'Z':1.1, 'Ź':1.1, 'Ż':1.1, '0':0.7, '1':0.65, 
+                            '2':0.7, '3':0.7, '4':0.7, '5':0.7, '6':0.7, '7':0.7, '8':0.7, '9':0.7, '`':0.25, '~':0.5, '!':0.25, '@':1, '#':1, '$':1, '%':1.1, '^':0.6, '&':1, '*':0.4, '(':0.25, 
+                            ')':0.25, '-':0.3, '_':1, '=':1, '+':1, '[':0.3, ']':0.3, '{':0.25, '}':0.25, '\\':1, '|':0.25, ';':0.25, ':':0.25, "'":0.25, '"':0.25, ',':0.25, '<':0.8, '.':0.25, 
+                            '>':0.8, '/':0.5, '?':0.5, ' ':0.6, "    ":2.4, '—':0.8}
         
         for l in string:
             if l.islower():
-                self.stringWidth += self.letterWidth[l] * 1.4
+                self.stringWidth += self.letterWidth[l] * 1.30
             elif l.isupper():
                 self.stringWidth += self.letterWidth[l] * 1.2
             elif l.isdigit():
-                self.stringWidth += self.letterWidth[l] * 1.40
+                self.stringWidth += self.letterWidth[l] * 1.43
             else:
-                self.stringWidth += self.letterWidth[l] * 1.5
+                self.stringWidth += self.letterWidth[l] * 1.55
 
         
         '''
@@ -332,7 +332,7 @@ class ReName():
             self.multiplier = 0.5
     '''
     def _preview(self):
-        multiplierList, newNameLenList, winWidthDict = [],[],{}
+        multiplierList, newNameLenList, winWidthDict, newNameWidthList = [],[],{},[]
         self.generatePreview = 'yes'
         
         self.start(self.generatePreview)
@@ -358,15 +358,17 @@ class ReName():
                     self.previewTextAfter.tag_add("after", f"{f+1}.{0}", f"{f+1}.{len(self.addNumList[f])}")
                     self.previewTextAfter.tag_configure("after", background="white", foreground="green")
 
-            multiplierList.append(self.multiplier)
-            newNameLenList.append(len(self.newNameList[f]))
-            winWidthDict[len(self.newNameList[f])] = self.multiplier
+            newNameWidthList.append(self.stringWidth)
+            #multiplierList.append(self.multiplier)
+            #newNameLenList.append(len(self.newNameList[f]))
+            #winWidthDict[len(self.newNameList[f])] = self.multiplier
        
-        winWidthList = [key * winWidthDict[key] for key in winWidthDict]
-        if (max(newNameLenList)+round((max(winWidthList) / 3.2))) > 48:
-            self.previewTextAfter.configure(width=max(newNameLenList)+round((max(winWidthList) / 3.2)))
+        #winWidthList = [key * winWidthDict[key] for key in winWidthDict]
+        #if (max(newNameLenList)+round((max(winWidthList) / 3.2))) > 48:
+            #self.previewTextAfter.configure(width=max(newNameLenList)+round((max(winWidthList) / 3.2)))
+        self.previewTextAfter.configure(width=round(max(newNameWidthList)))
         self.previewTextAfter.configure(state='disabled')
-    
+        print(max(self.nameWidthList), ' ', max(newNameWidthList)) # prz 184 przestaje rozszerzać
     def _back(self):
         self.backButton.configure(state='disabled')
         a = 0
