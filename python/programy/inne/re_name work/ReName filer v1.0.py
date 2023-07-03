@@ -77,7 +77,9 @@ class ReName():
         if (max(objsPreviewLenList)+round(max(winWidthList) / 3.2)) > 48:
             self.previewText.configure(width=max(objsPreviewLenList)+round(max(winWidthList) / 3.2))
         '''
-        self.previewText.configure(width=round(max(self.nameWidthList)))
+        if round(max(self.nameWidthList)) < 90:
+            self.previewText.configure(width=round(max(self.nameWidthList)))
+        else: self.previewText.configure( width = 90 )
         self.previewText.configure(state="disabled")
 
     def start(self, preview = 'no'):
@@ -286,7 +288,7 @@ class ReName():
             self.previewText.yview(*args)
             self.previewTextAfter.yview(*args)
         def on_textscroll(*args):
-            scrollbar.set(*args)
+            scrollbarVer.set(*args)
             multiple_yview('moveto', args[0])
         
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
@@ -296,14 +298,20 @@ class ReName():
         self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black',)
         self.previewTextAfter.grid(column= 2, row= 0, rowspan=8, sticky="NSEW", padx=(0,10), pady=(10,10))
 
-        scrollbar = ttk.Scrollbar(self.previewFrame, command=multiple_yview, orient="vertical")
-        #hsb = ttk.Scrollbar(self.previewFrame, command=(self.previewText.xview==self.previewTextAfter.xview), orient="horizontal",)
+        scrollbarVer = ttk.Scrollbar(self.previewFrame, command=multiple_yview, orient="vertical")
         self.previewText.configure(yscrollcommand=on_textscroll)
         self.previewTextAfter.configure(yscrollcommand=on_textscroll)
-        #self.previewTextAfter.configure(yscrollcommand=scrollbar.set)
-        scrollbar.grid(column=3, row=0, rowspan=8, sticky="ns", padx=2)
-        #hsb.grid(column=1, row=9, sticky="ew", padx=2)
-    
+        scrollbarVer.grid(column=3, row=0, rowspan=8, sticky="ns", padx=2)
+
+        scrollbarHor1 = ttk.Scrollbar(self.previewFrame, command=self.previewText.xview, orient="horizontal")
+        scrollbarHor1.grid(column=1, row=9, sticky="ew", padx=2)
+        self.previewText.configure(xscrollcommand=scrollbarHor1.set)
+        
+        scrollbarHor2 = ttk.Scrollbar(self.previewFrame, command=self.previewTextAfter.xview, orient="horizontal")
+        scrollbarHor2.grid(column=2, row=9, sticky="ew", padx=2)
+        self.previewTextAfter.configure(xscrollcommand=scrollbarHor2.set)
+        
+
     def stringLetterLowerUpper(self, string):
         self.stringWidth = 0
         self.letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.33, 'j':0.33, 'k':0.8, 'l':0.33, 'ł':0.6, 'm':0.9, 'n':0.8,
@@ -366,7 +374,9 @@ class ReName():
         #winWidthList = [key * winWidthDict[key] for key in winWidthDict]
         #if (max(newNameLenList)+round((max(winWidthList) / 3.2))) > 48:
             #self.previewTextAfter.configure(width=max(newNameLenList)+round((max(winWidthList) / 3.2)))
-        self.previewTextAfter.configure(width=round(max(newNameWidthList)))
+        if round(max(newNameWidthList)) +  round(max(self.nameWidthList)) < 180:
+            self.previewTextAfter.configure(width=round(max(newNameWidthList)))
+        else: self.previewTextAfter.configure(width=180 - round(max(self.nameWidthList)) if round(max(self.nameWidthList)) <= 90 else 90)
         self.previewTextAfter.configure(state='disabled')
         print(max(self.nameWidthList), ' ', max(newNameWidthList)) # prz 184 przestaje rozszerzać
     def _back(self):
@@ -400,19 +410,26 @@ class ReName():
 
 
     def _tree(self, master, path):
+        def on_textscroll(*args):
+            xsb.set(*args)
+            self.tree.yview(*args)
+
         self.fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
         self.folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
         self.openfolderIcon = PhotoImage(file=f'{self.filePath}/openfolder18t.png')
         self.nodes = dict()
         #self.treeFrame = ttk.LabelFrame(self.win, text='TREE',labelanchor='n')
         #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
-        self.treeFrame = ttk.Frame(master, width=80, height=80)
+        self.treeFrame = ttk.Frame(master, height=20)
         self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=20,)
-        self.tree = ttk.Treeview(self.treeFrame, height=16,)
+        self.tree = ttk.Treeview(self.treeFrame, height=17, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
-        self.tree.configure(yscroll=ysb.set, xscroll=xsb.set)
         self.tree.heading('#0', text='Project tree', anchor='w')
+        self.tree.column('#0', minwidth=320, stretch=True, anchor='w', width=250 )
+        self.tree.configure(xscrollcommand=xsb.set, yscrollcommand=ysb.set, )
+        
+        
 
         self.tree.grid()
         ysb.grid(row=0, column=1, sticky='ns')
