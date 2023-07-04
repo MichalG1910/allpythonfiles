@@ -51,7 +51,7 @@ class ReName():
         for name in self.objsPreview:
             if os.path.isfile(os.path.join(self.location1.get(), name)):
                 self.previewText.insert(tk.INSERT, f"{name}\n")
-                self.stringLetterLowerUpper(name)
+                self.textFieldAutoFit(name)
                 self.nameWidthList.append(self.stringWidth)
                 #objsPreviewLenList.append(len(self.objsPreview[a]))
                 #multiplierList.append(self.multiplier)
@@ -218,36 +218,78 @@ class ReName():
         self.standardVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection1())
         self.seriesVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection2())
     
+    def changePartNameFunc(self):
+        if self.changePartNameVar.get() == 0:
+            self.folderLocLab.configure(state='disabled')
+            self.lok.configure(state='disabled')
+            self.dirButton.configure(state='disabled')
+            self.textToChangeLab.configure(state='disabled')
+            self.toConv.configure(state='disabled')
+            self.changeToLab.configure(state='disabled')
+            self.aConv.configure(state='disabled')
+            self.checkOptionalWidget .configure(state='disabled')
+        if self.changePartNameVar.get() == 1:
+            self.folderLocLab.configure(state='normal')
+            self.lok.configure(state='normal')
+            self.dirButton.configure(state='normal')
+            self.textToChangeLab.configure(state='normal')
+            self.toConv.configure(state='normal')
+            self.changeToLab.configure(state='normal')
+            self.aConv.configure(state='normal')
+            self.checkOptionalWidget .configure(state='normal')
+    
+    
     def widgets(self):
         self.location1 = tk.StringVar()
         self.toConvert1 = tk.StringVar()
         self.afterConvert1 = tk.StringVar()
         self.chVarUn = tk.IntVar()
-
-        self.mainFrame = ttk.LabelFrame(self.win, text='Masowa zmiana nazwy plików',labelanchor='n')
+        self.changePartNameVar = tk.IntVar()
+        self.deleteAddVar = tk.IntVar()
+        
+         
+        #changePartNameChb.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
+        self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
-            
-        ttk.Label(self.mainFrame, text = "lokalizacja katalogu:").grid(column = 0, row = 1,  padx=10, pady=(20,2))
-        self.lok = ttk.Entry(self.mainFrame, text=self.directory, width= 34, textvariable= self.location1)   
+        
+        changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text='zmień fragment nazwy', command= self.changePartNameFunc,)
+        self.changePartNameVar.set(1)
+        self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=changePartNameChb)
+        self.changePartNameFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
+
+        self.folderLocLab = ttk.Label(self.changePartNameFrame, text = "lokalizacja katalogu:")
+        self.folderLocLab.grid(column = 0, row = 1,  padx=10, pady=(20,2))
+        self.lok = ttk.Entry(self.changePartNameFrame, text=self.directory, width= 34, textvariable= self.location1)   
         self.lok.grid(column= 0, row= 2, sticky="W", padx=10, pady=(0,5))
         
         self.icon = PhotoImage(file=f'{self.filePath}/folder24dp.png')
         TButton1 = ttk.Style()
         TButton1.configure("New.TButton", width = 5, border = 2, padding= {0,0,0,0})
-        self.dirButton = ttk.Button(self.mainFrame, image= self.icon, command= self.ask_dir, style='New.TButton')
+        self.dirButton = ttk.Button(self.changePartNameFrame, image= self.icon, command= self.ask_dir, style='New.TButton',)
         self.dirButton.grid(column= 0, row= 2, sticky="NE", padx=10)
 
-        ttk.Label(self.mainFrame, text = "Tekst do zmiany:").grid(column = 0, row = 3, padx=10, pady=(10,2))
-        toConv = ttk.Entry(self.mainFrame, width= 40, textvariable= self.toConvert1) 
-        toConv.grid(column= 0, row= 4, padx=10, pady=(0,5))
+        self.textToChangeLab = ttk.Label(self.changePartNameFrame, text = "Tekst do zmiany:")
+        self.textToChangeLab.grid(column = 0, row = 3, padx=10, pady=(10,2))
+        self.toConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.toConvert1) 
+        self.toConv.grid(column= 0, row= 4, padx=10, pady=(0,5))
 
-        ttk.Label(self.mainFrame, text = "Zmienić na:").grid(column = 0, row = 5, padx=10, pady=(10,2))
+        self.changeToLab = ttk.Label(self.changePartNameFrame, text = "Zmienić na:")
+        self.changeToLab.grid(column = 0, row = 5, padx=10, pady=(10,2))
         self.afterConvert1 = tk.StringVar() 
-        aConv = ttk.Entry(self.mainFrame, width= 40, textvariable= self.afterConvert1) 
-        aConv.grid(column= 0, row= 6, padx=10, pady=(0,10))
+        self.aConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.afterConvert1) 
+        self.aConv.grid(column= 0, row= 6, padx=10, pady=(0,10))
         
-        checkOptionalWidget = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
-        checkOptionalWidget.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
+        self.checkOptionalWidget = ttk.Checkbutton(self.changePartNameFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
+        self.checkOptionalWidget.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
+        
+        ################################ usuń/dodja w nazwie #################################################################
+        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changePartNameFunc)
+        self.changePartNameVar.set(0)
+        self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=30)
+        self.deleteAddFrame.grid(column=1, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
+        
+        
+        
         
         startButton = ttk.Button(self.mainFrame, text= "Start", command= self.start)
         startButton.grid(column= 0, row= 11, sticky="W", padx=10, pady=10)
@@ -298,7 +340,7 @@ class ReName():
         self.previewTextAfter.configure(xscrollcommand=scrollbarHor2.set)
         
 
-    def stringLetterLowerUpper(self, string):
+    def textFieldAutoFit(self, string):
         self.stringWidth = 0
         self.letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.33, 'j':0.33, 'k':0.8, 'l':0.33, 'ł':0.6, 'm':0.9, 'n':0.8,
                             'ń':0.8, 'o':0.8, 'ó':0.8, 'p':0.8, 'q':0.8, 'r':0.8, 's':0.8, 'ś':0.8, 't':0.8, 'u':0.8, 'v':0.8, 'w':0.9, 'x':0.8, 'y':0.9, 'z':0.8, 'ź':0.8, 'ż':0.8, 'A':1.1,
@@ -337,8 +379,7 @@ class ReName():
         
         for f in range(len(self.newNameList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
-            self.stringLetterLowerUpper(self.newNameList[f])
-            #print(self.multiplier)
+            self.textFieldAutoFit(self.newNameList[f])
             startIndexBefore = self.oldNameList[f].find(self.toConvert1.get())
             startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
             endIndexBefore = startIndexBefore + len(self.toConvert1.get())
