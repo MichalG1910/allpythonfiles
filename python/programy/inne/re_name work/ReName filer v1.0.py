@@ -21,20 +21,6 @@ class ReName():
         self.tree.bind("<Double-1>", self.OnDoubleClick)
         # self.win.iconbitmap('./ikona2.ico')
        
-    def OnDoubleClick(self, event):
-        self._clear()
-        self.directory = False
-        item = self.tree.selection()[0]
-        parent_iid = self.tree.parent(item)
-        node = []
-        # go backward until reaching root
-        while parent_iid != '':
-            node.insert(0, self.tree.item(parent_iid)['text'])
-            parent_iid = self.tree.parent(parent_iid)
-        i = self.tree.item(item, "text")
-        path = os.path.join(*node, i)
-        self.location1.set(path)
-        self.beforePreview()
     
     def _quit(self):
         self.win.quit()
@@ -407,13 +393,23 @@ class ReName():
             self.chVarUn.set(0)
             self.activateOptionalWidget()
         except: pass
-
+    
+    def OnDoubleClick(self, event):
+        self._clear()
+        self.directory = False
+        item = self.tree.selection()[0]
+        parent_iid = self.tree.parent(item)
+        node = []
+        # go backward until reaching root
+        while parent_iid != '':
+            node.insert(0, self.tree.item(parent_iid)['text'])
+            parent_iid = self.tree.parent(parent_iid)
+        i = self.tree.item(item, "text")
+        path = os.path.join(*node, i)
+        self.location1.set(path)
+        self.beforePreview()
 
     def _tree(self, master, path):
-        def on_textscroll(*args):
-            xsb.set(*args)
-            self.tree.yview(*args)
-
         self.fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
         self.folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
         self.openfolderIcon = PhotoImage(file=f'{self.filePath}/openfolder18t.png')
@@ -426,16 +422,13 @@ class ReName():
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
         self.tree.heading('#0', text='Project tree', anchor='w')
-        self.tree.column('#0', minwidth=320, stretch=True, anchor='w', width=250 )
+        self.tree.column('#0', minwidth=620, stretch=True, anchor='w', width=300 )
         self.tree.configure(xscrollcommand=xsb.set, yscrollcommand=ysb.set, )
         
-        
-
         self.tree.grid()
         ysb.grid(row=0, column=1, sticky='ns')
         xsb.grid(row=1, column=0, sticky='ew')
-        
-
+    
         abspath = os.path.abspath(path)
         self.insert_node('', abspath, abspath)
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
@@ -450,7 +443,6 @@ class ReName():
             self.tree.insert(node, 'end')
         else:
             node = self.tree.insert(parent, 'end', text=text, image=self.fileIcon, open=False)
-
 
     def open_node(self, event):
         node = self.tree.focus()
