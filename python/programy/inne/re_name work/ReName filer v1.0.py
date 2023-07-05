@@ -16,7 +16,6 @@ class ReName():
         self.widgets()
         self.previewWidgets()
         self.strLen = None
-        self._tree(self.win, path='\\')
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", self.OnDoubleClick)
         # self.win.iconbitmap('./ikona2.ico')
@@ -147,9 +146,9 @@ class ReName():
             self.optionalWidget()
         if self.chCall == 0:
             self.num.destroy()
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 8, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 9, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 3, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 4, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 5, sticky="NSWE") # przysłania
     
     def optionalWidget(self): 
         self.standardNumeration = tk.StringVar()
@@ -159,7 +158,19 @@ class ReName():
         self.seriesVar = tk.IntVar()
         self.sepVar = tk.StringVar()
         self.trace()
+
+        def chooseActivateEntry():
+            if self.standardVar.get() == 1 and self.seriesVar.get() == 0:
+                activateStandardEntry()
+            elif self.standardVar.get() == 0 and self.seriesVar.get() == 1:
+                activateSeriesEntry()
         
+        def chooseActivateEntry1():
+            if self.standardVar.get() == 0 and self.seriesVar.get() == 1:
+                activateSeriesEntry()
+            elif self.standardVar.get() == 1 and self.seriesVar.get() == 0:
+                activateStandardEntry()
+                
         def activateStandardEntry():
             try:
                 self.numLabel.destroy()
@@ -170,13 +181,13 @@ class ReName():
                 del self.numLabel1, self.num
             except: pass
             
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 5, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:").grid(column = 0, row = 5, sticky="W", padx=10, pady=2)
             self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.standardNumeration)
-            self.num.grid(column= 0, row= 10, sticky = "W", padx=(80,0))
-            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 10, sticky="W", padx=(180,0), pady=2)
+            self.num.grid(column= 0, row= 5, sticky = "W", padx=(80,0))
+            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 5, sticky="W", padx=(180,0), pady=2)
             self.sepEntry = ttk.Entry(self.mainFrame, width= 4, textvariable=self.sepVar)
-            self.sepEntry.grid(column= 0, row= 10, sticky = "W", padx=(245,0))
+            self.sepEntry.grid(column= 0, row= 5, sticky = "W", padx=(245,0))
         
         def activateSeriesEntry():
             try:
@@ -185,29 +196,30 @@ class ReName():
                 del self.numLabel, self.num
             except: pass
             
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 10, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od: S").grid(column = 0, row = 10, sticky="W", padx=10, pady=2)
+            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 5, sticky="NSWE") # przysłania
+            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od: S").grid(column = 0, row = 5, sticky="W", padx=10, pady=2)
             self.num = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration1)
-            self.num.grid(column= 0, row= 10, sticky = "W", padx=(89,0))
-            self.numLabel1 = ttk.Label(self.mainFrame, text = "E").grid(column = 0, row = 10, sticky="W", padx=(122,0), pady=2)
+            self.num.grid(column= 0, row= 5, sticky = "W", padx=(89,0))
+            self.numLabel1 = ttk.Label(self.mainFrame, text = "E").grid(column = 0, row = 5, sticky="W", padx=(122,0), pady=2)
             self.num1 = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration2)
-            self.num1.grid(column= 0, row= 10, sticky = "W", padx=(136,0))
-            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 10, sticky="W", padx=(180,0), pady=2)
+            self.num1.grid(column= 0, row= 5, sticky = "W", padx=(136,0))
+            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 5, sticky="W", padx=(180,0), pady=2)
             self.sepEntry = ttk.Entry(self.mainFrame, width= 4, textvariable=self.sepVar)
-            self.sepEntry.grid(column= 0, row= 10, sticky = "W", padx=(245,0))
+            self.sepEntry.grid(column= 0, row= 5, sticky = "W", padx=(245,0))
 
-        checkStandard = ttk.Checkbutton(self.mainFrame, text= "zwykła", variable=self.standardVar, command= activateStandardEntry) 
-        checkStandard.grid(column= 0, row= 8, sticky= tk.W, padx=10, pady=2)
+        checkStandard = ttk.Checkbutton(self.mainFrame, text= "zwykła", variable=self.standardVar, command= chooseActivateEntry) 
+        checkStandard.grid(column= 0, row= 3, sticky= tk.W, padx=10, pady=2)
         
-        checkSeries = ttk.Checkbutton(self.mainFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= activateSeriesEntry) 
-        checkSeries.grid(column= 0, row= 9, sticky= tk.W, padx=10, pady=2)
+        checkSeries = ttk.Checkbutton(self.mainFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= chooseActivateEntry1) 
+        checkSeries.grid(column= 0, row= 4, sticky= tk.W, padx=10, pady=2)
     
     def numerationSelection1(self, *ignoredArgs):
         if self.standardVar.get() == 0:
             self.seriesVar.set(1)
+            
         elif self.standardVar.get() == 1:         
             self.seriesVar.set(0)
-         
+            
     def numerationSelection2(self, *ignoredArgs):
         if self.seriesVar.get() == 0:
             self.standardVar.set(1)
@@ -220,24 +232,19 @@ class ReName():
     
     def changePartNameFunc(self):
         if self.changePartNameVar.get() == 0:
-            self.folderLocLab.configure(state='disabled')
-            self.lok.configure(state='disabled')
-            self.dirButton.configure(state='disabled')
             self.textToChangeLab.configure(state='disabled')
             self.toConv.configure(state='disabled')
             self.changeToLab.configure(state='disabled')
             self.aConv.configure(state='disabled')
-            self.checkOptionalWidget .configure(state='disabled')
+            
         if self.changePartNameVar.get() == 1:
-            self.folderLocLab.configure(state='normal')
-            self.lok.configure(state='normal')
-            self.dirButton.configure(state='normal')
             self.textToChangeLab.configure(state='normal')
             self.toConv.configure(state='normal')
             self.changeToLab.configure(state='normal')
             self.aConv.configure(state='normal')
-            self.checkOptionalWidget .configure(state='normal')
-    
+            
+    def changeAddDeleteFunc(self):
+        pass
     
     def widgets(self):
         self.location1 = tk.StringVar()
@@ -247,69 +254,72 @@ class ReName():
         self.changePartNameVar = tk.IntVar()
         self.deleteAddVar = tk.IntVar()
         
-         
+        #################################### kolumna 1 #######################################################
         #changePartNameChb.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
         self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
+        # zmień fragment nazwy
         changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text='zmień fragment nazwy', command= self.changePartNameFunc,)
         self.changePartNameVar.set(1)
         self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=changePartNameChb)
         self.changePartNameFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.folderLocLab = ttk.Label(self.changePartNameFrame, text = "lokalizacja katalogu:")
-        self.folderLocLab.grid(column = 0, row = 1,  padx=10, pady=(20,2))
-        self.lok = ttk.Entry(self.changePartNameFrame, text=self.directory, width= 34, textvariable= self.location1)   
-        self.lok.grid(column= 0, row= 2, sticky="W", padx=10, pady=(0,5))
-        
-        self.icon = PhotoImage(file=f'{self.filePath}/folder24dp.png')
-        TButton1 = ttk.Style()
-        TButton1.configure("New.TButton", width = 5, border = 2, padding= {0,0,0,0})
-        self.dirButton = ttk.Button(self.changePartNameFrame, image= self.icon, command= self.ask_dir, style='New.TButton',)
-        self.dirButton.grid(column= 0, row= 2, sticky="NE", padx=10)
-
         self.textToChangeLab = ttk.Label(self.changePartNameFrame, text = "Tekst do zmiany:")
-        self.textToChangeLab.grid(column = 0, row = 3, padx=10, pady=(10,2))
+        self.textToChangeLab.grid(column = 0, row = 1, padx=10, pady=(10,2))
         self.toConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.toConvert1) 
-        self.toConv.grid(column= 0, row= 4, padx=10, pady=(0,5))
+        self.toConv.grid(column= 0, row= 2, padx=10, pady=(0,5))
 
         self.changeToLab = ttk.Label(self.changePartNameFrame, text = "Zmienić na:")
-        self.changeToLab.grid(column = 0, row = 5, padx=10, pady=(10,2))
+        self.changeToLab.grid(column = 0, row = 3, padx=10, pady=(10,2))
         self.afterConvert1 = tk.StringVar() 
         self.aConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.afterConvert1) 
-        self.aConv.grid(column= 0, row= 6, padx=10, pady=(0,10))
+        self.aConv.grid(column= 0, row= 4, padx=10, pady=(0,10))
         
-        self.checkOptionalWidget = ttk.Checkbutton(self.changePartNameFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
-        self.checkOptionalWidget.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
+        # usuń/dodja w nazwie 
+        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changeAddDeleteFunc)
+        self.deleteAddVar.set(0)
+        self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
+        self.deleteAddFrame.grid(column=0, row=1,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
-        ################################ usuń/dodja w nazwie #################################################################
-        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changePartNameFunc)
-        self.changePartNameVar.set(0)
-        self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=30)
-        self.deleteAddFrame.grid(column=1, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
+        # numeracja
+        self.checkOptionalWidget = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
+        self.checkOptionalWidget.grid(column= 0, row= 2, sticky= tk.W, padx=10, pady=10)
         
-        
-        
-        
+        # przyciski akcji
         startButton = ttk.Button(self.mainFrame, text= "Start", command= self.start)
         startButton.grid(column= 0, row= 11, sticky="W", padx=10, pady=10)
-        
         previewButton = ttk.Button(self.mainFrame, text= "Podgląd", command= self._preview)
         previewButton.grid(column= 0, row= 11, sticky="N", padx=10, pady=10)
-        
         exitButton = ttk.Button(self.mainFrame, text= "Zamknij", command= self._quit)
         exitButton.grid(column= 0, row= 11, sticky="E", padx=10, pady=10)
-        
         disabledButton = ttk.Style()
         disabledButton.configure("DS.TButton")
-        self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton', state='disabled')
         disabledButton.map('DS.TButton', foreground=[('disabled', 'gray'), ('active', 'white')])
+        self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton', state='disabled')
         self.backButton.grid(column= 0, row= 12, sticky="W", padx=10, pady=(0,10))
-        
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
         
-        self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 10, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        # puste rzędy do przysłaniania
+        self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 3, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        self.numLabel1 = ttk.Label(self.mainFrame).grid(column = 0, row = 4, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        self.numLabel2 = ttk.Label(self.mainFrame).grid(column = 0, row = 5, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        
+        ###################################### kolumna 2 ######################################################
+        # wybór katalogu
+        self.folderLocLab = ttk.Label(self.win, text = "folder:")
+        self.folderLocLab.grid(column = 1, row = 0,  padx=10, pady=(20,5), sticky="NW")
+        self.lok = ttk.Entry(self.win, text=self.directory, width= 34, textvariable= self.location1)   
+        self.lok.grid(column= 1, row= 0, padx=10, pady=(15,5), sticky="N")
+        self.icon = PhotoImage(file=f'{self.filePath}/folder24dp.png')
+        TButton1 = ttk.Style()
+        TButton1.configure("New.TButton", width = 5, border = 2, padding= {0,0,0,0})
+        self.dirButton = ttk.Button(self.win, image= self.icon, command= self.ask_dir, style='New.TButton',)
+        self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=10, pady=15)
+
+        # widok drzewa katalogów
+        self._tree(self.win, path='\\')
 
     def previewWidgets(self):
         def multiple_yview(*args):
@@ -458,8 +468,8 @@ class ReName():
         #self.treeFrame = ttk.LabelFrame(self.win, text='TREE',labelanchor='n')
         #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.treeFrame = ttk.Frame(master, height=20)
-        self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=20,)
-        self.tree = ttk.Treeview(self.treeFrame, height=17, show='tree headings')
+        self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10),)
+        self.tree = ttk.Treeview(self.treeFrame, height=20, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
         self.tree.heading('#0', text='Project tree', anchor='w')
