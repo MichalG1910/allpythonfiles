@@ -323,14 +323,12 @@ class ReName(Tree, StartAction):
         self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245,0), pady=(10,10))
     
     def chooseActivateEntry(self):
-        
         if self.standardVar.get() == 1 and self.seriesVar.get() == 0:
             self.activateStandardEntry()
         elif self.standardVar.get() == 0 and self.seriesVar.get() == 1:
             self.activateSeriesEntry()
     
     def chooseActivateEntry1(self):
-        
         if self.standardVar.get() == 0 and self.seriesVar.get() == 1:
             self.activateSeriesEntry()
         elif self.standardVar.get() == 1 and self.seriesVar.get() == 0:
@@ -339,7 +337,6 @@ class ReName(Tree, StartAction):
     def numerationSelection1(self, *ignoredArgs):
         if self.standardVar.get() == 0:
             self.seriesVar.set(1)
-            
         elif self.standardVar.get() == 1:         
             self.seriesVar.set(0)
             
@@ -352,6 +349,30 @@ class ReName(Tree, StartAction):
     def traceNumerationSelection(self):         
         self.standardVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection1())
         self.seriesVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection2())
+
+    def ruleFrame1(self, *ignoredArgs):
+        if self.changePartNameVar.get() == 0:
+            self.deleteAddVar.set(1)
+            self.changePartNameFunc()
+            self.changeAddDeleteFunc()
+        elif self.changePartNameVar.get() == 1:         
+            self.deleteAddVar.set(0)
+            self.changePartNameFunc()
+            self.changeAddDeleteFunc()
+            
+    def ruleFrame2(self, *ignoredArgs):
+        if self.deleteAddVar.get() == 0:
+            self.changePartNameVar.set(1)
+            self.changePartNameFunc()
+            self.changeAddDeleteFunc()
+        elif self.deleteAddVar.get() == 1:         
+            self.changePartNameVar.set(0)
+            self.changePartNameFunc()
+            self.changeAddDeleteFunc() 
+        
+    def traceSelectRuleFrame(self):         
+        self.changePartNameVar.trace('w', lambda unused0, unused1, unused2 : self.ruleFrame1())
+        self.deleteAddVar.trace('w', lambda unused0, unused1, unused2 : self.ruleFrame2())
     
     def changePartNameFunc(self):
         if self.changePartNameVar.get() == 0:
@@ -417,23 +438,22 @@ class ReName(Tree, StartAction):
         self.location1 = tk.StringVar()
         self.toConvert1 = tk.StringVar()
         self.afterConvert1 = tk.StringVar()
-        self.chVarUn = tk.IntVar()
         self.changePartNameVar = tk.IntVar()
         self.deleteAddVar = tk.IntVar()
         self.startIndexVar = tk.StringVar()
         self.lenghtIndexVar = tk.StringVar()
         self.addTextCheckVar = tk.IntVar()
         self.newTextVar = tk.StringVar()
-
+        self.chVarUn = tk.IntVar()
         self.standardNumeration = tk.StringVar()
         self.seriesNumeration1 = tk.StringVar()
         self.seriesNumeration2 = tk.StringVar()
         self.standardVar = tk.IntVar()
         self.seriesVar = tk.IntVar()
         self.sepVar = tk.StringVar()
-        self.traceNumerationSelection()
+        
        
-       
+        self.traceSelectRuleFrame()
         #################################### kolumna 1 #######################################################
         #changePartNameChb.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
         self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
@@ -488,9 +508,9 @@ class ReName(Tree, StartAction):
         self.standardVar.set(1)
         self.checkSeries = ttk.Checkbutton(self.numerationFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= self.chooseActivateEntry1, state='disabled') 
         self.checkSeries.grid(column= 0, row= 0, sticky= tk.W, padx=(150,0), pady=2)
+        self.traceNumerationSelection()
         self.activateStandardEntry()
         self.changeNumerationFunc()
-        
         
         # przyciski akcji
         startButton = ttk.Button(self.mainFrame, text= "Start", command= super().action)
