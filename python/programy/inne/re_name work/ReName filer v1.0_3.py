@@ -205,7 +205,7 @@ class ReName(Tree, StartAction):
         self.previewText.configure(state="disabled")
 
     
-    
+    '''
     def activateOptionalWidget(self):
         self.chCall = self.chVarUn.get()      
         if self.chCall == 1:
@@ -223,7 +223,7 @@ class ReName(Tree, StartAction):
         self.standardVar = tk.IntVar()
         self.seriesVar = tk.IntVar()
         self.sepVar = tk.StringVar()
-        self.trace()
+        self.traceNumerationSelection()
 
         def chooseActivateEntry():
             if self.standardVar.get() == 1 and self.seriesVar.get() == 0:
@@ -278,6 +278,63 @@ class ReName(Tree, StartAction):
         
         checkSeries = ttk.Checkbutton(self.mainFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= chooseActivateEntry1) 
         checkSeries.grid(column= 0, row= 4, sticky= tk.W, padx=10, pady=2)
+    '''
+    def activateStandardEntry(self):
+        try:
+            self.numLabel.destroy()
+            self.num.destroy()
+            del self.numLabel, self.num 
+            self.numLabel1.destroy()
+            self.num1.destroy()
+            del self.numLabel1, self.num
+        except: pass
+        
+        self.numLabel = ttk.Label(self.numerationFrame, text = "")
+        self.numLabel.grid(column = 0, row = 1, sticky="NSWE") # przysłania
+        self.numLabel = ttk.Label(self.numerationFrame, text = "Zacznij od:")
+        self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
+        self.num = ttk.Entry(self.numerationFrame, width= 6, textvariable=self.standardNumeration)
+        self.num.grid(column= 0, row= 1, sticky = "W", padx=(80,0))
+        self.sepLabel = ttk.Label(self.numerationFrame, text = "separator:")
+        self.sepLabel.grid(column = 0, row = 1, sticky="W", padx=(180,0), pady=2)
+        self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
+        self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245,0), pady=(10,10))
+    
+    def activateSeriesEntry(self):
+        try:
+            self.numLabel.destroy()
+            self.num.destroy()
+            del self.numLabel, self.num
+        except: pass
+        
+        self.numLabel = ttk.Label(self.numerationFrame, text = "")
+        self.numLabel.grid(column = 0, row = 1, sticky="NSWE") # przysłania
+        self.numLabel = ttk.Label(self.numerationFrame, text = "Zacznij od: S")
+        self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
+        self.num = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration1)
+        self.num.grid(column= 0, row=1, sticky = "W", padx=(89,0))
+        self.numLabel1 = ttk.Label(self.numerationFrame, text = "E")
+        self.numLabel1.grid(column = 0, row = 1, sticky="W", padx=(122,0), pady=2)
+        self.num1 = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration2)
+        self.num1.grid(column= 0, row= 1, sticky = "W", padx=(136,0))
+        self.sepLabel = ttk.Label(self.numerationFrame, text = "separator:")
+        self.sepLabel.grid(column = 0, row = 1, sticky="W", padx=(180,0), pady=2)
+        self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
+        self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245,0), pady=(10,10))
+    
+    def chooseActivateEntry(self):
+        
+        if self.standardVar.get() == 1 and self.seriesVar.get() == 0:
+            self.activateStandardEntry()
+        elif self.standardVar.get() == 0 and self.seriesVar.get() == 1:
+            self.activateSeriesEntry()
+    
+    def chooseActivateEntry1(self):
+        
+        if self.standardVar.get() == 0 and self.seriesVar.get() == 1:
+            self.activateSeriesEntry()
+        elif self.standardVar.get() == 1 and self.seriesVar.get() == 0:
+            self.activateStandardEntry()
     
     def numerationSelection1(self, *ignoredArgs):
         if self.standardVar.get() == 0:
@@ -292,7 +349,7 @@ class ReName(Tree, StartAction):
         elif self.seriesVar.get() == 1:         
             self.standardVar.set(0) 
         
-    def trace(self):         
+    def traceNumerationSelection(self):         
         self.standardVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection1())
         self.seriesVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection2())
     
@@ -310,7 +367,51 @@ class ReName(Tree, StartAction):
             self.aConv.configure(state='normal')
             
     def changeAddDeleteFunc(self):
-        pass
+        if self.deleteAddVar.get() == 0:
+            self.startIndex.configure(state='disabled')
+            self.startIndexEntry.configure(state='disabled')
+            self.lenght.configure(state='disabled')
+            self.lenghtEntry.configure(state='disabled')
+            self.addTextCheck.configure(state='disabled')
+            self.newTextEntry.configure(state='disabled')
+        else:
+            self.startIndex.configure(state='normal')
+            self.startIndexEntry.configure(state='normal')
+            self.lenght.configure(state='normal')
+            self.lenghtEntry.configure(state='normal')
+            self.addTextCheck.configure(state='normal')
+            self.newTextEntry.configure(state='disabled')
+    def changeNumerationFunc(self):
+        if self.chVarUn.get() == 0:
+            self.checkStandard.configure(state='disabled')
+            self.checkSeries.configure(state='disabled')
+            self.numLabel.configure(state='disabled')
+            self.num.configure(state='disabled')
+            self.sepLabel.configure(state='disabled') 
+            self.sepEntry.configure(state='disabled')
+            try:
+                self.numLabel1.configure(state='disabled') 
+                self.num1.configure(state='disabled')
+            except: pass
+        else:
+            self.checkStandard.configure(state='normal')
+            self.checkSeries.configure(state='normal')
+            self.numLabel.configure(state='normal')
+            self.num.configure(state='normal')
+            self.sepLabel.configure(state='normal') 
+            self.sepEntry.configure(state='normal')
+            try:
+                self.numLabel1.configure(state='normal') 
+                self.num1.configure(state='normal')
+            except: pass
+
+
+
+    def addTextFunc(self):
+        if self.addTextCheckVar.get() == 0:
+            self.newTextEntry.configure(state='disabled')
+        else: self.newTextEntry.configure(state='normal')
+            
     
     def widgets(self):
         self.location1 = tk.StringVar()
@@ -323,6 +424,14 @@ class ReName(Tree, StartAction):
         self.lenghtIndexVar = tk.StringVar()
         self.addTextCheckVar = tk.IntVar()
         self.newTextVar = tk.StringVar()
+
+        self.standardNumeration = tk.StringVar()
+        self.seriesNumeration1 = tk.StringVar()
+        self.seriesNumeration2 = tk.StringVar()
+        self.standardVar = tk.IntVar()
+        self.seriesVar = tk.IntVar()
+        self.sepVar = tk.StringVar()
+        self.traceNumerationSelection()
        
        
         #################################### kolumna 1 #######################################################
@@ -352,25 +461,36 @@ class ReName(Tree, StartAction):
         self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
         self.deleteAddFrame.grid(column=0, row=1,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.startIndex = ttk.Label(self.deleteAddFrame, text = "Indeks znaku:")
+        self.startIndex = ttk.Label(self.deleteAddFrame, text = "Indeks znaku:", state='disabled')
         self.startIndex.grid(column = 0, row = 0, padx=10, pady=(8,2), sticky = "W")
-        self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar) 
+        self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar, state='disabled') 
         self.startIndexEntry.grid(column= 0, row= 0, padx=(100,10), pady=(10,10))
         
-        self.lenght = ttk.Label(self.deleteAddFrame, text = "ilość znaków:")
+        self.lenght = ttk.Label(self.deleteAddFrame, text = "ilość znaków:", state='disabled')
         self.lenght.grid(column = 1, row = 0, pady=(8,2), sticky="W")
-        self.lenghtEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.lenghtIndexVar) 
+        self.lenghtEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.lenghtIndexVar, state='disabled') 
         self.lenghtEntry.grid(column= 1, row= 0, padx=(87,10), pady=(10,10))
 
-        self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text='zastąpić tekstem')
+        self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text='zastąpić tekstem', command=self.addTextFunc, state='disabled')
         self.addTextCheck.grid(column= 0, row= 1, padx=(10,10), pady=(0,10))
         self.newTextEntry = ttk.Entry(self.deleteAddFrame, textvariable= self.newTextVar, state='disabled') 
         self.newTextEntry.grid(column= 1, row= 1, padx=(0,10), pady=(0,10), sticky="NSWE")
 
 
         # numeracja
-        self.checkOptionalWidget = ttk.Checkbutton(self.mainFrame, text= "Wprowadzić numerację?", variable=self.chVarUn, command= self.activateOptionalWidget) 
-        self.checkOptionalWidget.grid(column= 0, row= 2, sticky= tk.W, padx=10, pady=10)
+        checkNumerationWidget = ttk.Checkbutton(variable=self.chVarUn, text= "Wprowadzić numerację?", command=self.changeNumerationFunc) 
+        self.chVarUn.set(0)
+        self.numerationFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=checkNumerationWidget, width=320, height=180)
+        self.numerationFrame.grid(column=0, row=2,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
+        
+        self.checkStandard = ttk.Checkbutton(self.numerationFrame, text= "zwykła", variable=self.standardVar, command= self.chooseActivateEntry, state='disabled') 
+        self.checkStandard.grid(column= 0, row= 0, sticky= tk.W, padx=10, pady=2)
+        self.standardVar.set(1)
+        self.checkSeries = ttk.Checkbutton(self.numerationFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= self.chooseActivateEntry1, state='disabled') 
+        self.checkSeries.grid(column= 0, row= 0, sticky= tk.W, padx=(150,0), pady=2)
+        self.activateStandardEntry()
+        self.changeNumerationFunc()
+        
         
         # przyciski akcji
         startButton = ttk.Button(self.mainFrame, text= "Start", command= super().action)
@@ -388,9 +508,10 @@ class ReName(Tree, StartAction):
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
         
         # puste rzędy do przysłaniania
-        self.numLabel = ttk.Label(self.mainFrame).grid(column = 0, row = 3, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
-        self.numLabel1 = ttk.Label(self.mainFrame).grid(column = 0, row = 4, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
-        self.numLabel2 = ttk.Label(self.mainFrame).grid(column = 0, row = 5, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        #self.numLabel = ttk.Label(self.mainFrame)
+        #self.numLabel.grid(column = 0, row = 3, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        #self.numLabel1 = ttk.Label(self.mainFrame).grid(column = 0, row = 4, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
+        #self.numLabel2 = ttk.Label(self.mainFrame).grid(column = 0, row = 5, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
         
         ###################################### kolumna 2 ######################################################
         # wybór katalogu
