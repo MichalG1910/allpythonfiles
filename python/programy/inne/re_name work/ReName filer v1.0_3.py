@@ -453,7 +453,6 @@ class ReName(Tree, StartAction):
         self.sepVar = tk.StringVar()
         
        
-        self.traceSelectRuleFrame()
         #################################### kolumna 1 #######################################################
         #changePartNameChb.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
         self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
@@ -511,6 +510,7 @@ class ReName(Tree, StartAction):
         self.traceNumerationSelection()
         self.activateStandardEntry()
         self.changeNumerationFunc()
+        self.traceSelectRuleFrame()
         
         # przyciski akcji
         startButton = ttk.Button(self.mainFrame, text= "Start", command= super().action)
