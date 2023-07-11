@@ -83,11 +83,11 @@ class StartAction():
         self.oldNameList, self.oldNameLenList, self.newNameList, self.addNumList = [],[],[],[]
         
     def checkAddnumeration(self):
-        if reNameObj.chVarUn.get() == 1 and reNameObj.standardVar.get() == 1:
+        if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:
             self.numeration = int(reNameObj.standardNumeration.get())
             self.separator = reNameObj.sepVar.get()
             self.numeration2 = None
-        elif reNameObj.chVarUn.get() == 1 and reNameObj.seriesVar.get() == 1:
+        elif reNameObj.checkNumVar.get() == 1 and reNameObj.seriesVar.get() == 1:
             self.numeration = int(reNameObj.seriesNumeration1.get())
             self.numeration2 = int(reNameObj.seriesNumeration2.get())
             self.separator = reNameObj.sepVar.get()
@@ -97,7 +97,7 @@ class StartAction():
     
     def actionLoop(self,numeration, separator, toConvert, afterConvert, preview, numeration2 = None): 
         def addNumeration(numeration, separator, numeration2, oldName):
-            if reNameObj.chVarUn.get() == 1 and reNameObj.standardVar.get() == 1:               # zwykła numeracja
+            if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:               # zwykła numeracja
                 addNum = "0" + str(numeration) + separator  if numeration < 10 else str(numeration) + separator 
                 self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                 numeration += 1
@@ -205,82 +205,7 @@ class ReName(Tree, StartAction):
             self.previewText.configure(width=round(max(self.nameWidthList)))
         else: self.previewText.configure( width = 90 )
         self.previewText.configure(state="disabled")
-
-    
-    '''
-    def activateOptionalWidget(self):
-        self.chCall = self.chVarUn.get()      
-        if self.chCall == 1:
-            self.optionalWidget()
-        if self.chCall == 0:
-            self.num.destroy()
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 3, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 4, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 5, sticky="NSWE") # przysłania
-    
-    def optionalWidget(self): 
-        self.standardNumeration = tk.StringVar()
-        self.seriesNumeration1 = tk.StringVar()
-        self.seriesNumeration2 = tk.StringVar()
-        self.standardVar = tk.IntVar()
-        self.seriesVar = tk.IntVar()
-        self.sepVar = tk.StringVar()
-        self.traceNumerationSelection()
-
-        def chooseActivateEntry():
-            if self.standardVar.get() == 1 and self.seriesVar.get() == 0:
-                activateStandardEntry()
-            elif self.standardVar.get() == 0 and self.seriesVar.get() == 1:
-                activateSeriesEntry()
-        
-        def chooseActivateEntry1():
-            if self.standardVar.get() == 0 and self.seriesVar.get() == 1:
-                activateSeriesEntry()
-            elif self.standardVar.get() == 1 and self.seriesVar.get() == 0:
-                activateStandardEntry()
-                
-        def activateStandardEntry():
-            try:
-                self.numLabel.destroy()
-                self.num.destroy()
-                del self.numLabel, self.num 
-                self.numLabel1.destroy()
-                self.num1.destroy()
-                del self.numLabel1, self.num
-            except: pass
-            
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 5, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od:").grid(column = 0, row = 5, sticky="W", padx=10, pady=2)
-            self.num = ttk.Entry(self.mainFrame, width= 6, textvariable=self.standardNumeration)
-            self.num.grid(column= 0, row= 5, sticky = "W", padx=(80,0))
-            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 5, sticky="W", padx=(180,0), pady=2)
-            self.sepEntry = ttk.Entry(self.mainFrame, width= 4, textvariable=self.sepVar)
-            self.sepEntry.grid(column= 0, row= 5, sticky = "W", padx=(245,0))
-        
-        def activateSeriesEntry():
-            try:
-                self.numLabel.destroy()
-                self.num.destroy()
-                del self.numLabel, self.num
-            except: pass
-            
-            self.numLabel = ttk.Label(self.mainFrame, text = "").grid(column = 0, row = 5, sticky="NSWE") # przysłania
-            self.numLabel = ttk.Label(self.mainFrame, text = "Zacznij od: S").grid(column = 0, row = 5, sticky="W", padx=10, pady=2)
-            self.num = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration1)
-            self.num.grid(column= 0, row= 5, sticky = "W", padx=(89,0))
-            self.numLabel1 = ttk.Label(self.mainFrame, text = "E").grid(column = 0, row = 5, sticky="W", padx=(122,0), pady=2)
-            self.num1 = ttk.Entry(self.mainFrame, width= 2, textvariable=self.seriesNumeration2)
-            self.num1.grid(column= 0, row= 5, sticky = "W", padx=(136,0))
-            self.sepLabel = ttk.Label(self.mainFrame, text = "separator:").grid(column = 0, row = 5, sticky="W", padx=(180,0), pady=2)
-            self.sepEntry = ttk.Entry(self.mainFrame, width= 4, textvariable=self.sepVar)
-            self.sepEntry.grid(column= 0, row= 5, sticky = "W", padx=(245,0))
-
-        checkStandard = ttk.Checkbutton(self.mainFrame, text= "zwykła", variable=self.standardVar, command= chooseActivateEntry) 
-        checkStandard.grid(column= 0, row= 3, sticky= tk.W, padx=10, pady=2)
-        
-        checkSeries = ttk.Checkbutton(self.mainFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= chooseActivateEntry1) 
-        checkSeries.grid(column= 0, row= 4, sticky= tk.W, padx=10, pady=2)
-    '''
+ 
     def activateStandardEntry(self):
         try:
             self.numLabel.destroy()
@@ -355,28 +280,28 @@ class ReName(Tree, StartAction):
     def ruleFrame1(self, *ignoredArgs):
         if self.changePartNameVar.get() == 0:
             self.deleteAddVar.set(1)
-            self.changePartNameFunc()
-            self.changeAddDeleteFunc()
+            self.changeStatePartName()
+            self.changeStateDelAdd()
         elif self.changePartNameVar.get() == 1:         
             self.deleteAddVar.set(0)
-            self.changePartNameFunc()
-            self.changeAddDeleteFunc()
+            self.changeStatePartName()
+            self.changeStateDelAdd()
             
     def ruleFrame2(self, *ignoredArgs):
         if self.deleteAddVar.get() == 0:
             self.changePartNameVar.set(1)
-            self.changePartNameFunc()
-            self.changeAddDeleteFunc()
+            self.changeStatePartName()
+            self.changeStateDelAdd()
         elif self.deleteAddVar.get() == 1:         
             self.changePartNameVar.set(0)
-            self.changePartNameFunc()
-            self.changeAddDeleteFunc() 
+            self.changeStatePartName()
+            self.changeStateDelAdd() 
         
     def traceSelectRuleFrame(self):         
         self.changePartNameVar.trace('w', lambda unused0, unused1, unused2 : self.ruleFrame1())
         self.deleteAddVar.trace('w', lambda unused0, unused1, unused2 : self.ruleFrame2())
     
-    def changePartNameFunc(self):
+    def changeStatePartName(self):
         if self.changePartNameVar.get() == 0:
             self.textToChangeLab.configure(state='disabled')
             self.toConv.configure(state='disabled')
@@ -389,7 +314,7 @@ class ReName(Tree, StartAction):
             self.changeToLab.configure(state='normal')
             self.aConv.configure(state='normal')
             
-    def changeAddDeleteFunc(self):
+    def changeStateDelAdd(self):
         if self.deleteAddVar.get() == 0:
             self.startIndex.configure(state='disabled')
             self.startIndexEntry.configure(state='disabled')
@@ -404,8 +329,9 @@ class ReName(Tree, StartAction):
             self.lenghtEntry.configure(state='normal')
             self.addTextCheck.configure(state='normal')
             self.newTextEntry.configure(state='disabled')
-    def changeNumerationFunc(self):
-        if self.chVarUn.get() == 0:
+    
+    def changeStateNumeration(self):
+        if self.checkNumVar.get() == 0:
             self.checkStandard.configure(state='disabled')
             self.checkSeries.configure(state='disabled')
             self.numLabel.configure(state='disabled')
@@ -428,9 +354,7 @@ class ReName(Tree, StartAction):
                 self.num1.configure(state='normal')
             except: pass
 
-
-
-    def addTextFunc(self):
+    def changeStateAddText(self):
         if self.addTextCheckVar.get() == 0:
             self.newTextEntry.configure(state='disabled')
         else: self.newTextEntry.configure(state='normal')
@@ -446,7 +370,7 @@ class ReName(Tree, StartAction):
         self.lenghtIndexVar = tk.StringVar()
         self.addTextCheckVar = tk.IntVar()
         self.newTextVar = tk.StringVar()
-        self.chVarUn = tk.IntVar()
+        self.checkNumVar = tk.IntVar()
         self.standardNumeration = tk.StringVar()
         self.seriesNumeration1 = tk.StringVar()
         self.seriesNumeration2 = tk.StringVar()
@@ -461,7 +385,7 @@ class ReName(Tree, StartAction):
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
         # zmień fragment nazwy
-        changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text='zmień fragment nazwy', command= self.changePartNameFunc,)
+        changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text='zmień fragment nazwy', command= self.changeStatePartName,)
         self.changePartNameVar.set(1)
         self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=changePartNameChb)
         self.changePartNameFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
@@ -477,7 +401,7 @@ class ReName(Tree, StartAction):
         self.aConv.grid(column= 0, row= 4, padx=10, pady=(0,10))
         
         # usuń/dodja w nazwie 
-        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changeAddDeleteFunc)
+        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changeStateDelAdd)
         self.deleteAddVar.set(0)
         self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
         self.deleteAddFrame.grid(column=0, row=1,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
@@ -492,15 +416,15 @@ class ReName(Tree, StartAction):
         self.lenghtEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.lenghtIndexVar, state='disabled') 
         self.lenghtEntry.grid(column= 1, row= 0, padx=(87,10), pady=(10,10))
 
-        self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text='zastąpić tekstem', command=self.addTextFunc, state='disabled')
+        self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text='zastąpić tekstem', command=self.changeStateAddText, state='disabled')
         self.addTextCheck.grid(column= 0, row= 1, padx=(10,10), pady=(0,10))
         self.newTextEntry = ttk.Entry(self.deleteAddFrame, textvariable= self.newTextVar, state='disabled') 
         self.newTextEntry.grid(column= 1, row= 1, padx=(0,10), pady=(0,10), sticky="NSWE")
 
 
         # numeracja
-        checkNumerationWidget = ttk.Checkbutton(variable=self.chVarUn, text= "Wprowadzić numerację?", command=self.changeNumerationFunc) 
-        self.chVarUn.set(0)
+        checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= "Wprowadzić numerację?", command=self.changeStateNumeration) 
+        self.checkNumVar.set(0)
         self.numerationFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=checkNumerationWidget, width=320, height=180)
         self.numerationFrame.grid(column=0, row=2,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
         
@@ -511,7 +435,7 @@ class ReName(Tree, StartAction):
         self.checkSeries.grid(column= 0, row= 0, sticky= tk.W, padx=(150,0), pady=2)
         self.traceNumerationSelection()
         self.activateStandardEntry()
-        self.changeNumerationFunc()
+        self.changeStateNumeration()
         self.traceSelectRuleFrame()
         
         # przyciski akcji
@@ -628,7 +552,7 @@ class ReName(Tree, StartAction):
                 self.previewText.tag_configure("before", background="white", foreground="red") 
                 self.previewTextAfter.tag_add("after", f"{f+1}.{startIndexAfter}", f"{f+1}.{endIndexAfter}")
                 self.previewTextAfter.tag_configure("after", background="white", foreground="green")
-                if self.chVarUn.get() == 1:
+                if self.checkNumVar.get() == 1:
                     self.previewTextAfter.tag_add("after", f"{f+1}.{0}", f"{f+1}.{len(self.addNumList[f])}")
                     self.previewTextAfter.tag_configure("after", background="white", foreground="green")
 
@@ -668,13 +592,15 @@ class ReName(Tree, StartAction):
         self.location1.set('')
         self.toConvert1.set('')
         self.afterConvert1.set('')
-        try: 
-            self.standardNumeration.set('')
-            self.chVarUn.set(0)
-            self.activateOptionalWidget()
-        except: pass
-    
-    
+        
+        self.startIndexVar.set('')
+        self.lenghtIndexVar.set('')
+        self.newTextVar.set('') 
+        self.standardNumeration.set('')
+        self.seriesNumeration1.set('')
+        self.seriesNumeration2.set('')
+        self.sepVar.set('')
+
 #treeObj= Tree() 
 reNameObj = ReName() 
 reNameObj.win.mainloop()
