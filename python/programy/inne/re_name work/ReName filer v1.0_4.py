@@ -5,7 +5,7 @@ import tkinter.filedialog as fd
 from tkinter import PhotoImage
 from os import listdir
 
-# 119 wiersz, tam skonczyłem, teraz do dokonczenia else: pass z petli loop
+# 119 wiersz, tam skonczyłem, teraz do dokonczenia else: pass z petli loop a
 class Tree():
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0])
