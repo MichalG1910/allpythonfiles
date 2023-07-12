@@ -83,10 +83,11 @@ class StartAction():
         self.afterConvert = reNameObj.afterConvert1.get()
         self.toConvert = reNameObj.toConvert1.get()
         self.oldNameList, self.oldNameLenList, self.newNameList, self.addNumList = [],[],[],[]
-        self.startIndexVar = reNameObj.startIndexVar.get()
-        self.lengthIndexVar = reNameObj.lengthIndexVar.get()
+        if reNameObj.deleteAddVar.get() == 1:
+            self.startIVar = int(reNameObj.startIndexVar.get())
+            self.lengthIVar = int(reNameObj.lengthIndexVar.get())
         #self.addTextCheckVar = reNameObj.addTextCheckVar.get()
-        self.newTextVar = reNameObj.newTextVar.get()
+        self.newTxtVar = reNameObj.newTextVar.get()
 
         
     def checkAddnumeration(self):
@@ -103,20 +104,20 @@ class StartAction():
             self.numeration2 = None
     
     def actionLoop(self,preview): 
-        def addNumeration(oldName, toConvert = None, afterConvert = None):
+        def addNumeration(oldName, afterConvert = None, toConvert = None ):
             if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:               # zwykła numeracja
                 addNum = "0" + str(self.numeration) + self.separator  if self.numeration < 10 else str(self.numeration) + self.separator 
                 if reNameObj.addTextCheckVar.get() == 0:
                     self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                 else: 
-                    self.newName = addNum + oldName.replace(oldName[(self.startIndexVar-1):(self.startIndexVar-1+self.lengthIndexVar)], afterConvert, 1)
+                    self.newName = addNum + oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], afterConvert, 1)
                 self.numeration += 1
             else:                                                                               # serialowa numeracja
                 addNum = "S0" + str(self.numeration) + "E0" + str(self.numeration2) + self.separator if self.numeration2 < 10 else "S0" + str(self.numeration) + "E" + str(self.numeration2) + self.separator
                 if reNameObj.addTextCheckVar.get() == 0:
                     self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                 else: 
-                    self.newName = addNum + oldName.replace(oldName[(self.startIndexVar-1):(self.startIndexVar-1+self.lengthIndexVar)], afterConvert, 1)
+                    self.newName = addNum + oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], afterConvert, 1)
                 self.numeration2 += 1
             self.addNumList.append(addNum)
         
@@ -132,21 +133,36 @@ class StartAction():
         def loop():
             for oldName in reNameObj.objsPreview:
                 full_oldName = os.path.join(self.location, oldName)
-                if os.path.isfile(full_oldName):
+                if os.path.isfile(full_oldName):                                # FRAME zmiana częsci nazwy
                     if reNameObj.changePartNameVar.get() == 1:
                         if self.numeration != None:                               # samo dodanie numeracji
                             if reNameObj.toConvert1.get() == '' and reNameObj.afterConvert1.get() == '':
-                                addNumeration(oldName, self.toConvert, self.afterConvert)  
+                                addNumeration(oldName, self.afterConvert, self.toConvert)  
                             elif oldName.find(self.toConvert) != -1:             # dodanie numeracji i zmiana cześci nazwy
-                                addNumeration(oldName,self.toConvert, self.afterConvert)
+                                addNumeration(oldName, self.afterConvert, self.toConvert)
                             else:
                                 self.newName = oldName.replace(self.toConvert, self.afterConvert, 1) 
                                 self.addNumList.append(0)
                         else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                             self.newName = oldName.replace(self.toConvert, self.afterConvert, 1)
-                    else:
-                        pass
-                renameFunc(oldName, self.newName, full_oldName)
+                    else:                                                        # FRAME dodaj/usuń
+                        if self.numeration != None:                               # samo dodanie numeracji
+                            if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
+                                self.afterConvert = ''
+                                addNumeration(oldName, self.afterConvert)  
+                            elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:             # dodanie numeracji i zmiana cześci nazwy
+                                self.afterConvert = self.newTxtVar
+                                addNumeration(oldName, self.afterConvert)
+                            else:
+                                # tu mbox
+                                pass
+                        else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
+                            if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
+                                self.afterConvert = ''
+                            elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:             # dodanie numeracji i zmiana cześci nazwy
+                                self.afterConvert = self.newTxtVar
+                            self.newName = oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], self.afterConvert, 1)
+                    renameFunc(oldName, self.newName, full_oldName)
         
         def ifNoPreview():
             if preview == 'no':
@@ -558,10 +574,17 @@ class ReName(Tree, StartAction):
         for f in range(len(self.newNameList)):
             self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
             self.textFieldAutoFit(self.newNameList[f])
-            startIndexBefore = self.oldNameList[f].find(self.toConvert1.get())
-            startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
-            endIndexBefore = startIndexBefore + len(self.toConvert1.get())
-            endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
+            if self.changePartNameVar.get() == 1:
+                startIndexBefore = self.oldNameList[f].find(self.toConvert1.get())
+                startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
+                endIndexBefore = startIndexBefore + len(self.toConvert1.get())
+                endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
+            else:
+                startIndexBefore = int(self.startIndexVar.get())-1
+                startIndexAfter = self.newNameList[f].find(self.newTextVar.get())
+                endIndexBefore = startIndexBefore + int(self.lengthIndexVar.get())
+                endIndexAfter = startIndexAfter + len(self.newTextVar.get())
+            
             if startIndexBefore != -1:
                 self.previewText.tag_add("before", f"{f+1}.{startIndexBefore}", f"{f+1}.{endIndexBefore}")
                 self.previewText.tag_configure("before", background="white", foreground="red") 
