@@ -107,14 +107,14 @@ class StartAction():
         def addNumeration(oldName, afterConvert = None, toConvert = None ):
             if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:               # zwykła numeracja
                 addNum = "0" + str(self.numeration) + self.separator  if self.numeration < 10 else str(self.numeration) + self.separator 
-                if reNameObj.addTextCheckVar.get() == 0:
+                if reNameObj.changePartNameVar.get() == 1:
                     self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                 else: 
                     self.newName = addNum + oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], afterConvert, 1)
                 self.numeration += 1
             else:                                                                               # serialowa numeracja
                 addNum = "S0" + str(self.numeration) + "E0" + str(self.numeration2) + self.separator if self.numeration2 < 10 else "S0" + str(self.numeration) + "E" + str(self.numeration2) + self.separator
-                if reNameObj.addTextCheckVar.get() == 0:
+                if reNameObj.changePartNameVar.get() == 1:
                     self.newName = addNum + oldName.replace(toConvert, afterConvert, 1)
                 else: 
                     self.newName = addNum + oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], afterConvert, 1)
