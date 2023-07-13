@@ -65,3 +65,10 @@ class tree:
                 self.insert_node(node, p, os.path.join(abspath, p))
 obj = tree()
 obj.win.mainloop()
+
+# wyciągnięcie lier wszystkich dysków
+'''
+import os, string
+available_drives = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+print(available_drives)
+'''

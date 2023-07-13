@@ -1,15 +1,46 @@
 import tkinter as tk
 from tkinter import ttk
-import os, sys
+import os, sys, string
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
 from os import listdir
+
 
 # 119 wiersz, tam skonczyłem, teraz do dokonczenia else: pass z petli loop a
 class Tree():
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0])
+        self.available_drives = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+        print(self.available_drives)
     
+    def diskButton(self):
+        #pressedButton = ttk.Style()
+        #pressedButton.configure("PRESS.TButton")
+        #pressedButton.map('PRESS.TButton', foreground=[('pressed', 'gray'), ('active', 'white')], bordercolor=[('disabled', 'red'), ('active', 'green')])
+        self.diskButName = []
+        b = 0
+        padAgr = 0
+        for diskLetter in self.available_drives:
+           
+            globals()['diskButVar{}'.format(b)] = tk.StringVar() 
+            globals()['diskButVar{}'.format(b)].set(f'{b}')
+            globals()['diskBut{}'.format(b)] = ttk.Button(self.treeFrame, text=diskLetter,width=2, command=self.changeDiskLetter)
+            globals()['diskBut{}'.format(b)].grid(column=0, row=0, padx=2 + padAgr ,sticky='W', pady=(0,5))
+            globals()['diskBut{}'.format(0)].configure(state='normal')
+            b += 1
+            padAgr += 40
+            self.diskButName.append('diskBut{}'.format(b))
+        globals()['diskBut{}'.format(0)].configure(style='Accent.TButton')   
+        print(self.diskButName)
+    def changeDiskLetter(self):
+        print('bio')
+        '''
+        takefocus = globals()['diskBut{}'.format(b)]['takefocus']
+        for v in range(len(self.diskButName)):
+            if self.diskButName[v]['style'] == 'Accent.TButton':
+        '''        
+
+
     def _tree(self, master, path):
         self.fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
         self.folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
@@ -19,6 +50,7 @@ class Tree():
         #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.treeFrame = ttk.Frame(master, height=20)
         self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10),)
+        self.diskButton()
         self.tree = ttk.Treeview(self.treeFrame, height=20, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
@@ -26,9 +58,9 @@ class Tree():
         self.tree.column('#0', minwidth=620, stretch=True, anchor='w', width=300 )
         self.tree.configure(xscrollcommand=xsb.set, yscrollcommand=ysb.set, )
         
-        self.tree.grid()
-        ysb.grid(row=0, column=1, sticky='ns')
-        xsb.grid(row=1, column=0, sticky='ew')
+        self.tree.grid(column=0, row=1)
+        ysb.grid(row=1, column=1, sticky='ns')
+        xsb.grid(row=2, column=0, sticky='ew')
     
         abspath = os.path.abspath(path)
         self.insert_node('', abspath, abspath)
@@ -503,7 +535,7 @@ class ReName(Tree, StartAction):
         self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=10, pady=15)
 
         # widok drzewa katalogów
-        super()._tree(self.win, path='\\')
+        super()._tree(self.win, path='C:/')
 
     def previewWidgets(self):
         def multiple_yview(*args):
