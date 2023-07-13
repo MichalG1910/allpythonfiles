@@ -4,15 +4,32 @@ import os, sys, string
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
 from os import listdir
-
+import psutil
+#aaa = [sdiskpart(device='/dev/nvme0n1p7', mountpoint='/', fstype='ext4', opts='rw,relatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/loop0', mountpoint='/snap/bare/5', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop1', mountpoint='/snap/core/15419', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop2', mountpoint='/snap/core/15511', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop3', mountpoint='/snap/core18/2751', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop4', mountpoint='/snap/core18/2785', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop5', mountpoint='/snap/core20/1950', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop6', mountpoint='/snap/core20/1974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop7', mountpoint='/snap/core22/806', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop8', mountpoint='/snap/core22/817', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop9', mountpoint='/snap/cups/962', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop10', mountpoint='/snap/cups/974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop11', mountpoint='/snap/curl/1679', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop12', mountpoint='/snap/curl/1754', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop14', mountpoint='/snap/dbeaver-ce/242', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop13', mountpoint='/snap/dbeaver-ce/239', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop15', mountpoint='/snap/firefox/2800', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop16', mountpoint='/snap/firefox/2850', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop17', mountpoint='/snap/gimp/393', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop19', mountpoint='/snap/gnome-3-38-2004/143', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop18', mountpoint='/snap/gnome-3-38-2004/140', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop21', mountpoint='/snap/gnome-42-2204/120', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop20', mountpoint='/snap/gnome-42-2204/111', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop22', mountpoint='/snap/gtk2-common-themes/13', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop23', mountpoint='/snap/gtk-common-themes/1535', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop24', mountpoint='/snap/snap-store/959', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop25', mountpoint='/snap/snapd/19361', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop26', mountpoint='/snap/snapd/19457', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop27', mountpoint='/snap/snapd-desktop-integration/57', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop28', mountpoint='/snap/snapd-desktop-integration/83', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/nvme0n1p7', mountpoint='/var/snap/firefox/common/host-hunspell', fstype='ext4', opts='ro,noexec,noatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p3', mountpoint='/boot/efi', fstype='vfat', opts='rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p1', mountpoint='/media/micha/EFI', fstype='vfat', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,showexec,utf8,flush,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p4', mountpoint='/media/micha/2E8A5B568A5B1A23', fstype='fuseblk', opts='ro,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other,blksize=4096', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p6', mountpoint='/media/micha/Nowy', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p8', mountpoint='/media/micha/DriverCD', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096)]
 
 # 119 wiersz, tam skonczyłem, teraz do dokonczenia else: pass z petli loop a
 class Tree():
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0])
-        self.available_drives = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
-        print(self.available_drives)
-    
+        self.home_directory = os.path.expanduser( '~' )
+        self.getDrivesName()
+        
+    def getDrivesName(self): 
+        self.linuxMountpoint = []   
+        self.win_drives = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+        self.linux_drives = ['/dev/sda%s' % d for d in range(100) if os.path.exists('/dev/sda%s' % d)]
+        self.linux_drives.append(self.home_directory)
+        self.psutil_drives = psutil.disk_partitions(all=False)
+        
+        for p in self.psutil_drives:
+            if p.mountpoint == '/':
+                self.linux_drives.append(p.device)
+            if p.device in self.linux_drives:
+                self.linuxMountpoint.append(p.mountpoint)
+        
+        print(self.linuxMountpoint)
+        self.os_drives = self.linux_drives + self.win_drives
+        print(self.os_drives)
     def diskButton(self):
         #pressedButton = ttk.Style()
         #pressedButton.configure("PRESS.TButton")
@@ -20,7 +37,7 @@ class Tree():
         self.diskButName = []
         b = 0
         padAgr = 0
-        for diskLetter in self.available_drives:
+        for diskLetter in self.os_drives:
            
             globals()['diskButVar{}'.format(b)] = tk.StringVar() 
             globals()['diskButVar{}'.format(b)].set(f'{b}')
@@ -535,8 +552,8 @@ class ReName(Tree, StartAction):
         self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=10, pady=15)
 
         # widok drzewa katalogów
-        super()._tree(self.win, path='C:/')
-
+        super()._tree(self.win, path='/')
+        
     def previewWidgets(self):
         def multiple_yview(*args):
             self.previewText.yview(*args)
