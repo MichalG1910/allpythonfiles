@@ -18,13 +18,12 @@ class Tree():
         self.linuxMountpoint = []   
         self.win_drives = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
         self.linux_drives = ['/dev/sda%s' % d for d in range(100) if os.path.exists('/dev/sda%s' % d)]
-        self.linux_drives.append(self.home_directory)
+        self.linux_drives.insert(0,self.home_directory)
         self.psutil_drives = psutil.disk_partitions(all=False)
         
         for p in self.psutil_drives:
             if p.mountpoint == '/':
-                self.linux_drives.append(p.device)
-            if p.device in self.linux_drives:
+                self.linux_drives.insert(0,p.device)
                 self.linuxMountpoint.append(p.mountpoint)
         
         print(self.linuxMountpoint)
