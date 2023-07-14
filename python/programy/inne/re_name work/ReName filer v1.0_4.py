@@ -16,7 +16,7 @@ class Tree():
         
     def getDrivesName(self): 
         self.linuxMountpoint = []   
-        self.win_drives = ['%s:' % d for d in string.ascii_uppercase if os.path.exists('%s:' % d)]
+        self.win_drives = ['%s:\\' % d for d in string.ascii_uppercase if os.path.exists('%s:\\' % d)]
         self.linux_drives = ['/dev/sda%s' % d for d in range(100) if os.path.exists('/dev/sda%s' % d)]
         self.linux_drives.insert(0,self.home_directory)
         self.psutil_drives = psutil.disk_partitions(all=False)
@@ -29,6 +29,7 @@ class Tree():
         print(self.linuxMountpoint)
         self.os_drives = self.linux_drives + self.win_drives
         print(self.os_drives)
+    
     def diskButton(self):
         #pressedButton = ttk.Style()
         #pressedButton.configure("PRESS.TButton")
@@ -54,10 +55,14 @@ class Tree():
         takefocus = globals()['diskBut{}'.format(b)]['takefocus']
         for v in range(len(self.diskButName)):
             if self.diskButName[v]['style'] == 'Accent.TButton':
-        '''        
-
+        '''
+    
 
     def _tree(self, master, path):
+        def _treeReset(): 
+            self._tree(reNameObj.win, path=self.os_drives)
+            self.tree.bind("<Double-1>",self.OnDoubleClick)      
+           
         self.fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
         self.folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
         self.openfolderIcon = PhotoImage(file=f'{self.filePath}/openfolder18t.png')
@@ -66,20 +71,22 @@ class Tree():
         #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.treeFrame = ttk.Frame(master, height=20)
         self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10),)
-        self.diskButton()
+        #self.diskButton()
         self.tree = ttk.Treeview(self.treeFrame, height=20, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
-        self.tree.heading('#0', text='Project tree', anchor='w')
+        self.tree.heading('#0', text='Reset tree', anchor='w',command=_treeReset)
         self.tree.column('#0', minwidth=620, stretch=True, anchor='w', width=300 )
         self.tree.configure(xscrollcommand=xsb.set, yscrollcommand=ysb.set, )
         
         self.tree.grid(column=0, row=1)
         ysb.grid(row=1, column=1, sticky='ns')
         xsb.grid(row=2, column=0, sticky='ew')
-    
-        abspath = os.path.abspath(path)
-        self.insert_node('', abspath, abspath)
+
+        for i in range(len(path)):
+            abspath = os.path.abspath(path[i-1])
+            self.insert_node('', abspath, abspath)
+            i += 1
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
 
     def insert_node(self, parent, text, abspath):
@@ -436,8 +443,7 @@ class ReName(Tree, StartAction):
     def changeStateAddText(self):
         if self.addTextCheckVar.get() == 0:
             self.newTextEntry.configure(state='disabled')
-        else: self.newTextEntry.configure(state='normal')
-            
+        else: self.newTextEntry.configure(state='normal')          
     
     def widgets(self):
         self.location1 = tk.StringVar()
@@ -551,8 +557,8 @@ class ReName(Tree, StartAction):
         self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=10, pady=15)
 
         # widok drzewa katalogów
-        super()._tree(self.win, path='/')
-        
+        super()._tree(self.win, path=self.os_drives)   
+    
     def previewWidgets(self):
         def multiple_yview(*args):
             self.previewText.yview(*args)
