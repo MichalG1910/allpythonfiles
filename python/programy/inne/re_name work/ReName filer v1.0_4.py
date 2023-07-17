@@ -10,6 +10,9 @@ from tkinter import messagebox as mBox
 
 # mbox w dodaj/usuń - wprowadzony indeks i ilość znaków nie może być większa niż najkrotsza nazwa pliku
 # mbox dla pustego pola z lokalizacją katalogu na którym pracujemy - zrobiono
+# treeview - proba dodania katalogu bez plików do podglądu - bład ValueError 324 wiersz
+# otwieranie katalogu bez uprawnień doniego - PermissionError: [WinError 5] Odmowa dostępu: 'N:\\Aster Integration Stream' 113 wiersz
+
 class Tree():
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0])
@@ -107,10 +110,15 @@ class Tree():
         abspath = self.nodes.pop(node, None)
         if abspath:
             self.tree.delete(self.tree.get_children(node))
-            for p in os.listdir(abspath):
-                self.insert_node(node, p, os.path.join(abspath, p))
+            try:
+                for p in os.listdir(abspath):
+                    self.insert_node(node, p, os.path.join(abspath, p))
+            except PermissionError:
+                    mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu")
+                    
     
     def OnDoubleClick(self, event):
+        
         reNameObj._clear()
         self.directory = False
         item = self.tree.selection()[0]
@@ -122,8 +130,12 @@ class Tree():
             parent_iid = self.tree.parent(parent_iid)
         i = self.tree.item(item, "text")
         path = os.path.join(*node, i)
-        reNameObj.location1.set(path)
-        reNameObj.beforePreview()
+        try:
+            os.listdir(path)
+            reNameObj.location1.set(path)
+            reNameObj.beforePreview()
+        except PermissionError:
+            pass
 
 class StartAction():
     def action(self,  preview = 'no'):
@@ -298,6 +310,7 @@ class ReName(Tree, StartAction):
             self.lok.delete(first=0, last=self.strLen)
             self.lok.insert(0, self.directory)
             self.strLen = len(self.directory)
+        
         self.objsPreview = os.listdir(self.location1.get())
         self.objsPreview.sort()
         self.previewText.configure(state="normal")
@@ -321,6 +334,7 @@ class ReName(Tree, StartAction):
         if round(max(self.nameWidthList)) < 90:
             self.previewText.configure(width=round(max(self.nameWidthList)))
         else: self.previewText.configure( width = 90 )
+        
         self.previewText.configure(state="disabled")
  
     def activateStandardEntry(self):
