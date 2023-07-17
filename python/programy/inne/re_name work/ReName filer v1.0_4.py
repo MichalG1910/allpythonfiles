@@ -1,13 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
-import os, sys, string
+import os, sys, string, re
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
 from os import listdir
 import psutil
+from tkinter import messagebox as mBox
 #aaa = [sdiskpart(device='/dev/nvme0n1p7', mountpoint='/', fstype='ext4', opts='rw,relatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/loop0', mountpoint='/snap/bare/5', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop1', mountpoint='/snap/core/15419', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop2', mountpoint='/snap/core/15511', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop3', mountpoint='/snap/core18/2751', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop4', mountpoint='/snap/core18/2785', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop5', mountpoint='/snap/core20/1950', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop6', mountpoint='/snap/core20/1974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop7', mountpoint='/snap/core22/806', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop8', mountpoint='/snap/core22/817', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop9', mountpoint='/snap/cups/962', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop10', mountpoint='/snap/cups/974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop11', mountpoint='/snap/curl/1679', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop12', mountpoint='/snap/curl/1754', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop14', mountpoint='/snap/dbeaver-ce/242', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop13', mountpoint='/snap/dbeaver-ce/239', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop15', mountpoint='/snap/firefox/2800', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop16', mountpoint='/snap/firefox/2850', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop17', mountpoint='/snap/gimp/393', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop19', mountpoint='/snap/gnome-3-38-2004/143', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop18', mountpoint='/snap/gnome-3-38-2004/140', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop21', mountpoint='/snap/gnome-42-2204/120', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop20', mountpoint='/snap/gnome-42-2204/111', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop22', mountpoint='/snap/gtk2-common-themes/13', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop23', mountpoint='/snap/gtk-common-themes/1535', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop24', mountpoint='/snap/snap-store/959', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop25', mountpoint='/snap/snapd/19361', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop26', mountpoint='/snap/snapd/19457', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop27', mountpoint='/snap/snapd-desktop-integration/57', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop28', mountpoint='/snap/snapd-desktop-integration/83', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/nvme0n1p7', mountpoint='/var/snap/firefox/common/host-hunspell', fstype='ext4', opts='ro,noexec,noatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p3', mountpoint='/boot/efi', fstype='vfat', opts='rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p1', mountpoint='/media/micha/EFI', fstype='vfat', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,showexec,utf8,flush,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p4', mountpoint='/media/micha/2E8A5B568A5B1A23', fstype='fuseblk', opts='ro,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other,blksize=4096', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p6', mountpoint='/media/micha/Nowy', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p8', mountpoint='/media/micha/DriverCD', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096)]
 
-# 119 wiersz, tam skonczyłem, teraz do dokonczenia else: pass z petli loop a
 class Tree():
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0])
@@ -127,7 +127,13 @@ class StartAction():
     def action(self,  preview = 'no'):
         self.actionVariable()
         self.checkAddnumeration()
-        self.actionLoop(preview)
+        if self.stopActionFunc == "Yes":
+            pass
+        else: 
+            self.actionLoop(preview)
+    
+    def regexNum(self, getNum):
+        return getNum.isdigit()
     
     def actionVariable(self):
         self.numeration = ""
@@ -144,19 +150,31 @@ class StartAction():
         #self.addTextCheckVar = reNameObj.addTextCheckVar.get()
         self.newTxtVar = reNameObj.newTextVar.get()
 
-        
     def checkAddnumeration(self):
         if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:
-            self.numeration = int(reNameObj.standardNumeration.get())
-            self.separator = reNameObj.sepVar.get()
-            self.numeration2 = None
+            if self.regexNum(reNameObj.standardNumeration.get()) == True:
+                self.numeration = int(reNameObj.standardNumeration.get())
+                self.separator = reNameObj.sepVar.get()
+                self.numeration2 = None
+                self.stopActionFunc = 'No'
+            else: 
+                mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
+                self.stopActionFunc = 'Yes'
+
         elif reNameObj.checkNumVar.get() == 1 and reNameObj.seriesVar.get() == 1:
-            self.numeration = int(reNameObj.seriesNumeration1.get())
-            self.numeration2 = int(reNameObj.seriesNumeration2.get())
-            self.separator = reNameObj.sepVar.get()
+            if self.regexNum(reNameObj.seriesNumeration1.get()) == True and self.regexNum(reNameObj.seriesNumeration2.get()) == True:
+                self.numeration = int(reNameObj.seriesNumeration1.get())
+                self.numeration2 = int(reNameObj.seriesNumeration2.get())
+                self.separator = reNameObj.sepVar.get()
+                self.stopActionFunc = 'No'
+            else: 
+                mBox.showerror("Uwaga", "Nieprawidłowy format daty, wprowadź nową datę")
+                self.stopActionFunc = 'Yes'
         else: 
             self.numeration = None
             self.numeration2 = None
+            self.stopActionFunc = 'No'
+        return self.stopActionFunc
     
     def actionLoop(self,preview): 
         def addNumeration(oldName, afterConvert = None, toConvert = None ):
@@ -620,47 +638,51 @@ class ReName(Tree, StartAction):
         self.generatePreview = 'yes'
         
         super().action(self.generatePreview)
-        self.beforePreview()
-        
-        self.previewTextAfter.configure(state='normal')
-        self.previewTextAfter.delete('1.0', tk.END)
-        
-        for f in range(len(self.newNameList)):
-            self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
-            self.textFieldAutoFit(self.newNameList[f])
-            if self.changePartNameVar.get() == 1:
-                startIndexBefore = self.oldNameList[f].find(self.toConvert1.get())
-                startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
-                endIndexBefore = startIndexBefore + len(self.toConvert1.get())
-                endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
-            else:
-                startIndexBefore = int(self.startIndexVar.get())-1
-                startIndexAfter = self.newNameList[f].find(self.newTextVar.get())
-                endIndexBefore = startIndexBefore + int(self.lengthIndexVar.get())
-                endIndexAfter = startIndexAfter + len(self.newTextVar.get())
+        if self.stopActionFunc == "Yes":
+            pass
+        else: 
+           
+            self.beforePreview()
             
-            if startIndexBefore != -1:
-                self.previewText.tag_add("before", f"{f+1}.{startIndexBefore}", f"{f+1}.{endIndexBefore}")
-                self.previewText.tag_configure("before", background="white", foreground="red") 
-                self.previewTextAfter.tag_add("after", f"{f+1}.{startIndexAfter}", f"{f+1}.{endIndexAfter}")
-                self.previewTextAfter.tag_configure("after", background="white", foreground="green")
-                if self.checkNumVar.get() == 1:
-                    self.previewTextAfter.tag_add("after", f"{f+1}.{0}", f"{f+1}.{len(self.addNumList[f])}")
+            self.previewTextAfter.configure(state='normal')
+            self.previewTextAfter.delete('1.0', tk.END)
+            
+            for f in range(len(self.newNameList)):
+                self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
+                self.textFieldAutoFit(self.newNameList[f])
+                if self.changePartNameVar.get() == 1:
+                    startIndexBefore = self.oldNameList[f].find(self.toConvert1.get())
+                    startIndexAfter = self.newNameList[f].find(self.afterConvert1.get())
+                    endIndexBefore = startIndexBefore + len(self.toConvert1.get())
+                    endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
+                else:
+                    startIndexBefore = int(self.startIndexVar.get())-1
+                    startIndexAfter = self.newNameList[f].find(self.newTextVar.get())
+                    endIndexBefore = startIndexBefore + int(self.lengthIndexVar.get())
+                    endIndexAfter = startIndexAfter + len(self.newTextVar.get())
+                
+                if startIndexBefore != -1:
+                    self.previewText.tag_add("before", f"{f+1}.{startIndexBefore}", f"{f+1}.{endIndexBefore}")
+                    self.previewText.tag_configure("before", background="white", foreground="red") 
+                    self.previewTextAfter.tag_add("after", f"{f+1}.{startIndexAfter}", f"{f+1}.{endIndexAfter}")
                     self.previewTextAfter.tag_configure("after", background="white", foreground="green")
+                    if self.checkNumVar.get() == 1:
+                        self.previewTextAfter.tag_add("after", f"{f+1}.{0}", f"{f+1}.{len(self.addNumList[f])}")
+                        self.previewTextAfter.tag_configure("after", background="white", foreground="green")
 
-            newNameWidthList.append(self.stringWidth)
-            #multiplierList.append(self.multiplier)
-            #newNameLenList.append(len(self.newNameList[f]))
-            #winWidthDict[len(self.newNameList[f])] = self.multiplier
-       
-        #winWidthList = [key * winWidthDict[key] for key in winWidthDict]
-        #if (max(newNameLenList)+round((max(winWidthList) / 3.2))) > 48:
-            #self.previewTextAfter.configure(width=max(newNameLenList)+round((max(winWidthList) / 3.2)))
-        if round(max(newNameWidthList)) +  round(max(self.nameWidthList)) < 180:
-            self.previewTextAfter.configure(width=round(max(newNameWidthList)))
-        else: self.previewTextAfter.configure(width=180 - round(max(self.nameWidthList)) if round(max(self.nameWidthList)) <= 90 else 90)
-        self.previewTextAfter.configure(state='disabled')
-        print(max(self.nameWidthList), ' ', max(newNameWidthList)) # prz 184 przestaje rozszerzać
+                newNameWidthList.append(self.stringWidth)
+                #multiplierList.append(self.multiplier)
+                #newNameLenList.append(len(self.newNameList[f]))
+                #winWidthDict[len(self.newNameList[f])] = self.multiplier
+        
+            #winWidthList = [key * winWidthDict[key] for key in winWidthDict]
+            #if (max(newNameLenList)+round((max(winWidthList) / 3.2))) > 48:
+                #self.previewTextAfter.configure(width=max(newNameLenList)+round((max(winWidthList) / 3.2)))
+            if round(max(newNameWidthList)) +  round(max(self.nameWidthList)) < 180:
+                self.previewTextAfter.configure(width=round(max(newNameWidthList)))
+            else: self.previewTextAfter.configure(width=180 - round(max(self.nameWidthList)) if round(max(self.nameWidthList)) <= 90 else 90)
+            self.previewTextAfter.configure(state='disabled')
+            print(max(self.nameWidthList), ' ', max(newNameWidthList)) # prz 184 przestaje rozszerzać
     def _back(self):
         self.backButton.configure(state='disabled')
         a = 0
