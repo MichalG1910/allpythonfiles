@@ -30,10 +30,9 @@ class Tree():
             if p.mountpoint == '/':
                 self.linux_drives.insert(0,p.device)
                 self.linuxMountpoint.append(p.mountpoint)
-        
-        print(self.linuxMountpoint)
+    
         self.os_drives = self.linux_drives + self.win_drives
-        print(self.os_drives)
+        
     
     def diskButton(self):
         #pressedButton = ttk.Style()
@@ -105,17 +104,28 @@ class Tree():
             self.tree.insert(node, 'end')
         else:
             node = self.tree.insert(parent, 'end', text=text, image=img, open=False)
-
+    def iconChange(self):
+        pass
     def open_node(self, event):
+        print('1')
         node = self.tree.focus()
+        img=self.openfolderIcon
+        self.tree.item(node, image=img, open=False)
+        
+        print(node)
         abspath = self.nodes.pop(node, None)
         if abspath:
             self.tree.delete(self.tree.get_children(node))
             try:
                 for p in os.listdir(abspath):
                     if os.path.isdir(os.path.join(abspath, p)):
-                        img = self.folderIcon
-                        self.insert_node(node, p, os.path.join(abspath, p),img)
+                        try:
+                            os.scandir(os.path.join(abspath, p))
+                            img = self.folderIcon
+                            self.insert_node(node, p, os.path.join(abspath, p),img)
+                        except PermissionError:
+                            img=self.errorfolderIcon
+                            self.insert_node(node, p, os.path.join(abspath, p),img)
                     else:
                         img = self.fileIcon
                         self.insert_node(node, p, os.path.join(abspath, p), img)
@@ -124,16 +134,17 @@ class Tree():
                 img=self.errorfolderIcon
                 
                 #self.insert_node(self.tree.parent(node), self.text, abspath, img)
-                self.tree.insert(self.path, 'end', image=img)
+                #self.tree.insert(self.path, 'end', image=img)
 
                    
     
     def OnDoubleClick(self, event):
-        
+        print('onedoubleclick')
         reNameObj._clear()
         self.directory = False
         item = self.tree.selection()[0]
         parent_iid = self.tree.parent(item)
+        print(parent_iid)
         node = []
         # go backward until reaching root
         while parent_iid != '':
@@ -144,8 +155,8 @@ class Tree():
         try:
             os.listdir(self.path)
             reNameObj.location1.set(self.path)
-            reNameObj.beforePreview()
-        except PermissionError:
+            reNameObj.beforePreview()    
+        except PermissionError or ValueError:
             pass
 
 class StartAction():
@@ -342,7 +353,8 @@ class ReName(Tree, StartAction):
         if (max(objsPreviewLenList)+round(max(winWidthList) / 3.2)) > 48:
             self.previewText.configure(width=max(objsPreviewLenList)+round(max(winWidthList) / 3.2))
         '''
-        if round(max(self.nameWidthList)) < 90:
+        if self.nameWidthList == []: pass
+        elif round(max(self.nameWidthList)) < 90:
             self.previewText.configure(width=round(max(self.nameWidthList)))
         else: self.previewText.configure( width = 90 )
         
