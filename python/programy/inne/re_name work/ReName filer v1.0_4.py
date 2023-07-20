@@ -66,11 +66,12 @@ class Tree():
         def _treeReset(): 
             self._tree(reNameObj.win, path=self.os_drives)
             self.tree.bind("<Double-1>",self.OnDoubleClick)      
-           
+        
         self.fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
         self.folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
         self.openfolderIcon = PhotoImage(file=f'{self.filePath}/openfolder18t.png')
         self.errorfolderIcon = PhotoImage(file=f'{self.filePath}/error folder.png')
+        self.nodesAll= dict()
         self.nodes = dict()
         #self.treeFrame = ttk.LabelFrame(self.win, text='TREE',labelanchor='n')
         #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
@@ -93,6 +94,7 @@ class Tree():
             self.insert_node('', abspath, abspath, self.folderIcon)
             i += 1
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
+        self.tree.bind('<<TreeviewClose>>', self.close_node)
 
     def insert_node(self, parent, text, abspath, img):
         self.parent = parent
@@ -101,18 +103,26 @@ class Tree():
         if os.path.isdir(abspath):
             node = self.tree.insert(parent, 'end', text=text, image=img, open=False)
             self.nodes[node] = abspath
+            self.nodesAll[node] = abspath
             self.tree.insert(node, 'end')
         else:
             node = self.tree.insert(parent, 'end', text=text, image=img, open=False)
-    def iconChange(self):
-        pass
-    def open_node(self, event):
-        print('1')
+    
+    def close_node(self,event):
         node = self.tree.focus()
-        img=self.openfolderIcon
+        print(node)
+        path = os.path.abspath(self.nodesAll[node])
+        try:
+            os.listdir(path)
+            img=self.folderIcon
+        except PermissionError:
+            img=self.errorfolderIcon
         self.tree.item(node, image=img, open=False)
         
-        print(node)
+    def open_node(self, event):
+        node = self.tree.focus()
+        img=self.openfolderIcon
+        self.tree.item(node, image=img, open=True)
         abspath = self.nodes.pop(node, None)
         if abspath:
             self.tree.delete(self.tree.get_children(node))
@@ -130,6 +140,7 @@ class Tree():
                         img = self.fileIcon
                         self.insert_node(node, p, os.path.join(abspath, p), img)
             except PermissionError:
+                self.close_node('<<TreeviewClose>>')
                 mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu")
                 img=self.errorfolderIcon
                 
@@ -144,10 +155,10 @@ class Tree():
         self.directory = False
         item = self.tree.selection()[0]
         parent_iid = self.tree.parent(item)
-        print(parent_iid)
         node = []
         # go backward until reaching root
         while parent_iid != '':
+            print('4')
             node.insert(0, self.tree.item(parent_iid)['text'])
             parent_iid = self.tree.parent(parent_iid)
         i = self.tree.item(item, "text")
