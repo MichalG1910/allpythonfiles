@@ -7,8 +7,8 @@ from os import listdir
 import psutil
 from tkinter import messagebox as mBox
 #aaa = [sdiskpart(device='/dev/nvme0n1p7', mountpoint='/', fstype='ext4', opts='rw,relatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/loop0', mountpoint='/snap/bare/5', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop1', mountpoint='/snap/core/15419', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop2', mountpoint='/snap/core/15511', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop3', mountpoint='/snap/core18/2751', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop4', mountpoint='/snap/core18/2785', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop5', mountpoint='/snap/core20/1950', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop6', mountpoint='/snap/core20/1974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop7', mountpoint='/snap/core22/806', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop8', mountpoint='/snap/core22/817', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop9', mountpoint='/snap/cups/962', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop10', mountpoint='/snap/cups/974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop11', mountpoint='/snap/curl/1679', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop12', mountpoint='/snap/curl/1754', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop14', mountpoint='/snap/dbeaver-ce/242', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop13', mountpoint='/snap/dbeaver-ce/239', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop15', mountpoint='/snap/firefox/2800', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop16', mountpoint='/snap/firefox/2850', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop17', mountpoint='/snap/gimp/393', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop19', mountpoint='/snap/gnome-3-38-2004/143', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop18', mountpoint='/snap/gnome-3-38-2004/140', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop21', mountpoint='/snap/gnome-42-2204/120', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop20', mountpoint='/snap/gnome-42-2204/111', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop22', mountpoint='/snap/gtk2-common-themes/13', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop23', mountpoint='/snap/gtk-common-themes/1535', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop24', mountpoint='/snap/snap-store/959', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop25', mountpoint='/snap/snapd/19361', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop26', mountpoint='/snap/snapd/19457', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop27', mountpoint='/snap/snapd-desktop-integration/57', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop28', mountpoint='/snap/snapd-desktop-integration/83', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/nvme0n1p7', mountpoint='/var/snap/firefox/common/host-hunspell', fstype='ext4', opts='ro,noexec,noatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p3', mountpoint='/boot/efi', fstype='vfat', opts='rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p1', mountpoint='/media/micha/EFI', fstype='vfat', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,showexec,utf8,flush,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p4', mountpoint='/media/micha/2E8A5B568A5B1A23', fstype='fuseblk', opts='ro,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other,blksize=4096', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p6', mountpoint='/media/micha/Nowy', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p8', mountpoint='/media/micha/DriverCD', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096)]
-# mbox dla podwojnego klikniecia na plik zaniast na katalog
 
+# mbox dla podwojnego klikniecia na plik zaniast na katalog - zrobiono
 # mbox w dodaj/usuń - wprowadzony indeks i ilość znaków nie może być większa niż najkrotsza nazwa pliku - zrobiono
 # mbox dla pustego pola z lokalizacją katalogu na którym pracujemy - zrobiono
 # treeview - proba dodania katalogu bez plików do podglądu - bład ValueError zrobiono
@@ -176,23 +176,26 @@ class Tree():
         reNameObj._clear()
         self.directory = False
         item = self.tree.selection()[0]
-        parent_iid = self.tree.parent(item)
-        node = []
-        # go backward until reaching root
-        while parent_iid != '':
+        if item in self.nodesAll:
+            parent_iid = self.tree.parent(item)
+            node = []
+            # go backward until reaching root
+            while parent_iid != '':
+                
+                node.insert(0, self.nodesAll[parent_iid])
+                parent_iid = self.tree.parent(parent_iid)
+            i = self.nodesAll[item]
+            self.path = os.path.join(*node, i)
             
-            node.insert(0, self.nodesAll[parent_iid])
-            parent_iid = self.tree.parent(parent_iid)
-        i = self.nodesAll[item]
-        self.path = os.path.join(*node, i)
-        
-        try:
-            os.listdir(self.path)
-            reNameObj.location1.set(self.path)
-            reNameObj.beforePreview()    
-        except PermissionError or ValueError:
+            try:
+                os.listdir(self.path)
+                reNameObj.location1.set(self.path)
+                reNameObj.beforePreview()    
+            except PermissionError or ValueError:
+                pass
+        else:
+            mBox.showinfo('To nie jest katalog', 'Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację')
             pass
-
 class StartAction():
     def action(self,  preview = 'no'):
         self.actionVariable()
