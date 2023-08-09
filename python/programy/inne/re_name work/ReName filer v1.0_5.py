@@ -6,16 +6,6 @@ from tkinter import PhotoImage
 from os import listdir
 import psutil
 from tkinter import messagebox as mBox
-'''
- File "c:\Users\mgrabarz3\pythonMain\allpythonfiles\python\programy\inne\re_name work\ReName filer v1.0_5.py", line 206, in action
-    self.actionLoop(preview)
-  File "c:\Users\mgrabarz3\pythonMain\allpythonfiles\python\programy\inne\re_name work\ReName filer v1.0_5.py", line 335, in actionLoop
-    loop()
-  File "c:\Users\mgrabarz3\pythonMain\allpythonfiles\python\programy\inne\re_name work\ReName filer v1.0_5.py", line 312, in loop
-    if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
-AttributeError: 'ReName' object has no attribute 'startIVar'
-'''
-
 
 #aaa = [sdiskpart(device='/dev/nvme0n1p7', mountpoint='/', fstype='ext4', opts='rw,relatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/loop0', mountpoint='/snap/bare/5', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop1', mountpoint='/snap/core/15419', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop2', mountpoint='/snap/core/15511', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop3', mountpoint='/snap/core18/2751', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop4', mountpoint='/snap/core18/2785', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop5', mountpoint='/snap/core20/1950', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop6', mountpoint='/snap/core20/1974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop7', mountpoint='/snap/core22/806', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop8', mountpoint='/snap/core22/817', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop9', mountpoint='/snap/cups/962', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop10', mountpoint='/snap/cups/974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop11', mountpoint='/snap/curl/1679', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop12', mountpoint='/snap/curl/1754', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop14', mountpoint='/snap/dbeaver-ce/242', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop13', mountpoint='/snap/dbeaver-ce/239', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop15', mountpoint='/snap/firefox/2800', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop16', mountpoint='/snap/firefox/2850', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop17', mountpoint='/snap/gimp/393', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop19', mountpoint='/snap/gnome-3-38-2004/143', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop18', mountpoint='/snap/gnome-3-38-2004/140', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop21', mountpoint='/snap/gnome-42-2204/120', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop20', mountpoint='/snap/gnome-42-2204/111', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop22', mountpoint='/snap/gtk2-common-themes/13', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop23', mountpoint='/snap/gtk-common-themes/1535', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop24', mountpoint='/snap/snap-store/959', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop25', mountpoint='/snap/snapd/19361', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop26', mountpoint='/snap/snapd/19457', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop27', mountpoint='/snap/snapd-desktop-integration/57', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop28', mountpoint='/snap/snapd-desktop-integration/83', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/nvme0n1p7', mountpoint='/var/snap/firefox/common/host-hunspell', fstype='ext4', opts='ro,noexec,noatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p3', mountpoint='/boot/efi', fstype='vfat', opts='rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p1', mountpoint='/media/micha/EFI', fstype='vfat', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,showexec,utf8,flush,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p4', mountpoint='/media/micha/2E8A5B568A5B1A23', fstype='fuseblk', opts='ro,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other,blksize=4096', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p6', mountpoint='/media/micha/Nowy', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p8', mountpoint='/media/micha/DriverCD', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096)]
 
@@ -46,50 +36,12 @@ class Tree():
                     self.linuxMountpoint.insert(1,v.mountpoint)
                 except PermissionError:
                     pass
-        '''
-        for p in self.psutil_drives:
-            
-            if p.mountpoint == '/':
-                self.linux_drives.insert(0,p.device)
-                self.linuxMountpoint.insert(1,p.mountpoint)
-            
-            if p.fstype != 'squashfs':
-                self.linux_drives.insert(0,p.device)
-                self.linuxMountpoint.insert(1,p.mountpoint)
-    '''
+      
         self.os_drives = set(self.win_drives + self.linuxMountpoint)
         self.os_drives = list(self.os_drives)
         #print(self.linux_drives)
         #print(self.linuxMountpoint)
     
-    def diskButton(self):
-        #pressedButton = ttk.Style()
-        #pressedButton.configure("PRESS.TButton")
-        #pressedButton.map('PRESS.TButton', foreground=[('pressed', 'gray'), ('active', 'white')], bordercolor=[('disabled', 'red'), ('active', 'green')])
-        self.diskButName = []
-        b = 0
-        padAgr = 0
-        for diskLetter in self.os_drives:
-           
-            globals()['diskButVar{}'.format(b)] = tk.StringVar() 
-            globals()['diskButVar{}'.format(b)].set(f'{b}')
-            globals()['diskBut{}'.format(b)] = ttk.Button(self.treeFrame, text=diskLetter,width=2, command=self.changeDiskLetter)
-            globals()['diskBut{}'.format(b)].grid(column=0, row=0, padx=2 + padAgr ,sticky='W', pady=(0,5))
-            globals()['diskBut{}'.format(0)].configure(state='normal')
-            b += 1
-            padAgr += 40
-            self.diskButName.append('diskBut{}'.format(b))
-        globals()['diskBut{}'.format(0)].configure(style='Accent.TButton')   
-        print(self.diskButName)
-    def changeDiskLetter(self):
-        print('bio')
-        '''
-        takefocus = globals()['diskBut{}'.format(b)]['takefocus']
-        for v in range(len(self.diskButName)):
-            if self.diskButName[v]['style'] == 'Accent.TButton':
-        '''
-    
-
     def _tree(self, master, path):
         def _treeReset(): 
             self._tree(reNameObj.win, path=self.os_drives)
@@ -101,11 +53,8 @@ class Tree():
         self.errorfolderIcon = PhotoImage(file=f'{self.filePath}/error folder.png')
         self.nodes = dict()
         self.nodesAll = dict()
-        #self.treeFrame = ttk.LabelFrame(self.win, text='TREE',labelanchor='n')
-        #self.treeFrame.grid(column=1, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.treeFrame = ttk.Frame(master, height=20)
         self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10),)
-        #self.diskButton()
         self.tree = ttk.Treeview(self.treeFrame, height=20, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
@@ -179,9 +128,6 @@ class Tree():
                 self.close_node('<<TreeviewClose>>')
                 mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu")
                 img=self.errorfolderIcon
-                
-                #self.insert_node(self.tree.parent(node), self.text, abspath, img)
-                #self.tree.insert(self.path, 'end', image=img)
 
     def OnDoubleClick(self, event):
         reNameObj._clear()
@@ -219,6 +165,9 @@ class StartAction():
     def regexNum(self, getNum):
         return getNum.isdigit()
     
+    def regexNotNum(self, getNum):
+        return getNum.isalpha()
+    
     def actionVariable(self):
         self.numeration = ""
         self.numeration2 = ""
@@ -231,15 +180,15 @@ class StartAction():
         if reNameObj.deleteAddVar.get() == 1:
             if self.regexNum(reNameObj.startIndexVar.get()) == True and self.regexNum(reNameObj.lengthIndexVar.get()) == True:
                 self.startIVar = int(reNameObj.startIndexVar.get())
-                self.lengthIVar = int(reNameObj.lengthIndexVar.get())
+                self.lengthIVar = int(reNameObj.lengthIndexVar.get())  
             elif reNameObj.startIndexVar.get() != '' and self.regexNum(reNameObj.startIndexVar.get()) == False or reNameObj.lengthIndexVar.get() != '' and self.regexNum(reNameObj.lengthIndexVar.get()) == False:
                 mBox.showerror("Uwaga", "wprowadź liczbę")
             else: 
                 self.startIVar = 1
                 self.lengthIVar = 0
-        #self.addTextCheckVar = reNameObj.addTextCheckVar.get()
-        self.newTxtVar = reNameObj.newTextVar.get()
 
+        self.newTxtVar = reNameObj.newTextVar.get()
+        
     def checkAddnumeration(self):
         if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:
             if self.regexNum(reNameObj.standardNumeration.get()) == True:
@@ -250,7 +199,6 @@ class StartAction():
             else: 
                 mBox.showerror("Uwaga", "wprowadź liczbę")
                 self.stopActionFunc = 'Yes'
-
         elif reNameObj.checkNumVar.get() == 1 and reNameObj.seriesVar.get() == 1:
             if self.regexNum(reNameObj.seriesNumeration1.get()) == True and self.regexNum(reNameObj.seriesNumeration2.get()) == True:
                 self.numeration = int(reNameObj.seriesNumeration1.get())
@@ -308,8 +256,11 @@ class StartAction():
                                 self.addNumList.append(0)
                         else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                             self.newName = oldName.replace(self.toConvert, self.afterConvert, 1)
-                    else:                                                        # FRAME dodaj/usuń
-                        if self.numeration != None:                               # samo dodanie numeracji
+                    else:                                                                                       # FRAME dodaj/usuń
+                        if self.regexNotNum(reNameObj.startIndexVar.get()) == True or self.regexNotNum(reNameObj.lengthIndexVar.get()) == True:
+                            self.stopActionFunc = "Yes"
+                            break                                                        
+                        elif self.numeration != None:                               # samo dodanie numeracji
                             if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
                                 self.afterConvert = ''
                                 addNumeration(oldName, self.afterConvert)  
@@ -588,7 +539,6 @@ class ReName(Tree, StartAction):
         
        
         #################################### kolumna 1 #######################################################
-        #changePartNameChb.grid(column= 0, row= 7, sticky= tk.W, padx=10, pady=10)
         self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
@@ -731,13 +681,6 @@ class ReName(Tree, StartAction):
             else:
                 self.stringWidth += self.letterWidth[l] * 1.55
 
-        
-        '''
-        upperLetter = len([i for i in string if i.isupper()==True])
-        self.multiplier = upperLetter / len(string)
-        if self.multiplier < 0.5:
-            self.multiplier = 0.5
-    '''
     def _preview(self):
         multiplierList, newNameLenList, winWidthDict, newNameWidthList = [],[],{},[]
         self.generatePreview = 'yes'
@@ -776,18 +719,12 @@ class ReName(Tree, StartAction):
                         self.previewTextAfter.tag_configure("after", background="white", foreground="green")
 
                 newNameWidthList.append(self.stringWidth)
-                #multiplierList.append(self.multiplier)
-                #newNameLenList.append(len(self.newNameList[f]))
-                #winWidthDict[len(self.newNameList[f])] = self.multiplier
-        
-            #winWidthList = [key * winWidthDict[key] for key in winWidthDict]
-            #if (max(newNameLenList)+round((max(winWidthList) / 3.2))) > 48:
-                #self.previewTextAfter.configure(width=max(newNameLenList)+round((max(winWidthList) / 3.2)))
+             
             if round(max(newNameWidthList)) +  round(max(self.nameWidthList)) < 180:
                 self.previewTextAfter.configure(width=round(max(newNameWidthList)))
             else: self.previewTextAfter.configure(width=180 - round(max(self.nameWidthList)) if round(max(self.nameWidthList)) <= 90 else 90)
             self.previewTextAfter.configure(state='disabled')
-            print(max(self.nameWidthList), ' ', max(newNameWidthList)) # prz 184 przestaje rozszerzać
+            
     def _back(self):
         self.backButton.configure(state='disabled')
         a = 0
@@ -820,7 +757,6 @@ class ReName(Tree, StartAction):
         self.seriesNumeration2.set('')
         self.sepVar.set('')
 
-#treeObj= Tree() 
 reNameObj = ReName() 
 reNameObj.win.mainloop()
 
