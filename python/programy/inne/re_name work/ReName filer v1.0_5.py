@@ -7,42 +7,37 @@ from os import listdir
 import psutil
 from tkinter import messagebox as mBox
 
-#aaa = [sdiskpart(device='/dev/nvme0n1p7', mountpoint='/', fstype='ext4', opts='rw,relatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/loop0', mountpoint='/snap/bare/5', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop1', mountpoint='/snap/core/15419', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop2', mountpoint='/snap/core/15511', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop3', mountpoint='/snap/core18/2751', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop4', mountpoint='/snap/core18/2785', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop5', mountpoint='/snap/core20/1950', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop6', mountpoint='/snap/core20/1974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop7', mountpoint='/snap/core22/806', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop8', mountpoint='/snap/core22/817', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop9', mountpoint='/snap/cups/962', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop10', mountpoint='/snap/cups/974', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop11', mountpoint='/snap/curl/1679', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop12', mountpoint='/snap/curl/1754', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop14', mountpoint='/snap/dbeaver-ce/242', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop13', mountpoint='/snap/dbeaver-ce/239', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop15', mountpoint='/snap/firefox/2800', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop16', mountpoint='/snap/firefox/2850', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop17', mountpoint='/snap/gimp/393', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop19', mountpoint='/snap/gnome-3-38-2004/143', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop18', mountpoint='/snap/gnome-3-38-2004/140', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop21', mountpoint='/snap/gnome-42-2204/120', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop20', mountpoint='/snap/gnome-42-2204/111', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop22', mountpoint='/snap/gtk2-common-themes/13', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop23', mountpoint='/snap/gtk-common-themes/1535', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop24', mountpoint='/snap/snap-store/959', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop25', mountpoint='/snap/snapd/19361', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop26', mountpoint='/snap/snapd/19457', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop27', mountpoint='/snap/snapd-desktop-integration/57', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/loop28', mountpoint='/snap/snapd-desktop-integration/83', fstype='squashfs', opts='ro,nodev,relatime,errors=continue,threads=single', maxfile=256, maxpath=4096), sdiskpart(device='/dev/nvme0n1p7', mountpoint='/var/snap/firefox/common/host-hunspell', fstype='ext4', opts='ro,noexec,noatime,errors=remount-ro', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p3', mountpoint='/boot/efi', fstype='vfat', opts='rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p1', mountpoint='/media/micha/EFI', fstype='vfat', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,showexec,utf8,flush,errors=remount-ro', maxfile=1530, maxpath=4096), sdiskpart(device='/dev/nvme0n1p4', mountpoint='/media/micha/2E8A5B568A5B1A23', fstype='fuseblk', opts='ro,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other,blksize=4096', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p6', mountpoint='/media/micha/Nowy', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096), sdiskpart(device='/dev/nvme0n1p8', mountpoint='/media/micha/DriverCD', fstype='ntfs3', opts='rw,nosuid,nodev,relatime,uid=1000,gid=1000,iocharset=utf8,windows_names', maxfile=255, maxpath=4096)]
 
-# mbox dla podwojnego klikniecia na plik zaniast na katalog - zrobiono
-# mbox w dodaj/usuń - wprowadzony indeks i ilość znaków nie może być większa niż najkrotsza nazwa pliku - zrobiono
-# mbox dla pustego pola z lokalizacją katalogu na którym pracujemy - zrobiono
-# treeview - proba dodania katalogu bez plików do podglądu - bład ValueError zrobiono
-# otwieranie katalogu bez uprawnień doniego - PermissionError: [WinError 5] Odmowa dostępu: 'N:\\Aster Integration Stream' 113 wiersz - zrobiono
-
+# class to visualize the directory tree
 class Tree():
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0])
         self.home_directory = os.path.expanduser( '~' )
         self.getDrivesName()
-        
+    
+    # detect all active disk partitions  
     def getDrivesName(self):
         data1 = {} 
-        self.linuxMountpoint = []   
-        self.win_drives = ['%s:\\' % d for d in string.ascii_uppercase if os.path.exists('%s:\\' % d)]
-        self.linux_drives = ['/dev/sda%s' % d for d in range(100) if os.path.exists('/dev/sda%s' % d)]
-        self.psutil_drives = psutil.disk_partitions(all=False)
-        #data = ({v.device : v.mountpoint for v in self.psutil_drives if v.fstype != 'squashfs' and v.device not in self.psutil_drives})
-        for v in self.psutil_drives:
+        linuxMountpoint = []   
+        win_drives = ['%s:\\' % d for d in string.ascii_uppercase if os.path.exists('%s:\\' % d)]
+        # linux_drives = ['/dev/sda%s' % d for d in range(100) if os.path.exists('/dev/sda%s' % d)]
+        psutil_drives = psutil.disk_partitions(all=False)
+    
+        for v in psutil_drives:
             if v.fstype != 'squashfs' and v.device not in data1.values():
                 try:
                     os.listdir(v.mountpoint)
                     data1[v.mountpoint] = v.device
-                    self.linuxMountpoint.insert(1,v.mountpoint)
+                    linuxMountpoint.insert(1, v.mountpoint)
                 except PermissionError:
                     pass
       
-        self.os_drives = set(self.win_drives + self.linuxMountpoint)
+        self.os_drives = set(win_drives + linuxMountpoint)
         self.os_drives = list(self.os_drives)
-        #print(self.linux_drives)
-        #print(self.linuxMountpoint)
-    
+    # directory tree function
     def _tree(self, master, path):
+        
+        # directory tree reset
         def _treeReset(): 
             self._tree(reNameObj.win, path=self.os_drives)
             self.tree.bind("<Double-1>",self.OnDoubleClick)      
@@ -79,11 +74,11 @@ class Tree():
             i += 1
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
         self.tree.bind('<<TreeviewClose>>', self.close_node)
-
+    # inserts a new directory node
     def insert_node(self, parent, text, abspath, img):
         self.parent = parent
         self.text = text
-       # node = self.tree.insert(parent, 'end', text=text, open=False)
+       
         if os.path.isdir(abspath) :
             node = self.tree.insert(parent, 'end', text=text, image=img, open=False)
             self.nodes[node] = abspath
@@ -92,7 +87,7 @@ class Tree():
             
         else:
             node = self.tree.insert(parent, 'end', text=text, image=img, open=False)
-    
+    # closes the directory node
     def close_node(self,event):
         node = self.tree.focus()
         print(node)
@@ -103,7 +98,7 @@ class Tree():
         except PermissionError:
             img=self.errorfolderIcon
         self.tree.item(node, image=img, open=False)
-
+    # opens the directory node
     def open_node(self, event):
         node = self.tree.focus()
         img=self.openfolderIcon
@@ -128,7 +123,8 @@ class Tree():
                 self.close_node('<<TreeviewClose>>')
                 mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu")
                 img=self.errorfolderIcon
-
+   
+    # event one double click of the right mouse button
     def OnDoubleClick(self, event):
         reNameObj._clear()
         self.directory = False
@@ -142,18 +138,21 @@ class Tree():
                 node.insert(0, self.nodesAll[parent_iid])
                 parent_iid = self.tree.parent(parent_iid)
             i = self.nodesAll[item]
-            self.path = os.path.join(*node, i)
+            path = os.path.join(*node, i)
             
             try:
-                os.listdir(self.path)
-                reNameObj.location1.set(self.path)
+                os.listdir(path)
+                reNameObj.location1.set(path)
                 reNameObj.beforePreview()    
             except PermissionError or ValueError:
                 pass
         else:
             mBox.showinfo('To nie jest katalog', 'Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację')
             pass
+
+# class responsible for execute the action
 class StartAction():
+    # action function
     def action(self,  preview = 'no'):
         self.actionVariable()
         self.checkAddnumeration()
@@ -162,12 +161,14 @@ class StartAction():
         else: 
             self.actionLoop(preview)
     
+    # checks whether the passed parameter consists only of digits
     def regexNum(self, getNum):
         return getNum.isdigit()
     
+    # checks whether the passed parameter consists only of letters
     def regexNotNum(self, getNum):
         return getNum.isalpha()
-    
+    # the function initializes the variables necessary to perform the action
     def actionVariable(self):
         self.numeration = ""
         self.numeration2 = ""
@@ -188,7 +189,7 @@ class StartAction():
                 self.lengthIVar = 0
 
         self.newTxtVar = reNameObj.newTextVar.get()
-        
+    # the function checks the conditions for adding numbering   
     def checkAddnumeration(self):
         if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:
             if self.regexNum(reNameObj.standardNumeration.get()) == True:
@@ -213,8 +214,10 @@ class StartAction():
             self.numeration2 = None
             self.stopActionFunc = 'No'
         return self.stopActionFunc
-    
+    # a function responsible for running a loop and previewing changes or making changes
     def actionLoop(self,preview): 
+        
+        # the function will add numbering
         def addNumeration(oldName, afterConvert = None, toConvert = None ):
             if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:               # zwykła numeracja
                 addNum = "0" + str(self.numeration) + self.separator  if self.numeration < 10 else str(self.numeration) + self.separator 
@@ -232,6 +235,7 @@ class StartAction():
                 self.numeration2 += 1
             self.addNumList.append(addNum)
         
+        # function responsible for renaming the file
         def renameFunc(oldName, newName, full_oldName):
             if oldName != newName:
                 full_newName = os.path.join(self.location, newName)
@@ -241,6 +245,7 @@ class StartAction():
             self.newNameList.append(newName)
             self.oldNameList.append(oldName)
         
+        # function responsible for making changes
         def loop():
             for oldName in reNameObj.objsPreview:
                 full_oldName = os.path.join(self.location, oldName)
@@ -282,6 +287,7 @@ class StartAction():
                             self.newName = oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], self.afterConvert, 1)
                     renameFunc(oldName, self.newName, full_oldName)
         
+        # function responsible for displaying the preview
         def ifNoPreview():
             if preview == 'no':
                 reNameObj.toConvert1.set('')
@@ -302,7 +308,8 @@ class StartAction():
         else: 
             mBox.showerror("Nie wybrano katalogu roboczego", "Wybierz katalog roboczy, aby kontynuować")
             self.stopActionFunc ='Yes'
-               
+
+              
 class ReName(Tree, StartAction):
     def __init__(self):
         self.win = tk.Tk()
