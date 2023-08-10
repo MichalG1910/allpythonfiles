@@ -92,7 +92,6 @@ class Tree():
     # closes the directory node
     def close_node(self,event):
         node = self.tree.focus()
-        print(node)
         path = os.path.abspath(self.nodesAll[node])
         try:
             os.listdir(path)
@@ -679,7 +678,7 @@ class ReName(Tree, StartAction):
     #a function responsible for automatically adjusting the width of the text field for the preview
     def textFieldAutoFit(self, string):
         self.stringWidth = 0
-        self.letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.33, 'j':0.33, 'k':0.8, 'l':0.33, 'ł':0.6, 'm':0.9, 'n':0.8,
+        letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.33, 'j':0.33, 'k':0.8, 'l':0.33, 'ł':0.6, 'm':0.9, 'n':0.8,
                             'ń':0.8, 'o':0.8, 'ó':0.8, 'p':0.8, 'q':0.8, 'r':0.8, 's':0.8, 'ś':0.8, 't':0.8, 'u':0.8, 'v':0.8, 'w':0.9, 'x':0.8, 'y':0.9, 'z':0.8, 'ź':0.8, 'ż':0.8, 'A':1.1,
                             'Ą':1.1, 'B':1.1, 'C':1.1, 'Ć':1.1, 'D':1.1, 'E':1.2, 'Ę':1.1, 'F':1.1, 'G':1.2, 'H':1.1, 'I':0.35, 'J':1.1, 'K':1.2, 'L':1.1, 'Ł':1.1, 'M':1.3, 'N':1.1, 'Ń':1.1, 
                             'O':1.1, 'Ó':1.1, 'P':1.2, 'Q':1.2, 'R':1.1, 'S':1.1, 'Ś':1.1, 'T':1.1, 'U':1.1, 'V':1.1, 'W':1.3, 'X':1.1, 'Y':1.1, 'Z':1.1, 'Ź':1.1, 'Ż':1.1, '0':0.7, '1':0.65, 
@@ -689,17 +688,17 @@ class ReName(Tree, StartAction):
         
         for l in string:
             if l.islower():
-                self.stringWidth += self.letterWidth[l] * 1.30
+                self.stringWidth += letterWidth[l] * 1.30
             elif l.isupper():
-                self.stringWidth += self.letterWidth[l] * 1.2
+                self.stringWidth += letterWidth[l] * 1.2
             elif l.isdigit():
-                self.stringWidth += self.letterWidth[l] * 1.43
+                self.stringWidth += letterWidth[l] * 1.43
             else:
-                self.stringWidth += self.letterWidth[l] * 1.55
+                self.stringWidth += letterWidth[l] * 1.55
     
     # function that creates a preview before renaming files
     def _preview(self):
-        multiplierList, newNameLenList, winWidthDict, newNameWidthList = [],[],{},[]
+        newNameWidthList = []
         self.generatePreview = 'yes'
         
         super().action(self.generatePreview)
