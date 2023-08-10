@@ -3,7 +3,6 @@ from tkinter import ttk
 import os, sys, string, re
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
-from os import listdir
 import psutil
 from tkinter import messagebox as mBox
 
@@ -15,12 +14,12 @@ class Tree():
         self.home_directory = os.path.expanduser( '~' )
         self.getDrivesName()
     
-    # detect all active disk partitions  
+    # function detect all active disk partitions  
     def getDrivesName(self):
         data1 = {} 
         linuxMountpoint = []   
         win_drives = ['%s:\\' % d for d in string.ascii_uppercase if os.path.exists('%s:\\' % d)]
-        # linux_drives = ['/dev/sda%s' % d for d in range(100) if os.path.exists('/dev/sda%s' % d)]
+        # linux_drives = ['/dev/sda%s' % d for d in range(100) if os.path.exists('/dev/sda%s' % d)]                 sprawdz pendrive pod linuksem
         psutil_drives = psutil.disk_partitions(all=False)
     
         for v in psutil_drives:
@@ -34,6 +33,7 @@ class Tree():
       
         self.os_drives = set(win_drives + linuxMountpoint)
         self.os_drives = list(self.os_drives)
+   
     # directory tree function
     def _tree(self, master, path):
         
@@ -74,6 +74,7 @@ class Tree():
             i += 1
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
         self.tree.bind('<<TreeviewClose>>', self.close_node)
+   
     # inserts a new directory node
     def insert_node(self, parent, text, abspath, img):
         self.parent = parent
@@ -87,6 +88,7 @@ class Tree():
             
         else:
             node = self.tree.insert(parent, 'end', text=text, image=img, open=False)
+    
     # closes the directory node
     def close_node(self,event):
         node = self.tree.focus()
@@ -98,6 +100,7 @@ class Tree():
         except PermissionError:
             img=self.errorfolderIcon
         self.tree.item(node, image=img, open=False)
+   
     # opens the directory node
     def open_node(self, event):
         node = self.tree.focus()
@@ -168,6 +171,7 @@ class StartAction():
     # checks whether the passed parameter consists only of letters
     def regexNotNum(self, getNum):
         return getNum.isalpha()
+    
     # the function initializes the variables necessary to perform the action
     def actionVariable(self):
         self.numeration = ""
@@ -189,6 +193,7 @@ class StartAction():
                 self.lengthIVar = 0
 
         self.newTxtVar = reNameObj.newTextVar.get()
+    
     # the function checks the conditions for adding numbering   
     def checkAddnumeration(self):
         if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:
@@ -214,7 +219,8 @@ class StartAction():
             self.numeration2 = None
             self.stopActionFunc = 'No'
         return self.stopActionFunc
-    # a function responsible for running a loop and previewing changes or making changes
+    
+    # a function responsible for running a loop and making changes
     def actionLoop(self,preview): 
         
         # the function will add numbering
@@ -273,7 +279,6 @@ class StartAction():
                                 self.afterConvert = self.newTxtVar
                                 addNumeration(oldName, self.afterConvert)
                             else:
-                                # tu mbox
                                 pass
                         else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
                             if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
@@ -288,6 +293,7 @@ class StartAction():
                     renameFunc(oldName, self.newName, full_oldName)
         
         # function responsible for displaying the preview
+        # function responsible for changing field settings when file names are changed
         def ifNoPreview():
             if preview == 'no':
                 reNameObj.toConvert1.set('')
@@ -295,7 +301,6 @@ class StartAction():
                 reNameObj.previewTextAfter.configure(state='normal')
                 reNameObj.previewTextAfter.delete('1.0', tk.END)
                 reNameObj.previewTextAfter.configure(state='disabled')
-                #self.oldNameList = self.objsPreview
                 reNameObj.beforePreview()
                 reNameObj.backButton.configure(state='normal')
         
@@ -309,7 +314,7 @@ class StartAction():
             mBox.showerror("Nie wybrano katalogu roboczego", "Wybierz katalog roboczy, aby kontynuować")
             self.stopActionFunc ='Yes'
 
-              
+# the main class responsible for the work of the application             
 class ReName(Tree, StartAction):
     def __init__(self):
         self.win = tk.Tk()
@@ -322,24 +327,26 @@ class ReName(Tree, StartAction):
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", super().OnDoubleClick)
-        # self.win.iconbitmap('./ikona2.ico')
-
+    
+    # function responsible for exiting the application   
     def _quit(self):
         self.win.quit()
         self.win.destroy()
         exit()
-        
+    
+    # function responsible for launching the application's graphic theme   
     def winStyle(self, window):
         window.tk.call('source', os.path.join(self.filePath, 'forest-dark.tcl'))
         ttk.Style().theme_use('forest-dark')
     
+    # function responsible for handling the event when opening the directory selection window
     def ask_dir(self, event):
         self._clear()
         self.directory = fd.askdirectory()
         self.beforePreview()
     
+    # function responsible for creating a list of preview files and configuration parameters
     def beforePreview(self):
-        #objsPreviewLenList, multiplierList, winWidthDict = [],[],{}
         self.nameWidthList = []
         if self.directory:
             self.lok.delete(first=0, last=self.strLen)
@@ -356,23 +363,16 @@ class ReName(Tree, StartAction):
                 self.previewText.insert(tk.INSERT, f"{name}\n")
                 self.textFieldAutoFit(name)
                 self.nameWidthList.append(self.stringWidth)
-                #objsPreviewLenList.append(len(self.objsPreview[a]))
-                #multiplierList.append(self.multiplier)
-                #winWidthDict[len(self.objsPreview[a])] = self.multiplier
                 a += 1
-        '''
-        winWidthList = [key * winWidthDict[key] for key in winWidthDict]
-        print(winWidthList)
-        if (max(objsPreviewLenList)+round(max(winWidthList) / 3.2)) > 48:
-            self.previewText.configure(width=max(objsPreviewLenList)+round(max(winWidthList) / 3.2))
-        '''
+    
         if self.nameWidthList == []: pass
         elif round(max(self.nameWidthList)) < 90:
             self.previewText.configure(width=round(max(self.nameWidthList)))
         else: self.previewText.configure( width = 90 )
         
         self.previewText.configure(state="disabled")
- 
+    
+    # function responsible for building entry fields for regular numbering
     def activateStandardEntry(self):
         try:
             self.numLabel.destroy()
@@ -394,6 +394,7 @@ class ReName(Tree, StartAction):
         self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
         self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245,0), pady=(10,10))
     
+    # function responsible for building entry fields for serial numbering
     def activateSeriesEntry(self):
         try:
             self.numLabel.destroy()
@@ -416,34 +417,40 @@ class ReName(Tree, StartAction):
         self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
         self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245,0), pady=(10,10))
     
-    def chooseActivateEntry(self):
+    # function responsible for selecting appropriate numbering fields
+    def chooseActivateEntry1(self):
         if self.standardVar.get() == 1 and self.seriesVar.get() == 0:
             self.activateStandardEntry()
         elif self.standardVar.get() == 0 and self.seriesVar.get() == 1:
             self.activateSeriesEntry()
     
-    def chooseActivateEntry1(self):
+    # function responsible for selecting appropriate numbering fields
+    def chooseActivateEntry2(self):
         if self.standardVar.get() == 0 and self.seriesVar.get() == 1:
             self.activateSeriesEntry()
         elif self.standardVar.get() == 1 and self.seriesVar.get() == 0:
             self.activateStandardEntry()
-    
+   
+    # function responsible for changing the selection of checkbuttons for numeration
     def numerationSelection1(self, *ignoredArgs):
         if self.standardVar.get() == 0:
             self.seriesVar.set(1)
         elif self.standardVar.get() == 1:         
             self.seriesVar.set(0)
-            
+    
+    # function responsible for changing the selection of checkbuttons for numeration        
     def numerationSelection2(self, *ignoredArgs):
         if self.seriesVar.get() == 0:
             self.standardVar.set(1)
         elif self.seriesVar.get() == 1:         
             self.standardVar.set(0) 
-        
+   
+    # function responsible for tracking changes in the numbering method   
     def traceNumerationSelection(self):         
         self.standardVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection1())
         self.seriesVar.trace('w', lambda unused0, unused1, unused2 : self.numerationSelection2())
-
+    
+    # function responsible for changing the selection of main checkbuttons in main frame 
     def ruleFrame1(self, *ignoredArgs):
         if self.changePartNameVar.get() == 0:
             self.deleteAddVar.set(1)
@@ -453,7 +460,8 @@ class ReName(Tree, StartAction):
             self.deleteAddVar.set(0)
             self.changeStatePartName()
             self.changeStateDelAdd()
-            
+    
+    # function responsible for changing the selection of main checkbuttons in main frame         
     def ruleFrame2(self, *ignoredArgs):
         if self.deleteAddVar.get() == 0:
             self.changePartNameVar.set(1)
@@ -464,10 +472,12 @@ class ReName(Tree, StartAction):
             self.changeStatePartName()
             self.changeStateDelAdd() 
         
+    # function responsible for tracking changes in the main frame  
     def traceSelectRuleFrame(self):         
         self.changePartNameVar.trace('w', lambda unused0, unused1, unused2 : self.ruleFrame1())
         self.deleteAddVar.trace('w', lambda unused0, unused1, unused2 : self.ruleFrame2())
     
+    # function responsible for changing the state of fields in the changePartNameframe
     def changeStatePartName(self):
         if self.changePartNameVar.get() == 0:
             self.textToChangeLab.configure(state='disabled')
@@ -480,7 +490,8 @@ class ReName(Tree, StartAction):
             self.toConv.configure(state='normal')
             self.changeToLab.configure(state='normal')
             self.aConv.configure(state='normal')
-            
+
+    # function responsible for changing the state of fields in the deleteAddFrame        
     def changeStateDelAdd(self):
         if self.deleteAddVar.get() == 0:
             self.startIndex.configure(state='disabled')
@@ -497,6 +508,7 @@ class ReName(Tree, StartAction):
             self.addTextCheck.configure(state='normal')
             self.newTextEntry.configure(state='disabled')
     
+    # function responsible for changing the state of fields in the numerationFrame  
     def changeStateNumeration(self):
         if self.checkNumVar.get() == 0:
             self.checkStandard.configure(state='disabled')
@@ -520,12 +532,14 @@ class ReName(Tree, StartAction):
                 self.numLabel1.configure(state='normal') 
                 self.num1.configure(state='normal')
             except: pass
-
+    
+    # function responsible for changing the state of newTextEntry field in the deleteAddFrame
     def changeStateAddText(self):
         if self.addTextCheckVar.get() == 0:
             self.newTextEntry.configure(state='disabled')
         else: self.newTextEntry.configure(state='normal')          
     
+    # function responsible for creating widgets for the graphical interface
     def widgets(self):
         self.location1 = tk.StringVar()
         self.toConvert1 = tk.StringVar()
@@ -545,11 +559,11 @@ class ReName(Tree, StartAction):
         self.sepVar = tk.StringVar()
         
        
-        #################################### kolumna 1 #######################################################
+        #################################### column 1 #######################################################
         self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
-        # zmień fragment nazwy
+        # change part of the name widgets   zmień fragment nazwy
         changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text='zmień fragment nazwy', command= self.changeStatePartName,)
         self.changePartNameVar.set(1)
         self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=changePartNameChb)
@@ -565,7 +579,7 @@ class ReName(Tree, StartAction):
         self.aConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.afterConvert1) 
         self.aConv.grid(column= 0, row= 4, padx=10, pady=(0,10))
         
-        # usuń/dodja w nazwie 
+        # delete/add in name widgets   usuń/dodaj w nazwie 
         deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changeStateDelAdd)
         self.deleteAddVar.set(0)
         self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
@@ -587,23 +601,23 @@ class ReName(Tree, StartAction):
         self.newTextEntry.grid(column= 1, row= 1, padx=(0,10), pady=(0,10), sticky="NSWE")
 
 
-        # numeracja
+        # add numeration widgets    numeracja
         checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= "Wprowadzić numerację?", command=self.changeStateNumeration) 
         self.checkNumVar.set(0)
         self.numerationFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=checkNumerationWidget, width=320, height=180)
         self.numerationFrame.grid(column=0, row=2,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
         
-        self.checkStandard = ttk.Checkbutton(self.numerationFrame, text= "zwykła", variable=self.standardVar, command= self.chooseActivateEntry, state='disabled') 
+        self.checkStandard = ttk.Checkbutton(self.numerationFrame, text= "zwykła", variable=self.standardVar, command= self.chooseActivateEntry1, state='disabled') 
         self.checkStandard.grid(column= 0, row= 0, sticky= tk.W, padx=10, pady=2)
         self.standardVar.set(1)
-        self.checkSeries = ttk.Checkbutton(self.numerationFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= self.chooseActivateEntry1, state='disabled') 
+        self.checkSeries = ttk.Checkbutton(self.numerationFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= self.chooseActivateEntry2, state='disabled') 
         self.checkSeries.grid(column= 0, row= 0, sticky= tk.W, padx=(150,0), pady=2)
         self.traceNumerationSelection()
         self.activateStandardEntry()
         self.changeStateNumeration()
         self.traceSelectRuleFrame()
         
-        # przyciski akcji
+        # action button widgets     przyciski akcji
         startButton = ttk.Button(self.mainFrame, text= "Start", command= super().action)
         startButton.grid(column= 0, row= 11, sticky="W", padx=10, pady=10)
         previewButton = ttk.Button(self.mainFrame, text= "Podgląd", command= self._preview)
@@ -618,14 +632,8 @@ class ReName(Tree, StartAction):
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
         
-        # puste rzędy do przysłaniania
-        #self.numLabel = ttk.Label(self.mainFrame)
-        #self.numLabel.grid(column = 0, row = 3, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
-        #self.numLabel1 = ttk.Label(self.mainFrame).grid(column = 0, row = 4, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
-        #self.numLabel2 = ttk.Label(self.mainFrame).grid(column = 0, row = 5, sticky="W", padx=10, pady=10) # pełni rolę pustego rzędu
-        
-        ###################################### kolumna 2 ######################################################
-        # wybór katalogu
+        ###################################### column 2 ######################################################
+        # directory selection widgets   wybór katalogu
         self.folderLocLab = ttk.Label(self.win, text = "folder:")
         self.folderLocLab.grid(column = 1, row = 0,  padx=10, pady=(20,5), sticky="NW")
         self.lok = ttk.Entry(self.win, text=self.directory, width= 34, textvariable= self.location1)   
@@ -636,9 +644,10 @@ class ReName(Tree, StartAction):
         self.dirButton = ttk.Button(self.win, image= self.icon, command= self.ask_dir, style='New.TButton',)
         self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=10, pady=15)
 
-        # widok drzewa katalogów
+        # execute tree view     widok drzewa katalogów
         super()._tree(self.win, path=self.os_drives)   
     
+    # function creates widgets for preview
     def previewWidgets(self):
         def multiple_yview(*args):
             self.previewText.yview(*args)
@@ -667,7 +676,7 @@ class ReName(Tree, StartAction):
         scrollbarHor2.grid(column=2, row=9, sticky="ew", padx=2)
         self.previewTextAfter.configure(xscrollcommand=scrollbarHor2.set)
         
-
+    #a function responsible for automatically adjusting the width of the text field for the preview
     def textFieldAutoFit(self, string):
         self.stringWidth = 0
         self.letterWidth = {'a':0.8, 'ą':0.8, 'b':0.8, 'c':0.8, 'ć':0.8, 'd':0.8, 'e':0.8, 'ę':0.8, 'f':0.8, 'g':0.8, 'h':0.8, 'i':0.33, 'j':0.33, 'k':0.8, 'l':0.33, 'ł':0.6, 'm':0.9, 'n':0.8,
@@ -687,7 +696,8 @@ class ReName(Tree, StartAction):
                 self.stringWidth += self.letterWidth[l] * 1.43
             else:
                 self.stringWidth += self.letterWidth[l] * 1.55
-
+    
+    # function that creates a preview before renaming files
     def _preview(self):
         multiplierList, newNameLenList, winWidthDict, newNameWidthList = [],[],{},[]
         self.generatePreview = 'yes'
@@ -731,7 +741,8 @@ class ReName(Tree, StartAction):
                 self.previewTextAfter.configure(width=round(max(newNameWidthList)))
             else: self.previewTextAfter.configure(width=180 - round(max(self.nameWidthList)) if round(max(self.nameWidthList)) <= 90 else 90)
             self.previewTextAfter.configure(state='disabled')
-            
+    
+    # function to undo changes after renaming files        
     def _back(self):
         self.backButton.configure(state='disabled')
         a = 0
@@ -742,7 +753,8 @@ class ReName(Tree, StartAction):
                 os.rename(full_newName, full_oldName)
             a += 1
         self.beforePreview()
-
+    
+    # function clearing all entry and text fields
     def _clear(self):
         self.previewText.configure(state='normal', width=48)
         self.previewText.delete('1.0', tk.END)
