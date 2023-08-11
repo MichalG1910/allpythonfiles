@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
-import os, sys, string, re
+import os, sys, string
 import tkinter.filedialog as fd
 from tkinter import PhotoImage
 import psutil
 from tkinter import messagebox as mBox
-
+#1. sprawdz pendrive
+#2. dostosuj widok widgetow pod linuksem
 
 # class to visualize the directory tree
 class Tree():
@@ -34,7 +35,7 @@ class Tree():
         self.os_drives = set(win_drives + linuxMountpoint)
         self.os_drives = list(self.os_drives)
    
-    # directory tree function
+    # the function responsible for the tree view and tree view widgets
     def _tree(self, master, path):
         
         # directory tree reset
@@ -50,7 +51,7 @@ class Tree():
         self.nodesAll = dict()
         self.treeFrame = ttk.Frame(master, height=20)
         self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10),)
-        self.tree = ttk.Treeview(self.treeFrame, height=20, show='tree headings')
+        self.tree = ttk.Treeview(self.treeFrame, height=23, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
         self.tree.heading('#0', text='Reset tree', anchor='w',command=_treeReset)
@@ -245,7 +246,11 @@ class StartAction():
             if oldName != newName:
                 full_newName = os.path.join(self.location, newName)
                 if preview == 'no':
-                    os.rename(full_oldName, full_newName)
+                    try:
+                        os.rename(full_oldName, full_newName)
+                    except OSError:
+                        mBox.showerror("Błędny separator", "W separatorze użyto niedozwolonego znaku.\nZmień separator")
+                        self.stopActionFunc = 'Yes'
             self.oldNameLenList.append(len(oldName))
             self.newNameList.append(newName)
             self.oldNameList.append(oldName)
@@ -254,35 +259,35 @@ class StartAction():
         def loop():
             for oldName in reNameObj.objsPreview:
                 full_oldName = os.path.join(self.location, oldName)
-                if os.path.isfile(full_oldName):                                # FRAME zmiana częsci nazwy
+                if os.path.isfile(full_oldName):                               
                     if reNameObj.changePartNameVar.get() == 1:
-                        if self.numeration != None:                               # samo dodanie numeracji
+                        if self.numeration != None:                               
                             if reNameObj.toConvert1.get() == '' and reNameObj.afterConvert1.get() == '':
                                 addNumeration(oldName, self.afterConvert, self.toConvert)  
-                            elif oldName.find(self.toConvert) != -1:             # dodanie numeracji i zmiana cześci nazwy
+                            elif oldName.find(self.toConvert) != -1:             
                                 addNumeration(oldName, self.afterConvert, self.toConvert)
                             else:
                                 self.newName = oldName.replace(self.toConvert, self.afterConvert, 1) 
                                 self.addNumList.append(0)
-                        else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
+                        else:                                               
                             self.newName = oldName.replace(self.toConvert, self.afterConvert, 1)
-                    else:                                                                                       # FRAME dodaj/usuń
+                    else:                                                                                       
                         if self.regexNotNum(reNameObj.startIndexVar.get()) == True or self.regexNotNum(reNameObj.lengthIndexVar.get()) == True:
                             self.stopActionFunc = "Yes"
                             break                                                        
-                        elif self.numeration != None:                               # samo dodanie numeracji
+                        elif self.numeration != None:                               
                             if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
                                 self.afterConvert = ''
                                 addNumeration(oldName, self.afterConvert)  
-                            elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:             # dodanie numeracji i zmiana cześci nazwy
+                            elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:             
                                 self.afterConvert = self.newTxtVar
                                 addNumeration(oldName, self.afterConvert)
                             else:
                                 pass
-                        else:                                               # standardowa zamiana/usuniecie części nazwy bez zamiany na inną bez numeracji
+                        else:                                               
                             if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
                                 self.afterConvert = ''
-                            elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:             # dodanie numeracji i zmiana cześci nazwy
+                            elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:            
                                 self.afterConvert = self.newTxtVar
                             if len(oldName)-len(oldName[oldName.rfind('.'):])+1 <= self.startIVar + self.lengthIVar-1:
                                 mBox.showerror('nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę')
@@ -290,6 +295,8 @@ class StartAction():
                                 break 
                             self.newName = oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], self.afterConvert, 1)
                     renameFunc(oldName, self.newName, full_oldName)
+                    if self.stopActionFunc == 'Yes':
+                        break
         
         # function responsible for changing field settings when file names are changed
         def ifNoPreview():
@@ -307,7 +314,8 @@ class StartAction():
             if self.stopActionFunc == 'No':        
                 ifNoPreview()
             else:
-                reNameObj._clear()
+                pass
+                #reNameObj._clear()
         else: 
             mBox.showerror("Nie wybrano katalogu roboczego", "Wybierz katalog roboczy, aby kontynuować")
             self.stopActionFunc ='Yes'
@@ -561,7 +569,7 @@ class ReName(Tree, StartAction):
         self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
-        # change part of the name widgets   zmień fragment nazwy
+        # change part of the name widgets   
         changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text='zmień fragment nazwy', command= self.changeStatePartName,)
         self.changePartNameVar.set(1)
         self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=changePartNameChb)
@@ -577,7 +585,7 @@ class ReName(Tree, StartAction):
         self.aConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.afterConvert1) 
         self.aConv.grid(column= 0, row= 4, padx=10, pady=(0,10))
         
-        # delete/add in name widgets   usuń/dodaj w nazwie 
+        # delete/add in name widgets   
         deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changeStateDelAdd)
         self.deleteAddVar.set(0)
         self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
@@ -599,7 +607,7 @@ class ReName(Tree, StartAction):
         self.newTextEntry.grid(column= 1, row= 1, padx=(0,10), pady=(0,10), sticky="NSWE")
 
 
-        # add numeration widgets    numeracja
+        # add numeration widgets   
         checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= "Wprowadzić numerację?", command=self.changeStateNumeration) 
         self.checkNumVar.set(0)
         self.numerationFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=checkNumerationWidget, width=320, height=180)
@@ -615,7 +623,7 @@ class ReName(Tree, StartAction):
         self.changeStateNumeration()
         self.traceSelectRuleFrame()
         
-        # action button widgets     przyciski akcji
+        # action button widgets    
         startButton = ttk.Button(self.mainFrame, text= "Start", command= super().action)
         startButton.grid(column= 0, row= 11, sticky="W", padx=10, pady=10)
         previewButton = ttk.Button(self.mainFrame, text= "Podgląd", command= self._preview)
@@ -631,7 +639,7 @@ class ReName(Tree, StartAction):
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
         
         ###################################### column 2 ######################################################
-        # directory selection widgets   wybór katalogu
+        # directory selection widgets   
         self.folderLocLab = ttk.Label(self.win, text = "folder:")
         self.folderLocLab.grid(column = 1, row = 0,  padx=10, pady=(20,5), sticky="NW")
         self.lok = ttk.Entry(self.win, text=self.directory, width= 34, textvariable= self.location1)   
@@ -642,7 +650,7 @@ class ReName(Tree, StartAction):
         self.dirButton = ttk.Button(self.win, image= self.icon, command= self.ask_dir, style='New.TButton',)
         self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=10, pady=15)
 
-        # execute tree view     widok drzewa katalogów
+        # execute tree view    
         super()._tree(self.win, path=self.os_drives)   
     
     # function creates widgets for preview
@@ -656,7 +664,7 @@ class ReName(Tree, StartAction):
         
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
         self.previewFrame.grid(column=2, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
-        self.previewText = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black')
+        self.previewText = tk.Text(self.previewFrame, width=48, height=33, wrap= tk.NONE, background='white', foreground='black')
         self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,0), pady=(10,10))
         self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black',)
         self.previewTextAfter.grid(column= 2, row= 0, rowspan=8, sticky="NSEW", padx=(0,10), pady=(10,10))
