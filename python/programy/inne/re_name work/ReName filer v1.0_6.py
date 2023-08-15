@@ -324,6 +324,7 @@ class StartAction():
 class ReName(Tree, StartAction):
     def __init__(self):
         self.win = tk.Tk()
+        self.osVar()
         super().__init__()
         self.winStyle(self.win)
         self.win.title("ReName v1.0")
@@ -333,6 +334,13 @@ class ReName(Tree, StartAction):
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", super().OnDoubleClick)
+    
+    # function responsible for creating a special variable used to adjust the graphical interface for the linux system
+    def osVar(self):
+        if sys.platform == 'linux':
+            self.sysVar = 10
+        else:
+            self.sysVar = 0
     
     # function responsible for exiting the application   
     def _quit(self):
@@ -394,11 +402,11 @@ class ReName(Tree, StartAction):
         self.numLabel = ttk.Label(self.numerationFrame, text = "Zacznij od:")
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 6, textvariable=self.standardNumeration)
-        self.num.grid(column= 0, row= 1, sticky = "W", padx=(80,0))
+        self.num.grid(column= 0, row= 1, sticky = "W", padx=(80+self.sysVar ,0))
         self.sepLabel = ttk.Label(self.numerationFrame, text = "separator:")
         self.sepLabel.grid(column = 0, row = 1, sticky="W", padx=(180,0), pady=2)
         self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
-        self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245,0), pady=(10,10))
+        self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245+self.sysVar,0), pady=(10,10))
     
     # function responsible for building entry fields for serial numbering
     def activateSeriesEntry(self):
@@ -413,15 +421,15 @@ class ReName(Tree, StartAction):
         self.numLabel = ttk.Label(self.numerationFrame, text = "Zacznij od: S")
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration1)
-        self.num.grid(column= 0, row=1, sticky = "W", padx=(89,0))
+        self.num.grid(column= 0, row=1, sticky = "W", padx=(89+self.sysVar*0.7,0))
         self.numLabel1 = ttk.Label(self.numerationFrame, text = "E")
-        self.numLabel1.grid(column = 0, row = 1, sticky="W", padx=(122,0), pady=2)
+        self.numLabel1.grid(column = 0, row = 1, sticky="W", padx=(122+self.sysVar,0), pady=2)
         self.num1 = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration2)
-        self.num1.grid(column= 0, row= 1, sticky = "W", padx=(136,0))
+        self.num1.grid(column= 0, row= 1, sticky = "W", padx=(136+self.sysVar*0.7,0))
         self.sepLabel = ttk.Label(self.numerationFrame, text = "separator:")
-        self.sepLabel.grid(column = 0, row = 1, sticky="W", padx=(180,0), pady=2)
+        self.sepLabel.grid(column = 0, row = 1, sticky="W", padx=(180+self.sysVar*2,0), pady=2)
         self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
-        self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245,0), pady=(10,10))
+        self.sepEntry.grid(column= 0, row= 1, sticky = "W", padx=(245+self.sysVar*2.7,0), pady=(10,10))
     
     # function responsible for selecting appropriate numbering fields
     def chooseActivateEntry1(self):
@@ -599,7 +607,7 @@ class ReName(Tree, StartAction):
         self.lenght = ttk.Label(self.deleteAddFrame, text = "ilość znaków:", state='disabled')
         self.lenght.grid(column = 1, row = 0, pady=(8,2), sticky="W")
         self.lenghtEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.lengthIndexVar, state='disabled') 
-        self.lenghtEntry.grid(column= 1, row= 0, padx=(87,10), pady=(10,10))
+        self.lenghtEntry.grid(column= 1, row= 0, padx=(87-self.sysVar*3,10), pady=(10,10))
 
         self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text='zastąpić tekstem', command=self.changeStateAddText, state='disabled')
         self.addTextCheck.grid(column= 0, row= 1, padx=(10,10), pady=(0,10))
@@ -642,13 +650,13 @@ class ReName(Tree, StartAction):
         # directory selection widgets   
         self.folderLocLab = ttk.Label(self.win, text = "folder:")
         self.folderLocLab.grid(column = 1, row = 0,  padx=10, pady=(20,5), sticky="NW")
-        self.lok = ttk.Entry(self.win, text=self.directory, width= 34, textvariable= self.location1)   
-        self.lok.grid(column= 1, row= 0, padx=10, pady=(15,5), sticky="N")
+        self.lok = ttk.Entry(self.win, text=self.directory, width= 34-int(self.sysVar*0.4), textvariable= self.location1)   
+        self.lok.grid(column= 1, row= 0, padx=10+self.sysVar*5, pady=(15,5), sticky="N")
         self.icon = PhotoImage(file=f'{self.filePath}/folder24dp.png')
         TButton1 = ttk.Style()
         TButton1.configure("New.TButton", width = 5, border = 2, padding= {0,0,0,0})
         self.dirButton = ttk.Button(self.win, image= self.icon, command= self.ask_dir, style='New.TButton',)
-        self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=10, pady=15)
+        self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=(10,20), pady=15)
 
         # execute tree view    
         super()._tree(self.win, path=self.os_drives)   
@@ -664,7 +672,7 @@ class ReName(Tree, StartAction):
         
         self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
         self.previewFrame.grid(column=2, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
-        self.previewText = tk.Text(self.previewFrame, width=48, height=33, wrap= tk.NONE, background='white', foreground='black')
+        self.previewText = tk.Text(self.previewFrame, width=48, height=33-self.sysVar*0.2, wrap= tk.NONE, background='white', foreground='black')
         self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,0), pady=(10,10))
         self.previewTextAfter = tk.Text(self.previewFrame, width=48, height=23, wrap= tk.NONE, background='white', foreground='black',)
         self.previewTextAfter.grid(column= 2, row= 0, rowspan=8, sticky="NSEW", padx=(0,10), pady=(10,10))
