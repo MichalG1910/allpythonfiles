@@ -5,8 +5,10 @@ import tkinter.filedialog as fd
 from tkinter import PhotoImage
 import psutil
 from tkinter import messagebox as mBox
-#1. sprawdz pendrive
-#2. dostosuj widok widgetow pod linuksem
+#1. sprawdz pendrive                        - zrobione
+#2. dostosuj widok widgetow pod linuksem    - zrobione
+#3. w przypdku zmiany częsci nazwy plikow, która jest dla nich charakterystyczna na jakąś inną taką samą dla zmienianych plików, 
+# dochodzi do sytuacji, że część plików może mieć taką samą nazwę. Przemyśl to 
 
 # class to visualize the directory tree
 class Tree():
