@@ -243,6 +243,7 @@ class StartAction():
                 self.numeration2 += 1
             self.addNumList.append(addNum)
         
+        # function responsible for checking whether the names after the change will be unique
         def checkChangeConditions():
             newNameSet = set(self.newAllFilesList)
             if len(self.newAllFilesList) != len(newNameSet):
