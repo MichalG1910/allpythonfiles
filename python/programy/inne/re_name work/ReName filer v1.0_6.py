@@ -8,7 +8,7 @@ from tkinter import messagebox as mBox
 #1. sprawdz pendrive                        - zrobione
 #2. dostosuj widok widgetow pod linuksem    - zrobione
 #3. w przypdku zmiany częsci nazwy plikow, która jest dla nich charakterystyczna na jakąś inną taką samą dla zmienianych plików, 
-# dochodzi do sytuacji, że część plików może mieć taką samą nazwę. Przemyśl to 
+# dochodzi do sytuacji, że część plików może mieć taką samą nazwę. Przemyśl to - zrobione
 
 # class to visualize the directory tree
 class Tree():
@@ -183,7 +183,7 @@ class StartAction():
         self.location = reNameObj.location1.get()
         self.afterConvert = reNameObj.afterConvert1.get()
         self.toConvert = reNameObj.toConvert1.get()
-        self.oldNameList, self.oldNameLenList, self.newNameList, self.addNumList = [],[],[],[]
+        self.oldNameList, self.oldNameLenList, self.newNameList, self.addNumList, self.newAllFilesList, self.oldAllFilesList, self.fulloldAllFilesList = [],[],[],[],[],[],[]
         if reNameObj.deleteAddVar.get() == 1:
             if self.regexNum(reNameObj.startIndexVar.get()) == True and self.regexNum(reNameObj.lengthIndexVar.get()) == True:
                 self.startIVar = int(reNameObj.startIndexVar.get())
@@ -243,16 +243,23 @@ class StartAction():
                 self.numeration2 += 1
             self.addNumList.append(addNum)
         
+        def checkChangeConditions():
+            newNameSet = set(self.newAllFilesList)
+            if len(self.newAllFilesList) != len(newNameSet):
+                mBox.showerror("Błąd zmiany nazwy", "Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację")
+                self.stopActionFunc = "Yes"
+            else:
+                a=0
+                for v in self.oldAllFilesList:
+                    renameFunc(v,self.newAllFilesList[a], self.fulloldAllFilesList[a])
+                    a += 1
+
         # function responsible for renaming the file
         def renameFunc(oldName, newName, full_oldName):
             if oldName != newName:
                 full_newName = os.path.join(self.location, newName)
                 if preview == 'no':
-                    try:
-                        os.rename(full_oldName, full_newName)
-                    except OSError:
-                        mBox.showerror("Błędny separator", "W separatorze użyto niedozwolonego znaku.\nZmień separator")
-                        self.stopActionFunc = 'Yes'
+                    os.rename(full_oldName, full_newName)
             self.oldNameLenList.append(len(oldName))
             self.newNameList.append(newName)
             self.oldNameList.append(oldName)
@@ -296,10 +303,14 @@ class StartAction():
                                 self.stopActionFunc = 'Yes'
                                 break 
                             self.newName = oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], self.afterConvert, 1)
-                    renameFunc(oldName, self.newName, full_oldName)
+                    self.newAllFilesList.append(self.newName)
+                    self.oldAllFilesList.append(oldName)
+                    self.fulloldAllFilesList.append(full_oldName)
                     if self.stopActionFunc == 'Yes':
                         break
-        
+            checkChangeConditions()
+            #renameFunc(oldName, self.newName, full_oldName)
+
         # function responsible for changing field settings when file names are changed
         def ifNoPreview():
             if preview == 'no':
@@ -401,7 +412,7 @@ class ReName(Tree, StartAction):
         
         self.numLabel = ttk.Label(self.numerationFrame, text = "")
         self.numLabel.grid(column = 0, row = 1, sticky="NSWE") # przysłania
-        self.numLabel = ttk.Label(self.numerationFrame, text = "Zacznij od:")
+        self.numLabel = ttk.Label(self.numerationFrame, text = "zacznij od:")
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 6, textvariable=self.standardNumeration)
         self.num.grid(column= 0, row= 1, sticky = "W", padx=(80+self.sysVar ,0))
@@ -420,7 +431,7 @@ class ReName(Tree, StartAction):
         
         self.numLabel = ttk.Label(self.numerationFrame, text = "")
         self.numLabel.grid(column = 0, row = 1, sticky="NSWE") # przysłania
-        self.numLabel = ttk.Label(self.numerationFrame, text = "Zacznij od: S")
+        self.numLabel = ttk.Label(self.numerationFrame, text = "zacznij od: S")
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration1)
         self.num.grid(column= 0, row=1, sticky = "W", padx=(89+self.sysVar*0.7,0))
@@ -585,23 +596,23 @@ class ReName(Tree, StartAction):
         self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=changePartNameChb)
         self.changePartNameFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.textToChangeLab = ttk.Label(self.changePartNameFrame, text = "Tekst do zmiany:")
+        self.textToChangeLab = ttk.Label(self.changePartNameFrame, text = "tekst do zmiany:")
         self.textToChangeLab.grid(column = 0, row = 1, padx=10, pady=(10,2))
         self.toConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.toConvert1) 
         self.toConv.grid(column= 0, row= 2, padx=10, pady=(0,5))
 
-        self.changeToLab = ttk.Label(self.changePartNameFrame, text = "Zmienić na:")
+        self.changeToLab = ttk.Label(self.changePartNameFrame, text = "zmienić na:")
         self.changeToLab.grid(column = 0, row = 3, padx=10, pady=(10,2)) 
         self.aConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.afterConvert1) 
         self.aConv.grid(column= 0, row= 4, padx=10, pady=(0,10))
         
         # delete/add in name widgets   
-        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/dodaj w nazwie', command= self.changeStateDelAdd)
+        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/zastąp w nazwie', command= self.changeStateDelAdd)
         self.deleteAddVar.set(0)
         self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
         self.deleteAddFrame.grid(column=0, row=1,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.startIndex = ttk.Label(self.deleteAddFrame, text = "Indeks znaku:", state='disabled')
+        self.startIndex = ttk.Label(self.deleteAddFrame, text = "indeks znaku:", state='disabled')
         self.startIndex.grid(column = 0, row = 0, padx=10, pady=(8,2), sticky = "W")
         self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar, state='disabled') 
         self.startIndexEntry.grid(column= 0, row= 0, padx=(100,10), pady=(10,10))
@@ -618,7 +629,7 @@ class ReName(Tree, StartAction):
 
 
         # add numeration widgets   
-        checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= "Wprowadzić numerację?", command=self.changeStateNumeration) 
+        checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= "wprowadzić numerację?", command=self.changeStateNumeration) 
         self.checkNumVar.set(0)
         self.numerationFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=checkNumerationWidget, width=320, height=180)
         self.numerationFrame.grid(column=0, row=2,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
