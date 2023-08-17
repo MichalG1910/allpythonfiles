@@ -278,7 +278,7 @@ class StartAction():
                         else:                                               
                             self.newName = oldName.replace(self.toConvert, self.afterConvert, 1)
                     else:                                                                                       
-                        if self.regexNotNum(reNameObj.startIndexVar.get()) == True or self.regexNotNum(reNameObj.lengthIndexVar.get()) == True:
+                        if self.regexNum(reNameObj.startIndexVar.get()) == False or self.regexNum(reNameObj.lengthIndexVar.get()) == False:
                             self.stopActionFunc = "Yes"
                             break                                                        
                         elif self.numeration != None:                               
@@ -302,7 +302,8 @@ class StartAction():
                             if self.lengthIVar == 0:
                                 self.newName = oldName[0:self.startIVar-1] + self.afterConvert + oldName[self.startIVar-1:]
                             else:
-                                self.newName = oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], self.afterConvert, 1)
+                                self.newName = oldName.replace(oldName[self.startIVar-1:self.startIVar-1+self.lengthIVar], self.afterConvert,1)
+                                print(f'startIVar = {self.startIVar}    lengthIVar = {self.lengthIVar}     newname = {self.newName}')
                     self.newAllFilesList.append(self.newName)
                     self.oldAllFilesList.append(oldName)
                     self.fulloldAllFilesList.append(full_oldName)
