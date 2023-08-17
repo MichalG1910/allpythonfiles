@@ -5,10 +5,6 @@ import tkinter.filedialog as fd
 from tkinter import PhotoImage
 import psutil
 from tkinter import messagebox as mBox
-#1. sprawdz pendrive                        - zrobione
-#2. dostosuj widok widgetow pod linuksem    - zrobione
-#3. w przypdku zmiany częsci nazwy plikow, która jest dla nich charakterystyczna na jakąś inną taką samą dla zmienianych plików, 
-# dochodzi do sytuacji, że część plików może mieć taką samą nazwę. Przemyśl to - zrobione
 
 # class to visualize the directory tree
 class Tree():
@@ -303,7 +299,10 @@ class StartAction():
                                 mBox.showerror('nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę')
                                 self.stopActionFunc = 'Yes'
                                 break 
-                            self.newName = oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], self.afterConvert, 1)
+                            if self.lengthIVar == 0:
+                                self.newName = oldName[0:self.startIVar-1] + self.afterConvert + oldName[self.startIVar-1:]
+                            else:
+                                self.newName = oldName.replace(oldName[(self.startIVar-1):(self.startIVar-1+self.lengthIVar)], self.afterConvert, 1)
                     self.newAllFilesList.append(self.newName)
                     self.oldAllFilesList.append(oldName)
                     self.fulloldAllFilesList.append(full_oldName)
@@ -736,9 +735,13 @@ class ReName(Tree, StartAction):
         else: 
            
             self.beforePreview()
-            
             self.previewTextAfter.configure(state='normal')
             self.previewTextAfter.delete('1.0', tk.END)
+           
+            if self.addTextCheckVar.get() == 0:
+                self.newText = ''
+            else:
+                self.newText = self.newTextVar.get()
             
             for f in range(len(self.newNameList)):
                 self.previewTextAfter.insert(tk.INSERT, f"{self.newNameList[f]}\n") 
@@ -750,9 +753,9 @@ class ReName(Tree, StartAction):
                     endIndexAfter = startIndexAfter + len(self.afterConvert1.get())
                 else:
                     startIndexBefore = int(self.startIVar)-1
-                    startIndexAfter = self.newNameList[f].find(self.newTextVar.get())
+                    startIndexAfter = self.newNameList[f].find(self.newText)
                     endIndexBefore = startIndexBefore + int(self.lengthIVar)
-                    endIndexAfter = startIndexAfter + len(self.newTextVar.get())
+                    endIndexAfter = startIndexAfter + len(self.newText)
                 
                 if startIndexBefore != -1:
                     self.previewText.tag_add("before", f"{f+1}.{startIndexBefore}", f"{f+1}.{endIndexBefore}")
