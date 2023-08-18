@@ -122,7 +122,7 @@ class Tree():
                         self.insert_node(node, p, os.path.join(abspath, p), img)
             except PermissionError:
                 self.close_node('<<TreeviewClose>>')
-                mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu")
+                mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu.")
                 img=self.errorfolderIcon
    
     # event one double click of the right mouse button
@@ -148,7 +148,7 @@ class Tree():
             except PermissionError or ValueError:
                 pass
         else:
-            mBox.showinfo('To nie jest katalog', 'Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację')
+            mBox.showinfo('To nie jest katalog', 'Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację.')
             pass
 
 # class responsible for execute the action
@@ -172,10 +172,11 @@ class StartAction():
     
     # the function initializes the variables necessary to perform the action
     def actionVariable(self):
-        self.numeration = ""
-        self.numeration2 = ""
-        self.newName = ""
-        self.separator = ""
+        self.numeration = ''
+        self.numeration2 = ''
+        self.newName = ''
+        self.separator = ''
+        self.stopActionFunc = 'No'
         self.location = reNameObj.location1.get()
         self.afterConvert = reNameObj.afterConvert1.get()
         self.toConvert = reNameObj.toConvert1.get()
@@ -183,9 +184,13 @@ class StartAction():
         if reNameObj.deleteAddVar.get() == 1:
             if self.regexNum(reNameObj.startIndexVar.get()) == True and self.regexNum(reNameObj.lengthIndexVar.get()) == True:
                 self.startIVar = int(reNameObj.startIndexVar.get())
-                self.lengthIVar = int(reNameObj.lengthIndexVar.get())  
+                self.lengthIVar = int(reNameObj.lengthIndexVar.get())
+                if self.startIVar == 0:
+                     mBox.showerror("Uwaga", "Indeks znaku nie może być 0.")
+                     self.stopActionFunc = 'Yes'
             elif reNameObj.startIndexVar.get() != '' and self.regexNum(reNameObj.startIndexVar.get()) == False or reNameObj.lengthIndexVar.get() != '' and self.regexNum(reNameObj.lengthIndexVar.get()) == False:
-                mBox.showerror("Uwaga", "wprowadź liczbę")
+                mBox.showerror("Wprowadź liczbę", "Pola 'indeks znaku' i 'ilość znaków' muszą być liczbami.")
+                self.stopActionFunc = 'Yes'
             else: 
                 self.startIVar = 1
                 self.lengthIVar = 0
@@ -194,28 +199,28 @@ class StartAction():
     
     # the function checks the conditions for adding numbering   
     def checkAddnumeration(self):
-        if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:
-            if self.regexNum(reNameObj.standardNumeration.get()) == True:
-                self.numeration = int(reNameObj.standardNumeration.get())
-                self.separator = reNameObj.sepVar.get()
+        if self.stopActionFunc == 'Yes':
+            pass
+        else:
+            if reNameObj.checkNumVar.get() == 1 and reNameObj.standardVar.get() == 1:
+                if self.regexNum(reNameObj.standardNumeration.get()) == True:
+                    self.numeration = int(reNameObj.standardNumeration.get())
+                    self.separator = reNameObj.sepVar.get()
+                    self.numeration2 = None
+                else: 
+                    mBox.showerror("Wprowadź liczbę", "Pole 'zacznij od' musi być liczbą całkowitą większą od 0.")
+                    self.stopActionFunc = 'Yes'
+            elif reNameObj.checkNumVar.get() == 1 and reNameObj.seriesVar.get() == 1:
+                if self.regexNum(reNameObj.seriesNumeration1.get()) == True and self.regexNum(reNameObj.seriesNumeration2.get()) == True:
+                    self.numeration = int(reNameObj.seriesNumeration1.get())
+                    self.numeration2 = int(reNameObj.seriesNumeration2.get())
+                    self.separator = reNameObj.sepVar.get()
+                else:
+                    mBox.showerror("Wprowadź liczbę", "Pola 'zacznij od: S/E' muszą być liczbami całkowitymi większymi od 0.")
+                    self.stopActionFunc = 'Yes'
+            else: 
+                self.numeration = None
                 self.numeration2 = None
-                self.stopActionFunc = 'No'
-            else: 
-                mBox.showerror("Uwaga", "wprowadź liczbę")
-                self.stopActionFunc = 'Yes'
-        elif reNameObj.checkNumVar.get() == 1 and reNameObj.seriesVar.get() == 1:
-            if self.regexNum(reNameObj.seriesNumeration1.get()) == True and self.regexNum(reNameObj.seriesNumeration2.get()) == True:
-                self.numeration = int(reNameObj.seriesNumeration1.get())
-                self.numeration2 = int(reNameObj.seriesNumeration2.get())
-                self.separator = reNameObj.sepVar.get()
-                self.stopActionFunc = 'No'
-            else: 
-                mBox.showerror("Uwaga", "wprowadź liczbę")
-                self.stopActionFunc = 'Yes'
-        else: 
-            self.numeration = None
-            self.numeration2 = None
-            self.stopActionFunc = 'No'
         return self.stopActionFunc
     
     # a function responsible for running a loop and making changes
@@ -243,12 +248,14 @@ class StartAction():
         def checkChangeConditions():
             newNameSet = set(self.newAllFilesList)
             if len(self.newAllFilesList) != len(newNameSet):
-                mBox.showerror("Błąd zmiany nazwy", "Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację")
+                mBox.showerror("Błąd zmiany nazwy", "Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację.")
                 self.stopActionFunc = "Yes"
             else:
                 a=0
                 for v in self.oldAllFilesList:
                     renameFunc(v,self.newAllFilesList[a], self.fulloldAllFilesList[a])
+                    if self.stopActionFunc == 'Yes':
+                        break
                     a += 1
 
         # function responsible for renaming the file
@@ -256,7 +263,11 @@ class StartAction():
             if oldName != newName:
                 full_newName = os.path.join(self.location, newName)
                 if preview == 'no':
-                    os.rename(full_oldName, full_newName)
+                    try:
+                        os.rename(full_oldName, full_newName)
+                    except OSError:
+                        mBox.showerror("Błędny separator", "W separatorze użyto niedozwolonego znaku.\nZmień separator.")
+                        self.stopActionFunc = 'Yes'
             self.oldNameLenList.append(len(oldName))
             self.newNameList.append(newName)
             self.oldNameList.append(oldName)
@@ -296,7 +307,7 @@ class StartAction():
                             elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:            
                                 self.afterConvert = self.newTxtVar
                             if len(oldName)-len(oldName[oldName.rfind('.'):])+1 <= self.startIVar + self.lengthIVar-1:
-                                mBox.showerror('nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę')
+                                mBox.showerror('Nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.')
                                 self.stopActionFunc = 'Yes'
                                 break 
                            
@@ -329,7 +340,7 @@ class StartAction():
                 pass
                 #reNameObj._clear()
         else: 
-            mBox.showerror("Nie wybrano katalogu roboczego", "Wybierz katalog roboczy, aby kontynuować")
+            mBox.showerror("Nie wybrano katalogu roboczego", "Wybierz katalog roboczy, aby kontynuować.")
             self.stopActionFunc ='Yes'
 
 # the main class responsible for the work of the application             
