@@ -32,7 +32,8 @@ class Tree():
       
         self.os_drives = set(win_drives + linuxMountpoint)
         self.os_drives = list(self.os_drives)
-   
+
+        del data1, linuxMountpoint, win_drives
     # the function responsible for the tree view and tree view widgets
     def _tree(self, master, path):
         
@@ -257,7 +258,8 @@ class StartAction():
                     if self.stopActionFunc == 'Yes':
                         break
                     a += 1
-
+            del newNameSet, self.newAllFilesList, self.oldAllFilesList, self.fulloldAllFilesList
+       
         # function responsible for renaming the file
         def renameFunc(oldName, newName, full_oldName):
             if oldName != newName:
@@ -318,6 +320,7 @@ class StartAction():
                     self.fulloldAllFilesList.append(full_oldName)
                     if self.stopActionFunc == 'Yes':
                         break
+            del reNameObj.objsPreview
             checkChangeConditions()
             #renameFunc(oldName, self.newName, full_oldName)
 
@@ -380,7 +383,10 @@ class ReName(Tree, StartAction):
     def ask_dir(self, event):
         self._clear()
         self.directory = fd.askdirectory()
-        self.beforePreview()
+        if self.directory == '':
+            pass
+        else:
+            self.beforePreview()
     
     # function responsible for creating a list of preview files and configuration parameters
     def beforePreview(self):
@@ -408,6 +414,7 @@ class ReName(Tree, StartAction):
         else: self.previewText.configure( width = 90 )
         
         self.previewText.configure(state="disabled")
+        
     
     # function responsible for building entry fields for regular numbering
     def activateStandardEntry(self):
@@ -733,6 +740,7 @@ class ReName(Tree, StartAction):
                 self.stringWidth += letterWidth[l] * 1.43
             else:
                 self.stringWidth += letterWidth[l] * 1.55
+        del letterWidth
     
     # function that creates a preview before renaming files
     def _preview(self):
@@ -782,7 +790,7 @@ class ReName(Tree, StartAction):
                 self.previewTextAfter.configure(width=round(max(newNameWidthList)))
             else: self.previewTextAfter.configure(width=180 - round(max(self.nameWidthList)) if round(max(self.nameWidthList)) <= 90 else 90)
             self.previewTextAfter.configure(state='disabled')
-    
+        del self.nameWidthList, newNameWidthList
     # function to undo changes after renaming files        
     def _back(self):
         self.backButton.configure(state='disabled')
