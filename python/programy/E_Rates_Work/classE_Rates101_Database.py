@@ -224,6 +224,8 @@ class Scenario:
       self.conn.commit()
       self.conn.close()
    
+   
+   
    def createTabelNames(self):
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       sql ='''CREATE TABLE IF NOT EXISTS tablenames       
@@ -261,6 +263,22 @@ class Scenario:
       )'''
       self.cursor.execute(sql)
       print("Table bidask created successfully........")
+      self.conn.commit()
+      self.conn.close()
+   
+   def insertToTabelBidAsk22222(self):
+      dataObj = Data()
+      mboxIgnore = 'yes'
+      dataObj.reporteErrorChecking(self.startDate, self.endDate, 'Online_No_Database', mboxIgnore)
+      dataObj.num = 3
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
+      dataObj.ReportLoop(self.progress)
+      dataObj.dataFormatting("bid", self.tableName_id, self.progress )
+      dataObj.NBPbidAsk22222()
+      insert_stmt = '''INSERT INTO bidask (currency, code, date, 
+      bid, ask, table_name) VALUES (%s, %s, %s, %s, %s, %s)'''
+      self.cursor.executemany(insert_stmt, dataObj.csvListWithAsk)
+      print("Data inserted to tabel bidask........")
       self.conn.commit()
       self.conn.close()
    
@@ -316,7 +334,8 @@ class Scenario:
          self.createTabelBidAsk()
          self.value_label['text'] = self.update_progress_label()
          self.logWin.update()
-         self.insertToTabelBidAsk()
+         self.tableName_id = 1
+         self.insertToTabelBidAsk22222()
          self.value_label['text'] = self.update_progress_label()
          self.logWin.update()
          self.getLastDate()
@@ -338,7 +357,7 @@ class Scenario:
                self.insertToTabelRates(self.mboxIgnore)
                if self.stop_RunReport == 'no':
                   self.insertToTabelNames()
-                  self.insertToTabelBidAsk()
+                  self.insertToTabelBidAsk22222()
                   print("Database updated........")
                self.getLastDate()
                self.logwin_quit()

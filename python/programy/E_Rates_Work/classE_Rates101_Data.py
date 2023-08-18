@@ -68,6 +68,12 @@ class Data:
         self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.table_name1 = self.currencyList, self.codeList, self.valueList, self.askList, self.table_name
         del self.currencyList, self.codeList, self.valueList, self.askList, self.table_name
     
+    def NBPbidAsk22222(self):
+        #url = f"http://api.nbp.pl/api/exchangerates/tables/C/{startDate}/{endDate}/?format=json"
+        self.num = 3
+        self.currencyList1, self.codeList1, self.valueList1, self.askList1, self.table_name1 = self.currencyList, self.codeList, self.valueList, self.askList, self.table_name
+        del self.currencyList, self.codeList, self.valueList, self.askList, self.table_name
+    
     def last30Data(self, code):
         code = (code[0:3]).lower()
         currencyResponse = requests.get(f"http://api.nbp.pl/api/exchangerates/rates/a/{code}/last/30/?format=json")
@@ -137,8 +143,10 @@ class Data:
             if stepDate >= self.eDate: 
                 stepDate = self.eDate
                 self.repeat = 1
-                 
-            self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{runDate}/{stepDate}/?format=json") 
+            if self.num == 2:
+                self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/A/{runDate}/{stepDate}/?format=json") 
+            elif self.num == 3:
+                self.response = requests.get(f"http://api.nbp.pl/api/exchangerates/tables/C/{runDate}/{stepDate}/?format=json")
             self.data = self.response.json()[0:self.step]
             
             longerList += self.data
@@ -160,6 +168,7 @@ class Data:
             table = dict["table"]
             self.table_name = dict["no"]
             self.effectiveDate= dict["effectiveDate"]
+            print(self.effectiveDate)
             self.rates = dict["rates"]
             self.printList.append([table, self.table_name, self.effectiveDate])
             self.currencyList, self.codeList, self.valueList, self.askList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],[],{}
@@ -172,6 +181,9 @@ class Data:
             for rate in self.rates:
                 currency = rate["currency"]
                 self.code = rate["code"]
+                print(self.num)
+                if self.num ==3:
+                    print(rate["currency"],rate["code"])
                 mid = rate[midBid]
                 if currency == "rand (Republika Południowej Afryki)":
                     currency = "rand (RPA)"
