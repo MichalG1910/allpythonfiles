@@ -320,7 +320,6 @@ class StartAction():
                     self.fulloldAllFilesList.append(full_oldName)
                     if self.stopActionFunc == 'Yes':
                         break
-            del reNameObj.objsPreview
             checkChangeConditions()
             #renameFunc(oldName, self.newName, full_oldName)
 
