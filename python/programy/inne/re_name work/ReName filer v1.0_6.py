@@ -299,11 +299,9 @@ class StartAction():
                                 mBox.showerror('nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę')
                                 self.stopActionFunc = 'Yes'
                                 break 
-                            if self.lengthIVar == 0:
-                                self.newName = oldName[0:self.startIVar-1] + self.afterConvert + oldName[self.startIVar-1:]
-                            else:
-                                self.newName = oldName.replace(oldName[self.startIVar-1:self.startIVar-1+self.lengthIVar], self.afterConvert,1)
-                                print(f'startIVar = {self.startIVar}    lengthIVar = {self.lengthIVar}     newname = {self.newName}')
+                           
+                            self.newName = oldName[0:self.startIVar-1] + self.afterConvert + oldName[self.startIVar-1+self.lengthIVar:]
+                            
                     self.newAllFilesList.append(self.newName)
                     self.oldAllFilesList.append(oldName)
                     self.fulloldAllFilesList.append(full_oldName)
