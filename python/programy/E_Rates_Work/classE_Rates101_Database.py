@@ -66,10 +66,12 @@ class Scenario:
          "Table rates created successfully........",
          "sending requests/receiving data from API NBP........",
          "Data inserted to table rates........",
-         "Table tablenames created successfully........",
-         "Data inserted to tablenames........",
+         "Table tablenames_a created successfully........",
+         "Data inserted to tablenames_a........",
          "Table bidask created successfully........",
-         "Data inserted to tabel bidask........"
+         "Data inserted to tabel bidask........",
+         "Table tablenames_c created successfully........",
+         "Data inserted to tablenames_c........"
          ]
       self.progressStep += 1
       return f"{self.loadGraph[self.progressStep]}"
@@ -224,11 +226,9 @@ class Scenario:
       self.conn.commit()
       self.conn.close()
    
-   
-   
-   def createTabelNames(self):
+   def createTabelNamesA(self):
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
-      sql ='''CREATE TABLE IF NOT EXISTS tablenames       
+      sql ='''CREATE TABLE IF NOT EXISTS tablenames_a       
       (
          tablename_id SERIAL NOT NULL PRIMARY KEY,
          table_symbol VARCHAR(5),
@@ -236,16 +236,39 @@ class Scenario:
          date DATE
       )'''
       self.cursor.execute(sql)
-      print("Table tablenames created successfully........")
+      print("Table tablenames_a created successfully........")
       self.conn.commit()
       self.conn.close()
    
-   def insertToTabelNames(self):
+   def insertToTabelNamesA(self):
       self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
       dataObj = Data()
-      insert_stmt = '''INSERT INTO tablenames (table_symbol, table_name, date) VALUES (%s, %s, %s)'''
+      insert_stmt = '''INSERT INTO tablenames_a (table_symbol, table_name, date) VALUES (%s, %s, %s)'''
       self.cursor.executemany(insert_stmt, self.printList)
-      print("Data inserted to tablenames........")
+      print("Data inserted to tablenames_a........")
+      self.conn.commit()
+      self.conn.close()
+   
+   def createTabelNamesC(self):
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
+      sql ='''CREATE TABLE IF NOT EXISTS tablenames_c       
+      (
+         tablename_id SERIAL NOT NULL PRIMARY KEY,
+         table_symbol VARCHAR(5),
+         table_name VARCHAR(20),
+         date DATE
+      )'''
+      self.cursor.execute(sql)
+      print("Table tablenames_c created successfully........")
+      self.conn.commit()
+      self.conn.close()
+   
+   def insertToTabelNamesC(self):
+      self.cursorObj(self.username.get(), self.password.get(),"e_ratesdb", self.hostName.get(), self.port.get())
+      dataObj = Data()
+      insert_stmt = '''INSERT INTO tablenames_c (table_symbol, table_name, date) VALUES (%s, %s, %s)'''
+      self.cursor.executemany(insert_stmt, self.printList)
+      print("Data inserted to tablenames_c........")
       self.conn.commit()
       self.conn.close()
    
@@ -279,6 +302,7 @@ class Scenario:
       bid, ask, table_name) VALUES (%s, %s, %s, %s, %s, %s)'''
       self.cursor.executemany(insert_stmt, dataObj.csvListWithAsk)
       print("Data inserted to tabel bidask........")
+      self.printList = dataObj.printList
       self.conn.commit()
       self.conn.close()
    
@@ -325,10 +349,10 @@ class Scenario:
          self.insertToTabelRates()
          self.value_label['text'] = self.update_progress_label()
          self.logWin.update()
-         self.createTabelNames()
+         self.createTabelNamesA()
          self.value_label['text'] = self.update_progress_label()
          self.logWin.update()
-         self.insertToTabelNames()
+         self.insertToTabelNamesA()
          self.value_label['text'] = self.update_progress_label()
          self.logWin.update()
          self.createTabelBidAsk()
@@ -336,6 +360,12 @@ class Scenario:
          self.logWin.update()
          self.tableName_id = 1
          self.insertToTabelBidAsk22222()
+         self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
+         self.createTabelNamesC()
+         self.value_label['text'] = self.update_progress_label()
+         self.logWin.update()
+         self.insertToTabelNamesC()
          self.value_label['text'] = self.update_progress_label()
          self.logWin.update()
          self.getLastDate()
@@ -356,7 +386,7 @@ class Scenario:
                self.tableName_id += 1
                self.insertToTabelRates(self.mboxIgnore)
                if self.stop_RunReport == 'no':
-                  self.insertToTabelNames()
+                  self.insertToTabelNamesA()
                   self.insertToTabelBidAsk22222()
                   print("Database updated........")
                self.getLastDate()
@@ -491,7 +521,7 @@ class Scenario:
          self.erDataList.append(erData)
       del erData
       
-      self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY tablename_id''')
+      self.cursor.execute(f'''SELECT table_symbol, table_name, date FROM tablenames_a WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY tablename_id''')
       self.printList = self.cursor.fetchall()
       
       self.cursor.execute(f'''SELECT currency, code, date, value FROM rates WHERE date BETWEEN '{startDate}' AND '{endDate}' ORDER BY rates_id''') 
