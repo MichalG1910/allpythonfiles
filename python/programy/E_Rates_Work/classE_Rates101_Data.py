@@ -134,7 +134,8 @@ class Data:
                 
     def ReportLoop(self, progressBarDB = None):
         runDate = self.sDate
-        self.repeat = self.repeating = math.ceil(self.daysLen / self.step) 
+        self.repeat = math.ceil(self.daysLen / self.step) 
+        self.repeating = math.ceil(self.daysLen / self.step ) 
         stepDate = runDate + datetime.timedelta(days=self.step)
         stepTimedelta = datetime.timedelta(days=self.step) + datetime.timedelta(days=1)
         longerList = []
@@ -168,7 +169,6 @@ class Data:
             table = dict["table"]
             self.table_name = dict["no"]
             self.effectiveDate= dict["effectiveDate"]
-            print(self.effectiveDate)
             self.rates = dict["rates"]
             self.printList.append([table, self.table_name, self.effectiveDate])
             self.currencyList, self.codeList, self.valueList, self.askList, self.effectiveDateList, self.codeCurrencyDict= [],[],[],[],[],{}
@@ -181,9 +181,6 @@ class Data:
             for rate in self.rates:
                 currency = rate["currency"]
                 self.code = rate["code"]
-                print(self.num)
-                if self.num ==3:
-                    print(rate["currency"],rate["code"])
                 mid = rate[midBid]
                 if currency == "rand (Republika Południowej Afryki)":
                     currency = "rand (RPA)"

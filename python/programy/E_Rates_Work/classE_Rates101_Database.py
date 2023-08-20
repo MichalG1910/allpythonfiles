@@ -54,7 +54,7 @@ class Scenario:
    def progress(self, repeating):
       
       if self.pb['value'] < 100: 
-         self.pb['value'] += ((100/repeating)/2)* 0.99
+         self.pb['value'] += ((100/repeating)/4)* 0.99
          self.pb.update()
          
          if self.pb['value']>99:
