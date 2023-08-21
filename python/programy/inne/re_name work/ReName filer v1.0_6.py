@@ -187,7 +187,7 @@ class StartAction():
                 self.startIVar = int(reNameObj.startIndexVar.get())
                 self.lengthIVar = int(reNameObj.lengthIndexVar.get())
                 if self.startIVar == 0:
-                     mBox.showerror("Uwaga", "Indeks znaku nie może być 0.")
+                     mBox.showerror("Uwaga", "'Indeks znaku' nie może być 0.")
                      self.stopActionFunc = 'Yes'
             elif reNameObj.startIndexVar.get() != '' and self.regexNum(reNameObj.startIndexVar.get()) == False or reNameObj.lengthIndexVar.get() != '' and self.regexNum(reNameObj.lengthIndexVar.get()) == False:
                 mBox.showerror("Wprowadź liczbę", "Pola 'indeks znaku' i 'ilość znaków' muszą być liczbami.")
@@ -292,6 +292,7 @@ class StartAction():
                             self.newName = oldName.replace(self.toConvert, self.afterConvert, 1)
                     else:                                                                                       
                         if self.regexNum(reNameObj.startIndexVar.get()) == False or self.regexNum(reNameObj.lengthIndexVar.get()) == False:
+                            mBox.showinfo('Uzupełnij pola', 'Uzupełnij wszystkie pola niezbędne do przeprowadzenia zmiany nazwy.')
                             self.stopActionFunc = "Yes"
                             break                                                        
                         elif self.numeration != None:                               
@@ -307,14 +308,13 @@ class StartAction():
                             if self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 0:
                                 self.afterConvert = ''
                             elif self.startIVar != '' and self.lengthIVar != '' and reNameObj.addTextCheckVar.get() == 1:            
-                                self.afterConvert = self.newTxtVar
-                            if len(oldName)-len(oldName[oldName.rfind('.'):])+1 <= self.startIVar + self.lengthIVar-1:
-                                mBox.showerror('Nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.')
-                                self.stopActionFunc = 'Yes'
-                                break 
+                                self.afterConvert = self.newTxtVar 
                            
                             self.newName = oldName[0:self.startIVar-1] + self.afterConvert + oldName[self.startIVar-1+self.lengthIVar:]
-                            
+                    if len(oldName)-len(oldName[oldName.rfind('.'):])+1 <= self.startIVar + self.lengthIVar-1:
+                        mBox.showerror('Nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.')
+                        self.stopActionFunc = 'Yes'
+                        break       
                     self.newAllFilesList.append(self.newName)
                     self.oldAllFilesList.append(oldName)
                     self.fulloldAllFilesList.append(full_oldName)
@@ -345,8 +345,10 @@ class StartAction():
             mBox.showerror("Nie wybrano katalogu roboczego", "Wybierz katalog roboczy, aby kontynuować.")
             self.stopActionFunc ='Yes'
 
+class Language():
+    pass
 # the main class responsible for the work of the application             
-class ReName(Tree, StartAction):
+class ReName(Tree, StartAction, Language):
     def __init__(self):
         self.win = tk.Tk()
         self.osVar()
@@ -674,6 +676,8 @@ class ReName(Tree, StartAction):
         self.backButton.grid(column= 0, row= 12, sticky="W", padx=10, pady=(0,10))
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
+        exitButton = ttk.Button(self.mainFrame, text= "PL/ENG", command= self._quit)
+        exitButton.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10))
         
         ###################################### column 2 ######################################################
         # directory selection widgets   
@@ -727,18 +731,18 @@ class ReName(Tree, StartAction):
                             'Ą':1.1, 'B':1.1, 'C':1.1, 'Ć':1.1, 'D':1.1, 'E':1.2, 'Ę':1.1, 'F':1.1, 'G':1.2, 'H':1.1, 'I':0.35, 'J':1.1, 'K':1.2, 'L':1.1, 'Ł':1.1, 'M':1.3, 'N':1.1, 'Ń':1.1, 
                             'O':1.1, 'Ó':1.1, 'P':1.2, 'Q':1.2, 'R':1.1, 'S':1.1, 'Ś':1.1, 'T':1.1, 'U':1.1, 'V':1.1, 'W':1.3, 'X':1.1, 'Y':1.1, 'Z':1.1, 'Ź':1.1, 'Ż':1.1, '0':0.7, '1':0.65, 
                             '2':0.7, '3':0.7, '4':0.7, '5':0.7, '6':0.7, '7':0.7, '8':0.7, '9':0.7, '`':0.25, '~':0.5, '!':0.25, '@':1, '#':1, '$':1, '%':1.1, '^':0.6, '&':1, '*':0.4, '(':0.25, 
-                            ')':0.25, '-':0.3, '_':1, '=':1, '+':1, '[':0.3, ']':0.3, '{':0.25, '}':0.25, '\\':1, '|':0.25, ';':0.25, ':':0.25, "'":0.25, '"':0.25, ',':0.25, '<':0.8, '.':0.25, 
-                            '>':0.8, '/':0.5, '?':0.5, ' ':0.6, "    ":2.4, '—':0.8}
+                            ')':0.25, '-':0.3, '_':0.8, '=':1, '+':1, '[':0.3, ']':0.3, '{':0.25, '}':0.25, '\\':1, '|':0.25, ';':0.25, ':':0.25, "'":0.25, '"':0.25, ',':0.25, '<':0.8, '.':0.25, 
+                            '>':0.8, '/':0.5, '?':0.5, ' ':0.4, "    ":2.4, '—':0.8}
         
         for l in string:
             if l.islower():
                 self.stringWidth += letterWidth[l] * 1.30
             elif l.isupper():
-                self.stringWidth += letterWidth[l] * 1.2
+                self.stringWidth += letterWidth[l] * 1.25
             elif l.isdigit():
                 self.stringWidth += letterWidth[l] * 1.43
             else:
-                self.stringWidth += letterWidth[l] * 1.55
+                self.stringWidth += letterWidth[l] * 1.45
         del letterWidth
     
     # function that creates a preview before renaming files
@@ -789,7 +793,7 @@ class ReName(Tree, StartAction):
                 self.previewTextAfter.configure(width=round(max(newNameWidthList)))
             else: self.previewTextAfter.configure(width=180 - round(max(self.nameWidthList)) if round(max(self.nameWidthList)) <= 90 else 90)
             self.previewTextAfter.configure(state='disabled')
-        del self.nameWidthList, newNameWidthList
+            del self.nameWidthList, newNameWidthList
     # function to undo changes after renaming files        
     def _back(self):
         self.backButton.configure(state='disabled')
