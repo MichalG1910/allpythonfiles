@@ -312,7 +312,7 @@ class StartAction():
                            
                             self.newName = oldName[0:self.startIVar-1] + self.afterConvert + oldName[self.startIVar-1+self.lengthIVar:]
                     if len(oldName)-len(oldName[oldName.rfind('.'):])+1 <= self.startIVar + self.lengthIVar-1:
-                        mBox.showerror('Nie można zmienić pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.')
+                        mBox.showerror('Nie można zmienić nazwy pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.')
                         self.stopActionFunc = 'Yes'
                         break       
                     self.newAllFilesList.append(self.newName)
@@ -346,7 +346,47 @@ class StartAction():
             self.stopActionFunc ='Yes'
 
 class Language():
-    pass
+    def translate(self):
+        self.translateDict = {
+            'Acces denided':['Acces denided','Brak dostępu'], 
+            'You do not have permission to access this directory.':['You do not have permission to access this directory.','Nie masz uprawnień do dostępu do tego katalogu.'],
+            'This is not a directory':['This is not a directory','To nie jest katalog'],
+            'The specified location cannot be accessed because it is not a directory. Choose another location.':['The specified location cannot be accessed because it is not a directory. Choose another location.','Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację.'],
+            'Attention':['Attention','Uwaga'],
+            "'Character index' cannot be 0.":["'Character index' cannot be 0.","'Indeks znaku' nie może być 0."],
+            'Enter a number':['Enter a number','Wprowadź liczbę'],
+            "The 'character index' and 'number of characters' fields must be numbers.":["The 'character index' and 'number of characters' fields must be numbers.","Pola 'indeks znaku' i 'ilość znaków' muszą być liczbami."],
+            "The 'start at' field must be an integer greater than 0.":["The 'start at' field must be an integer greater than 0.","Pole 'zacznij od' musi być liczbą całkowitą większą od 0."],
+            "The 'start at: S/E' fields must be integers greater than 0.":["The 'start at: S/E' fields must be integers greater than 0.","Pola 'zacznij od: S/E' muszą być liczbami całkowitymi większymi od 0."],
+            'Rename error':['Rename error','Błąd zmiany nazwy'],
+            'Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.':['Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.','Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację.'],
+            'Wrong separator':['Wrong separator','Błędny separator'],
+            'An illegal character was used in the separator. Change separator.':['An illegal character was used in the separator. Change separator.','W separatorze użyto niedozwolonego znaku.\nZmień separator.'],
+            'Fill in the fields':['Fill in the fields','Uzupełnij pola'],
+            'Please complete all fields necessary for the name change.':['Please complete all fields necessary for the name change.','Uzupełnij wszystkie pola niezbędne do przeprowadzenia zmiany nazwy.'],
+            'Unable to rename the file':['Unable to rename the file','Nie można zmienić nazwy pliku'],
+            'Exceeded maximum number of changeable letters, please enter a smaller number.':['Exceeded maximum number of changeable letters, please enter a smaller number.','Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.'],
+            'No working directory selected':['No working directory selected','Nie wybrano katalogu roboczego'],
+            'Select a working directory to continue.':['Select a working directory to continue.','Wybierz katalog roboczy, aby kontynuować.'],
+            'start at:':['start at:','zacznij od:'],
+            'start at: S':['start at: S','zacznij od: S'],
+            'actions available':['actions available','dostępne akcje'],
+            'change part of name':['change part of name','zmień fragment nazwy'],
+            'text to change:':['text to change:','tekst do zmiany:'],
+            'change to:':['change to:','zmienić na:'],
+            'delete/replace in name':['delete/replace in name','usuń/zastąp w nazwie'],
+            'character index:':['character index:','indeks znaku:'],
+            'number of characters:':['number of characters:','ilość znaków:'],
+            'replace with text':['replace with text','zastąpić tekstem'],
+            'enter numbering?':['enter numbering?','wprowadzić numerację?'],
+            'typical':['typical','zwykła'],
+            'TV series (e.g. S01E01)':['TV series (e.g. S01E01)','serialowa (np. S01E01)'],
+            'Preview':['Preview','Podgląd'],
+            'Exit':['Exit','Zamknij'],
+            'Back':['Back','Cofnij'],
+            'Clear':['Clear','Wyczyść']
+            }
+        print(self.translateDict['Acces denided'][1])
 # the main class responsible for the work of the application             
 class ReName(Tree, StartAction, Language):
     def __init__(self):
@@ -361,6 +401,7 @@ class ReName(Tree, StartAction, Language):
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", super().OnDoubleClick)
+        super().translate()
     
     # function responsible for creating a special variable used to adjust the graphical interface for the linux system
     def osVar(self):
@@ -624,13 +665,13 @@ class ReName(Tree, StartAction, Language):
         self.aConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.afterConvert1) 
         self.aConv.grid(column= 0, row= 4, padx=10, pady=(0,10))
         
-        # delete/add in name widgets   
+        # delete/replace in name widgets   
         deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/zastąp w nazwie', command= self.changeStateDelAdd)
         self.deleteAddVar.set(0)
         self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
         self.deleteAddFrame.grid(column=0, row=1,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.startIndex = ttk.Label(self.deleteAddFrame, text = "indeks znaku:", state='disabled')
+        self.startIndex = ttk.Label(self.deleteAddFrame, text = "character index:", state='disabled')
         self.startIndex.grid(column = 0, row = 0, padx=10, pady=(8,2), sticky = "W")
         self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar, state='disabled') 
         self.startIndexEntry.grid(column= 0, row= 0, padx=(100,10), pady=(10,10))
