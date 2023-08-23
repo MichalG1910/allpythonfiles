@@ -41,11 +41,13 @@ class Tree():
         def _treeReset(): 
             self._tree(reNameObj.win, path=self.os_drives)
             self.tree.bind("<Double-1>",self.OnDoubleClick)      
-           
+
+        self.driveTextList = [] 
         self.fileIcon = PhotoImage(file=f'{self.filePath}/file18t.png')
         self.folderIcon = PhotoImage(file=f'{self.filePath}/folder18t.png')
         self.openfolderIcon = PhotoImage(file=f'{self.filePath}/openfolder18t.png')
         self.errorfolderIcon = PhotoImage(file=f'{self.filePath}/error folder.png')
+        self.diskIcon = PhotoImage(file=f'{self.filePath}/disk18.png')
         self.nodes = dict()
         self.nodesAll = dict()
         self.treeFrame = ttk.Frame(master, height=20)
@@ -64,14 +66,16 @@ class Tree():
         for i in range(len(path)):
             abspath = os.path.abspath(path[i-1])
             driveText = abspath[abspath.rfind('/')+1:] 
+            self.driveTextList.append(driveText)
             if len(driveText) > 15:
                 a=i
                 if a == 0: a=''
                 driveText = f"Wolumin{a}"
             elif len(driveText) == 0: 
                 driveText = "Ubuntu" 
-            self.insert_node('', driveText, abspath, self.folderIcon)
+            self.insert_node('', driveText, abspath, self.diskIcon)
             i += 1
+        #print(self.tree.item(self.nodesAll))
         self.tree.bind('<<TreeviewOpen>>', self.open_node)
         self.tree.bind('<<TreeviewClose>>', self.close_node)
    
@@ -95,7 +99,10 @@ class Tree():
         path = os.path.abspath(self.nodesAll[node])
         try:
             os.listdir(path)
-            img=self.folderIcon
+            if self.tree.item(node)['text'] in  self.driveTextList:
+                img=self.diskIcon
+            else:
+                img=self.openfolderIcon
         except PermissionError:
             img=self.errorfolderIcon
         self.tree.item(node, image=img, open=False)
@@ -103,7 +110,10 @@ class Tree():
     # opens the directory node
     def open_node(self, event):
         node = self.tree.focus()
-        img=self.openfolderIcon
+        if self.tree.item(node)['text'] in  self.driveTextList:
+            img=self.diskIcon
+        else:
+            img=self.openfolderIcon
         self.tree.item(node, image=img, open=True)
         abspath = self.nodes.pop(node, None) 
         if abspath:
@@ -125,7 +135,7 @@ class Tree():
                 self.close_node('<<TreeviewClose>>')
                 mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu.")
                 img=self.errorfolderIcon
-   
+        
     # event one double click of the right mouse button
     def OnDoubleClick(self, event):
         reNameObj._clear()
@@ -346,7 +356,7 @@ class StartAction():
             self.stopActionFunc ='Yes'
 
 class Language():
-    def translate(self):
+    def dictionary(self):
         self.translateDict = {
             'Acces denided':['Acces denided','Brak dostępu'], 
             'You do not have permission to access this directory.':['You do not have permission to access this directory.','Nie masz uprawnień do dostępu do tego katalogu.'],
@@ -387,6 +397,7 @@ class Language():
             'Clear':['Clear','Wyczyść']
             }
         print(self.translateDict['Acces denided'][1])
+
 # the main class responsible for the work of the application             
 class ReName(Tree, StartAction, Language):
     def __init__(self):
@@ -401,7 +412,7 @@ class ReName(Tree, StartAction, Language):
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", super().OnDoubleClick)
-        super().translate()
+        super().dictionary()
     
     # function responsible for creating a special variable used to adjust the graphical interface for the linux system
     def osVar(self):
