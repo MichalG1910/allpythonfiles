@@ -357,6 +357,8 @@ class StartAction():
 
 class Language():
     def dictionary(self):
+        self.langVar = tk.StringVar
+        self.lang = 0
         self.translateDict = {
             'Acces denided':['Acces denided','Brak dostępu'], 
             'You do not have permission to access this directory.':['You do not have permission to access this directory.','Nie masz uprawnień do dostępu do tego katalogu.'],
@@ -396,23 +398,34 @@ class Language():
             'Back':['Back','Cofnij'],
             'Clear':['Clear','Wyczyść']
             }
-        print(self.translateDict['Acces denided'][1])
+        print(self.translateDict['actions available'][0])
+    def changeLang(self,*ignoredArgs):
+        if self.langVar.get() == 'en':
+            self.lang = 0
+        else:
+            self.lang = 1
+        
+    def tracechangeLang(self):         
+        self.langVar.trace('w', lambda unused0, unused1, unused2 : self.changeLang())
 
 # the main class responsible for the work of the application             
-class ReName(Tree, StartAction, Language):
+class ReName(Tree, StartAction):
     def __init__(self):
         self.win = tk.Tk()
         self.osVar()
         super().__init__()
+        self.dictionary()
         self.winStyle(self.win)
         self.win.title("ReName v1.0")
         self.directory = None
         self.widgets()
         self.previewWidgets()
+        self.tracechangeLang()
         self.strLen = None
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", super().OnDoubleClick)
-        super().dictionary()
+        
+        
     
     # function responsible for creating a special variable used to adjust the graphical interface for the linux system
     def osVar(self):
@@ -420,6 +433,62 @@ class ReName(Tree, StartAction, Language):
             self.sysVar = 10
         else:
             self.sysVar = 0
+
+    def dictionary(self):
+        self.lang = 0
+        self.translateDict = {
+            'Acces denided':['Acces denided','Brak dostępu'], 
+            'You do not have permission to access this directory.':['You do not have permission to access this directory.','Nie masz uprawnień do dostępu do tego katalogu.'],
+            'This is not a directory':['This is not a directory','To nie jest katalog'],
+            'The specified location cannot be accessed because it is not a directory. Choose another location.':['The specified location cannot be accessed because it is not a directory. Choose another location.','Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację.'],
+            'Attention':['Attention','Uwaga'],
+            "'Character index' cannot be 0.":["'Character index' cannot be 0.","'Indeks znaku' nie może być 0."],
+            'Enter a number':['Enter a number','Wprowadź liczbę'],
+            "The 'character index' and 'number of characters' fields must be numbers.":["The 'character index' and 'number of characters' fields must be numbers.","Pola 'indeks znaku' i 'ilość znaków' muszą być liczbami."],
+            "The 'start at' field must be an integer greater than 0.":["The 'start at' field must be an integer greater than 0.","Pole 'zacznij od' musi być liczbą całkowitą większą od 0."],
+            "The 'start at: S/E' fields must be integers greater than 0.":["The 'start at: S/E' fields must be integers greater than 0.","Pola 'zacznij od: S/E' muszą być liczbami całkowitymi większymi od 0."],
+            'Rename error':['Rename error','Błąd zmiany nazwy'],
+            'Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.':['Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.','Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację.'],
+            'Wrong separator':['Wrong separator','Błędny separator'],
+            'An illegal character was used in the separator. Change separator.':['An illegal character was used in the separator. Change separator.','W separatorze użyto niedozwolonego znaku.\nZmień separator.'],
+            'Fill in the fields':['Fill in the fields','Uzupełnij pola'],
+            'Please complete all fields necessary for the name change.':['Please complete all fields necessary for the name change.','Uzupełnij wszystkie pola niezbędne do przeprowadzenia zmiany nazwy.'],
+            'Unable to rename the file':['Unable to rename the file','Nie można zmienić nazwy pliku'],
+            'Exceeded maximum number of changeable letters, please enter a smaller number.':['Exceeded maximum number of changeable letters, please enter a smaller number.','Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.'],
+            'No working directory selected':['No working directory selected','Nie wybrano katalogu roboczego'],
+            'Select a working directory to continue.':['Select a working directory to continue.','Wybierz katalog roboczy, aby kontynuować.'],
+            'start at:':['start at:','zacznij od:'],
+            'start at: S':['start at: S','zacznij od: S'],
+            'actions available':['actions available','dostępne akcje'],
+            'change part of name':['change part of name','zmień fragment nazwy'],
+            'text to change:':['text to change:','tekst do zmiany:'],
+            'change to:':['change to:','zmienić na:'],
+            'delete/replace in name':['delete/replace in name','usuń/zastąp w nazwie'],
+            'character index:':['character index:','indeks znaku:'],
+            'number of characters:':['number of characters:','ilość znaków:'],
+            'replace with text':['replace with text','zastąpić tekstem'],
+            'enter numbering?':['enter numbering?','wprowadzić numerację?'],
+            'typical':['typical','zwykła'],
+            'TV series (e.g. S01E01)':['TV series (e.g. S01E01)','serialowa (np. S01E01)'],
+            'Preview':['Preview','Podgląd'],
+            'Exit':['Exit','Zamknij'],
+            'Back':['Back','Cofnij'],
+            'Clear':['Clear','Wyczyść']
+            }
+        print(self.translateDict['actions available'][0])
+    def changeLang(self,*ignoredArgs):
+        print(self.langVar.get())
+        if self.langVar.get() == 'en':
+            self.lang = 0
+            self.widgets()
+        elif self.langVar.get() == 'pl':
+            self.lang = 1
+            self.widgets()
+        print(self.lang)    
+        print(self.langVar.get())   
+
+    def tracechangeLang(self):         
+        self.langVar.trace('w', lambda unused0, unused1, unused2 : self.changeLang())        
     
     # function responsible for exiting the application   
     def _quit(self):
@@ -658,7 +727,7 @@ class ReName(Tree, StartAction, Language):
         
        
         #################################### column 1 #######################################################
-        self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text='dostępne akcje')
+        self.mainFrame = ttk.LabelFrame(self.win, labelanchor='n', text=self.translateDict['actions available'][self.lang])
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
         # change part of the name widgets   
@@ -729,10 +798,9 @@ class ReName(Tree, StartAction, Language):
         self.backButton.grid(column= 0, row= 12, sticky="W", padx=10, pady=(0,10))
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
-        langCombobox = ttk.Combobox(self.mainFrame, text= "PL/ENG",textvariable= self.langVar, width=2, state= "readonly")
-        langCombobox.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10))
-        langCombobox["values"] = ('en', 'pl') # definiujemy naszą rozwijaną listę (w postaci krotki)
-        langCombobox.current(0)
+        langCombobox = ttk.Combobox(self.mainFrame,textvariable= self.langVar, width=2, state= "readonly", values=['en', 'pl'])
+        langCombobox.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10)) 
+        #langCombobox.current(0)
         self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
         self.themeButton = ttk.Button(self.mainFrame, image=self.icon, width=1)
         self.themeButton.image = self.icon
