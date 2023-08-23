@@ -654,6 +654,7 @@ class ReName(Tree, StartAction, Language):
         self.standardVar = tk.IntVar()
         self.seriesVar = tk.IntVar()
         self.sepVar = tk.StringVar()
+        self.langVar = tk.StringVar()
         
        
         #################################### column 1 #######################################################
@@ -682,7 +683,7 @@ class ReName(Tree, StartAction, Language):
         self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
         self.deleteAddFrame.grid(column=0, row=1,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.startIndex = ttk.Label(self.deleteAddFrame, text = "character index:", state='disabled')
+        self.startIndex = ttk.Label(self.deleteAddFrame, text = "indeks znaku:", state='disabled')
         self.startIndex.grid(column = 0, row = 0, padx=10, pady=(8,2), sticky = "W")
         self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar, state='disabled') 
         self.startIndexEntry.grid(column= 0, row= 0, padx=(100,10), pady=(10,10))
@@ -728,8 +729,14 @@ class ReName(Tree, StartAction, Language):
         self.backButton.grid(column= 0, row= 12, sticky="W", padx=10, pady=(0,10))
         clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
-        exitButton = ttk.Button(self.mainFrame, text= "PL/ENG", command= self._quit)
-        exitButton.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10))
+        langCombobox = ttk.Combobox(self.mainFrame, text= "PL/ENG",textvariable= self.langVar, width=2, state= "readonly")
+        langCombobox.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10))
+        langCombobox["values"] = ('en', 'pl') # definiujemy naszą rozwijaną listę (w postaci krotki)
+        langCombobox.current(0)
+        self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
+        self.themeButton = ttk.Button(self.mainFrame, image=self.icon, width=1)
+        self.themeButton.image = self.icon
+        self.themeButton.grid(column=0, row=12, sticky="E",padx=(0,65), pady=(0,10))
         
         ###################################### column 2 ######################################################
         # directory selection widgets   
