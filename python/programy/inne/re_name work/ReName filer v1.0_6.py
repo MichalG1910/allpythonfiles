@@ -133,7 +133,7 @@ class Tree():
                         self.insert_node(node, p, os.path.join(abspath, p), img)
             except PermissionError:
                 self.close_node('<<TreeviewClose>>')
-                mBox.showerror("Brak dostępu", "Nie masz uprawnień do dostępu do tego katalogu.")
+                mBox.showerror(reNameObj.translateDict["Acces denided"][reNameObj.lang], reNameObj.translateDict["You do not have permission to access this directory."][reNameObj.lang])
                 img=self.errorfolderIcon
         
     # event one double click of the right mouse button
@@ -159,7 +159,7 @@ class Tree():
             except PermissionError or ValueError:
                 pass
         else:
-            mBox.showinfo('To nie jest katalog', 'Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację.')
+            mBox.showinfo(reNameObj.translateDict["This is not a directory"][reNameObj.lang], reNameObj.translateDict["The specified location cannot be accessed because it is not a directory. Choose another location."][reNameObj.lang])
             pass
 
 # class responsible for execute the action
@@ -197,10 +197,10 @@ class StartAction():
                 self.startIVar = int(reNameObj.startIndexVar.get())
                 self.lengthIVar = int(reNameObj.lengthIndexVar.get())
                 if self.startIVar == 0:
-                     mBox.showerror("Uwaga", "'Indeks znaku' nie może być 0.")
+                     mBox.showerror(reNameObj.translateDict["Attention"][reNameObj.lang], reNameObj.translateDict["'Character index' cannot be 0."][reNameObj.lang])
                      self.stopActionFunc = 'Yes'
             elif reNameObj.startIndexVar.get() != '' and self.regexNum(reNameObj.startIndexVar.get()) == False or reNameObj.lengthIndexVar.get() != '' and self.regexNum(reNameObj.lengthIndexVar.get()) == False:
-                mBox.showerror("Wprowadź liczbę", "Pola 'indeks znaku' i 'ilość znaków' muszą być liczbami.")
+                mBox.showerror(reNameObj.translateDict["Enter a number"][reNameObj.lang], reNameObj.translateDict["The 'character index' and 'number of characters' fields must be numbers."][reNameObj.lang])
                 self.stopActionFunc = 'Yes'
             else: 
                 self.startIVar = 1
@@ -219,7 +219,7 @@ class StartAction():
                     self.separator = reNameObj.sepVar.get()
                     self.numeration2 = None
                 else: 
-                    mBox.showerror("Wprowadź liczbę", "Pole 'zacznij od' musi być liczbą całkowitą większą od 0.")
+                    mBox.showerror(reNameObj.translateDict["Enter a number"][reNameObj.lang], reNameObj.translateDict["The 'start at' field must be an integer greater than 0."][reNameObj.lang])
                     self.stopActionFunc = 'Yes'
             elif reNameObj.checkNumVar.get() == 1 and reNameObj.seriesVar.get() == 1:
                 if self.regexNum(reNameObj.seriesNumeration1.get()) == True and self.regexNum(reNameObj.seriesNumeration2.get()) == True:
@@ -227,7 +227,7 @@ class StartAction():
                     self.numeration2 = int(reNameObj.seriesNumeration2.get())
                     self.separator = reNameObj.sepVar.get()
                 else:
-                    mBox.showerror("Wprowadź liczbę", "Pola 'zacznij od: S/E' muszą być liczbami całkowitymi większymi od 0.")
+                    mBox.showerror(reNameObj.translateDict["Enter a number"][reNameObj.lang], reNameObj.translateDict["The 'start at: S/E' fields must be integers greater than 0."][reNameObj.lang])
                     self.stopActionFunc = 'Yes'
             else: 
                 self.numeration = None
@@ -259,7 +259,7 @@ class StartAction():
         def checkChangeConditions():
             newNameSet = set(self.newAllFilesList)
             if len(self.newAllFilesList) != len(newNameSet):
-                mBox.showerror("Błąd zmiany nazwy", "Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację.")
+                mBox.showerror(reNameObj.translateDict["Rename error"][reNameObj.lang], reNameObj.translateDict["Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering."][reNameObj.lang])
                 self.stopActionFunc = "Yes"
             else:
                 a=0
@@ -278,7 +278,7 @@ class StartAction():
                     try:
                         os.rename(full_oldName, full_newName)
                     except OSError:
-                        mBox.showerror("Błędny separator", "W separatorze użyto niedozwolonego znaku.\nZmień separator.")
+                        mBox.showerror(reNameObj.translateDict["Wrong separator"][reNameObj.lang], reNameObj.translateDict["An illegal character was used in the separator. Change separator."][reNameObj.lang])
                         self.stopActionFunc = 'Yes'
             self.oldNameLenList.append(len(oldName))
             self.newNameList.append(newName)
@@ -302,7 +302,7 @@ class StartAction():
                             self.newName = oldName.replace(self.toConvert, self.afterConvert, 1)
                     else:                                                                                       
                         if self.regexNum(reNameObj.startIndexVar.get()) == False or self.regexNum(reNameObj.lengthIndexVar.get()) == False:
-                            mBox.showinfo('Uzupełnij pola', 'Uzupełnij wszystkie pola niezbędne do przeprowadzenia zmiany nazwy.')
+                            mBox.showinfo(reNameObj.translateDict["Fill in the fields"][reNameObj.lang], reNameObj.translateDict["Please complete all fields necessary for the name change."][reNameObj.lang])
                             self.stopActionFunc = "Yes"
                             break                                                        
                         elif self.numeration != None:                               
@@ -322,7 +322,7 @@ class StartAction():
                            
                             self.newName = oldName[0:self.startIVar-1] + self.afterConvert + oldName[self.startIVar-1+self.lengthIVar:]
                     if len(oldName)-len(oldName[oldName.rfind('.'):])+1 <= self.startIVar + self.lengthIVar-1:
-                        mBox.showerror('Nie można zmienić nazwy pliku', 'Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.')
+                        mBox.showerror(reNameObj.translateDict["Unable to rename the file"][reNameObj.lang], reNameObj.translateDict["Exceeded maximum number of changeable letters, please enter a smaller number."][reNameObj.lang])
                         self.stopActionFunc = 'Yes'
                         break       
                     self.newAllFilesList.append(self.newName)
@@ -352,7 +352,7 @@ class StartAction():
                 pass
                 #reNameObj._clear()
         else: 
-            mBox.showerror("Nie wybrano katalogu roboczego", "Wybierz katalog roboczy, aby kontynuować.")
+            self.workingDirError = mBox.showerror(reNameObj.translateDict["No working directory selected"][reNameObj.lang], reNameObj.translateDict["Select a working directory to continue."][reNameObj.lang])
             self.stopActionFunc ='Yes'
 
 class Language():
@@ -363,7 +363,7 @@ class Language():
             'Acces denided':['Acces denided','Brak dostępu'], 
             'You do not have permission to access this directory.':['You do not have permission to access this directory.','Nie masz uprawnień do dostępu do tego katalogu.'],
             'This is not a directory':['This is not a directory','To nie jest katalog'],
-            'The specified location cannot be accessed because it is not a directory. Choose another location.':['The specified location cannot be accessed because it is not a directory. Choose another location.','Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację.'],
+            'The specified location cannot be accessed because it is not a directory. Choose another location.':['The specified location cannot be accessed because it is not a directory.\nChoose another location.','Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację.'],
             'Attention':['Attention','Uwaga'],
             "'Character index' cannot be 0.":["'Character index' cannot be 0.","'Indeks znaku' nie może być 0."],
             'Enter a number':['Enter a number','Wprowadź liczbę'],
@@ -371,7 +371,7 @@ class Language():
             "The 'start at' field must be an integer greater than 0.":["The 'start at' field must be an integer greater than 0.","Pole 'zacznij od' musi być liczbą całkowitą większą od 0."],
             "The 'start at: S/E' fields must be integers greater than 0.":["The 'start at: S/E' fields must be integers greater than 0.","Pola 'zacznij od: S/E' muszą być liczbami całkowitymi większymi od 0."],
             'Rename error':['Rename error','Błąd zmiany nazwy'],
-            'Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.':['Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.','Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację.'],
+            'Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.':['Selected files cannot be renamed.\nSome of the changed files would have the same name\nChange the renaming conditions or enter numbering.','Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację.'],
             'Wrong separator':['Wrong separator','Błędny separator'],
             'An illegal character was used in the separator. Change separator.':['An illegal character was used in the separator. Change separator.','W separatorze użyto niedozwolonego znaku.\nZmień separator.'],
             'Fill in the fields':['Fill in the fields','Uzupełnij pola'],
@@ -476,14 +476,29 @@ class ReName(Tree, StartAction):
             'Clear':['Clear','Wyczyść']
             }
         print(self.translateDict['actions available'][0])
+    
+    def widgetsToTranslate(self):
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
+        
     def changeLang(self,*ignoredArgs):
         print(self.langVar.get())
+        print(self.lang)
         if self.langVar.get() == 'en':
             self.lang = 0
-            self.widgets()
+            self.widgetsToTranslate()
         elif self.langVar.get() == 'pl':
             self.lang = 1
-            self.widgets()
+            self.widgetsToTranslate()
+             
         print(self.lang)    
         print(self.langVar.get())   
 
@@ -767,7 +782,6 @@ class ReName(Tree, StartAction):
         self.newTextEntry = ttk.Entry(self.deleteAddFrame, textvariable= self.newTextVar, state='disabled') 
         self.newTextEntry.grid(column= 1, row= 1, padx=(0,10), pady=(0,10), sticky="NSWE")
 
-
         # add numeration widgets   
         checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= "wprowadzić numerację?", command=self.changeStateNumeration) 
         self.checkNumVar.set(0)
@@ -800,14 +814,14 @@ class ReName(Tree, StartAction):
         clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
         langCombobox = ttk.Combobox(self.mainFrame,textvariable= self.langVar, width=2, state= "readonly", values=['en', 'pl'])
         langCombobox.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10)) 
-        #langCombobox.current(0)
+        langCombobox.current(0)
         self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
         self.themeButton = ttk.Button(self.mainFrame, image=self.icon, width=1)
         self.themeButton.image = self.icon
         self.themeButton.grid(column=0, row=12, sticky="E",padx=(0,65), pady=(0,10))
         
         ###################################### column 2 ######################################################
-        # directory selection widgets   
+        # directory selection widgets
         self.folderLocLab = ttk.Label(self.win, text = "folder:")
         self.folderLocLab.grid(column = 1, row = 0,  padx=10, pady=(20,5), sticky="NW")
         self.lok = ttk.Entry(self.win, text=self.directory, width= 34-int(self.sysVar*0.4), textvariable= self.location1)   
