@@ -412,7 +412,7 @@ class ReName(Tree, StartAction):
             'change to:':['change to:','zmienić na:'],
             'delete/replace in name':['delete/replace in name','usuń/zastąp w nazwie'],
             'character index:':['character index:','indeks znaku:'],
-            'number of characters:':['number of characters:','ilość znaków:'],
+            'quantity:':['quantity:','ilość znaków:'],
             'replace with text':['replace with text','zastąpić tekstem'],
             'enter numbering?':['enter numbering?','wprowadzić numerację?'],
             'typical':['typical','zwykła'],
@@ -431,7 +431,7 @@ class ReName(Tree, StartAction):
         self.changeToLab.configure(text=self.translateDict['change to:'][self.lang])
         self.deleteAddChb.configure(text=self.translateDict['delete/replace in name'][self.lang])
         self.startIndex.configure(text=self.translateDict['character index:'][self.lang])
-        self.lenght.configure(text=self.translateDict['number of characters:'][self.lang])
+        self.lenght.configure(text=self.translateDict['quantity:'][self.lang])
         self.addTextCheck.configure(text=self.translateDict['replace with text'][self.lang])
         self.checkNumerationWidget.configure(text=self.translateDict['enter numbering?'][self.lang])
         self.checkStandard.configure(text=self.translateDict['typical'][self.lang])
@@ -441,6 +441,9 @@ class ReName(Tree, StartAction):
         self.exitButton.configure(text=self.translateDict['Exit'][self.lang])
         self.backButton.configure(text=self.translateDict['Back'][self.lang])
         self.clearButton.configure(text=self.translateDict['Clear'][self.lang])
+        self.startIndexEntry.grid_configure(padx=(100+self.langPadxVar,10))
+        self.lenghtEntry.grid_configure(padx=(87-self.sysVar*3,10))
+        
         if self.standardVar.get() == 1:
             self.numLabel.configure(text=self.translateDict['start at:'][self.lang])
         else:
@@ -450,9 +453,11 @@ class ReName(Tree, StartAction):
     def changeLang(self,*ignoredArgs):
         if self.langVar.get() == 'en':
             self.lang = 0
+            self.langPadxVar = 10
             self.widgetsToTranslate()
         elif self.langVar.get() == 'pl':
             self.lang = 1
+            self.langPadxVar = 0
             self.widgetsToTranslate()
     
     # function responsible for tracking application language changes        
@@ -676,6 +681,7 @@ class ReName(Tree, StartAction):
     
     # function responsible for creating widgets for the graphical interface
     def widgets(self):
+        self.langPadxVar = 10
         self.location1 = tk.StringVar()
         self.toConvert1 = tk.StringVar()
         self.afterConvert1 = tk.StringVar()
@@ -724,12 +730,12 @@ class ReName(Tree, StartAction):
         self.startIndex = ttk.Label(self.deleteAddFrame, text = self.translateDict['character index:'][self.lang], state='disabled')
         self.startIndex.grid(column = 0, row = 0, padx=10, pady=(8,2), sticky = "W")
         self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar, state='disabled') 
-        self.startIndexEntry.grid(column= 0, row= 0, padx=(100,10), pady=(10,10))
+        self.startIndexEntry.grid(column= 0, row= 0, padx=(100+self.langPadxVar,10), pady=(10,10))
         
-        self.lenght = ttk.Label(self.deleteAddFrame, text = self.translateDict['number of characters:'][self.lang], state='disabled')
-        self.lenght.grid(column = 1, row = 0, pady=(8,2), sticky="W")
+        self.lenght = ttk.Label(self.deleteAddFrame, text = self.translateDict['quantity:'][self.lang], state='disabled')
+        self.lenght.grid(column = 1, row = 0, padx=15, pady=(8,2), sticky="W")
         self.lenghtEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.lengthIndexVar, state='disabled') 
-        self.lenghtEntry.grid(column= 1, row= 0, padx=(87-self.sysVar*3,10), pady=(10,10))
+        self.lenghtEntry.grid(column= 1, row= 0, padx=(87-self.sysVar*3+self.langPadxVar*2,10), pady=(10,10))
 
         self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text=self.translateDict['replace with text'][self.lang], command=self.changeStateAddText, state='disabled')
         self.addTextCheck.grid(column= 0, row= 1, padx=(10,10), pady=(0,10))
