@@ -34,6 +34,7 @@ class Tree():
         self.os_drives = list(self.os_drives)
 
         del data1, linuxMountpoint, win_drives
+    
     # the function responsible for the tree view and tree view widgets
     def _tree(self, master, path):
         
@@ -352,61 +353,8 @@ class StartAction():
                 pass
                 #reNameObj._clear()
         else: 
-            self.workingDirError = mBox.showerror(reNameObj.translateDict["No working directory selected"][reNameObj.lang], reNameObj.translateDict["Select a working directory to continue."][reNameObj.lang])
+            self.workingDirError = mBox.showinfo(reNameObj.translateDict["No working directory selected"][reNameObj.lang], reNameObj.translateDict["Select a working directory to continue."][reNameObj.lang])
             self.stopActionFunc ='Yes'
-
-class Language():
-    def dictionary(self):
-        self.langVar = tk.StringVar
-        self.lang = 0
-        self.translateDict = {
-            'Acces denided':['Acces denided','Brak dostępu'], 
-            'You do not have permission to access this directory.':['You do not have permission to access this directory.','Nie masz uprawnień do dostępu do tego katalogu.'],
-            'This is not a directory':['This is not a directory','To nie jest katalog'],
-            'The specified location cannot be accessed because it is not a directory. Choose another location.':['The specified location cannot be accessed because it is not a directory.\nChoose another location.','Nie da się wejść do wskazanej lokalizacji ponieważ nie jest to katalog.\nWskaż inną lokalizację.'],
-            'Attention':['Attention','Uwaga'],
-            "'Character index' cannot be 0.":["'Character index' cannot be 0.","'Indeks znaku' nie może być 0."],
-            'Enter a number':['Enter a number','Wprowadź liczbę'],
-            "The 'character index' and 'number of characters' fields must be numbers.":["The 'character index' and 'number of characters' fields must be numbers.","Pola 'indeks znaku' i 'ilość znaków' muszą być liczbami."],
-            "The 'start at' field must be an integer greater than 0.":["The 'start at' field must be an integer greater than 0.","Pole 'zacznij od' musi być liczbą całkowitą większą od 0."],
-            "The 'start at: S/E' fields must be integers greater than 0.":["The 'start at: S/E' fields must be integers greater than 0.","Pola 'zacznij od: S/E' muszą być liczbami całkowitymi większymi od 0."],
-            'Rename error':['Rename error','Błąd zmiany nazwy'],
-            'Selected files cannot be renamed. Some of the changed files would have the same name. Change the renaming conditions or enter numbering.':['Selected files cannot be renamed.\nSome of the changed files would have the same name\nChange the renaming conditions or enter numbering.','Nie można zmienić nazwy wybranych plików.\nCzęść ze zmienianych plików miałaby tą samą nazwę.\nZmień warunki zmiany nazw lub wprowadź numerację.'],
-            'Wrong separator':['Wrong separator','Błędny separator'],
-            'An illegal character was used in the separator. Change separator.':['An illegal character was used in the separator. Change separator.','W separatorze użyto niedozwolonego znaku.\nZmień separator.'],
-            'Fill in the fields':['Fill in the fields','Uzupełnij pola'],
-            'Please complete all fields necessary for the name change.':['Please complete all fields necessary for the name change.','Uzupełnij wszystkie pola niezbędne do przeprowadzenia zmiany nazwy.'],
-            'Unable to rename the file':['Unable to rename the file','Nie można zmienić nazwy pliku'],
-            'Exceeded maximum number of changeable letters, please enter a smaller number.':['Exceeded maximum number of changeable letters, please enter a smaller number.','Przekroczono maksymalną liczbę zmienianych liter, wprowadź mniejszą liczbę.'],
-            'No working directory selected':['No working directory selected','Nie wybrano katalogu roboczego'],
-            'Select a working directory to continue.':['Select a working directory to continue.','Wybierz katalog roboczy, aby kontynuować.'],
-            'start at:':['start at:','zacznij od:'],
-            'start at: S':['start at: S','zacznij od: S'],
-            'actions available':['actions available','dostępne akcje'],
-            'change part of name':['change part of name','zmień fragment nazwy'],
-            'text to change:':['text to change:','tekst do zmiany:'],
-            'change to:':['change to:','zmienić na:'],
-            'delete/replace in name':['delete/replace in name','usuń/zastąp w nazwie'],
-            'character index:':['character index:','indeks znaku:'],
-            'number of characters:':['number of characters:','ilość znaków:'],
-            'replace with text':['replace with text','zastąpić tekstem'],
-            'enter numbering?':['enter numbering?','wprowadzić numerację?'],
-            'typical':['typical','zwykła'],
-            'TV series (e.g. S01E01)':['TV series (e.g. S01E01)','serialowa (np. S01E01)'],
-            'Preview':['Preview','Podgląd'],
-            'Exit':['Exit','Zamknij'],
-            'Back':['Back','Cofnij'],
-            'Clear':['Clear','Wyczyść']
-            }
-        print(self.translateDict['actions available'][0])
-    def changeLang(self,*ignoredArgs):
-        if self.langVar.get() == 'en':
-            self.lang = 0
-        else:
-            self.lang = 1
-        
-    def tracechangeLang(self):         
-        self.langVar.trace('w', lambda unused0, unused1, unused2 : self.changeLang())
 
 # the main class responsible for the work of the application             
 class ReName(Tree, StartAction):
@@ -425,8 +373,6 @@ class ReName(Tree, StartAction):
         self.dirButton.bind("<Button-1>", self.ask_dir)
         self.tree.bind("<Double-1>", super().OnDoubleClick)
         
-        
-    
     # function responsible for creating a special variable used to adjust the graphical interface for the linux system
     def osVar(self):
         if sys.platform == 'linux':
@@ -434,6 +380,7 @@ class ReName(Tree, StartAction):
         else:
             self.sysVar = 0
 
+    # a function containing a dictionary with translations of words/sentences
     def dictionary(self):
         self.lang = 0
         self.translateDict = {
@@ -475,33 +422,40 @@ class ReName(Tree, StartAction):
             'Back':['Back','Cofnij'],
             'Clear':['Clear','Wyczyść']
             }
-        print(self.translateDict['actions available'][0])
     
+    # function containing widgets to be translated
     def widgetsToTranslate(self):
         self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        self.mainFrame.configure(text=self.translateDict['actions available'][self.lang])
-        
+        self.changePartNameChb.configure(text=self.translateDict['change part of name'][self.lang])
+        self.textToChangeLab.configure(text=self.translateDict['text to change:'][self.lang])
+        self.changeToLab.configure(text=self.translateDict['change to:'][self.lang])
+        self.deleteAddChb.configure(text=self.translateDict['delete/replace in name'][self.lang])
+        self.startIndex.configure(text=self.translateDict['character index:'][self.lang])
+        self.lenght.configure(text=self.translateDict['number of characters:'][self.lang])
+        self.addTextCheck.configure(text=self.translateDict['replace with text'][self.lang])
+        self.checkNumerationWidget.configure(text=self.translateDict['enter numbering?'][self.lang])
+        self.checkStandard.configure(text=self.translateDict['typical'][self.lang])
+        self.checkSeries.configure(text=self.translateDict['TV series (e.g. S01E01)'][self.lang])
+        self.previewButton.configure(text=self.translateDict['Preview'][self.lang])
+        self.previewFrame.configure(text=self.translateDict['Preview'][self.lang])
+        self.exitButton.configure(text=self.translateDict['Exit'][self.lang])
+        self.backButton.configure(text=self.translateDict['Back'][self.lang])
+        self.clearButton.configure(text=self.translateDict['Clear'][self.lang])
+        if self.standardVar.get() == 1:
+            self.numLabel.configure(text=self.translateDict['start at:'][self.lang])
+        else:
+            self.numLabel.configure(text=self.translateDict['start at: S'][self.lang])
+    
+    # a function that changes the values of variables when changing the application language    
     def changeLang(self,*ignoredArgs):
-        print(self.langVar.get())
-        print(self.lang)
         if self.langVar.get() == 'en':
             self.lang = 0
             self.widgetsToTranslate()
         elif self.langVar.get() == 'pl':
             self.lang = 1
             self.widgetsToTranslate()
-             
-        print(self.lang)    
-        print(self.langVar.get())   
-
+    
+    # function responsible for tracking application language changes        
     def tracechangeLang(self):         
         self.langVar.trace('w', lambda unused0, unused1, unused2 : self.changeLang())        
     
@@ -566,7 +520,7 @@ class ReName(Tree, StartAction):
         
         self.numLabel = ttk.Label(self.numerationFrame, text = "")
         self.numLabel.grid(column = 0, row = 1, sticky="NSWE") # przysłania
-        self.numLabel = ttk.Label(self.numerationFrame, text = "zacznij od:")
+        self.numLabel = ttk.Label(self.numerationFrame, text=self.translateDict['start at:'][self.lang])
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 6, textvariable=self.standardNumeration)
         self.num.grid(column= 0, row= 1, sticky = "W", padx=(80+self.sysVar ,0))
@@ -585,7 +539,7 @@ class ReName(Tree, StartAction):
         
         self.numLabel = ttk.Label(self.numerationFrame, text = "")
         self.numLabel.grid(column = 0, row = 1, sticky="NSWE") # przysłania
-        self.numLabel = ttk.Label(self.numerationFrame, text = "zacznij od: S")
+        self.numLabel = ttk.Label(self.numerationFrame, text = self.translateDict['start at: S'][self.lang])
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration1)
         self.num.grid(column= 0, row=1, sticky = "W", padx=(89+self.sysVar*0.7,0))
@@ -746,52 +700,52 @@ class ReName(Tree, StartAction):
         self.mainFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
         
         # change part of the name widgets   
-        changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text='zmień fragment nazwy', command= self.changeStatePartName,)
+        self.changePartNameChb = ttk.Checkbutton(variable=self.changePartNameVar,  text=self.translateDict['change part of name'][self.lang], command= self.changeStatePartName,)
         self.changePartNameVar.set(1)
-        self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=changePartNameChb)
+        self.changePartNameFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=self.changePartNameChb)
         self.changePartNameFrame.grid(column=0, row=0,columnspan=1, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.textToChangeLab = ttk.Label(self.changePartNameFrame, text = "tekst do zmiany:")
+        self.textToChangeLab = ttk.Label(self.changePartNameFrame, text = self.translateDict['text to change:'][self.lang])
         self.textToChangeLab.grid(column = 0, row = 1, padx=10, pady=(10,2))
         self.toConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.toConvert1) 
         self.toConv.grid(column= 0, row= 2, padx=10, pady=(0,5))
 
-        self.changeToLab = ttk.Label(self.changePartNameFrame, text = "zmienić na:")
+        self.changeToLab = ttk.Label(self.changePartNameFrame, text = self.translateDict['change to:'][self.lang])
         self.changeToLab.grid(column = 0, row = 3, padx=10, pady=(10,2)) 
         self.aConv = ttk.Entry(self.changePartNameFrame, width= 40, textvariable= self.afterConvert1) 
         self.aConv.grid(column= 0, row= 4, padx=10, pady=(0,10))
         
         # delete/replace in name widgets   
-        deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text='usuń/zastąp w nazwie', command= self.changeStateDelAdd)
+        self.deleteAddChb = ttk.Checkbutton(variable=self.deleteAddVar,  text=self.translateDict['delete/replace in name'][self.lang], command= self.changeStateDelAdd)
         self.deleteAddVar.set(0)
-        self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=deleteAddChb, width=320, height=180)
+        self.deleteAddFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=self.deleteAddChb, width=320, height=180)
         self.deleteAddFrame.grid(column=0, row=1,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
 
-        self.startIndex = ttk.Label(self.deleteAddFrame, text = "indeks znaku:", state='disabled')
+        self.startIndex = ttk.Label(self.deleteAddFrame, text = self.translateDict['character index:'][self.lang], state='disabled')
         self.startIndex.grid(column = 0, row = 0, padx=10, pady=(8,2), sticky = "W")
         self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar, state='disabled') 
         self.startIndexEntry.grid(column= 0, row= 0, padx=(100,10), pady=(10,10))
         
-        self.lenght = ttk.Label(self.deleteAddFrame, text = "ilość znaków:", state='disabled')
+        self.lenght = ttk.Label(self.deleteAddFrame, text = self.translateDict['number of characters:'][self.lang], state='disabled')
         self.lenght.grid(column = 1, row = 0, pady=(8,2), sticky="W")
         self.lenghtEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.lengthIndexVar, state='disabled') 
         self.lenghtEntry.grid(column= 1, row= 0, padx=(87-self.sysVar*3,10), pady=(10,10))
 
-        self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text='zastąpić tekstem', command=self.changeStateAddText, state='disabled')
+        self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text=self.translateDict['replace with text'][self.lang], command=self.changeStateAddText, state='disabled')
         self.addTextCheck.grid(column= 0, row= 1, padx=(10,10), pady=(0,10))
         self.newTextEntry = ttk.Entry(self.deleteAddFrame, textvariable= self.newTextVar, state='disabled') 
         self.newTextEntry.grid(column= 1, row= 1, padx=(0,10), pady=(0,10), sticky="NSWE")
 
         # add numeration widgets   
-        checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= "wprowadzić numerację?", command=self.changeStateNumeration) 
+        self.checkNumerationWidget = ttk.Checkbutton(variable=self.checkNumVar, text= self.translateDict['enter numbering?'][self.lang], command=self.changeStateNumeration) 
         self.checkNumVar.set(0)
-        self.numerationFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=checkNumerationWidget, width=320, height=180)
+        self.numerationFrame = ttk.LabelFrame(self.mainFrame, labelanchor='n', labelwidget=self.checkNumerationWidget, width=320, height=180)
         self.numerationFrame.grid(column=0, row=2,columnspan=2, sticky="NSWE", padx=10, pady=(10,10))
         
-        self.checkStandard = ttk.Checkbutton(self.numerationFrame, text= "zwykła", variable=self.standardVar, command= self.chooseActivateEntry1, state='disabled') 
+        self.checkStandard = ttk.Checkbutton(self.numerationFrame, text= self.translateDict['typical'][self.lang], variable=self.standardVar, command= self.chooseActivateEntry1, state='disabled') 
         self.checkStandard.grid(column= 0, row= 0, sticky= tk.W, padx=10, pady=2)
         self.standardVar.set(1)
-        self.checkSeries = ttk.Checkbutton(self.numerationFrame, text= "serialowa (np. S01E01)", variable=self.seriesVar, command= self.chooseActivateEntry2, state='disabled') 
+        self.checkSeries = ttk.Checkbutton(self.numerationFrame, text= self.translateDict['TV series (e.g. S01E01)'][self.lang], variable=self.seriesVar, command= self.chooseActivateEntry2, state='disabled') 
         self.checkSeries.grid(column= 0, row= 0, sticky= tk.W, padx=(150,0), pady=2)
         self.traceNumerationSelection()
         self.activateStandardEntry()
@@ -801,17 +755,17 @@ class ReName(Tree, StartAction):
         # action button widgets    
         startButton = ttk.Button(self.mainFrame, text= "Start", command= super().action)
         startButton.grid(column= 0, row= 11, sticky="W", padx=10, pady=10)
-        previewButton = ttk.Button(self.mainFrame, text= "Podgląd", command= self._preview)
-        previewButton.grid(column= 0, row= 11, sticky="N", padx=10, pady=10)
-        exitButton = ttk.Button(self.mainFrame, text= "Zamknij", command= self._quit)
-        exitButton.grid(column= 0, row= 11, sticky="E", padx=10, pady=10)
+        self.previewButton = ttk.Button(self.mainFrame, text= self.translateDict['Preview'][self.lang], command= self._preview)
+        self.previewButton.grid(column= 0, row= 11, sticky="N", padx=10, pady=10)
+        self.exitButton = ttk.Button(self.mainFrame, text= self.translateDict['Exit'][self.lang], command= self._quit)
+        self.exitButton.grid(column= 0, row= 11, sticky="E", padx=10, pady=10)
         disabledButton = ttk.Style()
         disabledButton.configure("DS.TButton")
         disabledButton.map('DS.TButton', foreground=[('disabled', 'gray'), ('active', 'white')])
-        self.backButton = ttk.Button(self.mainFrame, text= "Cofnij", command= self._back, style='DS.TButton', state='disabled')
+        self.backButton = ttk.Button(self.mainFrame, text= self.translateDict['Back'][self.lang], command= self._back, style='DS.TButton', state='disabled')
         self.backButton.grid(column= 0, row= 12, sticky="W", padx=10, pady=(0,10))
-        clearButton = ttk.Button(self.mainFrame, text= "Wyczyść", command= self._clear)
-        clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
+        self.clearButton = ttk.Button(self.mainFrame, text= self.translateDict['Clear'][self.lang], command= self._clear)
+        self.clearButton.grid(column= 0, row= 12, sticky="N", padx=10, pady=(0,10))
         langCombobox = ttk.Combobox(self.mainFrame,textvariable= self.langVar, width=2, state= "readonly", values=['en', 'pl'])
         langCombobox.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10)) 
         langCombobox.current(0)
@@ -844,7 +798,7 @@ class ReName(Tree, StartAction):
             scrollbarVer.set(*args)
             multiple_yview('moveto', args[0])
         
-        self.previewFrame = ttk.LabelFrame(self.win, text='Podgląd',labelanchor='n')
+        self.previewFrame = ttk.LabelFrame(self.win, text=self.translateDict['Preview'][self.lang],labelanchor='n')
         self.previewFrame.grid(column=2, row=0,columnspan=1, sticky="NSEW", padx=10, pady=(10,10))
         self.previewText = tk.Text(self.previewFrame, width=48, height=33-self.sysVar*0.2, wrap= tk.NONE, background='white', foreground='black')
         self.previewText.grid(column= 1, row= 0, rowspan=8, sticky="NSEW", padx=(10,0), pady=(10,10))
