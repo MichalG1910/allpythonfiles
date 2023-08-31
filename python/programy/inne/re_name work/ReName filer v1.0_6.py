@@ -441,13 +441,17 @@ class ReName(Tree, StartAction):
         self.exitButton.configure(text=self.translateDict['Exit'][self.lang])
         self.backButton.configure(text=self.translateDict['Back'][self.lang])
         self.clearButton.configure(text=self.translateDict['Clear'][self.lang])
-        self.startIndexEntry.grid_configure(padx=(100+self.langPadxVar,10))
-        self.lenghtEntry.grid_configure(padx=(87-self.sysVar*3,10))
+        self.startIndexEntry.grid_configure(padx=(100+self.sysVar*self.langPadxVar/10+self.langPadxVar,10))
+        self.lenghtEntry.grid_configure(padx=(87-self.sysVar*0.3-self.langPadxVar*6,10))
         
         if self.standardVar.get() == 1:
             self.numLabel.configure(text=self.translateDict['start at:'][self.lang])
+            self.num.grid_configure(padx=(80+self.sysVar*0.9-self.langPadxVar*2,0))
         else:
             self.numLabel.configure(text=self.translateDict['start at: S'][self.lang])
+            self.num.grid_configure(padx=(89+self.sysVar*0.6-self.langPadxVar*1.8,0))
+            self.numLabel1.grid_configure(padx=(122+self.sysVar-self.langPadxVar*1.8,0))
+            self.num1.grid_configure(padx=(136+self.sysVar*0.7-self.langPadxVar*1.8,0))
     
     # a function that changes the values of variables when changing the application language    
     def changeLang(self,*ignoredArgs):
@@ -528,7 +532,7 @@ class ReName(Tree, StartAction):
         self.numLabel = ttk.Label(self.numerationFrame, text=self.translateDict['start at:'][self.lang])
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 6, textvariable=self.standardNumeration)
-        self.num.grid(column= 0, row= 1, sticky = "W", padx=(80+self.sysVar ,0))
+        self.num.grid(column= 0, row= 1, sticky = "W", padx=(80+self.sysVar-self.langPadxVar*2,0))
         self.sepLabel = ttk.Label(self.numerationFrame, text = "separator:")
         self.sepLabel.grid(column = 0, row = 1, sticky="W", padx=(180,0), pady=2)
         self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
@@ -547,11 +551,11 @@ class ReName(Tree, StartAction):
         self.numLabel = ttk.Label(self.numerationFrame, text = self.translateDict['start at: S'][self.lang])
         self.numLabel.grid(column = 0, row = 1, sticky="W", padx=10, pady=2)
         self.num = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration1)
-        self.num.grid(column= 0, row=1, sticky = "W", padx=(89+self.sysVar*0.7,0))
+        self.num.grid(column= 0, row=1, sticky = "W", padx=(89+self.sysVar*0.6-self.langPadxVar*1.8,0))
         self.numLabel1 = ttk.Label(self.numerationFrame, text = "E")
-        self.numLabel1.grid(column = 0, row = 1, sticky="W", padx=(122+self.sysVar,0), pady=2)
+        self.numLabel1.grid(column = 0, row = 1, sticky="W", padx=(122+self.sysVar-self.langPadxVar*1.8,0), pady=2)
         self.num1 = ttk.Entry(self.numerationFrame, width= 2, textvariable=self.seriesNumeration2)
-        self.num1.grid(column= 0, row= 1, sticky = "W", padx=(136+self.sysVar*0.7,0))
+        self.num1.grid(column= 0, row= 1, sticky = "W", padx=(136+self.sysVar*0.7-self.langPadxVar*1.8,0))
         self.sepLabel = ttk.Label(self.numerationFrame, text = "separator:")
         self.sepLabel.grid(column = 0, row = 1, sticky="W", padx=(180+self.sysVar*2,0), pady=2)
         self.sepEntry = ttk.Entry(self.numerationFrame, width= 4, textvariable=self.sepVar)
@@ -730,12 +734,12 @@ class ReName(Tree, StartAction):
         self.startIndex = ttk.Label(self.deleteAddFrame, text = self.translateDict['character index:'][self.lang], state='disabled')
         self.startIndex.grid(column = 0, row = 0, padx=10, pady=(8,2), sticky = "W")
         self.startIndexEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.startIndexVar, state='disabled') 
-        self.startIndexEntry.grid(column= 0, row= 0, padx=(100+self.langPadxVar,10), pady=(10,10))
+        self.startIndexEntry.grid(column= 0, row= 0, padx=(100+self.sysVar*self.langPadxVar/10+self.langPadxVar,10), pady=(10,10))
         
         self.lenght = ttk.Label(self.deleteAddFrame, text = self.translateDict['quantity:'][self.lang], state='disabled')
         self.lenght.grid(column = 1, row = 0, padx=15, pady=(8,2), sticky="W")
         self.lenghtEntry = ttk.Entry(self.deleteAddFrame, width= 3, textvariable= self.lengthIndexVar, state='disabled') 
-        self.lenghtEntry.grid(column= 1, row= 0, padx=(87-self.sysVar*3+self.langPadxVar*2,10), pady=(10,10))
+        self.lenghtEntry.grid(column= 1, row= 0, padx=(87-self.sysVar*0.3-self.langPadxVar*6,10), pady=(10,10))
 
         self.addTextCheck = ttk.Checkbutton(self.deleteAddFrame, variable=self.addTextCheckVar,  text=self.translateDict['replace with text'][self.lang], command=self.changeStateAddText, state='disabled')
         self.addTextCheck.grid(column= 0, row= 1, padx=(10,10), pady=(0,10))
