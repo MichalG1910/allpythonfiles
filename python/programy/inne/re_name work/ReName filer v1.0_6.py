@@ -100,7 +100,7 @@ class Tree():
         path = os.path.abspath(self.nodesAll[node])
         try:
             os.listdir(path)
-            if self.tree.item(node)['text'] in  self.driveTextList:
+            if self.tree.item(node)['text'] in  self.driveTextList or self.tree.item(node)['text'] == 'Ubuntu':
                 img=self.diskIcon
             else:
                 img=self.openfolderIcon
@@ -111,7 +111,7 @@ class Tree():
     # opens the directory node
     def open_node(self, event):
         node = self.tree.focus()
-        if self.tree.item(node)['text'] in  self.driveTextList:
+        if self.tree.item(node)['text'] in  self.driveTextList or self.tree.item(node)['text'] == 'Ubuntu':
             img=self.diskIcon
         else:
             img=self.openfolderIcon
