@@ -474,34 +474,17 @@ class ReName(Tree, StartAction):
         exit()
     
     # function responsible for launching the application's graphic theme 
-    '''  
-    def winStyle(self, window):
-        window.tk.call('source', os.path.join(self.filePath, 'forest-light.tcl'))
-        window.tk.call('source', os.path.join(self.filePath, 'forest-dark.tcl'))
-       
-        #window.tk.call("theme", "forest-dark")
-        ttk.Style().theme_use('forest-dark')
-
-    def change_theme(self):
-        
-        if self.win.tk.call("ttk::style", "theme", "use") == "forest-dark":
-            #self.win.tk.call('source', os.path.join(self.filePath, 'forest-light.tcl'))
-            ttk.Style().theme_use('forest-light')
-            self.icon = PhotoImage(file=f'{self.filePath}/dark4.png')
-            
-        else:
-            ttk.Style().theme_use('forest-dark')
-            self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
-    '''
     def winStyle(self, window):
         window.tk.call('source', os.path.join(self.filePath, 'forest.tcl'))
         window.tk.call("set_theme", "forest-dark")
         self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
         #window.attributes("-fullscreen", True) # okno otwiera się na pełnym ekranie
 
+    # function responsible for changing the application's graphic theme 
     def change_theme(self):
         self.tree.destroy()
         self._tree(self.win, path=self.os_drives)
+        self.tree.bind("<Double-1>",self.OnDoubleClick)
         if self.win.tk.call("ttk::style", "theme", "use") == "forest-dark":
             self.win.tk.call("set_theme", "forest-light")
             self.icon1 = PhotoImage(file=f'{self.filePath}/dark4.png')
@@ -554,7 +537,6 @@ class ReName(Tree, StartAction):
         
         self.previewText.configure(state="disabled")
         
-    
     # function responsible for building entry fields for regular numbering
     def activateStandardEntry(self):
         try:
@@ -831,7 +813,7 @@ class ReName(Tree, StartAction):
         self.icon = PhotoImage(file=f'{self.filePath}/folder24dp.png')
         TButton1 = ttk.Style()
         TButton1.configure("New.TButton", width = 5, border = 2, padding= {0,0,0,0})
-        self.dirButton = ttk.Button(self.win, image= self.icon, command= self.ask_dir, style='New.TButton',)
+        self.dirButton = ttk.Button(self.win, image= self.icon, command= self.ask_dir, style='New.TButton')
         self.dirButton.grid(column= 1, row= 0, sticky="NE", padx=(10,20), pady=15)
 
         # execute tree view    
@@ -897,7 +879,6 @@ class ReName(Tree, StartAction):
         if self.stopActionFunc == "Yes":
             pass
         else: 
-           
             self.beforePreview()
             self.previewTextAfter.configure(state='normal')
             self.previewTextAfter.delete('1.0', tk.END)
