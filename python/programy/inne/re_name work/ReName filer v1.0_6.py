@@ -52,7 +52,7 @@ class Tree():
         self.nodes = dict()
         self.nodesAll = dict()
         self.treeFrame = ttk.Frame(master, height=20)
-        self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10),)
+        self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10))
         self.tree = ttk.Treeview(self.treeFrame, height=23, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
         xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
@@ -186,6 +186,8 @@ class StartAction():
     def actionVariable(self):
         self.numeration = ''
         self.numeration2 = ''
+        self.startIVar = 1
+        self.lengthIVar = 0
         self.newName = ''
         self.separator = ''
         self.stopActionFunc = 'No'
@@ -203,9 +205,6 @@ class StartAction():
             elif reNameObj.startIndexVar.get() != '' and self.regexNum(reNameObj.startIndexVar.get()) == False or reNameObj.lengthIndexVar.get() != '' and self.regexNum(reNameObj.lengthIndexVar.get()) == False:
                 mBox.showerror(reNameObj.translateDict["Enter a number"][reNameObj.lang], reNameObj.translateDict["The 'character index' and 'number of characters' fields must be numbers."][reNameObj.lang])
                 self.stopActionFunc = 'Yes'
-            else: 
-                self.startIVar = 1
-                self.lengthIVar = 0
 
         self.newTxtVar = reNameObj.newTextVar.get()
     
@@ -474,11 +473,51 @@ class ReName(Tree, StartAction):
         self.win.destroy()
         exit()
     
-    # function responsible for launching the application's graphic theme   
+    # function responsible for launching the application's graphic theme 
+    '''  
     def winStyle(self, window):
+        window.tk.call('source', os.path.join(self.filePath, 'forest-light.tcl'))
         window.tk.call('source', os.path.join(self.filePath, 'forest-dark.tcl'))
+       
+        #window.tk.call("theme", "forest-dark")
         ttk.Style().theme_use('forest-dark')
-    
+
+    def change_theme(self):
+        
+        if self.win.tk.call("ttk::style", "theme", "use") == "forest-dark":
+            #self.win.tk.call('source', os.path.join(self.filePath, 'forest-light.tcl'))
+            ttk.Style().theme_use('forest-light')
+            self.icon = PhotoImage(file=f'{self.filePath}/dark4.png')
+            
+        else:
+            ttk.Style().theme_use('forest-dark')
+            self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
+    '''
+    def winStyle(self, window):
+        window.tk.call('source', os.path.join(self.filePath, 'forest.tcl'))
+        window.tk.call("set_theme", "forest-dark")
+        self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
+        #window.attributes("-fullscreen", True) # okno otwiera się na pełnym ekranie
+
+    def change_theme(self):
+        self.tree.destroy()
+        self._tree(self.win, path=self.os_drives)
+        if self.win.tk.call("ttk::style", "theme", "use") == "forest-dark":
+            self.win.tk.call("set_theme", "forest-light")
+            self.icon1 = PhotoImage(file=f'{self.filePath}/dark4.png')
+            self.themeButton.configure(image=self.icon1)
+            TButton1 = ttk.Style()
+            TButton1.configure("New.TButton", width = 5, border = 2, padding= {0,0,0,0})
+            self.previewText.configure(background='white', foreground='black')
+            self.previewTextAfter.configure(background='white', foreground='black')
+            
+        else:
+            self.win.tk.call("set_theme", "forest-dark")
+            self.icon1 = PhotoImage(file=f'{self.filePath}/light4.png')
+            self.themeButton.configure(image=self.icon1)
+            self.previewText.configure(background='white', foreground='black')
+            self.previewTextAfter.configure(background='white', foreground='black')
+
     # function responsible for handling the event when opening the directory selection window
     def ask_dir(self, event):
         self._clear()
@@ -779,9 +818,8 @@ class ReName(Tree, StartAction):
         langCombobox = ttk.Combobox(self.mainFrame,textvariable= self.langVar, width=2, state= "readonly", values=['en', 'pl'])
         langCombobox.grid(column= 0, row= 12, sticky="E", padx=10, pady=(0,10)) 
         langCombobox.current(0)
-        self.icon = PhotoImage(file=f'{self.filePath}/light4.png')
-        self.themeButton = ttk.Button(self.mainFrame, image=self.icon, width=1)
-        self.themeButton.image = self.icon
+        self.icon1 = PhotoImage(file=f'{self.filePath}/light4.png')
+        self.themeButton = ttk.Button(self.mainFrame, image=self.icon1, width=1,command=self.change_theme)
         self.themeButton.grid(column=0, row=12, sticky="E",padx=(0,65), pady=(0,10))
         
         ###################################### column 2 ######################################################
