@@ -53,12 +53,13 @@ class Tree():
         self.nodesAll = dict()
         self.treeFrame = ttk.Frame(master, height=20)
         self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10))
-        self.tree = ttk.Treeview(self.treeFrame, height=23, show='tree headings')
+        self.tree = ttk.Treeview(self.treeFrame, height=23, show='tree headings',)
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
-        xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
-        self.tree.heading('#0', text='Reset tree', anchor='w',command=_treeReset)
-        self.tree.column('#0', minwidth=620, stretch=True, anchor='w', width=300 )
-        self.tree.configure(xscrollcommand=xsb.set, yscrollcommand=ysb.set, )
+        xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview_moveto)
+        self.tree.configure(xscrollcommand=xsb.set, yscrollcommand=ysb.set )
+        self.tree.heading('#0', text='Reset tree', anchor='w',command=_treeReset,)
+        self.tree.column('#0', minwidth=620, stretch=False, anchor='e',width=350 )
+        
         
         self.tree.grid(column=0, row=1)
         ysb.grid(row=1, column=1, sticky='ns')
@@ -482,9 +483,7 @@ class ReName(Tree, StartAction):
 
     # function responsible for changing the application's graphic theme 
     def change_theme(self):
-        self.tree.destroy()
-        self._tree(self.win, path=self.os_drives)
-        self.tree.bind("<Double-1>",self.OnDoubleClick)
+         
         if self.win.tk.call("ttk::style", "theme", "use") == "forest-dark":
             self.win.tk.call("set_theme", "forest-light")
             self.icon1 = PhotoImage(file=f'{self.filePath}/dark4.png')
@@ -494,12 +493,14 @@ class ReName(Tree, StartAction):
             self.previewText.configure(background='white', foreground='black')
             self.previewTextAfter.configure(background='white', foreground='black')
             
+            
         else:
             self.win.tk.call("set_theme", "forest-dark")
             self.icon1 = PhotoImage(file=f'{self.filePath}/light4.png')
             self.themeButton.configure(image=self.icon1)
             self.previewText.configure(background='white', foreground='black')
             self.previewTextAfter.configure(background='white', foreground='black')
+        
 
     # function responsible for handling the event when opening the directory selection window
     def ask_dir(self, event):
