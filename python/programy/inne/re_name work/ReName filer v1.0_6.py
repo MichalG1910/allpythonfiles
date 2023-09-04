@@ -53,13 +53,12 @@ class Tree():
         self.nodesAll = dict()
         self.treeFrame = ttk.Frame(master, height=20)
         self.treeFrame.grid(column=1, row=0, sticky="NSEW", padx=10, pady=(55,10))
-        self.tree = ttk.Treeview(self.treeFrame, height=23, show='tree headings',)
+        self.tree = ttk.Treeview(self.treeFrame, height=23, show='tree headings')
         ysb = ttk.Scrollbar(self.treeFrame, orient='vertical', command=self.tree.yview)
-        xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview_moveto)
+        xsb = ttk.Scrollbar(self.treeFrame, orient='horizontal', command=self.tree.xview)
         self.tree.configure(xscrollcommand=xsb.set, yscrollcommand=ysb.set )
-        self.tree.heading('#0', text='Reset tree', anchor='w',command=_treeReset,)
+        self.tree.heading('#0', text='Reset tree', anchor='w',command=_treeReset)
         self.tree.column('#0', minwidth=620, stretch=False, anchor='e',width=350 )
-        
         
         self.tree.grid(column=0, row=1)
         ysb.grid(row=1, column=1, sticky='ns')
@@ -420,7 +419,8 @@ class ReName(Tree, StartAction):
             'Preview':['Preview','Podgląd'],
             'Exit':['Exit','Zamknij'],
             'Back':['Back','Cofnij'],
-            'Clear':['Clear','Wyczyść']
+            'Clear':['Clear','Wyczyść'],
+            'Reset tree':['Reset tree', 'Reset drzewa']
             }
     
     # function containing widgets to be translated
@@ -443,6 +443,7 @@ class ReName(Tree, StartAction):
         self.clearButton.configure(text=self.translateDict['Clear'][self.lang])
         self.startIndexEntry.grid_configure(padx=(100+self.sysVar*self.langPadxVar/10+self.langPadxVar,10))
         self.lenghtEntry.grid_configure(padx=(87-self.sysVar*0.3-self.langPadxVar*6,10))
+        self.tree.heading('#0', text=self.translateDict['Reset tree'][self.lang])
         
         if self.standardVar.get() == 1:
             self.numLabel.configure(text=self.translateDict['start at:'][self.lang])
@@ -483,7 +484,7 @@ class ReName(Tree, StartAction):
 
     # function responsible for changing the application's graphic theme 
     def change_theme(self):
-         
+        
         if self.win.tk.call("ttk::style", "theme", "use") == "forest-dark":
             self.win.tk.call("set_theme", "forest-light")
             self.icon1 = PhotoImage(file=f'{self.filePath}/dark4.png')
@@ -493,7 +494,6 @@ class ReName(Tree, StartAction):
             self.previewText.configure(background='white', foreground='black')
             self.previewTextAfter.configure(background='white', foreground='black')
             
-            
         else:
             self.win.tk.call("set_theme", "forest-dark")
             self.icon1 = PhotoImage(file=f'{self.filePath}/light4.png')
@@ -501,7 +501,6 @@ class ReName(Tree, StartAction):
             self.previewText.configure(background='white', foreground='black')
             self.previewTextAfter.configure(background='white', foreground='black')
         
-
     # function responsible for handling the event when opening the directory selection window
     def ask_dir(self, event):
         self._clear()
