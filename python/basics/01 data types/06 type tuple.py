@@ -1,10 +1,10 @@
 
-data = ("Ala", "Ola", "Kasia")# krotka(inaczej tablica), jest niemutowalna, nie można jej zmieniać ani edytować
-                              # data[0]="Rafał" - pokaże błąd
-names = data + ("Rafał",) # ('Ala', 'Ola', 'Kasia', 'Rafał') 
-print(names)  
+data = ("Ala", "Ola", "Kasia") # krotka(inaczej tablica), jest niemutowalna, nie można jej zmieniać ani edytować
+                               # data[0]="Rafał" - pokaże błąd
+names = data + ("Rafał",) # ('Ala', 'Ola', 'Kasia', 'Rafał')
+print(names)
 print(len(names)) # 4
-print(type(names)) # <class 'tuple'>                       
+print(type(names)) # <class 'tuple'>
 
 numbers = 1,2,3 # krotkę można utworzyć bez nawiasów, jeśli ma ona posiadać kilka elementów
 print(numbers)
@@ -30,5 +30,5 @@ if "Ford" in cars[0]:
     # print(cars) - wyświetli błąd, kod nie zadziała
     # del names[0] - wyświetli błąd, kod nie zadziała. Nie można skasować elementu krotki, KROTKA JEST NIEMUTOWALNA
 
-tupleX3 = names * 3 # zwielokorotnienie krotki razy 3
+tupleX3 = names * 3 # zwielokrotnienie krotki razy 3
 print(tupleX3)
