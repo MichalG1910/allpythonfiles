@@ -6,7 +6,7 @@ print(names)
 print(len(names)) # 4
 print(type(names)) # <class 'tuple'>
 
-numbers = 1,2,3 # krotkę można utworzyć bez nawiasów, jeśli ma ona posiadać kilka elementów
+numbers = 1, 2, 3 # krotkę można utworzyć bez nawiasów, jeśli ma ona posiadać kilka elementów
 print(numbers)
 print(type(numbers))
 
@@ -18,7 +18,7 @@ print(names[1]) # Ola
 print(names[-1]) # Rafał - wyświetla od końca krotki
 print(names[1:3]) # ('Ola', 'Kasia')
 
-cars = (("Dodge","Ford"), ("Pontiac",)) # krotka złożona z 2 krotek
+cars = (("Dodge", "Ford"), ("Pontiac",)) # krotka złożona z 2 krotek
 print(cars[0][0]) # wyświetli Dodge
 print(cars[0][1]) # wyświetli Ford
 print(cars[1][0]) # wyświetli Pontiac
