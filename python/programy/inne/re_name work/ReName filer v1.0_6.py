@@ -5,6 +5,8 @@ import tkinter.filedialog as fd
 from tkinter import PhotoImage
 import psutil
 from tkinter import messagebox as mBox
+# wiersz 916 wurzucilo błąd, trzeba znalezć
+
 
 # class to visualize the directory tree
 class Tree():
@@ -344,7 +346,7 @@ class StartAction():
                 reNameObj.beforePreview()
                 reNameObj.backButton.configure(state='normal')
         
-        if self.location != '': 
+        if os.path.isdir(self.location): 
             loop()
             if self.stopActionFunc == 'No':        
                 ifNoPreview()
