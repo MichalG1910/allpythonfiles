@@ -9,7 +9,7 @@ from tkinter import messagebox as mBox
 
 
 # class to visualize the directory tree
-class Tree():
+class Tree:
     def __init__(self):
         self.filePath = os.path.dirname(sys.argv[0])
         self.home_directory = os.path.expanduser( '~' )
@@ -34,8 +34,8 @@ class Tree():
       
         self.os_drives = set(win_drives + linuxMountpoint)
         self.os_drives = list(self.os_drives)
-
         del data1, linuxMountpoint, win_drives
+        return self.os_drives
     
     # the function responsible for the tree view and tree view widgets
     def _tree(self, master, path):
@@ -105,7 +105,7 @@ class Tree():
             if self.tree.item(node)['text'] in  self.driveTextList or self.tree.item(node)['text'] == 'Ubuntu':
                 img=self.diskIcon
             else:
-                img=self.openfolderIcon
+                img=self.folderIcon
         except PermissionError:
             img=self.errorfolderIcon
         self.tree.item(node, image=img, open=False)
@@ -282,9 +282,7 @@ class StartAction():
                     except OSError:
                         mBox.showerror(reNameObj.translateDict["Wrong separator"][reNameObj.lang], reNameObj.translateDict["An illegal character was used in the separator. Change separator."][reNameObj.lang])
                         self.stopActionFunc = 'Yes'
-            self.oldNameLenList.append(len(oldName))
-            self.newNameList.append(newName)
-            self.oldNameList.append(oldName)
+            return self.oldNameLenList.append(len(oldName)), self.newNameList.append(newName), self.oldNameList.append(oldName)
         
         # function responsible for making changes
         def loop():
