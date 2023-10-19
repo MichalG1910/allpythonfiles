@@ -869,6 +869,8 @@ class ReName(Tree, StartAction):
             else:
                 self.stringWidth += letterWidth[l] * 1.45
         del letterWidth
+        print(self.stringWidth)
+        return self.stringWidth
     
     # function that creates a preview before renaming files
     def _preview(self):
