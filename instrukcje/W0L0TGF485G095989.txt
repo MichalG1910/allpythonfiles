@@ -1,0 +1,121 @@
+WVWZZZ3CZHE110074 passat 	olej motul specific 5W30  504/507
+filtr powietrza 5Q0129600D   obudowa filtra 5Q0129607AE 
+		Mann C30005 / C 30 005
+		FILTRON	AP 139/5
+filtr kabinowy  5Q0819653
+		MANN CUK 26009
+		FILTRON K 1311A
+filtr paliwa    5Q0127400F
+		FILTRON PE 973/9
+		KNECHT KX 386
+		MANN PU 8028
+filtr oleju     ?
+		MANN HU 7020 z
+		KNECHT OX 787D
+		FILTRON OE 688/3
+
+
+
+
+
+
+
+
+
+Serwis 25.11.2021    106400 km
+wymieniono:
+olej- motul specific 5W30
+filtr powietrza- Mann C30005 / C 30 005
+filtr kabinowy- MANN CUK 26009
+filtr paliwa- KNECHT KX 386
+filtr oleju- MANN HU 7020 z (zapomniałem wymienić uszczelki obudowy filtra)
+
+
+Serwis 23.07.2022    117422 km
+wymieniono:
+olej- motul specific 5W30
+filtr powietrza- FILTRON AP 139/5
+filtr kabinowy- FILTRON K 1311A
+filtr paliwa- KNECHT KX 386
+filtr oleju- MANN HU 7020 z 
+
+
+Serwis 24.10.2023    134376 km
+wymieniono:
+olej- motul specific 5W30	+ płukanka LM2662, dodatek do oleju ceratec LM7181
+olej skrzyni biegów G052527A2
+filtr powietrza- FILTRON AP 139/5
+filtr oleju- MANN HU 7020 z 
+Komplet sprzęgła Sachs (+dzwignia,obudowa łożyska, wysprzęglik 5Q0721261C)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kosiarka spalinowa Oleo-Mac GV 53 TK Allroad 4
+PARAMETRY:
+Stan - nowy
+Producent - Oleo-Mac (część oryginalna)
+Numer oryginalny - L66150445
+Wymiary - 132 x 112 x 21 mm
+Filtr powietrza pasuje do silników Emak (OLEO-MAC):
+K500 / K600 / K605 / K650 / K655 / K800 / K805
+olej 10W40
+moj k805- 196 cm3
+
+
+
+-----------------------------------------------------
+github, pythonanywhere
+bioly1910
+grabarzmichal@gmail.com
+grabarzmichal1910
+
+----------------------------------------------------
+github token
+token name - venv
+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
+
+----------------------------------------------------------------------------------------------
+pythonanywhere token
+
+d98aa5166528ed4661e474078f2f4fed8de64f85
+
+import requests
+username = 'bioly1910'
+token = 'd98aa5166528ed4661e474078f2f4fed8de64f85'
+
+response = requests.get(
+    'https://www.pythonanywhere.com/api/v0/user/{username}/cpu/'.format(
+        username=username
+    ),
+    headers={'Authorization': 'Token {token}'.format(token=token)}
+)
+if response.status_code == 200:
+    print('CPU quota info:')
+    print(response.content)
+else:
+    print('Got unexpected status code {}: {!r}'.format(response.status_code, response.content))
+-----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+		
