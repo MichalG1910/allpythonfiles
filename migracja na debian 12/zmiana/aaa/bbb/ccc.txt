@@ -1,0 +1,10 @@
+test_calc.cpython-311-pytest-7.2.1.pyc
+test_calc.cpython-311.pyc
+test_calc_1.cpython-311-pytest-7.2.1.pyc
+test_calc_1.cpython-311.pyc
+calc_math.cpython-311.pyc
+zadanie1.cpython-311.pyc
+test_zadanie1.cpython-311-pytest-7.2.1.pyc
+test_tech_stack.cpython-311-pytest-7.2.1.pyc
+tech_stack.cpython-311.pyc
+test_shopping.cpython-311-pytest-7.2.1.pyc

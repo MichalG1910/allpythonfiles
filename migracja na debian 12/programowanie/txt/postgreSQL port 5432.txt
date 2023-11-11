@@ -1,0 +1,82 @@
+postgreSQL
+miejsce instalacji - /etc/postgresql/15/main
+też coś jest		   - /lib/postgresql/15
+
+pgSQL_michal
+grupa serwerów - servers
+port = 5432
+ip - 192.168.8.3/24
+gm10
+
+instalacja posgres i pgadmin4 z tworzeniem nowego usera:
+https://www.linuxtechi.com/how-to-install-postgresql-on-ubuntu/?utm_content=cmp-true
+
+jakby był problem z home/home/micha
+https://dba.stackexchange.com/questions/54242/cannot-start-psql-with-user-postgres-could-not-change-directory-to-home-user
+
+obsługa portów z firewalld
+https://wladcysieci.pl/2022/08/04/firewalld-uruchamiamy-prosty-firewall-w-systemie-centos-ubuntu/
+
+ip 
+192.168.8.3/24
+grabarzmichal1910
+
+
+
+sudo su - postgres		postgres z uprawniniami admina
+psql				wiersz poleceń postgres w terminalu
+postgres=# SELECT version();	aktualna wersja postgres
+postgres=# \q			wyjście z wiersza poleceń postgres
+
+
+
+instrukcja konfiguracji postgres(udemy kurs)
+
+# definicja hasla dla użytkownika bazy danych postgres
+$ sudo su - postgres
+$ psql -c "alter user postgres with password 'StrongDBPassword'"
+
+# sprawdzenie adresu IP – przyda się do konfiguracji sieci
+ip address
+
+# definicja interfejsów sieciowych, na których ma nasłuchiwać postgresql
+sudo vim /var/lib/pgsql/13/data/postgresql.conf
+listen_addresses = '*'
+
+# definicja wymogów bezpieczeństwa przy podłączeniu
+sudo vim /var/lib/pgsql/13/data/pg_hba.conf
+
+# Accept from trusted subnet (Recommended setting)
+host all all 192.168.171.0/24 md5
+
+# Accept from anywhere (not recommended)
+host all all 0.0.0.0/0 md5
+
+# restart posgresql po konfiguracji i ponowne włączenie
+sudo systemctl restart postgresql
+sudo systemctl enable postgresql
+
+# testo lokalnego połączenia
+psql -U postgres -h localhost -p
+SELECT version();
+quit;
+5432 postgres
+
+# otwarcie portów, na poziomie systemu operacyjnego
+sudo firewall-cmd --add-service=postgresql --permanent
+sudo firewall-cmd –-reload
+sudo firewall-cmd --list-all
+
+# sprawdzenie statusu postgreSQL
+systemctl status postgresql
+wynik:
+micha@micha-GF63-Thin-10UC:~$ systemctl status postgresql
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; preset: e>
+     Active: active (exited) since Fri 2023-02-17 20:14:12 CET; 27min ago
+   Main PID: 1780 (code=exited, status=0/SUCCESS)
+        CPU: 750us
+
+lut 17 20:14:12 micha-GF63-Thin-10UC systemd[1]: Starting PostgreSQL RDBMS...
+lut 17 20:14:12 mic
+

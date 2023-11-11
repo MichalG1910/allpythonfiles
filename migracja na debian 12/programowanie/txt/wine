@@ -1,0 +1,22 @@
+$ wine --version
+wine-1.7.50
+$ winecfg
+[GUI: Applications tab > Windows Version: Windows 7]
+
+wine C:/Python38/Scripts/pyinstaller.exe
+wine C:/Python38/Scripts/pyinstaller.exe --onefile
+
+source myvenv/bin/activate - aktywacja srodowiska wirtualnego do django (home/micha/venv)
+
+cd /media/micha/84CA-F753/python/basics/strefakursow/06\ django/djangoblog
+
+
+Ctrl + Shift + V  - wklej w terminalu
+Ctrl + Shift + C  - kopiuj w terminalu
+
+
+exchnge rates 
+dobrze sformtowane dane na stronie nbp od 2004-05-04
+
+konfiguracja katalogu domowego ubuntu
+sudo dpkg-reconfigure apparmor

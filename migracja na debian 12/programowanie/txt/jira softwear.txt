@@ -1,0 +1,22 @@
+jira softwear
+grabarzmichl@gmail.com
+logowanie przez konto google
+
+twoja strona: grabarzmichal.atlassian.net
+
+nazwa projektu: My First Project
+Klucz(key): MFP
+
+
+W trakcie konfigurowania środowiska dokonaliśmy wyboru rodzaju projektu - SCRUM
+Wybraliśmy też rodzaj konta w chmurze (free trial), jednak istnieje możliwość zmiany na standard (14- day free trial)
+Ja go na razie nie włączyłem, jednak w dalszej części ma być potrzebny (tak twierdzi trener)
+widoki:
+active sprints (aktywne sprinty) - chyba najważniejszy widok
+backlog (zaleglości)
+
+zaczynamy (tworzymy tablicę z przykładowymi danymi)
+1. wyszukiwarka ->  boards (w dolnym pasku z przyciskami) -> create a scrum board with simple data
+2. tworzymy nowy projekt na tablicy (project name, project key, project lead - ja zostawilem te z podpowiedzi jiry) -> create project
+3. utworzyliśmy Sample Scrum Project - przykłdowy project scrum (automatycznie po utworzeniu -> backlog)
+
