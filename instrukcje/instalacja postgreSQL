@@ -1,0 +1,86 @@
+# log on root account
+su
+# Create the file repository configuration:
+sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+# Import the repository signing key:
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+# Update the package lists:
+apt-get update
+
+# Install the latest version of PostgreSQL.
+# If you want a specific version, use 'postgresql-12' or similar instead of 'postgresql':
+apt-get -y install postgresql
+
+# After installing PostgreSQL, start the PostgreSQL service and enable it to start at # system reboot:
+systemctl start postgresql
+systemctl enable postgresql
+
+# Next, check the status of the PostgreSQL service using the command below:
+systemctl status postgresql
+
+# You should get the following output:
+
+#● postgresql.service - PostgreSQL RDBMS
+#   Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: #enabled)
+#   Active: active (exited) since Sat 2021-04-17 05:44:16 UTC; 18s ago
+# Main PID: 2174 (code=exited, status=0/SUCCESS)
+#    Tasks: 0 (limit: 2359)
+#  Memory: 0B
+#   CGroup: /system.slice/postgresql.service
+
+#Apr 17 05:44:16 debian10 systemd[1]: Starting PostgreSQL RDBMS...
+#Apr 17 05:44:16 debian10 systemd[1]: Started PostgreSQL RDBMS.
+
+# By default, PostgreSQL listens on port 5432. You can check it using the following # # command:
+ss -antpl | grep 5432
+
+# You should get the following output:
+
+# LISTEN    0         128              127.0.0.1:5432             0.0.0.0:*        # # users:(("postgres",pid=2505,fd=5))                                             
+# LISTEN    0         128                  [::1]:5432                [::]:*        # # users:(("postgres",pid=2505,fd=3))                                             
+
+# Next, connect to the PostgreSQL shell and create a database and user:
+# UWAGA!!! musisz być na root
+su - postgres
+psql -c "alter user postgres with password '***hasło***'"
+
+# Connect to postgresql and grand priviliges
+psql
+CREATE USER postgres WITH PASSWORD 'grabarzmichal1910'
+CREATE DATABASE postgres
+GRANT ALL PRIVILEGES ON DATABASE postgres to postgres
+
+# Next, exit from the PostgreSQL shell with the following command:
+postgres= \q
+exit
+
+# By default, PostgreSQL uses client authentication to control the database #connections. You can change it by editing the file /etc/postgresql/11/main/#pg_hba.conf.
+# zwróc uwagę na wersje twojej instalacji
+nano /etc/postgresql/16/main/pg_hba.conf
+
+# Change the following lines:
+
+# host    all             all             127.0.0.1/32            md5
+# host    all             all             ::1/128                    md5
+
+# Save and close the file then restart the PostgreSQL service to apply the changes:
+systemctl restart postgresql
+
+# install curl (if you don't have) and download and add the GPG key with the #following command:
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | apt-key add
+
+# Next, add the pgAdmin4 repository using the following command (editing pgdg.list):
+nano /etc/apt/sources.list.d/pgdg.list
+#Add the following line:
+deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/buster pgadmin4 main
+
+#Next, update the repository cache and install the latest version of pgAdmin4 with the following command:
+apt-get update
+apt-get install pgadmin4
+
+# Run pgadmin GUI and configure server
+
+
+
