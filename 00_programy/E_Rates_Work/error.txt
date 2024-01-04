@@ -1,0 +1,1 @@
+sh: 0: cannot open /home/michal/pythongit/allpythonfiles/python/programy/E_Rates_Work#: No such file
